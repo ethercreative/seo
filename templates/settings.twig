@@ -1,0 +1,25 @@
+{% import "_includes/forms" as forms %}
+
+{{ forms.textField({
+	label: 'Title Suffix',
+	instructions: 'A string appended, after a space, to the page title. This can be removed on a per-entry basis.',
+	name: 'titleSuffix',
+	value: settings.titleSuffix is defined ? settings.titleSuffix : ''
+}) }}
+
+<div class="field">
+	<div class="heading">
+		<label for="settings[readability]">Readability Check</label>
+		<div class="instructions">What fields should the plugin look for when determining readability?</div>
+	</div>
+
+	<div class="input">
+		{{ forms.multiselect({
+			label: 'Readability Check',
+			instructions: 'What fields should the plugin look for when determining readability?',
+			name: 'readability',
+			options: fields,
+			values: settings.readability
+		}) }}
+	</div>
+</div>

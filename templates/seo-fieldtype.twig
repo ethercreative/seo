@@ -1,0 +1,64 @@
+{% if not isEntry %}
+<div class="seo--field">
+	This field will only work in Entries!
+</div>
+{% else %}
+<div class="seo--field">
+	<label>Snippet</label>
+	<div class="instructions">This is how the page might look in Google. Click the text to edit.</div>
+
+	<div class="seo--snippet">
+		<div class="inner">
+			<input type="text" name="{{ name }}[title]" class="title{{ isNew or value is null ? ' clean' : '' }}"
+			       title="Title" value="{{ value is not null ? value.title : settings.titleSuffix }}" id="{{ id }}-title">
+
+			<div class="url">{{ siteUrl }}{% if ref != 'homepage/homepage' %}<span id="{{ id }}-ref">{{ ref }}</span>
+				<span id="{{ id }}-slug"></span>{% endif %}</div>
+
+			<textarea title="Description" name="{{ name }}[description]" class="description"
+			          rows="1" id="{{ id }}-description" placeholder="Click to add a description!"
+			          oninput="this.style.height='';this.style.height=this.scrollHeight+'px';">{{ value is not null ? value.description : '' }}</textarea>
+		</div>
+	</div>
+
+	<label for="{{ id }}-keyword">Focus Keyword</label>
+	<div class="instructions">We use this keyword to work out the relevance and score of your page</div>
+
+	<input type="text" class="text fullwidth keyword" id="{{ id }}-keyword" name="{{ name }}[keyword]" value="{{ value is not null ? value.keyword : '' }}">
+
+	<label>Page Score</label>
+	<div class="instructions">Use this progress bar and detail view to discover the best ways of optimising your page.</div>
+
+	<div class="seo--score" id="{{ id }}-score">
+		<div class="content">
+			<div class="bar">
+				{% for i in 0..12 %}
+				<span data-i="{{ i }}" class="item{{ i < 7 ? ' good' : i < 10 ? ' neutral' : ' poor' }}" style="left:{{ i * (100/13) }}%"></span>
+				{% endfor %}
+			</div>
+			<div class="details">
+				<ul class="details-inner">
+					<li data-i="12">The keyword density is 3%, which is over the advised 2.5% maximum; the focus keyword was found 13 times.</li>
+					<li data-i="11">You have not used your focus keyword in any subheading (such as an H2) in your copy.</li>
+					<li data-i="10">The page title contains the focus keyword, but it does not appear at the beginning; try and move it to the beginning.</li>
+					<li data-i="9">No outbound links appear in this page. Consider adding some as appropriate.</li>
+					<li data-i="8">The copy scores 53.6 in the Flesch Reading Ease test, which is considered fairly difficult to read. Try to make shorter sentences to improve readability.</li>
+					<li data-i="7">The page title contains 28 characters, which is less than the recommended minimum of 40 characters. Use the space to add keyword variations or create compelling call-to-action copy.</li>
+					<li data-i="6">The meta description contains the focus keyword.</li>
+					<li data-i="5">The images on this page contain alt attributes with the focus keyword.</li>
+					<li data-i="4">In the specified meta description, consider: How does it compare to the competition? Could it be made more appealing?</li>
+					<li data-i="3">The focus keyword appears in the first paragraph of the copy.</li>
+					<li data-i="2">The focus keyword appears in the URL for this page.</li>
+					<li data-i="1">You've never used this focus keyword before, very good.</li>
+					<li data-i="0">The text contains 429 words, this is more than the 300 word recommended minimum.</li>
+				</ul>
+			</div>
+		</div>
+
+		<a class="toggle-score">
+			<span class="open">View your score in detail</span>
+			<span class="close">Minimize your score</span>
+		</a>
+	</div>
+</div>
+{% endif %}
