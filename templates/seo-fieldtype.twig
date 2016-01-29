@@ -10,7 +10,7 @@
 	<div class="seo--snippet">
 		<div class="inner">
 			<input type="text" name="{{ name }}[title]" class="title{{ isNew or value is null ? ' clean' : '' }}"
-			       title="Title" value="{{ value is not null ? value.title : settings.titleSuffix }}" id="{{ id }}-title">
+			       title="Title" value="{{ value is not null ? value.title : titleSuffix }}" id="{{ id }}-title">
 
 			<div class="url">{{ siteUrl }}{% if ref != 'homepage/homepage' %}<span id="{{ id }}-ref">{{ ref }}</span>
 				<span id="{{ id }}-slug"></span>{% endif %}</div>
@@ -29,11 +29,11 @@
 	<label>Page Score</label>
 	<div class="instructions">Use this progress bar and detail view to discover the best ways of optimising your page.</div>
 
-	<div class="seo--score" id="{{ id }}-score">
+	<div class="seo--score disabled" id="{{ id }}-score">
 		<div class="content">
 			<div class="bar">
 				{% for i in 0..12 %}
-				<span data-i="{{ i }}" class="item{{ i < 7 ? ' good' : i < 10 ? ' neutral' : ' poor' }}" style="left:{{ i * (100/13) }}%"></span>
+				<span data-i="{{ i }}" class="item" style="left:{{ i * (100/13) }}%"></span>
 				{% endfor %}
 			</div>
 			<div class="details">

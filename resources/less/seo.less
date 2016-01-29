@@ -90,7 +90,11 @@
 		border: 1px solid #e3e5e8;
 		border-radius: 3px;
 
+		transition: opacity 0.3s ease;
+
 		.toggle-score {
+			position: relative;
+			z-index: 1;
 			display: block;
 			padding: 10px;
 
@@ -108,16 +112,19 @@
 		}
 
 		.bar {
-			height: 15px;
+			height: 14px;
 			font-size: 0;
 
 			.item {
 				position: absolute;
+				z-index: 2;
 				top: 0;
 
 				display: block;
 				width: 100%/13;
 				height: 15px;
+
+				background: #cccccc;
 
 				transition: left 0.5s ease, top 0.5s ease, width 0.5s ease, border-radius 0.5s ease, transform 0.5s ease;
 
@@ -146,12 +153,17 @@
 			transition: height 0.5s ease;
 
 			&-inner {
-				padding: 5px 20px 20px 50px;
+				padding: 6px 20px 20px 50px;
 			}
 
 			li {
 				margin-bottom: 15px;
 			}
+		}
+
+		&.disabled {
+			opacity: 0.25;
+			pointer-events: none;
 		}
 
 		&.open {

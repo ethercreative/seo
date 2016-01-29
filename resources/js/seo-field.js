@@ -1,5 +1,17 @@
-var SeoField = function (namespace) {
+var SeoField = function (namespace, readabilityFields) {
 	this.namespace = namespace;
+	this.readabilityFields = readabilityFields;
+
+	// TODO: Remove all HTML & reference tags
+	var text = '';
+	/* jshint ignore:start */
+	for (var i = 0; i < readabilityFields.length; i++) {
+		[].slice.call(document.querySelectorAll('[name="fields[' + readabilityFields[i] + ']"]')).forEach(function (el) {
+			text += '\r\n' + el.value;
+		});
+	}
+	/* jshint ignore:end */
+	console.log(text);
 
 	// Snippet
 	this.title();
