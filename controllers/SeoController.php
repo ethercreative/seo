@@ -147,7 +147,7 @@ class SeoController extends BaseController
 		HeaderHelper::setContentTypeByExtension('html');
 		HeaderHelper::setHeader(array('charset' => 'utf-8'));
 		ob_start();
-		echo strip_tags($output, '<h1><h2><h3><h4><h5><h6><a><img><b><strong><seo-parse>');
+		echo strip_tags($output, '<p><h1><h2><h3><h4><h5><h6><a><img><b><strong><seo-parse>');
 		craft()->end();
 	}
 

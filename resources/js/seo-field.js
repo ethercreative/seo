@@ -20,7 +20,7 @@ var SeoField = function (namespace, readabilityFields) {
 	this.score = document.getElementById(namespace + "-score");
 	this.toggle();
 
-	// Calculate
+	// Calculate // TODO: Fire on ANY field change
 	this.calculateScore();
 };
 
@@ -145,38 +145,54 @@ SeoField.prototype.moveItems = function (isOpen) {
 
 SeoField.prototype.calculateScore = function () {
 	if (this.keyword.value) {
-		var score = {};
+		this.currentScore = {};
+		var self = this;
 
-		// TODO: Call one of these functions judgeDredd. Very important.
-		score.titleLength = this.judgeTitleLength();
-		score.titleKeyword = this.judgeTitleKeyword();
-		score.slug = this.judgeSlug();
-		score.desc = this.judgeDesc();
+		this.currentScore.titleLength = this.judgeTitleLength();
+		this.currentScore.titleKeyword = this.judgeTitleKeyword();
+		this.currentScore.slug = this.judgeSlug();
+		this.currentScore.desc = this.judgeDesc();
 
 		if (this.readabilityFields.length > 0) {
 			SeoField.getFieldsHTML(this.readabilityFields, function (res) {
-				console.log(res);
-				// Word count (300 minimum)
-				// Keyword in first paragraph (?)
-				// Keyword in image alt text
-				// Flesch Reading Ease
-				// Outbound links
-				// Keyword in headings (h2)?
-				// Keyword density max 2.5% of text, include total count
-			});
-		}
+				var content = document.createElement('div');
+				content.innerHTML = res;
 
-		this.score.classList.remove('disabled');
-		var list = this.score.getElementsByClassName('details-inner')[0];
-		list.innerHTML = '';
-		for (var key in score) {
-			if (score.hasOwnProperty(key) && score[key]) {
-				list.innerHTML += '<li>' + score[key].reason + '</li>';
-			}
+				[].slice.call(content.getElementsByTagName('seo-parse')).forEach(function (el) {
+					if (!el.textContent || el.textContent === 'Array') {
+						content.removeChild(el);
+					}
+				});
+
+				self.content = content;
+
+				self.currentScore.wordCount = self.judgeWordCount();
+				self.currentScore.firstParagraph = self.judgeFirstParagraph();
+				self.currentScore.images = self.judgeImages();
+				self.currentScore.links = self.judgeLinks();
+				self.currentScore.headings = self.judgeHeadings();
+				// Keyword density max 2.5% of text, include total count
+				// Flesch Reading Ease (dredd)
+
+				self.updateScoreHtml();
+			});
+		} else {
+			this.updateScoreHtml();
 		}
 	} else {
 		this.score.classList.remove('open');
 		this.score.classList.add('disabled');
+	}
+};
+
+SeoField.prototype.updateScoreHtml = function () {
+	this.score.classList.remove('disabled');
+	var list = this.score.getElementsByClassName('details-inner')[0];
+	list.innerHTML = '';
+	for (var key in this.currentScore) {
+		if (this.currentScore.hasOwnProperty(key) && this.currentScore[key]) {
+			list.innerHTML += '<li>' + this.currentScore[key].reason + '</li>';
+		}
 	}
 };
 
@@ -260,20 +276,121 @@ SeoField.prototype.judgeDesc = function () {
 	}
 };
 
-// HELPERS
-/**
- * Naked Text
- *
- * @return {string}
- */
-SeoField.stripHTML = function (html) {
-	var tmp = document.createElement("DIV");
-	tmp.innerHTML = html;
-	// TODO: Link count
-	console.log(tmp.querySelectorAll('a'));
-	return tmp.textContent || tmp.innerText || "";
+SeoField.prototype.judgeWordCount = function () {
+	var wc = this.content.textContent.trim().replace(/\s+/gi, ' ').split(' ').length;
+	if (wc > 300) {
+		return {
+			score : SeoField.Levels.GOOD,
+			reason: SeoField.Reasons.wordCountSuccess.replace('{l}', wc)
+		};
+	} else {
+		return {
+			score : SeoField.Levels.BAD,
+			reason: SeoField.Reasons.wordCountFail.replace('{l}', wc)
+		};
+	}
 };
 
+SeoField.prototype.judgeFirstParagraph = function () {
+	if (this.content.querySelector('p').textContent.indexOf(this.keyword.value) > -1) {
+		return {
+			score : SeoField.Levels.GOOD,
+			reason: SeoField.Reasons.firstParagraphSuccess
+		};
+	} else {
+		return {
+			score : SeoField.Levels.BAD,
+			reason: SeoField.Reasons.firstParagraphFail
+		};
+	}
+};
+
+SeoField.prototype.judgeImages = function () {
+	var imgs = this.content.getElementsByTagName('img');
+	if (imgs) {
+		var imgsWithAltKeyword = 0;
+
+		for (var i = 0; i < imgs.length; i++) {
+			if (imgs[i].getAttribute('alt') &&
+				imgs[i].getAttribute('alt').indexOf(this.keyword.value))
+				imgsWithAltKeyword++;
+		}
+
+		if (imgsWithAltKeyword === imgs.length) {
+			return {
+				score : SeoField.Levels.GOOD,
+				reason: SeoField.Reasons.imagesSuccess
+			};
+		} else if (imgsWithAltKeyword >= imgs.length/2) {
+			return {
+				score : SeoField.Levels.OK,
+				reason: SeoField.Reasons.imagesOk
+			};
+		} else {
+			return {
+				score : SeoField.Levels.BAD,
+				reason: SeoField.Reasons.imagesFail
+			};
+		}
+	}
+};
+
+SeoField.prototype.judgeLinks = function () {
+	var a = this.content.getElementsByTagName('a');
+
+	if (a) {
+		for (var i = 0; i < a.length; i++) {
+			if (SeoField.isExternalUrl(a[i].href)) {
+				return {
+					score : SeoField.Levels.GOOD,
+					reason: SeoField.Reasons.linksSuccess
+				};
+			}
+		}
+	}
+
+	return {
+		score : SeoField.Levels.BAD,
+		reason: SeoField.Reasons.linksFail
+	};
+};
+
+SeoField.prototype.judgeHeadings = function () {
+	var headings = this.content.querySelectorAll('h1,h2,h3,h4,h5,h6');
+
+	if (headings) {
+		var primary = 0, secondary = 0;
+
+		for (var i = 0; i < headings.length; i++) {
+			if (headings[i].textContent.indexOf(this.keyword.value) > -1) {
+				if (['H1', 'H2'].indexOf(headings[i].nodeName) > -1) {
+					primary++;
+				} else {
+					secondary++;
+				}
+			}
+		}
+
+		if (primary > 0) {
+			return {
+				score : SeoField.Levels.GOOD,
+				reason: SeoField.Reasons.headingsSuccess
+			};
+		} else if (secondary > 0) {
+			return {
+				score : SeoField.Levels.OK,
+				reason: SeoField.Reasons.headingsOk
+			};
+		}
+	}
+
+	return {
+		score : SeoField.Levels.BAD,
+		reason: SeoField.Reasons.headingsFail
+	};
+};
+
+// HELPERS
 /**
  * Get Parsed Fields HTML
  *
@@ -295,6 +412,24 @@ SeoField.getFieldsHTML = function (fields, cb) {
 		cb(response);
 	});
 };
+
+/**
+ * External URL checker
+ * From http://stackoverflow.com/a/9744104/550109
+ *
+ * @param {string} url
+ */
+SeoField.isExternalUrl = (function(){
+	var domainRe = /https?:\/\/((?:[\w\d]+\.)+[\w\d]{2,})/i;
+
+	return function(url) {
+		function domain(url) {
+			return domainRe.exec(url)[1];
+		}
+
+		return domain(location.href) !== domain(url);
+	};
+})();
 
 // CONSTS / ENUMS
 SeoField.Levels = {
@@ -318,4 +453,21 @@ SeoField.Reasons = {
 
 	descFail: 'The description does not contain the keyword. Try adding it near the beginning of the description.',
 	descSuccess: 'The description contains the keyword.',
+
+	wordCountFail: 'Your text contains {l} words, this is less than the recommended 300 word minimum.',
+	wordCountSuccess: 'Your text contains {l} words, this is more than the recommended 300 word minimum.',
+
+	firstParagraphFail: 'The keyword does not appear in the first paragraph of your text. Try adding it.',
+	firstParagraphSuccess: 'The keyword appears in the first paragraph of your text.',
+
+	imagesFail: 'Less than half of the images have alt tags containing the keyword, try adding it to more images.',
+	imagesOk: 'Half or more of the images have alt tags containing the keyword. To improve this, try adding keywords to all the images alt tags.',
+	imagesSuccess: 'All of the images have alt tags containing the keyword.',
+
+	linksFail: 'The page does not contain any outgoing links. Try adding some.',
+	linksSuccess: 'The page contains outgoing links.',
+
+	headingsFail: 'The page does not contain any headings that contain the keyword. Try adding some with the keyword.',
+	headingsOk: 'The page contains some lower importance headings that contain the keyword. Try adding the keyword to some h2\'s.',
+	headingsSuccess: 'The page contains higher importance headings with the keyword.',
 };
