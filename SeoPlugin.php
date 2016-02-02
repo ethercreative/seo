@@ -24,7 +24,7 @@ class SeoPlugin extends BasePlugin {
 
 	public function getVersion()
 	{
-		return '0.0.1';
+		return '0.0.3';
 	}
 
 	public function getDeveloper()
@@ -41,25 +41,46 @@ class SeoPlugin extends BasePlugin {
 	{
 		return array(
 			'titleSuffix' => array(AttributeType::String),
-			'readability' => array(AttributeType::Mixed)
+			'readability' => array(AttributeType::Mixed),
+			'fieldTemplates' => array(AttributeType::Mixed)
 		);
 	}
 
 	public function getSettingsHtml()
 	{
+		return $this->generateSettingsHtml('seo/settings', $this->getSettings());
+	}
+
+	public function generateSettingsHtml ($template, $settings) {
 		$fieldsRaw = craft()->fields->getAllFields();
 		$fields = [];
 
 		foreach ($fieldsRaw as $field) {
-			$fields[] = array(
+			$fields[$field->handle] = array(
 				'label' => $field->name,
-				'value' => $field->handle
+				'value' => $field->handle,
+				'type' => $field->fieldType->name
 			);
 		}
 
-		return craft()->templates->render('seo/settings', array(
-			'settings' => $this->getSettings(),
-			'fields' => $fields
+		$unsetFields = $fields;
+
+		if ($settings->readability !== null) {
+			foreach ($settings->readability as $field) {
+				if ($unsetFields[$field])
+					unset($unsetFields[$field]);
+			}
+		}
+
+		$namespaceId = craft()->templates->namespaceInputId(craft()->templates->formatInputId('readability'));
+
+		craft()->templates->includeJsResource('seo/js/seo-settings.js');
+		craft()->templates->includeJs("new ReadabilitySorter('#{$namespaceId}');");
+
+		return craft()->templates->render($template, array(
+			'settings' => $settings,
+			'fields' => $fields,
+			'unsetFields' => $unsetFields
 		));
 	}
 

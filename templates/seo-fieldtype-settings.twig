@@ -1,0 +1,40 @@
+{% import "_includes/forms" as forms %}
+
+{{ forms.textField({
+	label: 'Title Suffix',
+	instructions: 'A string appended, after a space, to the page title. This can be removed on a per-entry basis.',
+	name: 'titleSuffix',
+	value: settings.titleSuffix is defined ? settings.titleSuffix : ''
+}) }}
+
+{% macro readField (field, isChecked) %}
+	<div class="readabiltiy-row" style="margin:5px 0">
+		<div class="icon move"></div>
+		<label>
+			<input type="checkbox" name="readability[]" style="margin:0 5px"
+			       value="{{ field.value }}" {{ isChecked ? 'checked' : '' }}>
+			{{ field.label }}
+		</label>
+	</div>
+{% endmacro %}
+
+{% import _self as _ %}
+
+<div class="field" id="readability">
+	<div class="heading">
+		<label>Readability Check</label>
+		<div class="instructions">What fields should the plugin look for when determining readability? The order of the
+			fields dictates the order they would appear on a page, and the order in which the plugin reads them.</div>
+	</div>
+
+	<div class="input">
+		<input type="hidden" name="readability">
+		{% for field in settings.readability %}
+			{% set f = fields[field] %}
+			{{ _.readField(f, true) }}
+		{% endfor %}
+		{% for field in unsetFields %}
+			{{ _.readField(field, false) }}
+		{% endfor %}
+	</div>
+</div>

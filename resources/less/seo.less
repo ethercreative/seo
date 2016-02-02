@@ -47,15 +47,24 @@
 			text-overflow: ellipsis;
 			color: #1a0dab;
 
-			border: none;
+			border: 1px solid transparent;
+			outline: none;
 
 			overflow: hidden;
+
+			transition: box-shadow 0.1s ease, border-color 0.1s ease;
+
+			&:focus {
+				border-color: #7dafe8;
+				box-shadow: 0 0 5px #80caff;
+			}
 		}
 
 		.url {
 			display: block;
 			width: 100%;
 			height: 17px;
+			margin-left: 2px;
 
 			color: #006621;
 			font-size: 14px;
@@ -74,12 +83,19 @@
 			font-size: 13px;
 			color: #545454;
 
-			border: none;
+			border: 1px solid transparent;
+			outline: none;
 
-			transition: height 0.2s ease;
+			transition: height 0.2s ease, box-shadow 0.1s ease, border-color 0.1s ease;
+
+			&:focus {
+				border-color: #7dafe8;
+				box-shadow: 0 0 5px #80caff;
+			}
 
 			&.invalid {
-				border: 1px solid #da5a47;
+				border-color: #da5a47 !important;
+				box-shadow: 0 0 5px #ff6450 !important;
 			}
 		}
 	}
