@@ -40,6 +40,7 @@ class SeoPlugin extends BasePlugin {
 	protected function defineSettings()
 	{
 		return array(
+			// Fieldtype Settings
 			'titleSuffix' => array(AttributeType::String),
 			'readability' => array(AttributeType::Mixed),
 			'fieldTemplates' => array(AttributeType::Mixed)

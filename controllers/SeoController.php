@@ -137,7 +137,7 @@ class SeoController extends BaseController
 				$fieldTemplate = "{{ entry.{$field} }}";
 			}
 
-			$template .= "<seo-parse data-field='{$field}'>{$fieldTemplate}</seo-parse>";
+			$template .= "<seo-parse data-field='{$field}'>{$fieldTemplate}</seo-parse> "; // Space at end is important!
 		}
 
 		$output = $this->renderTemplate(new StringTemplate(md5(time()), $template), array(

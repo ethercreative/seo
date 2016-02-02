@@ -131,18 +131,22 @@
 			height: 14px;
 			font-size: 0;
 
+			transform-origin: top;
+			transition: transform 0.5s ease;
+
 			.item {
 				position: absolute;
 				z-index: 2;
 				top: 0;
 
 				display: block;
-				width: 100%/13;
+				width: 100%;
 				height: 15px;
 
 				background: #cccccc;
 
-				transition: left 0.5s ease, top 0.5s ease, width 0.5s ease, border-radius 0.5s ease, transform 0.5s ease;
+				transition: transform 0.2s ease;
+				transform-origin: top left;
 
 				&:first-child {
 					border-radius: 3px 0 0 0;
@@ -153,8 +157,8 @@
 				}
 
 				&.good { background: #3eda80; }
-				&.neutral { background: #ffab47; }
-				&.poor { background: #ff4750; }
+				&.ok { background: #ffab47; }
+				&.bad { background: #ff4750; }
 			}
 		}
 
@@ -170,10 +174,35 @@
 
 			&-inner {
 				padding: 6px 20px 20px 50px;
+
+				transition: opacity 0.5s ease;
+
+				opacity: 0;
 			}
 
 			li {
+				position: relative;
 				margin-bottom: 15px;
+
+				&:last-child {
+					margin-bottom: 0;
+				}
+
+				&:before {
+					content: '';
+					position: absolute;
+					top: 2px;
+					left: -30px;
+
+					width: 15px;
+					height: 15px;
+
+					border-radius: 3px;
+				}
+
+				&.good:before { background: #3eda80; }
+				&.ok:before { background: #ffab47; }
+				&.bad:before { background: #ff4750; }
 			}
 		}
 
@@ -183,10 +212,12 @@
 		}
 
 		&.open {
-			.item {
-				width: 15px;
-				border-radius: 3px !important;
-				transform: translate3d(-30px, 2px, 0);
+			.bar {
+				transform: scale(1, 0.2);
+			}
+
+			.details-inner {
+				opacity: 1;
 			}
 
 			.toggle-score {
