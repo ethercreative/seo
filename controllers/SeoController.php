@@ -9,7 +9,7 @@ class SeoController extends BaseController
 	{
 		$namespace = 'settings';
 
-		$settings = craft()->plugins->getPlugin('seo')->getSettings();
+		$settings = craft()->seo->settings();
 		$fieldsRaw = craft()->fields->getAllFields();
 		$fields = [];
 

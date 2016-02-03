@@ -45,7 +45,14 @@ class SeoPlugin extends BasePlugin {
 	public function registerCpRoutes ()
 	{
 		return array(
-			'seo/settings' => array('action' => 'seo/settings')
+			'seo/settings' => array('action' => 'seo/settings'),
+		);
+	}
+
+	public function registerSiteRoutes ()
+	{
+		return array(
+			$this->getSettings()->sitemapName . '.xml' => array('action' => 'seo/sitemap/generate')
 		);
 	}
 

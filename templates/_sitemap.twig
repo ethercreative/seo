@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+	{# Sections #}
+
+	{% for section in sectionUrls %}
+	<url>
+		<loc>{{ url(section.url) }}</loc>
+		<lastmod>{{ section.lastmod }}</lastmod>
+		<changefreq>{{ section.frequency }}</changefreq>
+		<priority>{{ section.priority }}</priority>
+	</url>
+	{% endfor %}
+
+	{# Custom Urls #}
+
+	{% for custom in customUrls %}
+	<url>
+		<loc>{{ url(custom.url) }}</loc>
+		<changefreq>{{ custom.frequency }}</changefreq>
+		<priority>{{ custom.priority }}</priority>
+	</url>
+	{% endfor %}
+
+</urlset>
