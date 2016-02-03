@@ -7,6 +7,8 @@ class SeoController extends BaseController
 
 	public function actionSettings ()
 	{
+		$namespace = 'settings';
+
 		$settings = craft()->plugins->getPlugin('seo')->getSettings();
 		$fieldsRaw = craft()->fields->getAllFields();
 		$fields = [];
@@ -28,23 +30,31 @@ class SeoController extends BaseController
 			}
 		}
 
-		$namespaceId = craft()->templates->namespaceInputId(craft()->templates->formatInputId('readability'));
-
 		craft()->templates->includeJsResource('seo/js/seo-settings.js');
-		craft()->templates->includeJs("new ReadabilitySorter('#{$namespaceId}');");
+		craft()->templates->includeJs("new SeoSettings('{$namespace}');");
 
 		$this->renderTemplate('seo/settings', array(
+			// Global
+			'namespace' => $namespace,
 			'settings' => $settings,
-			'fields' => $fields,
-			'unsetFields' => $unsetFields,
+
+			// Misc
 			'tabs' => [
-				['label' => 'Sitemap', 'url' => '#tab1', 'class' => null],
-				['label' => 'Redirect', 'url' => '#tab2', 'class' => null],
-				['label' => 'Fieldtype', 'url' => '#tab3', 'class' => null],
+				['label' => 'Sitemap', 'url' => "#{$namespace}-tab1", 'class' => null],
+				['label' => 'Redirects', 'url' => "#{$namespace}-tab2", 'class' => null],
+				['label' => 'Fieldtype', 'url' => "#{$namespace}-tab3", 'class' => null],
 			],
 			'crumbs' => [
-				['label' => 'SEO', 'url' => 'seo'],
-			]
+				['label' => 'Settings', 'url' => 'settings'],
+				['label' => 'Plugins', 'url' => 'settings/plugins'],
+			],
+
+			// Sitemap
+			'sections' => craft()->seo_sitemap->getValidSections(),
+
+			// Fieldtype
+			'fields' => $fields,
+			'unsetFields' => $unsetFields,
 		));
 	}
 

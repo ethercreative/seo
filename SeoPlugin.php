@@ -24,7 +24,7 @@ class SeoPlugin extends BasePlugin {
 
 	public function getVersion()
 	{
-		return '0.0.3';
+		return '0.0.4';
 	}
 
 	public function getDeveloper()
@@ -52,6 +52,11 @@ class SeoPlugin extends BasePlugin {
 	protected function defineSettings()
 	{
 		return array(
+			// Sitemap Settings
+			'sitemapName' => array(AttributeType::String, 'default' => 'sitemap'),
+			'sections' => array(AttributeType::Mixed),
+			'customUrls' => array(AttributeType::Mixed),
+
 			// Fieldtype Settings
 			'titleSuffix' => array(AttributeType::String),
 			'readability' => array(AttributeType::Mixed),

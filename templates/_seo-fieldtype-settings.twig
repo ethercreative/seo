@@ -7,12 +7,17 @@
 	value: settings.titleSuffix is defined ? settings.titleSuffix : ''
 }) }}
 
-{% macro readField (field, isChecked) %}
+{% macro readField (forms, field, isChecked) %}
 	<div class="readabiltiy-row" style="margin:5px 0">
 		<div class="icon move"></div>
 		<label>
-			<input type="checkbox" name="readability[]" style="margin:0 5px"
-			       value="{{ field.value }}" {{ isChecked ? 'checked' : '' }}>
+			&nbsp;
+			{{ forms.checkbox({
+				name: "readability[]",
+				value: field.value,
+				checked: isChecked
+			}) }}
+			&nbsp;
 			{{ field.label }}
 		</label>
 	</div>
@@ -31,10 +36,10 @@
 		<input type="hidden" name="readability">
 		{% for field in settings.readability %}
 			{% set f = fields[field] %}
-			{{ _.readField(f, true) }}
+			{{ _.readField(forms, f, true) }}
 		{% endfor %}
 		{% for field in unsetFields %}
-			{{ _.readField(field, false) }}
+			{{ _.readField(forms, field, false) }}
 		{% endfor %}
 	</div>
 </div>
