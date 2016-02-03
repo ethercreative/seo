@@ -160,17 +160,24 @@ SeoField.prototype.calculateScore = function () {
 					}
 				});
 
-				self.content = content;
-				self.content.textOnly = self.content.textContent.replace('\r', ' ').replace('\n', ' ').replace('\r\n', ' ').replace(/\s+/gi, ' ');
-				self.content.stats = SeoField.TextStatistics(self.content.textContent);
+				if (content.textContent.replace('\r', '').replace('\n', '').replace('\r\n', '').replace(/\s+/gi, '') === '') {
+					self.currentScore.noContent = {
+						score: SeoField.Levels.BAD,
+						reason: 'You have no content, adding some would be a good start!'
+					};
+				} else {
+					self.content = content;
+					self.content.textOnly = self.content.textContent.replace('\r', ' ').replace('\n', ' ').replace('\r\n', ' ').replace(/\s+/gi, ' ');
+					self.content.stats = SeoField.TextStatistics(self.content.textContent);
 
-				self.currentScore.wordCount = self.judgeWordCount();
-				self.currentScore.firstParagraph = self.judgeFirstParagraph();
-				self.currentScore.images = self.judgeImages();
-				self.currentScore.links = self.judgeLinks();
-				self.currentScore.headings = self.judgeHeadings();
-				self.currentScore.density = self.judgeDensity();
-				self.currentScore.fleschEase = self.judgeFleschEase();
+					self.currentScore.wordCount = self.judgeWordCount();
+					self.currentScore.firstParagraph = self.judgeFirstParagraph();
+					self.currentScore.images = self.judgeImages();
+					self.currentScore.links = self.judgeLinks();
+					self.currentScore.headings = self.judgeHeadings();
+					self.currentScore.density = self.judgeDensity();
+					self.currentScore.fleschEase = self.judgeFleschEase();
+				}
 
 				self.updateScoreHtml();
 			});
@@ -260,7 +267,7 @@ SeoField.prototype.judgeTitleKeyword = function () {
 SeoField.prototype.judgeSlug = function () {
 	if (!this.slugField) return;
 
-	if (this.slugField.value.indexOf(this.keyword.value) > -1) {
+	if (this.slugField.textContent.indexOf(this.keyword.value) > -1) {
 		return {
 			score : SeoField.Levels.GOOD,
 			reason: SeoField.Reasons.slugSuccess
@@ -478,7 +485,7 @@ SeoField.getFieldsHTML = function (fields, cb) {
 		/* jshint ignore:end */
 	}
 
-	Craft.postActionRequest('seo/parser?fields=' + fields.join(','), data, function(response) {
+	Craft.postActionRequest('seo/fieldtype/parser?fields=' + fields.join(','), data, function(response) {
 		cb(response);
 	});
 };

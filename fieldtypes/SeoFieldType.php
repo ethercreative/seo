@@ -35,7 +35,7 @@ class SeoFieldType extends BaseFieldType {
 		craft()->templates->includeJsResource('seo/js/seo-field.js');
 		craft()->templates->includeJs("new SeoField('{$namespaceId}', ['{$readability}']);");
 
-		return craft()->templates->render('seo/seo-fieldtype', array(
+		return craft()->templates->render('seo/_seo-fieldtype', array(
 			'id' => $id,
 			'name' => $name,
 			'value' => $value,
@@ -48,7 +48,7 @@ class SeoFieldType extends BaseFieldType {
 
 	public function getSettingsHtml()
 	{
-		return craft()->plugins->getPlugin('seo')->generateSettingsHtml('seo/seo-fieldtype-settings', $this->getSettings());
+		return craft()->plugins->getPlugin('seo')->generateSettingsHtml('seo/_seo-fieldtype-settings', $this->getSettings());
 	}
 
 }

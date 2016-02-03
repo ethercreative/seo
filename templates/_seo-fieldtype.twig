@@ -12,8 +12,7 @@
 			<input type="text" name="{{ name }}[title]" class="title{{ isNew or value is null ? ' clean' : '' }}"
 			       title="Title" value="{{ value is not null ? value.title : titleSuffix }}" id="{{ id }}-title">
 
-			<div class="url">{{ siteUrl }}{% if ref != 'homepage/homepage' %}<span id="{{ id }}-ref">{{ ref }}</span>
-				<span id="{{ id }}-slug"></span>{% endif %}</div>
+			<div class="url">{{ siteUrl }}{% if ref != 'homepage/homepage' %}<span id="{{ id }}-ref">{{ ref }}</span><span id="{{ id }}-slug"></span>{% endif %}</div>
 
 			<textarea title="Description" name="{{ name }}[description]" class="description"
 			          rows="1" id="{{ id }}-description" placeholder="Click to add a description!"

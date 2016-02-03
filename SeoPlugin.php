@@ -37,6 +37,18 @@ class SeoPlugin extends BasePlugin {
 		return 'http://ethercreative.co.uk';
 	}
 
+	public function getSettingsUrl()
+	{
+		return 'seo/settings';
+	}
+
+	public function registerCpRoutes ()
+	{
+		return array(
+			'seo/settings' => array('action' => 'seo/settings')
+		);
+	}
+
 	protected function defineSettings()
 	{
 		return array(
@@ -45,44 +57,6 @@ class SeoPlugin extends BasePlugin {
 			'readability' => array(AttributeType::Mixed),
 			'fieldTemplates' => array(AttributeType::Mixed)
 		);
-	}
-
-	public function getSettingsHtml()
-	{
-		return $this->generateSettingsHtml('seo/settings', $this->getSettings());
-	}
-
-	public function generateSettingsHtml ($template, $settings) {
-		$fieldsRaw = craft()->fields->getAllFields();
-		$fields = [];
-
-		foreach ($fieldsRaw as $field) {
-			$fields[$field->handle] = array(
-				'label' => $field->name,
-				'value' => $field->handle,
-				'type' => $field->fieldType->name
-			);
-		}
-
-		$unsetFields = $fields;
-
-		if ($settings->readability !== null) {
-			foreach ($settings->readability as $field) {
-				if ($unsetFields[$field])
-					unset($unsetFields[$field]);
-			}
-		}
-
-		$namespaceId = craft()->templates->namespaceInputId(craft()->templates->formatInputId('readability'));
-
-		craft()->templates->includeJsResource('seo/js/seo-settings.js');
-		craft()->templates->includeJs("new ReadabilitySorter('#{$namespaceId}');");
-
-		return craft()->templates->render($template, array(
-			'settings' => $settings,
-			'fields' => $fields,
-			'unsetFields' => $unsetFields
-		));
 	}
 
 }
