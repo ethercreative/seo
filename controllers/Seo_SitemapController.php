@@ -36,7 +36,8 @@ class Seo_SitemapController extends BaseController
 
 		foreach ($this->settings->sections as $sectionId => $section)
 		{
-			$urls = array_merge($urls, $this->_generateUrls($sectionId, $section));
+			if ($section['enabled'])
+				$urls = array_merge($urls, $this->_generateUrls($sectionId, $section));
 		}
 
 		return $urls;

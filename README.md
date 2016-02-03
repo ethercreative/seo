@@ -4,6 +4,13 @@
 
 Clone this repo into `craft/plugins/seo`.
 
+
+### TODO
+* Sitemap support for custom routes & categories
+* Sitemap Craft Commerce support
+* **Test with multiple locales**
+
+
 ---
 
 Copyright © 2016 Ether Creative <hello@ethercreative.co.uk>

@@ -16,11 +16,13 @@
 	{# Custom Urls #}
 
 	{% for custom in customUrls %}
+	{% if custom.enabled %}
 	<url>
 		<loc>{{ url(custom.url) }}</loc>
 		<changefreq>{{ custom.frequency }}</changefreq>
 		<priority>{{ custom.priority }}</priority>
 	</url>
+	{% endif %}
 	{% endfor %}
 
 </urlset>

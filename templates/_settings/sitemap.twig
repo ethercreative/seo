@@ -24,7 +24,7 @@
 
 {{ forms.textField({
 	label: 'Sitemap Name',
-	instructions: 'The name of your sitemap file. It will be found at ' ~ siteUrl ~ '<code id="sitemapNameExample">' ~ (settings.sitemapName is defined ? settings.sitemapName : '') ~ '</code>.xml',
+	instructions: 'The name of your sitemap file. It will be found at <strong>' ~ siteUrl ~ '<code id="sitemapNameExample">' ~ (settings.sitemapName is defined ? settings.sitemapName : '') ~ '.xml</code></strong>',
 	name: 'sitemapName',
 	id: 'sitemapName',
 	value: settings.sitemapName is defined ? settings.sitemapName : ''

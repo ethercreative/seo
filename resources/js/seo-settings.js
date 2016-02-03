@@ -13,7 +13,7 @@ var SeoSettings = function (namespace) {
 SeoSettings.prototype.sitemapName = function () {
 	var example = document.getElementById(this.namespace + '-sitemapNameExample');
 	document.getElementById(this.namespace + '-sitemapName').addEventListener('input', function () {
-		example.textContent = this.value;
+		example.textContent = this.value + '.xml';
 	});
 };
 
