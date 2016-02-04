@@ -6,11 +6,11 @@ class Seo_SitemapController extends BaseController
 {
 	protected $allowAnonymous = true;
 
-	private $settings;
+	private $sitemap;
 
 	public function init()
 	{
-		$this->settings = craft()->seo->settings();
+		$this->sitemap = craft()->seo->getData('sitemap');
 		parent::init();
 	}
 
@@ -26,7 +26,7 @@ class Seo_SitemapController extends BaseController
 
 		$this->renderTemplate('_sitemap', array(
 			'sectionUrls' => $sectionUrls,
-			'customUrls' => $this->settings->customUrls,
+			'customUrls' => $this->sitemap['customUrls'],
 		));
 	}
 
@@ -34,7 +34,7 @@ class Seo_SitemapController extends BaseController
 	{
 		$urls = [];
 
-		foreach ($this->settings->sections as $sectionId => $section)
+		foreach ($this->sitemap['sections'] as $sectionId => $section)
 		{
 			if ($section['enabled'])
 				$urls = array_merge($urls, $this->_generateUrls($sectionId, $section));
