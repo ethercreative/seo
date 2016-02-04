@@ -1,12 +1,15 @@
-var SeoSettings = function (namespace) {
+var SeoSettings = function (namespace, run) {
 	this.namespace = namespace;
 
-	// Sitemap
-	this.sitemapName();
-	this.customUrls();
-
-	// Fieldtype
-	new SeoSettings.SortableList('#' + this.namespace + '-readability');
+	switch (run) {
+		case 'sitemap':
+			this.customUrls();
+			break;
+		case 'settings':
+			this.sitemapName();
+			new SeoSettings.SortableList('#' + this.namespace + '-readability');
+			break;
+	}
 };
 
 // SITEMAP
@@ -25,6 +28,12 @@ SeoSettings.prototype.customUrls = function () {
 	this.sitemapTable.firstElementChild.remove();
 
 	this.sitemapRow.classList.remove('hidden');
+
+	[].slice.call(this.sitemapTable.getElementsByClassName('delete')).forEach(function (el) {
+		el.addEventListener('click', function () {
+			el.parentNode.parentNode.remove();
+		});
+	});
 
 	document.getElementById(this.namespace + '-addCustomUrl').addEventListener('click', function () {
 		self.addCustomUrl();

@@ -1,6 +1,5 @@
-{% requireAdmin %}
 {% extends "_layouts/cp" %}
-{% set title = 'Settings' %}
+{% set title = 'Redirects' %}
 {% set fullPageForm = true %}
 
 {% import "_includes/forms" as forms %}
@@ -8,18 +7,13 @@
 {% block saveButton %}
 	<input type="hidden" name="action" value="plugins/savePluginSettings">
 	<input type="hidden" name="pluginClass" value="seo">
-	<input type="hidden" name="redirect" value="seo/settings">
+	<input type="hidden" name="redirect" value="seo/sitemap">
 
 	<input type="submit" class="btn submit" value="{{ 'Save'|t }}">
 {% endblock %}
 
 {% block content %}
 	{% namespace namespace %}
-	<div id="tab1">
-		{% include "seo/_settings/fieldtype" %}
-	</div>
-	<div id="tab2" class="hidden">
-		{% include "seo/_settings/general" %}
-	</div>
+	Fuck you
 	{% endnamespace %}
 {% endblock %}

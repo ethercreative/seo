@@ -24,7 +24,12 @@ class SeoPlugin extends BasePlugin {
 
 	public function getVersion()
 	{
-		return '0.0.4';
+		return '0.0.6';
+	}
+
+	public function getSchemaVersion()
+	{
+		return '0.0.7';
 	}
 
 	public function getDeveloper()
@@ -42,11 +47,19 @@ class SeoPlugin extends BasePlugin {
 		return 'seo/settings';
 	}
 
+	public function hasCpSection()
+	{
+		return (craft()->userSession->isAdmin() || craft()->userSession->checkPermission('accessPlugin-seo'));
+	}
+
 	public function registerCpRoutes ()
 	{
-		return array(
+		return [
+			'seo' => array('action' => 'seo/index'),
+			'seo/sitemap' => array('action' => 'seo/sitemapPage'),
+			'seo/redirects' => array('action' => 'seo/redirectsPage'),
 			'seo/settings' => array('action' => 'seo/settings'),
-		);
+		];
 	}
 
 	public function registerSiteRoutes ()
@@ -68,6 +81,14 @@ class SeoPlugin extends BasePlugin {
 			'titleSuffix' => array(AttributeType::String),
 			'readability' => array(AttributeType::Mixed),
 			'fieldTemplates' => array(AttributeType::Mixed)
+		);
+	}
+
+	public function registerUserPermissions()
+	{
+		return array(
+			'manageSitemap' => array('label' => Craft::t('Manage Sitemap')),
+			'manageRedirects' => array('label' => Craft::t('Manage Redirects')),
 		);
 	}
 
