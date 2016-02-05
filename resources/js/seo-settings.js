@@ -3,7 +3,10 @@ var SeoSettings = function (namespace, run) {
 
 	switch (run) {
 		case 'sitemap':
-			this.customUrls();
+			new SeoSettings.EditableTable(this.namespace + '-customUrls', this.namespace + '-addCustomUrl');
+			break;
+		case 'redirects':
+			new SeoSettings.EditableTable(this.namespace + '-redirects', this.namespace + '-addRedirect');
 			break;
 		case 'settings':
 			this.sitemapName();
@@ -20,34 +23,34 @@ SeoSettings.prototype.sitemapName = function () {
 	});
 };
 
-SeoSettings.prototype.customUrls = function () {
+// HELPERS
+SeoSettings.EditableTable = function (tableId, addButtonId) {
 	var self = this;
+	this.table = document.getElementById(tableId).getElementsByTagName('tbody')[0];
+	this.row = this.table.firstElementChild.cloneNode(true);
+	this.table.firstElementChild.remove();
 
-	this.sitemapTable = document.getElementById(this.namespace + '-customUrls').getElementsByTagName('tbody')[0];
-	this.sitemapRow = this.sitemapTable.firstElementChild.cloneNode(true);
-	this.sitemapTable.firstElementChild.remove();
+	this.row.classList.remove('hidden');
 
-	this.sitemapRow.classList.remove('hidden');
-
-	[].slice.call(this.sitemapTable.getElementsByClassName('delete')).forEach(function (el) {
+	[].slice.call(this.table.getElementsByClassName('delete')).forEach(function (el) {
 		el.addEventListener('click', function () {
 			el.parentNode.parentNode.remove();
 		});
 	});
 
-	document.getElementById(this.namespace + '-addCustomUrl').addEventListener('click', function () {
-		self.addCustomUrl();
+	document.getElementById(addButtonId).addEventListener('click', function () {
+		self.addRow();
 	});
 };
 
-SeoSettings.prototype.addCustomUrl = function () {
+SeoSettings.EditableTable.prototype.addRow = function () {
 	var i = 1;
 
-	if (this.sitemapTable.getElementsByTagName('tr').length > 0) {
-		i = parseInt(this.sitemapTable.lastElementChild.getAttribute('data-id')) + 1;
+	if (this.table.getElementsByTagName('tr').length > 0) {
+		i = parseInt(this.table.lastElementChild.getAttribute('data-id')) + 1;
 	}
 
-	var newRow = this.sitemapRow.cloneNode(true);
+	var newRow = this.row.cloneNode(true);
 	newRow.setAttribute('data-id', i);
 	newRow.innerHTML = newRow.innerHTML.replace(new RegExp('{i}', 'g'), i);
 
@@ -55,16 +58,9 @@ SeoSettings.prototype.addCustomUrl = function () {
 		newRow.remove();
 	});
 
-	this.sitemapTable.appendChild(newRow);
+	this.table.appendChild(newRow);
 };
 
-// Redirects
-// todo
-
-// FIELDTYPE
-// todo
-
-// HELPERS
 SeoSettings.SortableList = Garnish.DragSort.extend(
 {
 	$readability: null,

@@ -26,7 +26,15 @@ class SeoController extends BaseController
 	}
 
 
-	// DB
+	// DATA
+	public function actionSaveRedirects ()
+	{
+		if (craft()->seo->settings()->redirectMethod !== 'db')
+			craft()->seo_redirect->updateRedirects(craft()->request->getRequiredPost('data'));
+
+		$this->actionSaveData();
+	}
+
 	public function actionSaveData ()
 	{
 		$this->requirePostRequest();
@@ -62,7 +70,6 @@ class SeoController extends BaseController
 		$this->renderTemplate('seo/sitemap', array(
 			// Global
 			'namespace' => $namespace,
-			'sitemap' => craft()->seo->getData('sitemap'),
 			'subnav' => $this->subNav,
 			'selectedSubnavItem' => 'sitemap',
 
@@ -72,6 +79,7 @@ class SeoController extends BaseController
 			],
 
 			// Sitemap
+			'sitemap' => craft()->seo->getData('sitemap'),
 			'sections' => craft()->seo_sitemap->getValidSections(),
 		));
 	}
@@ -80,9 +88,7 @@ class SeoController extends BaseController
 	{
 		craft()->userSession->requirePermission('manageRedirects');
 
-		$namespace = 'settings';
-
-		$settings = craft()->seo->settings();
+		$namespace = 'data';
 
 		craft()->templates->includeJsResource('seo/js/seo-settings.js');
 		craft()->templates->includeJs("new SeoSettings('{$namespace}', 'redirects');");
@@ -90,7 +96,6 @@ class SeoController extends BaseController
 		$this->renderTemplate('seo/redirects', array(
 			// Global
 			'namespace' => $namespace,
-			'settings' => $settings,
 			'subnav' => $this->subNav,
 			'selectedSubnavItem' => 'redirects',
 
@@ -98,6 +103,9 @@ class SeoController extends BaseController
 			'crumbs' => [
 				['label' => 'SEO', 'url' => 'index'],
 			],
+
+			// Redirecs
+			'redirects' => craft()->seo->getData('redirects')['redirects'] ?: array(),
 		));
 	}
 

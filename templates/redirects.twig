@@ -5,15 +5,82 @@
 {% import "_includes/forms" as forms %}
 
 {% block saveButton %}
-	<input type="hidden" name="action" value="plugins/savePluginSettings">
-	<input type="hidden" name="pluginClass" value="seo">
-	<input type="hidden" name="redirect" value="seo/sitemap">
+	<input type="hidden" name="action" value="seo/saveRedirects">
+	<input type="hidden" name="name" value="redirects">
 
 	<input type="submit" class="btn submit" value="{{ 'Save'|t }}">
 {% endblock %}
 
+{% set redirectType = {
+	'301': '301 (Permanent)',
+	'302': '302 (Temporary)',
+} %}
+
 {% block content %}
 	{% namespace namespace %}
-	Fuck you
+	<div class="field">
+		{#<div class="heading">
+			<label>Redirects</label>
+		</div>#}
+		<div class="input">
+			<input type="hidden" name="redirects" value="">
+
+			<table class="shadow-box editable" id="redirects">
+				<thead>
+					<tr>
+						<th class="header">URI</th>
+						<th class="header">To</th>
+						<th class="header">Type</th>
+						<th class="header"></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr class="hidden" data-id="{i}">
+						<td class="textual">
+							<input type="hidden" name="redirects[{i}]" value="">
+							<textarea rows="1" style="height:46px" name="redirects[{i}][uri]"></textarea>
+						</td>
+						<td class="textual">
+							<textarea rows="1" style="height:46px" name="redirects[{i}][to]"></textarea>
+						</td>
+						<td class="thin">
+							{{ forms.selectField({
+								name: 'redirects[{i}][type]',
+								options: redirectType,
+								value: '301'
+							}) }}
+						</td>
+						<td class="thin action">
+							<a class="delete icon" title="Delete"></a>
+						</td>
+					</tr>
+
+				{% for redirect in redirects %}
+					<tr data-id="{{ loop.index }}">
+						<td class="textual">
+							<input type="hidden" name="redirects[{{ loop.index }}]" value="">
+							<textarea rows="1" style="height:46px" name="redirects[{{ loop.index }}][uri]">{{ redirect.uri }}</textarea>
+						</td>
+						<td class="textual">
+							<textarea rows="1" style="height:46px" name="redirects[{{ loop.index }}][to]">{{ redirect.to }}</textarea>
+						</td>
+						<td class="thin">
+							{{ forms.selectField({
+								name: 'redirects['~loop.index~'][type]',
+								options: redirectType,
+								value: redirect.type|default('301')
+							}) }}
+						</td>
+						<td class="thin action">
+							<a class="delete icon" title="Delete"></a>
+						</td>
+					</tr>
+				{% endfor %}
+				</tbody>
+			</table>
+
+			<div class="btn add icon" tabindex="0" id="addRedirect">Add a Redirect</div>
+		</div>
+	</div>
 	{% endnamespace %}
 {% endblock %}
