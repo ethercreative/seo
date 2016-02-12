@@ -1,6 +1,20 @@
 {% if not isEntry %}
 <div class="seo--field">
-	This field will only work in Entries!
+	<label>Snippet</label>
+	<div class="instructions">This is how the page might look in Google. Click the text to edit.</div>
+
+	<div class="seo--snippet">
+		<div class="inner">
+			<input type="text" name="{{ name }}[title]" class="title{{ isNew or value is null ? ' clean' : '' }}"
+			       title="Title" value="{{ value is not null ? value.title : titleSuffix }}" id="{{ id }}-title">
+
+			<div class="url">{{ siteUrl }}...</div>
+
+			<textarea title="Description" name="{{ name }}[description]" class="description"
+			          rows="1" id="{{ id }}-description" placeholder="Click to add a description!"
+			          oninput="this.style.height='';this.style.height=this.scrollHeight+'px';">{{ value is not null ? value.description : '' }}</textarea>
+		</div>
+	</div>
 </div>
 {% else %}
 <div class="seo--field">
