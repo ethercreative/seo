@@ -29,9 +29,6 @@ class SeoController extends BaseController
 	// DATA
 	public function actionSaveRedirects ()
 	{
-		if (craft()->seo->settings()->redirectMethod !== 'db')
-			craft()->seo_redirect->updateRedirects(craft()->request->getRequiredPost('data'));
-
 		$this->actionSaveData();
 	}
 

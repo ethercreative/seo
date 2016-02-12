@@ -11,17 +11,6 @@
 	instructions: 'If you are not using database redirect method, we need to know where your public directory is. Environment variables in single braces are allowed.',
 	name: 'publicPath',
 	id: 'publicPath',
+	placeholder: '{basePath}',
 	value: settings.publicPath is defined ? settings.publicPath : ''
 }) }}
-
-{{ forms.selectField({
-	label: 'Redirect Method',
-	instructions: 'How should we implement your redirects?',
-	name: 'redirectMethod',
-	options: {
-		'db': 'Database',
-		'ht': '.htaccess',
-	},
-	value: settings.redirectMethod is defined ? settings.redirectMethod : 'db'
-}) }}
-{#'wc': 'web.config',#}

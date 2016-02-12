@@ -77,7 +77,6 @@ class SeoPlugin extends BasePlugin {
 
 			// Redirect Settings
 			'publicPath' => array(AttributeType::String),
-			'redirectMethod' => array(AttributeType::String, 'default' => 'db'),
 
 			// Fieldtype Settings
 			'titleSuffix' => array(AttributeType::String),
@@ -96,37 +95,30 @@ class SeoPlugin extends BasePlugin {
 
 	public function init()
 	{
-		// Database Redirects
-		if ($this->getSettings()->redirectMethod == 'db')
+
+		if (craft()->request->isSiteRequest() && !craft()->request->isLivePreview())
 		{
-			if (craft()->request->isSiteRequest() && !craft()->request->isLivePreview())
+			craft()->onException = function(\CExceptionEvent $event)
 			{
-				craft()->onException = function(\CExceptionEvent $event)
+				if($event->exception->statusCode && $event->exception->statusCode == 404)
 				{
-					if($event->exception->statusCode && $event->exception->statusCode == 404)
+					$path = craft()->request->getPath();
+					$query = craft()->request->getQueryStringWithoutPath();
+
+					if ($query) $path .= '?' . $query;
+
+					if ($loc = craft()->seo_redirect->findRedirectByPath($path))
 					{
-						$path = craft()->request->getPath();
-						$query = craft()->request->getQueryStringWithoutPath();
-
-						if ($query) $path .= '?' . $query;
-
-						if ($loc = craft()->seo_redirect->findRedirectByPath($path))
-						{
-							$event->handled = true;
-							craft()->request->redirect($loc['to'], true, $loc['type']);
-						}
+						$event->handled = true;
+						craft()->request->redirect($loc['to'], true, $loc['type']);
 					}
-				};
-			}
+				}
+			};
 		}
 	}
 
 	public function prepSettings($settings)
 	{
-		// This assumes settings will be saved correctly...
-		if ($settings['redirectMethod'] !== 'db')
-			craft()->seo_redirect->updateRedirects(craft()->seo->getData('redirects'));
-
 		return parent::prepSettings($settings);
 	}
 
