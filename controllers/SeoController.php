@@ -10,7 +10,7 @@ class SeoController extends BaseController
 	public function init()
 	{
 		$this->subNav = [
-			'index' => ['label' => 'Statistics', 'url'=>'seo'],
+			'index' => ['label' => 'Dashboard', 'url'=>'seo'],
 		];
 
 		if (craft()->userSession->isAdmin() || craft()->userSession->checkPermission('manageSitemap'))
