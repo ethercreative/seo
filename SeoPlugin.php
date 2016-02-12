@@ -24,7 +24,7 @@ class SeoPlugin extends BasePlugin {
 
 	public function getVersion()
 	{
-		return '0.0.7';
+		return '0.0.8';
 	}
 
 	public function getSchemaVersion()
@@ -40,6 +40,11 @@ class SeoPlugin extends BasePlugin {
 	public function getDeveloperUrl()
 	{
 		return 'http://ethercreative.co.uk';
+	}
+
+	public function getReleaseFeedUrl()
+	{
+		return 'https://raw.githubusercontent.com/ethercreative/seo/master/releases.json';
 	}
 
 	public function getSettingsUrl()

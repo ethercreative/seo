@@ -16,6 +16,7 @@ var SeoField = function (namespace, readabilityFields) {
 	this.score = document.getElementById(namespace + "-score");
 	this.list = document.getElementById(namespace + "-list");
 	this.bar = document.getElementById(namespace + "-bar");
+	this.scoreField = document.getElementById(namespace + "-score-field");
 	this.toggle();
 
 	// Calculate
@@ -187,6 +188,7 @@ SeoField.prototype.calculateScore = function () {
 	} else {
 		this.toggle.close();
 		this.score.classList.add('disabled');
+		this.scoreField.value = '';
 	}
 };
 
@@ -213,6 +215,18 @@ SeoField.prototype.updateScoreHtml = function () {
 	good.style.transform = 'scale(' + goodW + ', 1)';
 	ok.style.transform = 'translateX(' + (goodW * 100) + '%) scale(' + okW + ', 1)';
 	bad.style.transform = 'translateX(' + ((goodW + okW) * 100) + '%) scale(' + badW + ', 1)';
+
+	var s = '';
+
+	if (badW > goodW) {
+		s = 'bad';
+	} else if ((badW + okW) > goodW) {
+		s = 'ok';
+	} else {
+		s = 'good';
+	}
+
+	this.scoreField.value = s;
 };
 
 // CALCULATOR

@@ -48,8 +48,8 @@ All parameters are optional.
 
 
 ### TODO
-* Sitemap support for custom routes & categories
-* Sitemap Craft Commerce support
+* Sitemap support for categories
+* Add hooks to sitemap for plugin support
 * **Test with multiple locales**
 
 

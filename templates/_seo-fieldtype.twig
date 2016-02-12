@@ -15,6 +15,8 @@
 			          oninput="this.style.height='';this.style.height=this.scrollHeight+'px';">{{ value is not null ? value.description : '' }}</textarea>
 		</div>
 	</div>
+
+	<input type="hidden" name="{{ name }}[score]" value="">
 </div>
 {% else %}
 <div class="seo--field">
@@ -59,5 +61,7 @@
 			<span class="close">Minimize your score</span>
 		</a>
 	</div>
+
+	<input type="hidden" name="{{ name }}[score]" value="{{ value is not null ? value.score : '' }}"  id="{{ id }}-score-field">
 </div>
 {% endif %}

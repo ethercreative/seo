@@ -2,7 +2,7 @@
 
 namespace Craft;
 
-class SeoFieldType extends BaseFieldType {
+class SeoFieldType extends BaseFieldType implements IPreviewableFieldType {
 
 	public function getName()
 	{
@@ -76,6 +76,28 @@ class SeoFieldType extends BaseFieldType {
 			'fields' => $fields,
 			'unsetFields' => $unsetFields
 		));
+	}
+
+	public function getTableAttributeHtml($value)
+	{
+		$ret = '';
+
+		switch ($value['score']) {
+			case '':
+				$ret = '<span class="status active" style="margin-top:5px;background:#ccc;" title="Unranked"></span>';
+				break;
+			case 'bad':
+				$ret = '<span class="status active" style="margin-top:5px;background:#ff4750;" title="Bad"></span>';
+				break;
+			case 'ok':
+				$ret = '<span class="status active" style="margin-top:5px;background:#ffab47;" title="Okay"></span>';
+				break;
+			case 'good':
+				$ret = '<span class="status active" style="margin-top:5px;background:#3eda80;" title="Good"></span>';
+				break;
+		}
+
+		return $ret;
 	}
 
 }
