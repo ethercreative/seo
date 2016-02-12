@@ -24,7 +24,7 @@ class SeoPlugin extends BasePlugin {
 
 	public function getVersion()
 	{
-		return '0.0.6';
+		return '0.0.7';
 	}
 
 	public function getSchemaVersion()
@@ -100,17 +100,18 @@ class SeoPlugin extends BasePlugin {
 		{
 			craft()->onException = function(\CExceptionEvent $event)
 			{
-				if($event->exception->statusCode && $event->exception->statusCode == 404)
+				if($event->exception->statusCode)
 				{
-					$path = craft()->request->getPath();
-					$query = craft()->request->getQueryStringWithoutPath();
+					if ($event->exception->statusCode == 404) {
+						$path = craft()->request->getPath();
+						$query = craft()->request->getQueryStringWithoutPath();
 
-					if ($query) $path .= '?' . $query;
+						if ($query) $path .= '?' . $query;
 
-					if ($loc = craft()->seo_redirect->findRedirectByPath($path))
-					{
-						$event->handled = true;
-						craft()->request->redirect($loc['to'], true, $loc['type']);
+						if ($loc = craft()->seo_redirect->findRedirectByPath($path)) {
+							$event->handled = true;
+							craft()->request->redirect($loc['to'], true, $loc['type']);
+						}
 					}
 				}
 			};
