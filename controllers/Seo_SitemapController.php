@@ -26,7 +26,7 @@ class Seo_SitemapController extends BaseController
 
 		$this->renderTemplate('_sitemap', array(
 			'sectionUrls' => $sectionUrls,
-			'customUrls' => $this->sitemap['customUrls'],
+			'customUrls' => array_key_exists('customUrls', $this->sitemap) ? $this->sitemap['customUrls'] : [],
 		));
 	}
 
@@ -34,10 +34,12 @@ class Seo_SitemapController extends BaseController
 	{
 		$urls = [];
 
-		foreach ($this->sitemap['sections'] as $sectionId => $section)
-		{
-			if ($section['enabled'])
-				$urls = array_merge($urls, $this->_generateUrls($sectionId, $section));
+		if (array_key_exists('sections', $this->sitemap)) {
+			foreach ($this->sitemap['sections'] as $sectionId => $section)
+			{
+				if ($section['enabled'])
+					$urls = array_merge($urls, $this->_generateUrls($sectionId, $section));
+			}
 		}
 
 		return $urls;

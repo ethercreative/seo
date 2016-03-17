@@ -81,7 +81,7 @@
 							{{ forms.checkbox({
 								name: "sections["~section.id~"][enabled]",
 								value: true,
-								checked: (sitemap.sections ? sitemap.sections[section.id].enabled : true)
+								checked: (sitemap.sections is defined and sitemap.sections[section.id] ? sitemap.sections[section.id].enabled : true)
 							}) }}
 						</td>
 					</tr>
@@ -141,38 +141,40 @@
 					</td>
 				</tr>
 
-				{% for custom in sitemap.customUrls %}
-					<tr data-id="{{ loop.index }}">
-						<td class="textual">
-							<input type="hidden" name="customUrls[{{ loop.index }}]">
-							<textarea rows="1" style="height:46px" name="customUrls[{{ loop.index }}][url]">{{ custom.url }}</textarea>
-						</td>
-						<td class="thin" style="text-align:left;">
-							{{ forms.selectField({
-								name: 'customUrls['~loop.index~'][frequency]',
-								options: changeFrequencyOpts,
-								value: custom.frequency|default('weekly')
-							}) }}
-						</td>
-						<td class="thin">
-							{{ forms.selectField({
-								name: 'customUrls['~loop.index~'][priority]',
-								options: priorityOpts,
-								value: custom.priority|default('0.5')
-							}) }}
-						</td>
-						<td class="thin">
-							{{ forms.checkbox({
-								name: 'customUrls['~loop.index~'][enabled]',
-								value: true,
-								checked: custom.enabled
-							}) }}
-						</td>
-						<td class="thin action">
-							<a class="delete icon" title="Delete"></a>
-						</td>
-					</tr>
-				{% endfor %}
+				{% if sitemap.customUrls is defined %}
+					{% for custom in sitemap.customUrls %}
+						<tr data-id="{{ loop.index }}">
+							<td class="textual">
+								<input type="hidden" name="customUrls[{{ loop.index }}]">
+								<textarea rows="1" style="height:46px" name="customUrls[{{ loop.index }}][url]">{{ custom.url }}</textarea>
+							</td>
+							<td class="thin" style="text-align:left;">
+								{{ forms.selectField({
+									name: 'customUrls['~loop.index~'][frequency]',
+									options: changeFrequencyOpts,
+									value: custom.frequency|default('weekly')
+								}) }}
+							</td>
+							<td class="thin">
+								{{ forms.selectField({
+									name: 'customUrls['~loop.index~'][priority]',
+									options: priorityOpts,
+									value: custom.priority|default('0.5')
+								}) }}
+							</td>
+							<td class="thin">
+								{{ forms.checkbox({
+									name: 'customUrls['~loop.index~'][enabled]',
+									value: true,
+									checked: custom.enabled
+								}) }}
+							</td>
+							<td class="thin action">
+								<a class="delete icon" title="Delete"></a>
+							</td>
+						</tr>
+					{% endfor %}
+				{% endif %}
 				</tbody>
 			</table>
 

@@ -102,7 +102,7 @@ class SeoController extends BaseController
 			],
 
 			// Redirecs
-			'redirects' => craft()->seo->getData('redirects')['redirects'] ?: array(),
+			'redirects' => craft()->seo->getData('redirects') ? craft()->seo->getData('redirects')['redirects'] : array(),
 		));
 	}
 
