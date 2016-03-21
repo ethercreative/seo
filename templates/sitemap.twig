@@ -93,6 +93,60 @@
 
 	<div class="field">
 		<div class="heading">
+			<label>Categories</label>
+			<div class="instructions">How should we handle each category?</div>
+		</div>
+		<div class="input">
+			<input type="hidden" name="categories" value="">
+
+			<table class="shadow-box editable">
+				<thead>
+				<tr>
+					<th class="header">Category</th>
+					<th class="header">URL Format</th>
+					<th class="header" style="white-space:nowrap">Change Frequency</th>
+					<th class="header">Priority</th>
+					<th class="header">Enabled?</th>
+				</tr>
+				</thead>
+				<tbody>
+				{% for category in categories %}
+					<tr>
+						<td style="text-align:left;">
+							<strong>{{ category.name }}</strong>
+							<input type="hidden" name="categories[{{ category.id }}]" value="">
+						</td>
+						<td style="text-align:left;">{{ category.locales[craft.locale].urlFormat }}</td>
+						<td class="thin" style="text-align:left;">
+							{{ forms.selectField({
+								name: "categories["~category.id~"][frequency]",
+								options: changeFrequencyOpts,
+								value: sitemap.categories[category.id].frequency|default('weekly')
+							}) }}
+						</td>
+						<td class="thin">
+							{{ forms.selectField({
+								name: "categories["~category.id~"][priority]",
+								options: priorityOpts,
+								value: sitemap.categories[category.id].priority|default('0.5')
+							}) }}
+						</td>
+						<td class="thin">
+							{{ forms.checkbox({
+								name: "categories["~category.id~"][enabled]",
+								value: true,
+								checked: (sitemap.categories is defined and sitemap.categories[category.id] is defined ? sitemap.categories[category.id].enabled : true)
+							}) }}
+						</td>
+					</tr>
+				{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+	<div class="field">
+		<div class="heading">
 			<label>Custom URLs</label>
 			<div class="instructions">Add additional URLs that may not appear in Craft (i.e. public templates). <strong>Do not include {{ siteUrl }}</strong></div>
 		</div>

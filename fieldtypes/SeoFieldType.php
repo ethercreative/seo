@@ -35,6 +35,11 @@ class SeoFieldType extends BaseFieldType implements IPreviewableFieldType {
 		craft()->templates->includeJsResource('seo/js/seo-field.js');
 		craft()->templates->includeJs("new SeoField('{$namespaceId}', ['{$readability}']);");
 
+		$url = $this->element->getUrl();
+
+		if ($this->element->uri != '__home__')
+			$url = substr($url, 0, strrpos( $url, '/'));
+
 		return craft()->templates->render('seo/_seo-fieldtype', array(
 			'id' => $id,
 			'name' => $name,
@@ -42,7 +47,8 @@ class SeoFieldType extends BaseFieldType implements IPreviewableFieldType {
 			'titleSuffix' => $settings->titleSuffix ?: $settingsGlobal->titleSuffix,
 			'isEntry' => $this->element->elementType === 'Entry',
 			'isNew' => $this->element->title === null,
-			'ref' => $this->element->getRef()
+			'isHome' => $this->element->uri == '__home__',
+			'url' => $url . '/',
 		));
 	}
 

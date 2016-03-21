@@ -59,12 +59,10 @@ SeoField.prototype.title = function () {
 SeoField.prototype.slug = function () {
 	var slug = this.slugField = document.getElementById(this.namespace + '-slug'),
 		s = document.getElementById('slug'),
-		r = document.getElementById(this.namespace + '-ref'),
 		self = this;
 
 	if (s && slug) {
 		slug.textContent = s.value;
-		r.textContent = r.textContent.replace(s.value, '');
 
 		// On a loop because crafts slug generation doesn't trigger any events
 		setInterval(function () {
@@ -98,8 +96,10 @@ SeoField.prototype.desc = function () {
 		});
 	}
 
-	Craft.livePreview.on('enter', adjustHeight);
-	Craft.livePreview.on('exit', adjustHeight);
+	if (Craft.livePreview) {
+		Craft.livePreview.on('enter', adjustHeight);
+		Craft.livePreview.on('exit', adjustHeight);
+	}
 	window.addEventListener('resize', adjustHeight);
 
 	// Disable line breaks
@@ -141,7 +141,7 @@ SeoField.prototype.toggle = function () {
 };
 
 SeoField.prototype.calculateScore = function () {
-	if (this.keyword.value) {
+	if (this.keyword && this.keyword.value) {
 		this.currentScore = {};
 		var self = this;
 
@@ -246,12 +246,12 @@ SeoField.prototype.judgeTitleLength = function () {
 SeoField.prototype.judgeTitleKeyword = function () {
 	var ret;
 
-	if (this.titleField.value.indexOf(this.keyword.value) > -1) {
-		var w = this.titleField.value.split(' '),
+	if (this.titleField.value.toLowerCase().indexOf(this.keyword.value.toLowerCase()) > -1) {
+		var w = this.titleField.value.toLowerCase().split(' '),
 			inFirstHalf = false;
 
 		for (var i = 0; i < w.length/2; i++) {
-			if (w[i] == this.keyword.value) {
+			if (w[i] == this.keyword.value.toLowerCase()) {
 				inFirstHalf = true;
 				break;
 			}
@@ -281,7 +281,7 @@ SeoField.prototype.judgeTitleKeyword = function () {
 SeoField.prototype.judgeSlug = function () {
 	if (!this.slugField) return;
 
-	if (this.slugField.textContent.indexOf(this.keyword.value) > -1) {
+	if (this.slugField.textContent.toLowerCase().indexOf(this.keyword.value.toLowerCase()) > -1) {
 		return {
 			score : SeoField.Levels.GOOD,
 			reason: SeoField.Reasons.slugSuccess
@@ -296,7 +296,7 @@ SeoField.prototype.judgeSlug = function () {
 
 // TODO: Check if keyword in first half / number of times it appears?
 SeoField.prototype.judgeDesc = function () {
-	if (this.descField.value.indexOf(this.keyword.value) > -1) {
+	if (this.descField.value.toLowerCase().indexOf(this.keyword.value.toLowerCase()) > -1) {
 		return {
 			score : SeoField.Levels.GOOD,
 			reason: SeoField.Reasons.descSuccess
@@ -325,7 +325,7 @@ SeoField.prototype.judgeWordCount = function () {
 };
 
 SeoField.prototype.judgeFirstParagraph = function () {
-	if (this.content.querySelector('p').textContent.indexOf(this.keyword.value) > -1) {
+	if (this.content.querySelector('p').textContent.toLowerCase().indexOf(this.keyword.value.toLowerCase()) > -1) {
 		return {
 			score : SeoField.Levels.GOOD,
 			reason: SeoField.Reasons.firstParagraphSuccess
@@ -345,7 +345,7 @@ SeoField.prototype.judgeImages = function () {
 
 		for (var i = 0; i < imgs.length; i++) {
 			if (imgs[i].getAttribute('alt') &&
-				imgs[i].getAttribute('alt').indexOf(this.keyword.value))
+				imgs[i].getAttribute('alt').toLowerCase().indexOf(this.keyword.value.toLowerCase()))
 				imgsWithAltKeyword++;
 		}
 
@@ -395,7 +395,7 @@ SeoField.prototype.judgeHeadings = function () {
 		var primary = 0, secondary = 0;
 
 		for (var i = 0; i < headings.length; i++) {
-			if (headings[i].textContent.indexOf(this.keyword.value) > -1) {
+			if (headings[i].textContent.toLowerCase().indexOf(this.keyword.value.toLowerCase()) > -1) {
 				if (['H1', 'H2'].indexOf(headings[i].nodeName) > -1) {
 					primary++;
 				} else {
@@ -429,15 +429,15 @@ SeoField.prototype.judgeDensity = function () {
 	function countInArray (arr, word) {
 		var c = 0, i = 0;
 		for (; i < arr.length; i++)
-			if (arr[i] == word) c++;
+			if (arr[i].toLowerCase() == word) c++;
 		return c;
 	}
 
-	var keyCount = countInArray(words, this.keyword.value);
+	var keyCount = countInArray(words, this.keyword.value.toLowerCase());
 
 	var keyPercent = parseFloat((100 + ((keyCount - words.length) / words.length) * 100).toFixed(2));
 
-	if (keyPercent > 0 && keyPercent < 1.0) {
+	if (keyPercent < 1.0) {
 		return {
 			score : SeoField.Levels.BAD,
 			reason: SeoField.Reasons.densityFailUnder.replace('{d}', keyPercent)

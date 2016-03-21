@@ -2,7 +2,37 @@
 
 # SEO for Craft CMS
 
+SEO for Craft does three things that will help your sites SEO, and does them really damn well *(and it has full localisation support!)*.
+
+### The Field Type
+
+The SEO field type helps give users an idea of how their page will look in Google, and how their pages content scores when compared to a specific keyword.
+
+The field type allows users to manage the meta of their page in one simple and easy to use input that has the added bonus of giving them an idea of how their page will show up in a Google search.
+
+The field also contains a *Focus Keyword* input and *Page Score*. This is used to workout how relevant a key word or phrase is to your entry and how well the page is likely to do in a search for that keyword.
+
+The Page Score also contains a breakdown of your entries score, and tips on where it can be improved.
+
+![SEO for Craft CMS](resources/imgs/fieldtype.png)
+
+### The Sitemap
+
+SEO for Craft boasts an extremely powerful, yet simple to use Sitemap manager. With automatic support for all your site’s sections and categories (with localisations taken into account), and the ability to easily add custom URLs (useful for public templates that aren’t content managed), keeping your sitemap up-to-date has never been easier.
+
+With SEO for Craft’s sitemap manager you have complete control over what content you want to have appear on your sitemap as well as managing its change frequency and priority in your site.
+
+### The Redirects
+
+When moving from your old, awful site to your shiny new Craft one, you’ll want to make sure that all your old pages are redirected to their new counterparts. Redirects are easy to manage with SEO for Craft.
+
+SEO for Crafts redirect manager lets you easily add 301 & 302 redirects, with full regex support!
+
+## Installation & Usage
+
 Clone this repo into `craft/plugins/seo`.
+
+Before using the SEO field type, you’ll need to ensure all the settings are correct. You can find the settings under the SEO plugin menu in the sidebar, or via the plugin menu.
 
 ### Fieldtype Usage
 
@@ -34,7 +64,7 @@ Replace or modify your current SEO head code with, or to match, the following:
 
 The code snippet above assumes that you will be creating a variable call `seo` in your templates that will return either the SEO field or a custom SEO object (see below).
 
-**Custom SEO Object**
+### Custom SEO Object
 
 In some cases, you will not have access to an SEO field, but will want to set the page title & description. You can do this by creating a custom SEO object using the function below:
 
@@ -47,10 +77,16 @@ The last parameter is a boolean that tell the plugin whether or not to include t
 All parameters are optional.
 
 
-### TODO
-* Sitemap support for categories
-* Add hooks to sitemap for plugin support
-* **Test with multiple locales**
+## TODO
+- [ ] Add hooks for plugin support
+- [ ] Include more fields in snippet (i.e. Type, Image, etc.)
+- [ ] Allow for multiple focus keywords
+- [ ] Make the SEO dashboard more useful. Somehow.
+
+## Changelog
+
+### 1.0.0
+- Initial Release
 
 
 ---

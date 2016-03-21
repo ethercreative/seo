@@ -78,6 +78,7 @@ class SeoController extends BaseController
 			// Sitemap
 			'sitemap' => craft()->seo->getData('sitemap'),
 			'sections' => craft()->seo_sitemap->getValidSections(),
+			'categories' => craft()->seo_sitemap->getValidCategories(),
 		));
 	}
 

@@ -12,4 +12,11 @@ class Seo_SitemapService extends BaseApplicationComponent
 		});
 	}
 
+	public function getValidCategories ()
+	{
+		return array_filter(craft()->categories->allGroups, function ($category) {
+			return $category->hasUrls;
+		});
+	}
+
 }

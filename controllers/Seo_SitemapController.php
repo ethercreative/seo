@@ -17,6 +17,7 @@ class Seo_SitemapController extends BaseController
 	public function actionGenerate ()
 	{
 		$sectionUrls = $this->_generateSections();
+		$categoryUrls = $this->_generateCategories();
 
 		HeaderHelper::setContentTypeByExtension('xml');
 		HeaderHelper::setHeader(array('charset' => 'utf-8'));
@@ -26,6 +27,7 @@ class Seo_SitemapController extends BaseController
 
 		$this->renderTemplate('_sitemap', array(
 			'sectionUrls' => $sectionUrls,
+			'categoryUrls' => $categoryUrls,
 			'customUrls' => array_key_exists('customUrls', $this->sitemap) ? $this->sitemap['customUrls'] : [],
 		));
 	}
@@ -38,27 +40,63 @@ class Seo_SitemapController extends BaseController
 			foreach ($this->sitemap['sections'] as $sectionId => $section)
 			{
 				if ($section['enabled'])
-					$urls = array_merge($urls, $this->_generateUrls($sectionId, $section));
+					$urls = array_merge($urls, $this->_generateUrls($sectionId, $section, ElementType::Entry));
 			}
 		}
 
 		return $urls;
 	}
 
-	private function _generateUrls ($id, $section)
+	private function _generateCategories ()
 	{
 		$urls = [];
 
-		$sect = craft()->elements->getCriteria(ElementType::Entry);
+		if (array_key_exists('categories', $this->sitemap)) {
+			foreach ($this->sitemap['categories'] as $categoryId => $category)
+			{
+				if ($category['enabled'])
+					$urls = array_merge($urls, $this->_generateUrls($categoryId, $category, ElementType::Category));
+			}
+		}
+
+		return $urls;
+	}
+
+	private function _generateUrls ($id, $section, $elemType)
+	{
+		$urls = [];
+
+		$sect = craft()->elements->getCriteria($elemType);
 		$sect->sectionId = $id;
 
 		foreach ($sect->find() as $elem) {
-			$urls[] = [
-				'url' => $elem->url,
-				'lastmod' => $elem->dateUpdated,
-				'frequency' => $section['frequency'],
-				'priority' => $section['priority'],
-			];
+
+			if ($elem->url !== null) {
+
+				$urlAlts = [];
+
+				if (is_array($elem->locales) && count($elem->locales) > 1) {
+					foreach ($elem->locales as $locale => $settings) {
+						$locale = $elemType == ElementType::Category ? $settings : $locale;
+
+						if ($locale !== craft()->language) {
+							$urlAlts[] = [
+								'locale' => str_replace('_', '-', $locale),
+								'url' => UrlHelper::getSiteUrl(($elem->uri == '__home__') ? '' : $elem->uri, null, null, $locale)
+							];
+						}
+					}
+				}
+
+				$urls[] = [
+					'url' => $elem->url,
+					'urlAlts' => $urlAlts,
+					'lastmod' => $elem->dateUpdated,
+					'frequency' => $section['frequency'],
+					'priority' => $section['priority'],
+				];
+
+			}
 		}
 
 		return $urls;

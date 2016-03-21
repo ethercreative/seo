@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
 
 	{# Sections #}
 
@@ -10,6 +10,21 @@
 		<lastmod>{{ section.lastmod }}</lastmod>
 		<changefreq>{{ section.frequency }}</changefreq>
 		<priority>{{ section.priority }}</priority>
+		{% for alt in section.urlAlts %}<xhtml:link rel="alternate" hreflang="{{ alt.locale }}" href="{{ alt.url }}" />
+		{% endfor %}
+	</url>
+	{% endfor %}
+
+	{# Categories #}
+
+	{% for category in categoryUrls %}
+	<url>
+		<loc>{{ url(category.url) }}</loc>
+		<lastmod>{{ category.lastmod }}</lastmod>
+		<changefreq>{{ category.frequency }}</changefreq>
+		<priority>{{ category.priority }}</priority>
+		{% for alt in category.urlAlts %}<xhtml:link rel="alternate" hreflang="{{ alt.locale }}" href="{{ alt.url }}" />
+		{% endfor %}
 	</url>
 	{% endfor %}
 
