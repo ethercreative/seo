@@ -37,7 +37,7 @@ class SeoFieldType extends BaseFieldType implements IPreviewableFieldType {
 
 		$url = $this->element->getUrl();
 
-		if ($this->element->uri != '__home__')
+		if ($this->element->uri != '__home__' && $this->element->section->type != 'single')
 			$url = substr($url, 0, strrpos( $url, '/'));
 
 		return craft()->templates->render('seo/_seo-fieldtype', array(

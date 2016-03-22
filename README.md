@@ -85,6 +85,9 @@ All parameters are optional.
 
 ## Changelog
 
+### 1.0.1
+- Fixed bug where the entry URL in the SEO fieldtype snippet was incorrect for Single entries.
+
 ### 1.0.0
 - Initial Release
 
