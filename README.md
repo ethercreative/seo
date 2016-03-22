@@ -87,6 +87,7 @@ All parameters are optional.
 
 ### 1.0.1
 - Fixed bug where the entry URL in the SEO fieldtype snippet was incorrect for Single entries.
+- Fixed double slash on Homepage URL in SEO fieldtype snippet.
 
 ### 1.0.0
 - Initial Release
