@@ -10,7 +10,7 @@
   {
     "version": "1.0.1",
     "downloadUrl": "https://github.com/ethercreative/seo/archive/v1.0.1.zip",
-    "date": "2016-03-22:00:00-08:00",
+    "date": "2016-03-22T10:00:00-08:00",
     "notes": [
       "Fixed bug where the entry URL in the SEO fieldtype snippet was incorrect for Single entries.",
       "Fixed double slash on Homepage URL in SEO fieldtype snippet."
