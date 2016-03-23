@@ -58,11 +58,12 @@ class SeoFieldType extends BaseFieldType implements IPreviewableFieldType {
 		$fieldsRaw = craft()->fields->getAllFields();
 		$fields = [];
 		foreach ($fieldsRaw as $field) {
-			$fields[$field->handle] = array(
-				'label' => $field->name,
-				'value' => $field->handle,
-				'type' => $field->fieldType->name
-			);
+			if ($field->fieldType->name != 'SEO') {
+				$fields[$field->handle] = array(
+					'label' => $field->name,
+					'value' => $field->handle
+				);
+			}
 		}
 		$unsetFields = $fields;
 		if ($settings->readability !== null) {

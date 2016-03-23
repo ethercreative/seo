@@ -15,5 +15,13 @@
       "Fixed bug where the entry URL in the SEO fieldtype snippet was incorrect for Single entries.",
       "Fixed double slash on Homepage URL in SEO fieldtype snippet."
     ]
+  },
+  {
+    "version": "1.0.2",
+    "downloadUrl": "https://github.com/ethercreative/seo/archive/v1.0.2.zip",
+    "date": "2016-03-23T10:00:00-08:00",
+    "notes": [
+      "Stopped SEO fields showing up in the Readability Check list for the SEO fieldtype."
+    ]
   }
 ]

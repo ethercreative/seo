@@ -85,6 +85,9 @@ All parameters are optional.
 
 ## Changelog
 
+### 1.0.2
+- Stopped SEO fields showing up in the Readability Check list for the SEO fieldtype.
+
 ### 1.0.1
 - Fixed bug where the entry URL in the SEO fieldtype snippet was incorrect for Single entries.
 - Fixed double slash on Homepage URL in SEO fieldtype snippet.
