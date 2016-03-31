@@ -13,7 +13,7 @@ class Seo_RedirectService extends BaseApplicationComponent
 		{
 			$to = false;
 
-			if ($redirect['uri'] == $path)
+			if (trim($redirect['uri'], '/') == $path)
 			{
 				$to = $redirect['to'];
 			}

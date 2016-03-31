@@ -23,5 +23,13 @@
     "notes": [
       "Stopped SEO fields showing up in the Readability Check list for the SEO fieldtype."
     ]
+  },
+  {
+    "version": "1.0.3",
+    "downloadUrl": "https://github.com/ethercreative/seo/archive/v1.0.3.zip",
+    "date": "2016-03-31T10:00:00-08:00",
+    "notes": [
+      "Fixed bug where redirects containing trailing slashes were not redirected!"
+    ]
   }
 ]

@@ -78,12 +78,16 @@ All parameters are optional.
 
 
 ## TODO
+- [ ] Add redirect support for .htaccess & web.config to improve performance
 - [ ] Add hooks for plugin support
 - [ ] Include more fields in snippet (i.e. Type, Image, etc.)
 - [ ] Allow for multiple focus keywords
 - [ ] Make the SEO dashboard more useful. Somehow.
 
 ## Changelog
+
+### 1.0.3
+- Fixed bug where redirects containing trailing slashes were not redirected!
 
 ### 1.0.2
 - Stopped SEO fields showing up in the Readability Check list for the SEO fieldtype.
