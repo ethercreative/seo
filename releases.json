@@ -31,5 +31,13 @@
     "notes": [
       "Fixed bug where redirects containing trailing slashes were not redirected!"
     ]
+  },
+  {
+    "version": "1.0.4",
+    "downloadUrl": "https://github.com/ethercreative/seo/archive/v1.0.4.zip",
+    "date": "2016-04-13T10:00:00-08:00",
+    "notes": [
+      "Fixed error on settings save when no readability fields were checked."
+    ]
   }
 ]

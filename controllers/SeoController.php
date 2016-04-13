@@ -127,7 +127,7 @@ class SeoController extends BaseController
 
 		$unsetFields = $fields;
 
-		if ($settings->readability !== null) {
+		if ($settings->readability !== null && $settings->readability !== '') {
 			foreach ($settings->readability as $field) {
 				if ($unsetFields[$field])
 					unset($unsetFields[$field]);

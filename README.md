@@ -86,6 +86,9 @@ All parameters are optional.
 
 ## Changelog
 
+### 1.0.4
+- Fixed error on settings save when no readability fields were checked.
+
 ### 1.0.3
 - Fixed bug where redirects containing trailing slashes were not redirected!
 
