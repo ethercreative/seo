@@ -116,7 +116,7 @@ class SeoController extends BaseController
 		$fields = [];
 
 		foreach ($fieldsRaw as $field) {
-			if ($field->fieldType->name !== 'SEO') {
+			if (is_object($field) && $field->getFieldType()->getName() !== 'SEO') {
 				$fields[$field->handle] = array(
 					'label' => $field->name,
 					'value' => $field->handle,
