@@ -116,7 +116,7 @@ class SeoController extends BaseController
 		$fields = [];
 
 		foreach ($fieldsRaw as $field) {
-			if (is_object($field) && $field->getFieldType()->getName() !== 'SEO') {
+			if (is_object($field) && is_object($field->getFieldType()) && $field->getFieldType()->getName() !== 'SEO') {
 				$fields[$field->handle] = array(
 					'label' => $field->name,
 					'value' => $field->handle,
@@ -129,7 +129,7 @@ class SeoController extends BaseController
 
 		if ($settings->readability !== null && $settings->readability !== '') {
 			foreach ($settings->readability as $field) {
-				if ($unsetFields[$field])
+				if (array_key_exists($field, $unsetFields) && $unsetFields[$field])
 					unset($unsetFields[$field]);
 			}
 		}

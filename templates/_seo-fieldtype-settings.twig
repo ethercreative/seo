@@ -36,8 +36,10 @@
 	<div class="input">
 		<input type="hidden" name="readability">
 		{% for field in settings.readability %}
-			{% set f = fields[field] %}
-			{{ _.readField(forms, f, true) }}
+			{% if fields[field] is defined %}
+				{% set f = fields[field] %}
+				{{ _.readField(forms, f, true) }}
+			{% endif %}
 		{% endfor %}
 		{% for field in unsetFields %}
 			{{ _.readField(forms, field, false) }}
