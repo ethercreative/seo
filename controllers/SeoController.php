@@ -88,8 +88,12 @@ class SeoController extends BaseController
 
 		$namespace = 'data';
 
+		craft()->templates->includeCssResource('seo/css/redirects.css');
 		craft()->templates->includeJsResource('seo/js/seo-settings.js');
 		craft()->templates->includeJs("new SeoSettings('{$namespace}', 'redirects');");
+
+		$redirects = craft()->seo->getData('redirects') ? craft()->seo->getData('redirects')['redirects'] : array();
+		if (is_string($redirects)) $redirects = json_decode($redirects, true);
 
 		$this->renderTemplate('seo/redirects', array(
 			// Global
@@ -103,7 +107,7 @@ class SeoController extends BaseController
 			],
 
 			// Redirecs
-			'redirects' => craft()->seo->getData('redirects') ? craft()->seo->getData('redirects')['redirects'] : array(),
+			'redirects' => $redirects,
 		));
 	}
 

@@ -16,14 +16,44 @@
 	'302': '302 (Temporary)',
 } %}
 
+{% macro selectField(config) %}
+	{%- set class = [
+		'select',
+		(config.class is defined ? config.class : null)
+	]|filter|join(' ') %}
+
+	{%- set options = (config.options is defined ? config.options : []) %}
+	{%- set value = (config.value is defined ? config.value : null) %}
+
+	<div class="{{ class }}">
+		<select
+				{%- if config.id is defined %} id="{{ config.id }}"{% endif %}
+				{%- if config.toggle is defined and config.toggle %} class="fieldtoggle"{% endif %}
+				{%- if config.name is defined %} data-name="{{ config.name }}"{% endif %}
+				{%- if config.autofocus is defined and config.autofocus and not craft.request.isMobileBrowser(true) %} autofocus{% endif %}
+				{%- if config.disabled is defined and config.disabled %} disabled{% endif %}
+				{%- if config.targetPrefix is defined %} data-target-prefix="{{ config.targetPrefix }}"{% endif %}>
+			{% for key, option in options %}
+				{% set optionLabel = (option.label is defined ? option.label : option) %}
+				{% set optionValue = (option.value is defined ? option.value : key) %}
+				{% set optionDisabled = (option.disabled is defined ? option.disabled : false) %}
+				<option value="{{ optionValue }}"{% if optionValue == value %} selected{% endif %}{% if optionDisabled %} disabled{% endif %}>{{ optionLabel }}</option>
+			{% endfor %}
+		</select>
+	</div>
+{% endmacro %}
+
+{% import _self as ui %}
+
 {% block content %}
 	{% namespace namespace %}
 	<div class="field">
 		{#<div class="heading">
 			<label>Redirects</label>
 		</div>#}
+
 		<div class="input">
-			<input type="hidden" name="redirects" value="">
+			<input type="hidden" name="redirects" id="redirects-field">
 
 			<table class="shadow-box editable" id="redirects">
 				<thead>
@@ -37,15 +67,14 @@
 				<tbody>
 					<tr class="hidden" data-id="{i}">
 						<td class="textual">
-							<input type="hidden" name="redirects[{i}]" value="">
-							<textarea rows="1" style="height:46px" name="redirects[{i}][uri]"></textarea>
+							<textarea rows="1" style="height:46px" data-name="redirects-uri"></textarea>
 						</td>
 						<td class="textual">
-							<textarea rows="1" style="height:46px" name="redirects[{i}][to]"></textarea>
+							<textarea rows="1" style="height:46px" data-name="redirects-to"></textarea>
 						</td>
 						<td class="thin">
-							{{ forms.selectField({
-								name: 'redirects[{i}][type]',
+							{{ ui.selectField({
+								name: 'redirects-type',
 								options: redirectType,
 								value: '301'
 							}) }}
@@ -58,15 +87,14 @@
 				{% for redirect in redirects %}
 					<tr data-id="{{ loop.index }}">
 						<td class="textual">
-							<input type="hidden" name="redirects[{{ loop.index }}]" value="">
-							<textarea rows="1" style="height:46px" name="redirects[{{ loop.index }}][uri]">{{ redirect.uri }}</textarea>
+							<textarea rows="1" style="height:46px" data-name="redirects-uri">{{ redirect.uri }}</textarea>
 						</td>
 						<td class="textual">
-							<textarea rows="1" style="height:46px" name="redirects[{{ loop.index }}][to]">{{ redirect.to }}</textarea>
+							<textarea rows="1" style="height:46px" data-name="redirects-to">{{ redirect.to }}</textarea>
 						</td>
 						<td class="thin">
-							{{ forms.selectField({
-								name: 'redirects['~loop.index~'][type]',
+							{{ ui.selectField({
+								name: 'redirects-type',
 								options: redirectType,
 								value: redirect.type|default('301')
 							}) }}

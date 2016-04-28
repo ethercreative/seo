@@ -86,6 +86,11 @@ All parameters are optional.
 
 ## Changelog
 
+### 1.0.5
+- Fixed bug where redirects wouldn't be saved when there were more than ~246 rows ([#3](https://github.com/ethercreative/seo/issues/3)).
+- Removed unused Public Path setting field.
+- **NOTICE:** You may need to clear Crafts template cache in order for this update work!
+
 ### 1.0.4
 - Fixed error on settings save when no readability fields were checked.
 

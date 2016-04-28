@@ -20,7 +20,7 @@ gulp.task('js', function () {
 
 // Less
 gulp.task('less', function () {
-	gulp.src('less/seo.less')
+	gulp.src('less/**/*.less')
 		.pipe(less({
 			plugins: [autoprefixer, cleancss]
 		}).on('error', function(err){ console.log(err.message); }))

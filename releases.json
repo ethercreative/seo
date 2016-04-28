@@ -39,5 +39,15 @@
     "notes": [
       "Fixed error on settings save when no readability fields were checked."
     ]
+  },
+  {
+    "version": "1.0.5",
+    "downloadUrl": "https://github.com/ethercreative/seo/archive/v1.0.5.zip",
+    "date": "2016-04-28T10:00:00-08:00",
+    "notes": [
+      "- Fixed bug where redirects wouldn't be saved when there were more than ~246 rows ([#3](https://github.com/ethercreative/seo/issues/3)).",
+      "- Removed unused Public Path setting field.",
+      "- **NOTICE:** You may need to clear Crafts template cache in order for this update work!"
+    ]
   }
 ]

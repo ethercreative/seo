@@ -6,11 +6,11 @@
 	value: settings.sitemapName is defined ? settings.sitemapName : ''
 }) }}
 
-{{ forms.textField({
+{# {{ forms.textField({
 	label: 'Public Path',
 	instructions: 'If you are not using database redirect method, we need to know where your public directory is. Environment variables in single braces are allowed.',
 	name: 'publicPath',
 	id: 'publicPath',
 	placeholder: '{basePath}',
 	value: settings.publicPath is defined ? settings.publicPath : ''
-}) }}
+}) }} #}

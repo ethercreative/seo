@@ -1,0 +1,46 @@
+.redirects {
+
+	&--table {
+		position: relative;
+
+		.row {
+			position: relative;
+
+			display: flex;
+			height: 34px;
+			margin-bottom: -1px;
+
+			line-height: 34px;
+
+			background: #ffffff;
+			border: 1px solid #f4f4f4;
+			border-left: none;
+			//border-right: none;
+
+			.cell {
+				padding: 0 5px;
+				width: 100%;
+				border-left: 1px solid #f4f4f4;
+			}
+
+			//&.delete {
+			//	position: absolute;
+			//	z-index: 0;
+			//	left: 0;
+			//	right: 0;
+			//}
+			//
+			//&.delete ~ .row {
+			//	position: relative;
+			//	z-index: 1;
+			//	transform: translate3d(0, 34px, 0);
+			//}
+			//
+			//&.out ~ .row {
+			//	transition: transform 0.3s ease;
+			//	transform: translate3d(0, 0, 0);
+			//}
+		}
+	}
+
+}

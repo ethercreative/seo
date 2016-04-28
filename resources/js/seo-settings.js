@@ -1,4 +1,5 @@
 var SeoSettings = function (namespace, run) {
+	var self = this;
 	this.namespace = namespace;
 
 	switch (run) {
@@ -6,7 +7,12 @@ var SeoSettings = function (namespace, run) {
 			new SeoSettings.EditableTable(this.namespace + '-customUrls', this.namespace + '-addCustomUrl');
 			break;
 		case 'redirects':
-			new SeoSettings.EditableTable(this.namespace + '-redirects', this.namespace + '-addRedirect');
+			var table = document.getElementById(this.namespace + '-redirects'),
+				field = document.getElementById(this.namespace + '-redirects-field');
+			new SeoSettings.EditableTable(this.namespace + '-redirects', this.namespace + '-addRedirect', function () {
+				self.redirectsForm(table, field);
+			});
+			this.redirectsForm(table, field);
 			break;
 		case 'settings':
 			this.sitemapName();
@@ -23,9 +29,39 @@ SeoSettings.prototype.sitemapName = function () {
 	});
 };
 
+// REDIRECTS
+SeoSettings.prototype.redirectsForm = function (table, field) {
+	function parseRedirectForm() {
+		var o = {};
+		[].slice.call(table.querySelectorAll('tbody tr:not(.hidden)')).forEach(function (el) {
+			o[+el.getAttribute('data-id')] = {
+				'uri': el.querySelector('[data-name="redirects-uri"]').value.trim(),
+				'to': el.querySelector('[data-name="redirects-to"]').value.trim(),
+				'type': el.querySelector('[data-name="redirects-type"]').value
+			};
+		});
+
+		field.value = JSON.stringify(o).replace(/\\n/g, "\\n")
+									    .replace(/\\'/g, "\\'")
+									    .replace(/\\"/g, '\\"')
+									    .replace(/\\&/g, "\\&")
+								        .replace(/\\r/g, "\\r")
+									    .replace(/\\t/g, "\\t")
+									    .replace(/\\b/g, "\\b")
+									    .replace(/\\f/g, "\\f");
+	}
+
+	parseRedirectForm();
+
+	[].slice.call(document.querySelectorAll('[data-name]')).forEach(function (el) {
+		el.addEventListener('input', parseRedirectForm);
+	});
+};
+
 // HELPERS
-SeoSettings.EditableTable = function (tableId, addButtonId) {
+SeoSettings.EditableTable = function (tableId, addButtonId, rowCb) {
 	var self = this;
+	this.rowCb = (typeof rowCb === "function" ? rowCb : function () {});
 	this.table = document.getElementById(tableId).getElementsByTagName('tbody')[0];
 	this.row = this.table.firstElementChild.cloneNode(true);
 	this.table.firstElementChild.remove();
@@ -35,6 +71,7 @@ SeoSettings.EditableTable = function (tableId, addButtonId) {
 	[].slice.call(this.table.getElementsByClassName('delete')).forEach(function (el) {
 		el.addEventListener('click', function () {
 			el.parentNode.parentNode.remove();
+			self.rowCb();
 		});
 	});
 
@@ -52,13 +89,15 @@ SeoSettings.EditableTable.prototype.addRow = function () {
 
 	var newRow = this.row.cloneNode(true);
 	newRow.setAttribute('data-id', i);
-	newRow.innerHTML = newRow.innerHTML.replace(new RegExp('{i}', 'g'), i);
+	// newRow.innerHTML = newRow.innerHTML.replace(new RegExp('{i}', 'g'), i);
 
 	newRow.getElementsByClassName('delete')[0].addEventListener('click', function () {
 		newRow.remove();
 	});
 
 	this.table.appendChild(newRow);
+
+	this.rowCb();
 };
 
 SeoSettings.SortableList = Garnish.DragSort.extend(
