@@ -8,6 +8,7 @@ class Seo_RedirectService extends BaseApplicationComponent
 	public function findRedirectByPath ($path)
 	{
 		$redirects = craft()->seo->getData('redirects') ? craft()->seo->getData('redirects')['redirects'] : array();
+		if (is_string($redirects)) $redirects = json_decode($redirects, true);
 
 		foreach ($redirects as $redirect)
 		{
