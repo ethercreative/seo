@@ -515,7 +515,7 @@ SeoField.isExternalUrl = (function(){
 
 	return function(url) {
 		function domain(url) {
-			return domainRe.exec(url)[1];
+			return (res = domainRe.exec(url)) !== null ? res[1] : false;
 		}
 
 		return domain(location.href) !== domain(url);
