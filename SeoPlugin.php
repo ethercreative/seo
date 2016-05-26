@@ -54,7 +54,11 @@ class SeoPlugin extends BasePlugin {
 
 	public function hasCpSection()
 	{
-		return (craft()->userSession->isAdmin() || craft()->userSession->checkPermission('accessPlugin-seo'));
+		if (!craft()->isConsole()) {
+			return (craft()->userSession->isAdmin() || craft()->userSession->checkPermission('accessPlugin-seo'));
+		}
+
+		return false;
 	}
 
 	public function registerCpRoutes ()
