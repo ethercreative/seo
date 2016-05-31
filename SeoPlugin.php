@@ -24,12 +24,12 @@ class SeoPlugin extends BasePlugin {
 
 	public function getVersion()
 	{
-		return '1.0.5';
+		return '1.1.0';
 	}
 
 	public function getSchemaVersion()
 	{
-		return '0.0.7';
+		return '0.0.8';
 	}
 
 	public function getDeveloper()
@@ -54,7 +54,10 @@ class SeoPlugin extends BasePlugin {
 
 	public function hasCpSection()
 	{
-		return (craft()->userSession->isAdmin() || craft()->userSession->checkPermission('accessPlugin-seo'));
+		if (!craft()->isConsole()) {
+			return (craft()->userSession->isAdmin() || craft()->userSession->checkPermission('accessPlugin-seo'));
+	    }
+		return false;
 	}
 
 	public function registerCpRoutes ()
@@ -84,9 +87,7 @@ class SeoPlugin extends BasePlugin {
 			'publicPath' => array(AttributeType::String),
 
 			// Fieldtype Settings
-			'titleSuffix' => array(AttributeType::String),
-			'readability' => array(AttributeType::Mixed),
-			'fieldTemplates' => array(AttributeType::Mixed)
+			'titleSuffix' => array(AttributeType::String)
 		);
 	}
 

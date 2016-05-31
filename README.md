@@ -2,7 +2,7 @@
 
 # SEO for Craft CMS
 
-SEO for Craft does three things that will help your sites SEO, and does them really damn well *(and it has full localisation support!)*.
+SEO for Craft does three things that will help your sites SEO, and does them really damn well *(and it has full localisation and Craft Commerce support!)*.
 
 ### The Field Type
 
@@ -83,8 +83,16 @@ All parameters are optional.
 - [ ] Include more fields in snippet (i.e. Type, Image, etc.)
 - [ ] Allow for multiple focus keywords
 - [ ] Make the SEO dashboard more useful. Somehow.
+- [ ] Add schema / rich snippet support to the fieldtype.
 
 ## Changelog
+
+### 1.1.0
+- Fixed #5 - Fieldtype can now be used on any element type (but keyword & score will only be visible on entries).
+- Fix #7 via @FrankZwiers - Check regex exec for null value
+- Fix #8 via @roelvanhintum - Admin is unavailable from the console
+- Removed all "Readability" settings! - We now examine the page exactly as Google would see it.
+- **Added Craft Commerce Support**
 
 ### 1.0.5
 - Fixed bug where redirects wouldn't be saved when there were more than ~246 rows ([#3](https://github.com/ethercreative/seo/issues/3)).
