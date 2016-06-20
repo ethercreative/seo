@@ -473,6 +473,11 @@ SeoField.prototype.judgeFleschEase = function () {
 };
 
 // HELPERS
+SeoField.Fail = function (message) {
+	Craft.cp.displayError('<strong>SEO:</strong> ' + message);
+	if (window.console) console.error.apply(console, ['%cSEO: %c' + message, 'font-weight:bold;','font-weight:normal;']);
+};
+
 /**
  * Get Parsed Fields HTML
  */
@@ -500,7 +505,10 @@ SeoField.GetEntryHTML.prototype.update = function (cb) {
 				self.iframe.contentWindow.document.write(data);
 				self.iframe.contentWindow.document.close();
 
-				cb(self.iframe.contentWindow.document.body);
+				if (self.iframe.contentWindow.document.body)
+					cb(self.iframe.contentWindow.document.body);
+				else
+					SeoField.Fail("Unable to calculate score");
 			}
 		});
 	}
