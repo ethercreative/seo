@@ -87,6 +87,10 @@ All parameters are optional.
 
 ## Changelog
 
+### 1.1.1
+- Added error notification
+- Fix #10 via @bertoost - Fixed check empty sections and categories
+
 ### 1.1.0
 - Fixed #5 - Fieldtype can now be used on any element type (but keyword & score will only be visible on entries).
 - Fix #7 via @FrankZwiers - Check regex exec for null value
