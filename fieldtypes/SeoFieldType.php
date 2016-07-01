@@ -30,7 +30,7 @@ class SeoFieldType extends BaseFieldType implements IPreviewableFieldType {
 		$settingsGlobal = craft()->plugins->getPlugin('seo')->getSettings();
 		$hasSection = false;
 		$isEntry = false;
-		if (empty(!$this->element)) {
+		if (!empty($this->element)) {
 			switch ($this->element->getElementType()) {
 				case "Entry":
 					$isEntry = true;
