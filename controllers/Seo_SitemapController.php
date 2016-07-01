@@ -36,7 +36,7 @@ class Seo_SitemapController extends BaseController
 	{
 		$urls = [];
 
-		if (array_key_exists('sections', $this->sitemap)) {
+		if (array_key_exists('sections', $this->sitemap) && !empty($this->sitemap['sections'])) {
 			foreach ($this->sitemap['sections'] as $sectionId => $section)
 			{
 				if ($section['enabled'])
@@ -51,7 +51,7 @@ class Seo_SitemapController extends BaseController
 	{
 		$urls = [];
 
-		if (array_key_exists('categories', $this->sitemap)) {
+		if (array_key_exists('categories', $this->sitemap) && !empty($this->sitemap['categories'])) {
 			foreach ($this->sitemap['categories'] as $categoryId => $category)
 			{
 				if ($category['enabled'])

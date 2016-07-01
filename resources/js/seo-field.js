@@ -1,33 +1,36 @@
-var SeoField = function (namespace, readabilityFields) {
+var SeoField = function (namespace, hasSection) {
 	var self = this;
 
 	this.namespace = namespace;
-	this.readabilityFields = readabilityFields;
 
 	// Snippet
 	this.title();
 	this.slug();
 	this.desc();
 
-	// Keyword
-	this.keyword = document.getElementById(namespace + '-keyword');
+	if (hasSection) {
 
-	// Score
-	this.score = document.getElementById(namespace + "-score");
-	this.list = document.getElementById(namespace + "-list");
-	this.bar = document.getElementById(namespace + "-bar");
-	this.scoreField = document.getElementById(namespace + "-score-field");
-	this.toggle();
+		this.getHTMLForParsing = new SeoField.GetEntryHTML();
 
-	// Calculate
-	this.calculateScore();
+		// Keyword
+		this.keyword = document.getElementById(namespace + '-keyword');
 
-	// Listen to all field changes
-	[].slice.call(document.querySelectorAll('[name*="field"]')).forEach(function (el) {
-		el.addEventListener('change', function () {
+		// Score
+		this.score = document.getElementById(namespace + "-score");
+		this.list = document.getElementById(namespace + "-list");
+		this.bar = document.getElementById(namespace + "-bar");
+		this.scoreField = document.getElementById(namespace + "-score-field");
+		this.toggle();
+
+		// Calculate
+		this.calculateScore();
+
+		// Re-calculate the score every second
+		setInterval(function () {
 			self.calculateScore();
-		});
-	});
+		}, 1000);
+
+	}
 };
 
 // SNIPPET
@@ -150,41 +153,29 @@ SeoField.prototype.calculateScore = function () {
 		this.currentScore.slug = this.judgeSlug();
 		this.currentScore.desc = this.judgeDesc();
 
-		if (this.readabilityFields.length > 0) {
-			SeoField.getFieldsHTML(this.readabilityFields, function (res) {
-				var content = document.createElement('div');
-				content.innerHTML = res;
+		this.getHTMLForParsing.update(function (content) {
+			if (content.textContent.replace('\r', '').replace('\n', '').replace('\r\n', '').replace(/\s+/gi, '') === '') {
+				self.currentScore.noContent = {
+					score: SeoField.Levels.BAD,
+					reason: 'You have no content, adding some would be a good start!'
+				};
+			} else {
+				self.content = content;
+				self.content.textOnly = self.content.textContent.replace('\r', ' ').replace('\n', ' ').replace('\r\n', ' ').replace(/\s+/gi, ' ');
+				self.content.stats = SeoField.TextStatistics(self.content.textContent);
 
-				[].slice.call(content.getElementsByTagName('seo-parse')).forEach(function (el) {
-					if (!el.textContent || el.textContent === 'Array') {
-						content.removeChild(el);
-					}
-				});
+				self.currentScore.wordCount = self.judgeWordCount();
+				self.currentScore.firstParagraph = self.judgeFirstParagraph();
+				self.currentScore.images = self.judgeImages();
+				self.currentScore.links = self.judgeLinks();
+				self.currentScore.headings = self.judgeHeadings();
+				self.currentScore.density = self.judgeDensity();
+				self.currentScore.fleschEase = self.judgeFleschEase();
+			}
 
-				if (content.textContent.replace('\r', '').replace('\n', '').replace('\r\n', '').replace(/\s+/gi, '') === '') {
-					self.currentScore.noContent = {
-						score: SeoField.Levels.BAD,
-						reason: 'You have no content, adding some would be a good start!'
-					};
-				} else {
-					self.content = content;
-					self.content.textOnly = self.content.textContent.replace('\r', ' ').replace('\n', ' ').replace('\r\n', ' ').replace(/\s+/gi, ' ');
-					self.content.stats = SeoField.TextStatistics(self.content.textContent);
-
-					self.currentScore.wordCount = self.judgeWordCount();
-					self.currentScore.firstParagraph = self.judgeFirstParagraph();
-					self.currentScore.images = self.judgeImages();
-					self.currentScore.links = self.judgeLinks();
-					self.currentScore.headings = self.judgeHeadings();
-					self.currentScore.density = self.judgeDensity();
-					self.currentScore.fleschEase = self.judgeFleschEase();
-				}
-
-				self.updateScoreHtml();
-			});
-		} else {
-			this.updateScoreHtml();
-		}
+			self.getHTMLForParsing.clean();
+			self.updateScoreHtml();
+		});
 	} else {
 		this.toggle.close();
 		this.score.classList.add('disabled');
@@ -482,26 +473,56 @@ SeoField.prototype.judgeFleschEase = function () {
 };
 
 // HELPERS
+SeoField.Fail = function (message) {
+	Craft.cp.displayError('<strong>SEO:</strong> ' + message);
+	if (window.console) console.error.apply(console, ['%cSEO: %c' + message, 'font-weight:bold;','font-weight:normal;']);
+};
+
 /**
  * Get Parsed Fields HTML
- *
- * @param {object} fields
- * @param {function} cb
  */
-SeoField.getFieldsHTML = function (fields, cb) {
-	var data = {};
+SeoField.GetEntryHTML = function () {
+	this.clean();
+};
 
-	for (var i = 0; i < fields.length; i++) {
-		/* jshint ignore:start */
-		[].slice.call(document.forms[0].elements).forEach(function (el) {
-			data[el.getAttribute('name')] = el.value;
+SeoField.GetEntryHTML.prototype.update = function (cb) {
+	var self = this,
+		postData = Garnish.getPostData(document.getElementById('container'));
+
+	if (!this.lastPostData || !Craft.compare(postData, this.lastPostData)) {
+		this.lastPostData = postData;
+
+		$.ajax({
+			url: Craft.livePreview.previewUrl,
+			method: 'POST',
+			data: $.extend({}, postData, Craft.livePreview.basePostData),
+			xhrFields: {
+				withCredentials: true
+			},
+			crossDomain: true,
+			success: function (data) {
+				self.iframe.contentWindow.document.open();
+				self.iframe.contentWindow.document.write(data);
+				self.iframe.contentWindow.document.close();
+
+				if (self.iframe.contentWindow.document.body)
+					cb(self.iframe.contentWindow.document.body);
+				else
+					SeoField.Fail("Unable to calculate score");
+			}
 		});
-		/* jshint ignore:end */
 	}
+};
 
-	Craft.postActionRequest('seo/fieldtype/parser?fields=' + fields.join(','), data, function(response) {
-		cb(response);
-	});
+SeoField.GetEntryHTML.prototype.clean = function () {
+	if (this.iframe)
+		document.body.removeChild(this.iframe);
+
+	this.iframe = document.createElement('iframe');
+	this.iframe.setAttribute('frameborder', '0');
+	this.iframe.style.width = '0px';
+	this.iframe.style.height = '0px';
+	document.body.appendChild(this.iframe);
 };
 
 /**
@@ -511,7 +532,7 @@ SeoField.getFieldsHTML = function (fields, cb) {
  * @param {string} url
  */
 SeoField.isExternalUrl = (function(){
-	var domainRe = /https?:\/\/((?:[\w\d]+\.)+[\w\d]{2,})/i;
+	var domainRe = /https?:\/\/((?:[\w\d]+\.)+[\w\d]{2,})/i, res = null;
 
 	return function(url) {
 		function domain(url) {

@@ -17,8 +17,7 @@ class SeoFieldType extends BaseFieldType implements IPreviewableFieldType {
 	protected function defineSettings()
 	{
 		return array(
-			'titleSuffix' => array(AttributeType::String),
-			'readability' => array(AttributeType::Mixed)
+			'titleSuffix' => array(AttributeType::String)
 		);
 	}
 
@@ -29,15 +28,26 @@ class SeoFieldType extends BaseFieldType implements IPreviewableFieldType {
 
 		$settings = $this->getSettings();
 		$settingsGlobal = craft()->plugins->getPlugin('seo')->getSettings();
-		$readability = implode("','", $settings->readability ?: $settingsGlobal->readability);
+		$hasSection = false;
+		$isEntry = false;
+		switch ($this->element->getElementType()) {
+			case "Entry":
+				$isEntry = true;
+				$hasSection = craft()->sections->isSectionTemplateValid($this->element->section);
+				break;
+			case "Commerce_Product":
+				$hasSection = craft()->commerce_productTypes->isProductTypeTemplateValid($this->element->type);
+				break;
+		}
+		$hasSectionString = $hasSection ? 'true' : 'false';
 
 		craft()->templates->includeCssResource('seo/css/seo.css');
 		craft()->templates->includeJsResource('seo/js/seo-field.js');
-		craft()->templates->includeJs("new SeoField('{$namespaceId}', ['{$readability}']);");
+		craft()->templates->includeJs("new SeoField('{$namespaceId}', {$hasSectionString});");
 
 		$url = $this->element->getUrl();
 
-		if ($this->element->uri != '__home__' && $this->element->section->type != 'single')
+		if ($hasSection && $isEntry && $this->element->uri != '__home__' && $this->element->section->type != 'single')
 			$url = substr($url, 0, strrpos( $url, '/')) . '/';
 
 		return craft()->templates->render('seo/_seo-fieldtype', array(
@@ -45,7 +55,7 @@ class SeoFieldType extends BaseFieldType implements IPreviewableFieldType {
 			'name' => $name,
 			'value' => $value,
 			'titleSuffix' => $settings->titleSuffix ?: $settingsGlobal->titleSuffix,
-			'isEntry' => $this->element->elementType === 'Entry',
+			'hasSection' => $hasSection,
 			'isNew' => $this->element->title === null,
 			'isHome' => $this->element->uri == '__home__',
 			'url' => $url,
@@ -55,23 +65,6 @@ class SeoFieldType extends BaseFieldType implements IPreviewableFieldType {
 	public function getSettingsHtml()
 	{
 		$settings = craft()->plugins->getPlugin('seo')->getSettings();
-		$fieldsRaw = craft()->fields->getAllFields();
-		$fields = [];
-		foreach ($fieldsRaw as $field) {
-			if ($field->fieldType->name != 'SEO') {
-				$fields[$field->handle] = array(
-					'label' => $field->name,
-					'value' => $field->handle
-				);
-			}
-		}
-		$unsetFields = $fields;
-		if ($settings->readability !== null && $settings->readability !== '') {
-			foreach ($settings->readability as $field) {
-				if ($unsetFields[$field])
-					unset($unsetFields[$field]);
-			}
-		}
 
 		$namespaceId = craft()->templates->namespaceInputId(craft()->templates->formatInputId('readability'));
 
@@ -79,9 +72,7 @@ class SeoFieldType extends BaseFieldType implements IPreviewableFieldType {
 		craft()->templates->includeJs("new SeoSettings.SortableList('#{$namespaceId}');");
 
 		return craft()->templates->render('seo/_seo-fieldtype-settings', array(
-			'settings' => $settings,
-			'fields' => $fields,
-			'unsetFields' => $unsetFields
+			'settings' => $settings
 		));
 	}
 

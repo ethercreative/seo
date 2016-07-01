@@ -49,5 +49,26 @@
       "- Removed unused Public Path setting field.",
       "- **NOTICE:** You may need to clear Crafts template cache in order for this update work!"
     ]
+  },
+  {
+    "version": "1.1.0",
+    "downloadUrl": "https://github.com/ethercreative/seo/archive/v1.1.0.zip",
+    "date": "2016-05-31T10:00:00-08:00",
+    "notes": [
+      "- Fixed #5 - Fieldtype can now be used on any element type (but keyword & score will only be visible on entries).",
+      "- Fix #7 via @FrankZwiers - Check regex exec for null value",
+      "- Fix #8 via @roelvanhintum - Admin is unavailable from the console",
+      "- Removed all \"Readability\" settings! - We now examine the page exactly as Google would see it.",
+      "- **Added Craft Commerce Support**"
+    ]
+  },
+  {
+    "version": "1.1.1",
+    "downloadUrl": "https://github.com/ethercreative/seo/archive/v1.1.1.zip",
+    "date": "2016-06-20T10:00:00-08:00",
+    "notes": [
+      "- Added error notification",
+      "- Fix #10 via @bertoost - Fixed check empty sections and categories"
+    ]
   }
 ]

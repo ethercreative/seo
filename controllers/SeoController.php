@@ -116,27 +116,6 @@ class SeoController extends BaseController
 		$namespace = 'settings';
 
 		$settings = craft()->seo->settings();
-		$fieldsRaw = craft()->fields->getAllFields();
-		$fields = [];
-
-		foreach ($fieldsRaw as $field) {
-			if (is_object($field) && is_object($field->getFieldType()) && $field->getFieldType()->getName() !== 'SEO') {
-				$fields[$field->handle] = array(
-					'label' => $field->name,
-					'value' => $field->handle,
-					'type' => $field->fieldType->name
-				);
-			}
-		}
-
-		$unsetFields = $fields;
-
-		if ($settings->readability !== null && $settings->readability !== '') {
-			foreach ($settings->readability as $field) {
-				if (array_key_exists($field, $unsetFields) && $unsetFields[$field])
-					unset($unsetFields[$field]);
-			}
-		}
 
 		craft()->templates->includeJsResource('seo/js/seo-settings.js');
 		craft()->templates->includeJs("new SeoSettings('{$namespace}', 'settings');");
@@ -155,11 +134,7 @@ class SeoController extends BaseController
 			],
 			'crumbs' => [
 				['label' => 'SEO', 'url' => 'index'],
-			],
-
-			// Fieldtype
-			'fields' => $fields,
-			'unsetFields' => $unsetFields,
+			]
 		));
 	}
 

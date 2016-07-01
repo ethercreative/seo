@@ -1,9 +1,9 @@
-{% if not isEntry %}
+{% if not hasSection %}
 <div class="seo--field">
 	<label>Snippet</label>
 	<div class="instructions">This is how the page might look in Google. Click the text to edit.</div>
 
-	<div class="seo--snippet">
+	<div class="seo--snippet nmb">
 		<div class="inner">
 			<input type="text" name="{{ name }}[title]" class="title{{ isNew or value is null ? ' clean' : '' }}"
 			       title="Title" value="{{ value is not null ? value.title : titleSuffix }}" id="{{ id }}-title">
@@ -16,6 +16,7 @@
 		</div>
 	</div>
 
+	<input type="hidden" name="{{ name }}[keyword]" value="">
 	<input type="hidden" name="{{ name }}[score]" value="">
 </div>
 {% else %}
