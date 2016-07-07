@@ -84,6 +84,7 @@ All parameters are optional.
 - [ ] Allow for multiple focus keywords
 - [ ] Make the SEO dashboard more useful. Somehow.
 - [ ] Add schema / rich snippet support to the fieldtype.
+- [ ] Add support for Routes.
 
 ## Changelog
 
@@ -91,6 +92,7 @@ All parameters are optional.
 - Fix #12 via @FrankZwiers - Fix for php error on adding a Quick Post widget
 - Fixed #11 - Fixed bug causing an Uncaught TypeError when no paragraphs are on the page
 - Fixed text parser reading script tags as text
+- SEO Field now uses minified JS
 
 ### 1.1.1
 - Added error notification

@@ -43,7 +43,7 @@ class SeoFieldType extends BaseFieldType implements IPreviewableFieldType {
 			$hasSectionString = $hasSection ? 'true' : 'false';
 
 			craft()->templates->includeCssResource('seo/css/seo.css');
-			craft()->templates->includeJsResource('seo/js/seo-field.js');
+			craft()->templates->includeJsResource('seo/js/seo-field.min.js');
 			craft()->templates->includeJs("new SeoField('{$namespaceId}', {$hasSectionString});");
 
 			$url = $this->element->getUrl();
