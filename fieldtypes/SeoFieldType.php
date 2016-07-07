@@ -30,36 +30,38 @@ class SeoFieldType extends BaseFieldType implements IPreviewableFieldType {
 		$settingsGlobal = craft()->plugins->getPlugin('seo')->getSettings();
 		$hasSection = false;
 		$isEntry = false;
-		switch ($this->element->getElementType()) {
-			case "Entry":
-				$isEntry = true;
-				$hasSection = craft()->sections->isSectionTemplateValid($this->element->section);
-				break;
-			case "Commerce_Product":
-				$hasSection = craft()->commerce_productTypes->isProductTypeTemplateValid($this->element->type);
-				break;
+		if (!empty($this->element)) {
+			switch ($this->element->getElementType()) {
+				case "Entry":
+					$isEntry = true;
+					$hasSection = craft()->sections->isSectionTemplateValid($this->element->section);
+					break;
+				case "Commerce_Product":
+					$hasSection = craft()->commerce_productTypes->isProductTypeTemplateValid($this->element->type);
+					break;
+			}
+			$hasSectionString = $hasSection ? 'true' : 'false';
+
+			craft()->templates->includeCssResource('seo/css/seo.css');
+			craft()->templates->includeJsResource('seo/js/seo-field.js');
+			craft()->templates->includeJs("new SeoField('{$namespaceId}', {$hasSectionString});");
+
+			$url = $this->element->getUrl();
+
+			if ($hasSection && $isEntry && $this->element->uri != '__home__' && $this->element->section->type != 'single')
+				$url = substr($url, 0, strrpos( $url, '/')) . '/';
+
+			return craft()->templates->render('seo/_seo-fieldtype', array(
+				'id' => $id,
+				'name' => $name,
+				'value' => $value,
+				'titleSuffix' => $settings->titleSuffix ?: $settingsGlobal->titleSuffix,
+				'hasSection' => $hasSection,
+				'isNew' => $this->element->title === null,
+				'isHome' => $this->element->uri == '__home__',
+				'url' => $url,
+			));
 		}
-		$hasSectionString = $hasSection ? 'true' : 'false';
-
-		craft()->templates->includeCssResource('seo/css/seo.css');
-		craft()->templates->includeJsResource('seo/js/seo-field.js');
-		craft()->templates->includeJs("new SeoField('{$namespaceId}', {$hasSectionString});");
-
-		$url = $this->element->getUrl();
-
-		if ($hasSection && $isEntry && $this->element->uri != '__home__' && $this->element->section->type != 'single')
-			$url = substr($url, 0, strrpos( $url, '/')) . '/';
-
-		return craft()->templates->render('seo/_seo-fieldtype', array(
-			'id' => $id,
-			'name' => $name,
-			'value' => $value,
-			'titleSuffix' => $settings->titleSuffix ?: $settingsGlobal->titleSuffix,
-			'hasSection' => $hasSection,
-			'isNew' => $this->element->title === null,
-			'isHome' => $this->element->uri == '__home__',
-			'url' => $url,
-		));
 	}
 
 	public function getSettingsHtml()
