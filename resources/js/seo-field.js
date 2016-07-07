@@ -1,5 +1,12 @@
 var SeoField = function (namespace, hasSection) {
+	if (window.hasSeoField) {
+		SeoField.Fail("One SEO field only");
+		document.getElementById(namespace + '-field').classList.add('seo--disabled');
+		return;
+	}
+
 	var self = this;
+	window.hasSeoField = true;
 
 	this.namespace = namespace;
 
@@ -316,7 +323,7 @@ SeoField.prototype.judgeWordCount = function () {
 };
 
 SeoField.prototype.judgeFirstParagraph = function () {
-	if (this.content.querySelector('p').textContent.toLowerCase().indexOf(this.keyword.value.toLowerCase()) > -1) {
+	if (this.content.querySelector('p') && this.content.querySelector('p').textContent.toLowerCase().indexOf(this.keyword.value.toLowerCase()) > -1) {
 		return {
 			score : SeoField.Levels.GOOD,
 			reason: SeoField.Reasons.firstParagraphSuccess
@@ -501,6 +508,8 @@ SeoField.GetEntryHTML.prototype.update = function (cb) {
 			},
 			crossDomain: true,
 			success: function (data) {
+				data = data.replace(/<script([^'"]|"(\\.|[^"\\])*"|'(\\.|[^'\\])*')*?<\/script>/g, '');
+
 				self.iframe.contentWindow.document.open();
 				self.iframe.contentWindow.document.write(data);
 				self.iframe.contentWindow.document.close();

@@ -89,6 +89,8 @@ All parameters are optional.
 
 ### 1.1.2
 - Fix #12 via @FrankZwiers - Fix for php error on adding a Quick Post widget
+- Fixed #11 - Fixed bug causing an Uncaught TypeError when no paragraphs are on the page
+- Fixed text parser reading script tags as text
 
 ### 1.1.1
 - Added error notification
