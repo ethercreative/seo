@@ -88,6 +88,9 @@ All parameters are optional.
 
 ## Changelog
 
+### 1.1.3
+- Fixed #15 - Fixed bug where global settings undefined on new install
+
 ### 1.1.2
 - Fix #12 via @FrankZwiers - Fix for php error on adding a Quick Post widget
 - Fixed #11 - Fixed bug causing an Uncaught TypeError when no paragraphs are on the page
