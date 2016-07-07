@@ -76,7 +76,10 @@
     "downloadUrl": "https://github.com/ethercreative/seo/archive/v1.1.2.zip",
     "date": "2016-07-07T10:00:00-08:00",
     "notes": [
-      "- Fix #12 via @FrankZwiers - Fix for php error on adding a Quick Post widget"
+      "- Fix #12 via @FrankZwiers - Fix for php error on adding a Quick Post widget",
+      "- Fixed #11 - Fixed bug causing an Uncaught TypeError when no paragraphs are on the page",
+      "- Fixed text parser reading script tags as text",
+      "- SEO Field now uses minified JS"
     ]
   }
 ]
