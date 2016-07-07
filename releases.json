@@ -70,5 +70,13 @@
       "- Added error notification",
       "- Fix #10 via @bertoost - Fixed check empty sections and categories"
     ]
+  },
+  {
+    "version": "1.1.2",
+    "downloadUrl": "https://github.com/ethercreative/seo/archive/v1.1.2.zip",
+    "date": "2016-07-07T10:00:00-08:00",
+    "notes": [
+      "- Fix #12 via @FrankZwiers - Fix for php error on adding a Quick Post widget"
+    ]
   }
 ]

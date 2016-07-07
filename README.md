@@ -87,6 +87,9 @@ All parameters are optional.
 
 ## Changelog
 
+### 1.1.2
+- Fix #12 via @FrankZwiers - Fix for php error on adding a Quick Post widget
+
 ### 1.1.1
 - Added error notification
 - Fix #10 via @bertoost - Fixed check empty sections and categories
