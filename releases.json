@@ -96,7 +96,7 @@
     "date": "2016-08-09T11:00:00-08:00",
     "notes": [
       "[Added] Added Craft Commerce product types to Sitemap.",
-      "[Improvement] Sitemap and Redirects are now stored in their own database tables, fixing the issue with the ~194 limit."
+      "[Improved] Sitemap and Redirects are now stored in their own database tables, fixing the issue with the ~194 limit."
     ]
   }
 ]
