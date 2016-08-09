@@ -24,12 +24,12 @@ class SeoPlugin extends BasePlugin {
 
 	public function getVersion()
 	{
-		return '1.1.3';
+		return '1.2.1';
 	}
 
 	public function getSchemaVersion()
 	{
-		return '0.0.8';
+		return '0.0.11';
 	}
 
 	public function getDeveloper()

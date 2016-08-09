@@ -89,5 +89,13 @@
     "notes": [
       "- Fixed #15 - Fixed bug where global settings undefined on new install"
     ]
+  },
+  {
+    "version": "1.2.1",
+    "downloadUrl": "https://github.com/ethercreative/seo/archive/v1.2.1.zip",
+    "date": "2016-08-09T11:00:00-08:00",
+    "notes": [
+      "[Improvement] Sitemap and Redirects are now stored in their own database tables, fixing the issue with the ~194 limit."
+    ]
   }
 ]

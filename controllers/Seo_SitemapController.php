@@ -23,7 +23,7 @@ class Seo_SitemapController extends BaseController
 		HeaderHelper::setHeader(array('charset' => 'utf-8'));
 
 		$path = craft()->path->getPluginsPath() . 'seo/templates';
-		craft()->path->setTemplatesPath($path);
+		craft()->templates->setTemplatesPath($path);
 
 		$this->renderTemplate('_sitemap', array(
 			'sectionUrls' => $sectionUrls,

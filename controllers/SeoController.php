@@ -92,8 +92,7 @@ class SeoController extends BaseController
 		craft()->templates->includeJsResource('seo/js/seo-settings.js');
 		craft()->templates->includeJs("new SeoSettings('{$namespace}', 'redirects');");
 
-		$redirects = craft()->seo->getData('redirects') ? craft()->seo->getData('redirects')['redirects'] : array();
-		if (is_string($redirects)) $redirects = json_decode($redirects, true);
+		$redirects = craft()->seo_redirect->getAllRedirects();
 
 		$this->renderTemplate('seo/redirects', array(
 			// Global

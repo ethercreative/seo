@@ -5,8 +5,7 @@
 {% import "_includes/forms" as forms %}
 
 {% block saveButton %}
-	<input type="hidden" name="action" value="seo/saveRedirects">
-	<input type="hidden" name="name" value="redirects">
+	<input type="hidden" name="action" value="seo/redirects/saveRedirects">
 
 	<input type="submit" class="btn submit" value="{{ 'Save'|t }}">
 {% endblock %}
@@ -65,7 +64,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr class="hidden" data-id="{i}">
+					<tr class="hidden" data-id="-1">
 						<td class="textual">
 							<textarea rows="1" style="height:46px" data-name="redirects-uri"></textarea>
 						</td>
@@ -85,7 +84,7 @@
 					</tr>
 
 				{% for redirect in redirects %}
-					<tr data-id="{{ loop.index }}">
+					<tr data-id="{{ redirect.id }}">
 						<td class="textual">
 							<textarea rows="1" style="height:46px" data-name="redirects-uri">{{ redirect.uri }}</textarea>
 						</td>

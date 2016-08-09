@@ -32,13 +32,14 @@ SeoSettings.prototype.sitemapName = function () {
 // REDIRECTS
 SeoSettings.prototype.redirectsForm = function (table, field) {
 	function parseRedirectForm() {
-		var o = {};
+		var o = [];
 		[].slice.call(table.querySelectorAll('tbody tr:not(.hidden)')).forEach(function (el) {
-			o[+el.getAttribute('data-id')] = {
+			o.push({
+				'id': +el.getAttribute('data-id'),
 				'uri': el.querySelector('[data-name="redirects-uri"]').value.trim(),
 				'to': el.querySelector('[data-name="redirects-to"]').value.trim(),
 				'type': el.querySelector('[data-name="redirects-type"]').value
-			};
+			});
 		});
 
 		field.value = JSON.stringify(o).replace(/\\n/g, "\\n")
@@ -81,18 +82,13 @@ SeoSettings.EditableTable = function (tableId, addButtonId, rowCb) {
 };
 
 SeoSettings.EditableTable.prototype.addRow = function () {
-	var i = 1;
-
-	if (this.table.getElementsByTagName('tr').length > 0) {
-		i = parseInt(this.table.lastElementChild.getAttribute('data-id')) + 1;
-	}
+	var self = this;
 
 	var newRow = this.row.cloneNode(true);
-	newRow.setAttribute('data-id', i);
-	// newRow.innerHTML = newRow.innerHTML.replace(new RegExp('{i}', 'g'), i);
 
 	newRow.getElementsByClassName('delete')[0].addEventListener('click', function () {
 		newRow.remove();
+		self.rowCb();
 	});
 
 	this.table.appendChild(newRow);
