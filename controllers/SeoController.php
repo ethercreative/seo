@@ -76,9 +76,10 @@ class SeoController extends BaseController
 			],
 
 			// Sitemap
-			'sitemap' => craft()->seo->getData('sitemap'),
+			'sitemap' => craft()->seo_sitemap->getSitemap(),
 			'sections' => craft()->seo_sitemap->getValidSections(),
 			'categories' => craft()->seo_sitemap->getValidCategories(),
+			'productTypes' => craft()->seo_sitemap->getValidProductTypes(),
 		));
 	}
 
@@ -92,8 +93,6 @@ class SeoController extends BaseController
 		craft()->templates->includeJsResource('seo/js/seo-settings.js');
 		craft()->templates->includeJs("new SeoSettings('{$namespace}', 'redirects');");
 
-		$redirects = craft()->seo_redirect->getAllRedirects();
-
 		$this->renderTemplate('seo/redirects', array(
 			// Global
 			'namespace' => $namespace,
@@ -106,7 +105,7 @@ class SeoController extends BaseController
 			],
 
 			// Redirecs
-			'redirects' => $redirects,
+			'redirects' => craft()->seo_redirect->getAllRedirects(),
 		));
 	}
 

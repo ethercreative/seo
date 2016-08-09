@@ -68,6 +68,8 @@ class Seo_RedirectService extends BaseApplicationComponent
 			$record->save();
 		}
 
+		// TODO: Add redirects to .htaccess / web.config to improve performance
+
 		return true;
 	}
 

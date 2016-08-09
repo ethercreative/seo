@@ -86,6 +86,8 @@ SeoSettings.EditableTable.prototype.addRow = function () {
 
 	var newRow = this.row.cloneNode(true);
 
+	newRow.innerHTML = newRow.innerHTML.replace(/\{i}/g, this.table.childNodes.length - 2);
+
 	newRow.getElementsByClassName('delete')[0].addEventListener('click', function () {
 		newRow.remove();
 		self.rowCb();

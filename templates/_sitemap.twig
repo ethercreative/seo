@@ -4,7 +4,7 @@
 
 	{# Sections #}
 
-	{% for section in sectionUrls %}
+	{% for section in sectionUrls -%}
 	<url>
 		<loc>{{ url(section.url) }}</loc>
 		<lastmod>{{ section.lastmod }}</lastmod>
@@ -17,7 +17,7 @@
 
 	{# Categories #}
 
-	{% for category in categoryUrls %}
+	{% for category in categoryUrls -%}
 	<url>
 		<loc>{{ url(category.url) }}</loc>
 		<lastmod>{{ category.lastmod }}</lastmod>
@@ -28,10 +28,23 @@
 	</url>
 	{% endfor %}
 
+	{# Products #}
+
+	{% for category in productTypeUrls -%}
+		<url>
+			<loc>{{ url(category.url) }}</loc>
+			<lastmod>{{ category.lastmod }}</lastmod>
+			<changefreq>{{ category.frequency }}</changefreq>
+			<priority>{{ category.priority }}</priority>
+			{% for alt in category.urlAlts %}<xhtml:link rel="alternate" hreflang="{{ alt.locale }}" href="{{ alt.url }}" />
+			{% endfor %}
+		</url>
+	{% endfor %}
+
 	{# Custom Urls #}
 
-	{% for custom in customUrls %}
-	{% if custom.enabled %}
+	{% for custom in customUrls -%}
+	{%- if custom.enabled -%}
 	<url>
 		<loc>{{ url(custom.url) }}</loc>
 		<changefreq>{{ custom.frequency }}</changefreq>

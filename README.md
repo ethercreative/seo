@@ -78,6 +78,7 @@ All parameters are optional.
 
 
 ## TODO
+- [ ] Add locale support for custom sitemap urls
 - [ ] Add redirect support for .htaccess & web.config to improve performance
 - [ ] Add hooks for plugin support
 - [ ] Include more fields in snippet (i.e. Type, Image, etc.)
@@ -87,6 +88,10 @@ All parameters are optional.
 - [ ] Add support for Routes.
 
 ## Changelog
+
+### 1.2.3
+- Added Craft Commerce product types to Sitemap.
+- Sitemap and Redirects are now stored in their own database tables, fixing the issue with the ~194 limit.
 
 ### 1.1.3
 - Fixed #15 - Fixed bug where global settings undefined on new install

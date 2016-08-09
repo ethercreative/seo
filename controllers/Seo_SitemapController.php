@@ -10,14 +10,28 @@ class Seo_SitemapController extends BaseController
 
 	public function init()
 	{
-		$this->sitemap = craft()->seo->getData('sitemap');
+		$this->sitemap = craft()->seo_sitemap->getSitemap();
 		parent::init();
+	}
+
+	public function actionSaveSitemap ()
+	{
+		$this->requirePostRequest();
+
+		if (craft()->seo_sitemap->saveSitemap(craft()->request->getRequiredPost('data'))) {
+			craft()->userSession->setNotice(Craft::t('Sitemap updated.'));
+		} else {
+			craft()->userSession->setError(Craft::t('Couldn’t update sitemap.'));
+		}
+
+		$this->redirectToPostedUrl();
 	}
 
 	public function actionGenerate ()
 	{
 		$sectionUrls = $this->_generateSections();
 		$categoryUrls = $this->_generateCategories();
+		$productTypeUrls = $this->_generateProductTypes();
 
 		HeaderHelper::setContentTypeByExtension('xml');
 		HeaderHelper::setHeader(array('charset' => 'utf-8'));
@@ -28,6 +42,7 @@ class Seo_SitemapController extends BaseController
 		$this->renderTemplate('_sitemap', array(
 			'sectionUrls' => $sectionUrls,
 			'categoryUrls' => $categoryUrls,
+			'productTypeUrls' => $productTypeUrls,
 			'customUrls' => array_key_exists('customUrls', $this->sitemap) ? $this->sitemap['customUrls'] : [],
 		));
 	}
@@ -62,6 +77,23 @@ class Seo_SitemapController extends BaseController
 		return $urls;
 	}
 
+	private function _generateProductTypes ()
+	{
+		if (!SeoPlugin::$commerceInstalled) return array();
+
+		$urls = [];
+
+		if (array_key_exists('productTypes', $this->sitemap) && !empty($this->sitemap['productTypes'])) {
+			foreach ($this->sitemap['productTypes'] as $productTypeId => $productType)
+			{
+				if ($productType['enabled'])
+					$urls = array_merge($urls, $this->_generateUrls($productTypeId, $productType, 'Commerce_Product'));
+			}
+		}
+
+		return $urls;
+	}
+
 	private function _generateUrls ($id, $section, $elemType)
 	{
 		$urls = [];
@@ -77,7 +109,7 @@ class Seo_SitemapController extends BaseController
 
 				if (is_array($elem->locales) && count($elem->locales) > 1) {
 					foreach ($elem->locales as $locale => $settings) {
-						$locale = $elemType == ElementType::Category ? $settings : $locale;
+						$locale = ($elemType == ElementType::Category) || ($elemType == 'Commerce_Product') ? $settings : $locale;
 
 						if ($locale !== craft()->language) {
 							$urlAlts[] = [
