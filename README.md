@@ -28,8 +28,9 @@ When moving from your old, awful site to your shiny new Craft one, you’ll want
 
 SEO for Crafts redirect manager lets you easily add 301 & 302 redirects, with full .htaccess style regex support!
 
-**Redirect Regex Example**
+**Redirect Regex Example**  
 To redirect from `blog/2016/my-post` to `news/my-post` you would add the following redirect:
+
 URI: `blog/([0-9]{4})/(.*)` To: `news/$2`
 
 ## Installation & Usage
