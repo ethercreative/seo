@@ -6,6 +6,8 @@
 	}
 
 	&--field {
+		position: relative;
+
 		padding: 20px;
 
 		border: 1px solid #e3e5e8;
@@ -216,7 +218,7 @@
 		}
 
 		&.disabled {
-			opacity: 0.25;
+			opacity: 0.1;
 			pointer-events: none;
 		}
 
@@ -232,6 +234,22 @@
 			.toggle-score {
 				.open { display: none; }
 				.close { display: inline; }
+			}
+		}
+
+		&-disabled {
+			position: absolute;
+			z-index: 2;
+			bottom: 35px;
+			left: 17.5%;
+
+			display: block;
+			width: 65%;
+
+			text-align: center;
+
+			&.hide {
+				display: none;
 			}
 		}
 	}

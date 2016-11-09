@@ -51,11 +51,16 @@ class SeoFieldType extends BaseFieldType implements IPreviewableFieldType {
 			if ($hasSection && $isEntry && $this->element->uri != '__home__' && $this->element->section->type != 'single')
 				$url = substr($url, 0, strrpos( $url, '/')) . '/';
 
+			$titleSuffix = $settings->titleSuffix ?: $settingsGlobal->titleSuffix;
+
+			if ($hasSection && $isEntry && $value['title'] == null && $this->element->section->type == 'single')
+				$titleSuffix = $this->element->title . ' ' . $titleSuffix;
+
 			return craft()->templates->render('seo/_seo-fieldtype', array(
 				'id' => $id,
 				'name' => $name,
 				'value' => $value,
-				'titleSuffix' => $settings->titleSuffix ?: $settingsGlobal->titleSuffix,
+				'titleSuffix' => $titleSuffix,
 				'hasSection' => $hasSection,
 				'isNew' => $this->element->title === null,
 				'isHome' => $this->element->uri == '__home__',

@@ -37,7 +37,7 @@ class Seo_SitemapService extends BaseApplicationComponent
 
 		foreach ($newSitemap as $group => $rows)
 		{
-			foreach ($rows as $new)
+			foreach ((array)$rows as $new)
 			{
 				$new['group'] = $group;
 

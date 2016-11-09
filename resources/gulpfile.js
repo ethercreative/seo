@@ -15,7 +15,7 @@ gulp.task('js', function () {
 		.pipe(jshint.reporter())
 		.pipe(uglify().on('error', function(err){ console.log(err.message); }))
 		.pipe(rename({ suffix: ".min" }))
-		.pipe(gulp.dest('js'));
+		.pipe(gulp.dest('../seo/resources/js'));
 });
 
 // Less
@@ -24,7 +24,7 @@ gulp.task('less', function () {
 		.pipe(less({
 			plugins: [autoprefixer, cleancss]
 		}).on('error', function(err){ console.log(err.message); }))
-		.pipe(gulp.dest('./css'));
+		.pipe(gulp.dest('../seo/resources/css'));
 });
 
 // Watchers

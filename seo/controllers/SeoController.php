@@ -61,7 +61,7 @@ class SeoController extends BaseController
 
 		$namespace = 'data';
 
-		craft()->templates->includeJsResource('seo/js/seo-settings.js');
+		craft()->templates->includeJsResource('seo/js/seo-settings.min.js');
 		craft()->templates->includeJs("new SeoSettings('{$namespace}', 'sitemap');");
 
 		$this->renderTemplate('seo/sitemap', array(
@@ -90,7 +90,7 @@ class SeoController extends BaseController
 		$namespace = 'data';
 
 		craft()->templates->includeCssResource('seo/css/redirects.css');
-		craft()->templates->includeJsResource('seo/js/seo-settings.js');
+		craft()->templates->includeJsResource('seo/js/seo-settings.min.js');
 		craft()->templates->includeJs("new SeoSettings('{$namespace}', 'redirects');");
 
 		$this->renderTemplate('seo/redirects', array(
@@ -115,7 +115,7 @@ class SeoController extends BaseController
 
 		$settings = craft()->seo->settings();
 
-		craft()->templates->includeJsResource('seo/js/seo-settings.js');
+		craft()->templates->includeJsResource('seo/js/seo-settings.min.js');
 		craft()->templates->includeJs("new SeoSettings('{$namespace}', 'settings');");
 
 		$this->renderTemplate('seo/settings', array(

@@ -26,7 +26,7 @@ class SeoPlugin extends BasePlugin {
 
 	public function getVersion()
 	{
-		return '1.2.3';
+		return '1.3.0';
 	}
 
 	public function getSchemaVersion()
@@ -120,7 +120,7 @@ class SeoPlugin extends BasePlugin {
 		{
 			craft()->onException = function(\CExceptionEvent $event)
 			{
-				if($event->exception->statusCode)
+				if(property_exists($event->exception, 'statusCode') && $event->exception->statusCode)
 				{
 					if ($event->exception->statusCode == 404) {
 						$path = craft()->request->getPath();

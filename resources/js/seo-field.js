@@ -1,14 +1,15 @@
 var SeoField = function (namespace, hasSection) {
-	if (window.hasSeoField) {
-		SeoField.Fail("One SEO field only");
-		document.getElementById(namespace + '-field').classList.add('seo--disabled');
-		return;
-	}
+	if (window.hasSeoField) return;
 
 	var self = this;
 	window.hasSeoField = true;
 
 	this.namespace = namespace;
+
+	// Field
+	document.getElementById(namespace + '-field').addEventListener('DOMNodeRemoved', function () {
+		window.hasSeoField = false;
+	});
 
 	// Snippet
 	this.title();
@@ -495,6 +496,11 @@ SeoField.GetEntryHTML = function () {
 SeoField.GetEntryHTML.prototype.update = function (cb) {
 	var self = this,
 		postData = Garnish.getPostData(document.getElementById('container'));
+
+	if (typeof Craft.livePreview === typeof undefined) {
+		this.score.previousElementSibling.classList.add('hide');
+		return;
+	}
 
 	if (!this.lastPostData || !Craft.compare(postData, this.lastPostData)) {
 		this.lastPostData = postData;
