@@ -83,6 +83,7 @@ All parameters are optional.
 
 
 ## TODO
+- [ ] Add caching to sitemap
 - [ ] Add locale support for custom sitemap urls
 - [ ] Add redirect support for .htaccess & web.config to improve performance
 - [ ] Add hooks for plugin support
@@ -93,6 +94,9 @@ All parameters are optional.
 - [ ] Add support for Routes.
 
 ## Changelog
+
+### 1.3.1
+- Actual fix for #20
 
 ### 1.3.0
 - Singles snippet title field now auto-populates.

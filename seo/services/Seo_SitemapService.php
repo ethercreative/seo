@@ -41,6 +41,8 @@ class Seo_SitemapService extends BaseApplicationComponent
 			{
 				$new['group'] = $group;
 
+				if (!array_key_exists('id', $new)) continue;
+
 				if ($new['id'] != "-1") $newById[$new['id']] = $new;
 				else $newRecordsRaw[] = $new;
 			}
