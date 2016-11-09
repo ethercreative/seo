@@ -1,1 +1,38 @@
-{% include 'seo/_seo-fieldtype-settings' %}
+{% include 'seo/_seo-fieldtype-settings' with {default:true} %}
+
+<div class="field" id="populateAllFields">
+	<div class="heading">
+		<label>Populate field types</label>
+		<div class="instructions">
+			<p>
+				Useful if you created the SEO field after content was added.<br>
+				This will set the titles of all the entries that have the selected SEO field to <code>{{ '{{' }} entry.title ~ ' ' ~ seoField.suffix }}</code><br>
+				<strong>Warning:</strong> This is a destructive process. Any changes to any entries SEO field will be overwritten.
+			</p>
+		</div>
+	</div>
+	<br>
+	<div class="input ltr">
+		<div class="form last">
+			<div class="checkbox-select" id="populateEntries">
+				<div>
+					<input type="hidden" name="populate" value="">
+					<input type="checkbox" value="*" id="populateAllEntries" class="all checkbox" name="populate">
+					<label for="populateAllEntries"><b>All Entries</b></label>
+				</div>
+				{% for field in entries %}
+					{% set v = 'entries-' ~ field.section.id ~ '|' ~ field.entryType.id ~ '|' ~ field.seoFieldIds|join(':') %}
+				<div>
+					<input type="checkbox" value="{{ v }}" id="{{ v }}" class="checkbox" name="populate[]">
+					<label for="{{ v }}">
+						{{ field.section.name }} -
+						{{ field.entryType.name }}
+						<code style="color:silver">({% for id in field.seoFieldIds %}{{ seoFields[id].handle ~ (not loop.last ? ', ') }}{% endfor %})</code>
+					</label>
+				</div>
+				{% endfor %}
+			</div>
+			<div class="buttons"><input type="submit" class="btn submit" value="Populate field types" id="populateAllEntriesBtn"></div>
+		</div>
+	</div>
+</div>
