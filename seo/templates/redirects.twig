@@ -47,9 +47,15 @@
 {% block content %}
 	{% namespace namespace %}
 	<div class="field">
-		{#<div class="heading">
-			<label>Redirects</label>
-		</div>#}
+		<div class="heading">
+			<div class="instructions">
+				Redirects support regex.
+				To redirect from <code>blog/2016/my-post</code> to <code>news/my-post</code> you would add the following redirect:
+				URI: <code>blog/([0-9]{4})/(.*)</code> To: <code>news/$2</code>
+			</div>
+		</div>
+
+		<br>
 
 		<div class="input">
 			<input type="hidden" name="redirects" id="redirects-field">

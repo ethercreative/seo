@@ -98,5 +98,21 @@
       "[Added] Added Craft Commerce product types to Sitemap.",
       "[Improved] Sitemap and Redirects are now stored in their own database tables, fixing the issue with the ~194 limit."
     ]
+  },
+
+  {
+    "version": "1.3.0",
+    "downloadUrl": "https://github.com/ethercreative/seo/archive/v1.3.0.zip",
+    "date": "2016-11-09T15:00:00-08:00",
+    "notes": [
+      "[Fixed] Fixed a bug where a PHP warning appear at the top of error pages, breaking the HTTP response status code.",
+      "[Fixed] Added @PetterRuud's fix for #20",
+      "[Fixed] Added fix for #21",
+      "[Fixed] Added fix for #26",
+      "[Fixed] Field no longer throws 'One SEO field only' error when using quick-edit modal thingies.",
+      "[Fixed] Singles snippet title field now auto-populates.",
+      "[Improved] Moved plugin files into `SEO/` directory, moved superfluous files out of plugin directory.",
+      "[Improved] Made redirects regex support clearer (even I forgot)."
+    ]
   }
 ]

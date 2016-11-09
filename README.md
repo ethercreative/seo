@@ -26,7 +26,11 @@ With SEO for Craft’s sitemap manager you have complete control over what conte
 
 When moving from your old, awful site to your shiny new Craft one, you’ll want to make sure that all your old pages are redirected to their new counterparts. Redirects are easy to manage with SEO for Craft.
 
-SEO for Crafts redirect manager lets you easily add 301 & 302 redirects, with full regex support!
+SEO for Crafts redirect manager lets you easily add 301 & 302 redirects, with full .htaccess style regex support!
+
+**Redirect Regex Example**
+To redirect from `blog/2016/my-post` to `news/my-post` you would add the following redirect:
+URI: `blog/([0-9]{4})/(.*)` To: `news/$2`
 
 ## Installation & Usage
 
@@ -88,6 +92,15 @@ All parameters are optional.
 - [ ] Add support for Routes.
 
 ## Changelog
+
+### 1.3.0
+- Singles snippet title field now auto-populates.
+- Made redirects regex support clearer (even I forgot).
+- Field no longer throws "One SEO field only" error when using quick-edit modal thingies.
+- Moved plugin files into `SEO/` directory, moved superfluous files out of plugin directory.
+- Added fix for #26
+- Added fix for #21
+- Added @PetterRuud's fix for #20
 
 ### 1.2.3
 - Added Craft Commerce product types to Sitemap.

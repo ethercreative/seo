@@ -100,6 +100,7 @@ class Seo_SitemapController extends BaseController
 
 		$sect = craft()->elements->getCriteria($elemType);
 		$sect->sectionId = $id;
+		$sect->limit = null;
 
 		foreach ($sect->find() as $elem) {
 
