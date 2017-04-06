@@ -102,7 +102,7 @@
   {
     "version": "1.3.0",
     "downloadUrl": "https://github.com/ethercreative/seo/archive/v1.3.0.zip",
-    "date": "2016-11-09T15:00:00-08:00",
+    "date": "2016-08-09T15:00:00-08:00",
     "notes": [
       "[Fixed] Fixed a bug where a PHP warning appear at the top of error pages, breaking the HTTP response status code.",
       "[Fixed] Added @PetterRuud's fix for #20",
@@ -117,7 +117,7 @@
   {
     "version": "1.3.1",
     "downloadUrl": "https://github.com/ethercreative/seo/archive/v1.3.1.zip",
-    "date": "2016-08-09T11:00:00-10:00",
+    "date": "2016-11-09T11:00:00-10:00",
     "notes": [
       "[Fixed] An actual fix for #20 (oops)"
     ]
