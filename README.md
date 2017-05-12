@@ -95,6 +95,12 @@ All parameters are optional.
 
 ## Changelog
 
+### 1.3.2
+- Fix for #33
+- Merged andrefgneves' #28 "Fix settings script URL"
+- Merged roelvanhintum's #32 "Fixed the returning #20 php error"
+- Fixed the borked release dates
+
 ### 1.3.1
 - Actual fix for #20
 

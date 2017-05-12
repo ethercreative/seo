@@ -121,5 +121,16 @@
     "notes": [
       "[Fixed] An actual fix for #20 (oops)"
     ]
+  },
+  {
+    "version": "1.3.2",
+    "downloadUrl": "https://github.com/ethercreative/seo/archive/v1.3.2.zip",
+    "date": "2017-05-12T10:50:00-08:00",
+    "notes": [
+      "[Fixed] Fix for #33",
+      "[Fixed] Merged andrefgneves' #28 \"Fix settings script URL\"",
+      "[Fixed] Merged roelvanhintum's #32 \"Fixed the returning #20 php error\"",
+      "[Fixed] Fixed the borked release dates"
+    ]
   }
 ]
