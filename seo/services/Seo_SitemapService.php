@@ -39,6 +39,7 @@ class Seo_SitemapService extends BaseApplicationComponent
 		{
 			foreach ((array)$rows as $new)
 			{
+				if (!is_array($new)) continue;
 				$new['group'] = $group;
 
 				if (!array_key_exists('id', $new)) continue;
