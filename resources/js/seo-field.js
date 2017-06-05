@@ -65,6 +65,7 @@ SeoField.prototype.title = function () {
 	title.addEventListener('input', titleInput, false);
 
 	title.addEventListener('change', function () { self.calculateScore(); });
+	t.addEventListener('change', function (e) { self.titleField.value = e.target.value; });
 };
 
 SeoField.prototype.slug = function () {
