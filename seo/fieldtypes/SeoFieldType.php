@@ -44,7 +44,10 @@ class SeoFieldType extends BaseFieldType implements IPreviewableFieldType {
 
 			craft()->templates->includeCssResource('seo/css/seo.css');
 			craft()->templates->includeJsResource('seo/js/seo-field.min.js');
-			craft()->templates->includeJs("new SeoField('{$namespaceId}', {$hasSectionString});");
+
+			// Pass settings to JS - global settings overridden with any field settings
+			$jsSettings = array_replace($settingsGlobal->getAttributes(), array_filter($settings->getAttributes()));
+			craft()->templates->includeJs("new SeoField('{$namespaceId}', {$hasSectionString}, " . json_encode($jsSettings) . ");");
 
 			$url = $this->element->getUrl();
 

@@ -3,6 +3,14 @@
 	<label>Snippet</label>
 	<div class="instructions">This is how the page might look in Google. Click the text to edit.</div>
 
+	<div class="seo--options">
+		<label>
+			<input type="checkbox" name="{{ name }}[useCustomTitle]" id="{{ id }}-useCustomTitle"
+					{{ value is not null and value.useCustomTitle == 'on' ? 'checked="checked"' : '' }}>
+			Use custom title
+		</label>
+	</div>
+
 	<div class="seo--snippet nmb">
 		<div class="inner">
 			<input type="text" name="{{ name }}[title]" class="title{{ isNew or value is null ? ' clean' : '' }}"
@@ -22,7 +30,15 @@
 {% else %}
 <div class="seo--field">
 	<label>Snippet</label>
-	<div class="instructions">This is how the page might look in Google. Click the text to edit.</div>
+	<div class="instructions">This is how the page might look in Google.</div>
+
+	<div class="seo--options">
+		<label>
+			<input type="checkbox" name="{{ name }}[useCustomTitle]" id="{{ id }}-useCustomTitle"
+				   {{ value is not null and value.useCustomTitle == 'on' ? 'checked="checked"' : '' }}>
+			Use custom title
+		</label>
+	</div>
 
 	<div class="seo--snippet">
 		<div class="inner">
