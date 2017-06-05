@@ -1,4 +1,4 @@
-var SeoField = function (namespace, hasSection) {
+var SeoField = function (namespace, hasSection, settings) {
 	if (window.hasSeoField) return;
 
 	var self = this;
@@ -10,6 +10,9 @@ var SeoField = function (namespace, hasSection) {
 	document.getElementById(namespace + '-field').addEventListener('DOMNodeRemoved', function () {
 		window.hasSeoField = false;
 	});
+
+	// Settings
+	this.settings = settings;
 
 	// Snippet
 	this.title();
@@ -44,27 +47,34 @@ var SeoField = function (namespace, hasSection) {
 // SNIPPET
 SeoField.prototype.title = function () {
 	var title = this.titleField = document.getElementById(this.namespace + '-title'),
+		useCustomTitle = document.getElementById(this.namespace + '-useCustomTitle'),
+		titleSuffix = this.settings.titleSuffix,
 		t = document.getElementById('title'),
 		tInput, titleInput, self = this;
 
 	tInput = function () {
-		title.value = this.value + ' ' + initial;
+		title.value = t.value + ' ' + titleSuffix;
 	};
-
-	titleInput = function () {
-		this.classList.remove('clean');
-		t.removeEventListener('input', tInput, false);
-		this.removeEventListener('input', titleInput, false);
-	};
-
-	if (t && title.classList.contains('clean')) {
-		var initial = title.value;
-		t.addEventListener('input', tInput, false);
-	}
-
-	title.addEventListener('input', titleInput, false);
 
 	title.addEventListener('change', function () { self.calculateScore(); });
+
+	// Add handler
+	useCustomTitleInput = function() {
+		if (!useCustomTitle.checked) {
+			title.setAttribute('readonly', 'readonly');
+			t.addEventListener('input', tInput);
+			// And do it now to reset title - should prob use .dispatchEvent()
+			tInput();
+		}
+		else {
+			title.removeAttribute('readonly');
+			t.removeEventListener('input', tInput);
+		}
+	};
+
+	useCustomTitle.addEventListener('input', useCustomTitleInput, false);
+	// And do it now to set listeners - should prob use .dispatchEvent()
+	useCustomTitleInput();
 };
 
 SeoField.prototype.slug = function () {
