@@ -16,7 +16,6 @@ var SeoSettings = function (namespace, run) {
 			break;
 		case 'settings':
 			this.sitemapName();
-			this.populateFields();
 			break;
 	}
 };
@@ -56,36 +55,6 @@ SeoSettings.prototype.redirectsForm = function (table, field) {
 
 	[].slice.call(document.querySelectorAll('[data-name]')).forEach(function (el) {
 		el.addEventListener('input', parseRedirectForm);
-	});
-};
-
-// SETTINGS
-SeoSettings.prototype.populateFields = function () {
-	document.getElementById('settings-populateAllEntriesBtn').addEventListener('click', function (e) {
-		e.preventDefault();
-
-		// Entries
-		var entriesToProcess = [].slice.call(document.getElementById('settings-populateEntries')
-			.querySelectorAll('input[type=checkbox]:checked')).reduce(function(a, el) {
-			if (el.value === "*") return a;
-
-			var s = el.value.split('-')[1].split('|');
-
-			a.push({
-				section: +s[0],
-				type: +s[1],
-				fields: s[2].split(':').map(function (n) { return +n; })
-			});
-
-			return a;
-		}, []);
-
-		// TODO: Categories
-		// TODO: Globals
-		// TODO: Products
-		// TODO: Custom Element Types
-
-		console.log(entriesToProcess);
 	});
 };
 

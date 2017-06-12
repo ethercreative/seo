@@ -118,67 +118,6 @@ class SeoController extends BaseController
 		craft()->templates->includeJsResource('seo/js/seo-settings.min.js');
 		craft()->templates->includeJs("new SeoSettings('{$namespace}', 'settings');");
 
-		// Get all SEO fields
-		$seoFieldIds = [];
-		$seoFieldsById = [];
-		foreach (craft()->fields->getAllFields() as $field) {
-			if ($field->getFieldType()->getClassHandle() == "Seo") {
-				$id = $field->getAttribute('id');
-				$seoFieldIds[] = $id;
-				$seoFieldsById[$id] = $field;
-			}
-		}
-
-		// Get all entry types that have an SEO field
-		$allSections = craft()->sections->getAllSections();
-		$allEntryTypes = [];
-		foreach ($allSections as $section) {
-			/** @var EntryTypeModel $entryType */
-			foreach ($section->getEntryTypes() as $entryType) {
-				$fieldLayout = craft()->fields->getLayoutById($entryType->getAttribute('fieldLayoutId'));
-				$fieldIds = array_intersect($seoFieldIds, $fieldLayout->getFieldIds());
-
-				if (count($fieldIds) < 1) continue;
-
-				$allEntryTypes[] = [
-					'section' => $section,
-					'entryType' => $entryType,
-					'seoFieldIds' => $fieldIds,
-				];
-			}
-		}
-
-		// TODO: All category groups
-		// TODO: All global sets
-		// TODO: All product types
-		// TODO: Hooks for custom element types
-
-//		$elementTypes = craft()->elements->getAllElementTypes();
-//		$seoFields = [];
-//
-//		$elementIndex = 0;
-//		$fieldIndex = 0;
-//		foreach ($elementTypes as $elementType) {
-//			if (!$elementType->hasTitles()) continue;
-//
-//			$fields = craft()->fields->getFieldsByElementType($elementType->getClassHandle());
-//			foreach ($fields as $field) {
-//				if ($field->getFieldType()->getClassHandle() == "Seo") {
-//					$seoFields[] = [
-//						'field' => $field,
-//						'elementType' => $elementType,
-//						'elementTypeClassName' => get_class($elementType),
-//
-//						'elementIndex' => $elementIndex,
-//						'fieldIndex' => $fieldIndex,
-//					];
-//					$fieldIndex++;
-//				}
-//			}
-//
-//			$elementIndex++;
-//		}
-
 		$this->renderTemplate('seo/settings', array(
 			// Global
 			'namespace' => $namespace,
@@ -194,10 +133,6 @@ class SeoController extends BaseController
 			'crumbs' => [
 				['label' => 'SEO', 'url' => 'index'],
 			],
-
-			// Populate Fields
-			'seoFields' => $seoFieldsById,
-			'entries' => $allEntryTypes,
 		));
 	}
 
