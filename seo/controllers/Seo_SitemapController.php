@@ -6,14 +6,6 @@ class Seo_SitemapController extends BaseController
 {
 	protected $allowAnonymous = true;
 
-	private $sitemap;
-
-	public function init()
-	{
-		$this->sitemap = craft()->seo_sitemap->getSitemap();
-		parent::init();
-	}
-
 	public function actionSaveSitemap ()
 	{
 		$this->requirePostRequest();
@@ -27,111 +19,40 @@ class Seo_SitemapController extends BaseController
 		$this->redirectToPostedUrl();
 	}
 
-	public function actionGenerate ()
+	/**
+	 * Renders the sitemap Index
+	 */
+	public function actionIndex ()
 	{
-		$sectionUrls = $this->_generateSections();
-		$categoryUrls = $this->_generateCategories();
-		$productTypeUrls = $this->_generateProductTypes();
-
 		HeaderHelper::setContentTypeByExtension('xml');
 		HeaderHelper::setHeader(array('charset' => 'utf-8'));
 
-		$path = craft()->path->getPluginsPath() . 'seo/templates';
-		craft()->templates->setTemplatesPath($path);
-
-		$this->renderTemplate('_sitemap', array(
-			'sectionUrls' => $sectionUrls,
-			'categoryUrls' => $categoryUrls,
-			'productTypeUrls' => $productTypeUrls,
-			'customUrls' => array_key_exists('customUrls', $this->sitemap) ? $this->sitemap['customUrls'] : [],
-		));
+		echo craft()->seo_sitemap->index();
 	}
 
-	private function _generateSections ()
+	/**
+	 * Renders the sitemap for custom URLs
+	 */
+	public function actionCustom ()
 	{
-		$urls = [];
+		HeaderHelper::setContentTypeByExtension('xml');
+		HeaderHelper::setHeader(array('charset' => 'utf-8'));
 
-		if (array_key_exists('sections', $this->sitemap) && !empty($this->sitemap['sections'])) {
-			foreach ($this->sitemap['sections'] as $sectionId => $section)
-			{
-				if ($section['enabled'])
-					$urls = array_merge($urls, $this->_generateUrls($sectionId, $section, ElementType::Entry));
-			}
-		}
-
-		return $urls;
+		echo craft()->seo_sitemap->custom();
 	}
 
-	private function _generateCategories ()
+	/**
+	 * Renders the sitemaps for craft-defined URLs
+	 * (i.e. sections, categories, etc.)
+	 *
+	 * @param array $variables
+	 */
+	public function actionSitemap (array $variables = [])
 	{
-		$urls = [];
+		HeaderHelper::setContentTypeByExtension('xml');
+		HeaderHelper::setHeader(array('charset' => 'utf-8'));
 
-		if (array_key_exists('categories', $this->sitemap) && !empty($this->sitemap['categories'])) {
-			foreach ($this->sitemap['categories'] as $categoryId => $category)
-			{
-				if ($category['enabled'])
-					$urls = array_merge($urls, $this->_generateUrls($categoryId, $category, ElementType::Category));
-			}
-		}
-
-		return $urls;
+		echo craft()->seo_sitemap->sitemap($variables);
 	}
 
-	private function _generateProductTypes ()
-	{
-		if (!SeoPlugin::$commerceInstalled) return array();
-
-		$urls = [];
-
-		if (array_key_exists('productTypes', $this->sitemap) && !empty($this->sitemap['productTypes'])) {
-			foreach ($this->sitemap['productTypes'] as $productTypeId => $productType)
-			{
-				if ($productType['enabled'])
-					$urls = array_merge($urls, $this->_generateUrls($productTypeId, $productType, 'Commerce_Product'));
-			}
-		}
-
-		return $urls;
-	}
-
-	private function _generateUrls ($id, $section, $elemType)
-	{
-		$urls = [];
-
-		$sect = craft()->elements->getCriteria($elemType);
-		$sect->sectionId = $id;
-		$sect->limit = null;
-
-		foreach ($sect->find() as $elem) {
-
-			if ($elem->url !== null) {
-
-				$urlAlts = [];
-
-				if (is_array($elem->locales) && count($elem->locales) > 1) {
-					foreach ($elem->locales as $locale => $settings) {
-						$locale = ($elemType == ElementType::Category) || ($elemType == 'Commerce_Product') ? $settings : $locale;
-
-						if ($locale !== craft()->language) {
-							$urlAlts[] = [
-								'locale' => str_replace('_', '-', $locale),
-								'url' => UrlHelper::getSiteUrl(($elem->uri == '__home__') ? '' : $elem->uri, null, null, $locale)
-							];
-						}
-					}
-				}
-
-				$urls[] = [
-					'url' => $elem->url,
-					'urlAlts' => $urlAlts,
-					'lastmod' => $elem->dateUpdated,
-					'frequency' => $section['frequency'],
-					'priority' => $section['priority'],
-				];
-
-			}
-		}
-
-		return $urls;
-	}
 }

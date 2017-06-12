@@ -98,6 +98,10 @@ All parameters are optional.
 
 ## Changelog
 
+### 1.4.0
+- Sitemap is now split into appropriate sections and paginated. By default the pages are limited to 1000 elements, but this is configurable in the settings.
+- Renamed General settings tab to Sitemap.
+
 ### 1.3.2
 - Fixed JS bug on fields settings page
 - Added ability to populate SEO fields by element type. Doing so will set all SEO fields to `{{ entry.title ~ ' ' ~ seoField.suffix }}`.

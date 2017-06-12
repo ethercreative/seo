@@ -121,5 +121,25 @@
     "notes": [
       "[Fixed] An actual fix for #20 (oops)"
     ]
+  },
+  {
+    "version": "1.3.2",
+    "downloadUrl": "https://github.com/ethercreative/seo/archive/v1.3.2.zip",
+    "date": "2017-05-12T10:50:00-08:00",
+    "notes": [
+      "[Fixed] Fix for #33",
+      "[Fixed] Merged andrefgneves' #28 \"Fix settings script URL\"",
+      "[Fixed] Merged roelvanhintum's #32 \"Fixed the returning #20 php error\"",
+      "[Fixed] Fixed the borked release dates"
+    ]
+  },
+  {
+    "version": "1.4.0",
+    "downloadUrl": "https://github.com/ethercreative/seo/archive/v1.4.0.zip",
+    "date": "2017-06-12T14:38:00-08:00",
+    "notes": [
+      "[Improved] Sitemap is now split into appropriate sections and paginated. By default the pages are limited to 1000 elements, but this is configurable in the settings.",
+      "[Improved] Renamed General settings tab to Sitemap."
+    ]
   }
 ]
