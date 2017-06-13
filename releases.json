@@ -141,5 +141,14 @@
       "[Improved] Sitemap is now split into appropriate sections and paginated. By default the pages are limited to 1000 elements, but this is configurable in the settings.",
       "[Improved] Renamed General settings tab to Sitemap."
     ]
+  },
+  {
+    "version": "1.4.1",
+    "downloadUrl": "https://github.com/ethercreative/seo/archive/v1.4.1.zip",
+    "date": "2017-06-13T10:19:00-08:00",
+    "notes": [
+      "[Fixed] Fixed bug where products & categories weren't being split out correctly in the sitemap",
+      "[Fixed] Sitemap content sections now correctly show as disabled by default"
+    ]
   }
 ]

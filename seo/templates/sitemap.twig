@@ -83,7 +83,7 @@
 							{{ forms.checkbox({
 								name: "sections["~section.id~"][enabled]",
 								value: true,
-								checked: (sitemap.sections is defined and sitemap.sections[section.id] is defined ? sitemap.sections[section.id].enabled : true)
+								checked: (sitemap.sections is defined and sitemap.sections[section.id] is defined ? sitemap.sections[section.id].enabled : false)
 							}) }}
 						</td>
 					</tr>
@@ -139,7 +139,7 @@
 							{{ forms.checkbox({
 								name: "categories["~category.id~"][enabled]",
 								value: true,
-								checked: (sitemap.categories is defined and sitemap.categories[category.id] is defined ? sitemap.categories[category.id].enabled : true)
+								checked: (sitemap.categories is defined and sitemap.categories[category.id] is defined ? sitemap.categories[category.id].enabled : false)
 							}) }}
 						</td>
 					</tr>
@@ -196,7 +196,7 @@
 							{{ forms.checkbox({
 								name: "productTypes["~section.id~"][enabled]",
 								value: true,
-								checked: (sitemap.productTypes is defined and sitemap.productTypes[section.id] is defined ? sitemap.productTypes[section.id].enabled : true)
+								checked: (sitemap.productTypes is defined and sitemap.productTypes[section.id] is defined ? sitemap.productTypes[section.id].enabled : false)
 							}) }}
 						</td>
 					</tr>

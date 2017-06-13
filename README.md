@@ -98,6 +98,10 @@ All parameters are optional.
 
 ## Changelog
 
+### 1.4.1
+- Fixed bug where products & categories weren't being split out correctly in the sitemaps
+- Sitemap content sections now correctly show as disabled by default
+
 ### 1.4.0
 - Sitemap is now split into appropriate sections and paginated. By default the pages are limited to 1000 elements, but this is configurable in the settings.
 - Renamed General settings tab to Sitemap.

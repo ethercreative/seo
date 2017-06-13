@@ -323,23 +323,27 @@ class Seo_SitemapService extends BaseApplicationComponent
 			goto out;
 
 		$type = null;
+		$idHandle = null;
 
 		switch ($variables["section"]) {
 			case "sections":
 				$type = ElementType::Entry;
+				$idHandle = "sectionId";
 				break;
 			case "categories":
 				$type = ElementType::Category;
+				$idHandle = "groupId";
 				break;
 			case "productTypes":
 				$type = "Commerce_Product";
+				$idHandle = "typeId";
 				break;
 			default:
 				goto out;
 		}
 
 		$elements = craft()->elements->getCriteria($type);
-		$elements->sectionId = $variables["id"];
+		$elements->{$idHandle} = $variables["id"];
 		$elements->limit = $this->settings()->sitemapLimit;
 		$elements->offset = $this->settings()->sitemapLimit * $variables["page"];
 

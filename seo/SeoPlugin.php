@@ -26,7 +26,7 @@ class SeoPlugin extends BasePlugin {
 
 	public function getVersion()
 	{
-		return '1.4.0';
+		return '1.4.1';
 	}
 
 	public function getSchemaVersion()
@@ -81,7 +81,6 @@ class SeoPlugin extends BasePlugin {
 				['action' => 'seo/sitemap/custom'],
 			$this->getSettings()->sitemapName . '_(?P<section>\w*)_(?P<id>\d*)_(?P<page>\d*)\.xml' =>
 				["action" => "seo/sitemap/sitemap"],
-
 		);
 	}
 
