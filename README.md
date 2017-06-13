@@ -83,6 +83,7 @@ All parameters are optional.
 
 
 ## TODO
+- [ ] Make field more self contained (to allow for multiple per page, e.g. product variants that have SEO fields)
 - [ ] Add caching to sitemap
 - [ ] Add locale support for custom sitemap urls
 - [ ] Add redirect support for .htaccess & web.config to improve performance
@@ -92,14 +93,22 @@ All parameters are optional.
 - [ ] Make the SEO dashboard more useful. Somehow.
 - [ ] Add schema / rich snippet support to the fieldtype.
 - [ ] Add support for Routes.
+- [ ] Include [TextRank](https://github.com/crodas/TextRank) functionality?
+- [ ] AI to assist with copywriting..? (IBM has some interesting stuff on this)
 
 ## Changelog
 
+### 1.4.1
+- Fixed bug where products & categories weren't being split out correctly in the sitemaps
+- Sitemap content sections now correctly show as disabled by default
+
+### 1.4.0
+- Sitemap is now split into appropriate sections and paginated. By default the pages are limited to 1000 elements, but this is configurable in the settings.
+- Renamed General settings tab to Sitemap.
+
 ### 1.3.2
-- Fix for #33
-- Merged andrefgneves' #28 "Fix settings script URL"
-- Merged roelvanhintum's #32 "Fixed the returning #20 php error"
-- Fixed the borked release dates
+- Fixed JS bug on fields settings page
+- Added ability to populate SEO fields by element type. Doing so will set all SEO fields to `{{ entry.title ~ ' ' ~ seoField.suffix }}`.
 
 ### 1.3.1
 - Actual fix for #20

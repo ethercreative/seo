@@ -26,7 +26,7 @@ class SeoPlugin extends BasePlugin {
 
 	public function getVersion()
 	{
-		return '1.3.2';
+		return '1.4.1';
 	}
 
 	public function getSchemaVersion()
@@ -75,7 +75,12 @@ class SeoPlugin extends BasePlugin {
 	public function registerSiteRoutes ()
 	{
 		return array(
-			$this->getSettings()->sitemapName . '.xml' => array('action' => 'seo/sitemap/generate')
+			$this->getSettings()->sitemapName . '.xml' =>
+				['action' => 'seo/sitemap/index'],
+			$this->getSettings()->sitemapName . '_custom.xml' =>
+				['action' => 'seo/sitemap/custom'],
+			$this->getSettings()->sitemapName . '_(?P<section>\w*)_(?P<id>\d*)_(?P<page>\d*)\.xml' =>
+				["action" => "seo/sitemap/sitemap"],
 		);
 	}
 
@@ -84,6 +89,7 @@ class SeoPlugin extends BasePlugin {
 		return array(
 			// Sitemap Settings
 			'sitemapName' => array(AttributeType::String, 'default' => 'sitemap'),
+			'sitemapLimit'=> [AttributeType::Number, 'default' => 1000],
 
 			// Redirect Settings
 			'publicPath' => array(AttributeType::String),

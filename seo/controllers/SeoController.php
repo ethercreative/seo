@@ -128,11 +128,11 @@ class SeoController extends BaseController
 			// Misc
 			'tabs' => [
 				['label' => 'Fieldtype', 'url' => "#{$namespace}-tab1", 'class' => null],
-				['label' => 'General', 'url' => "#{$namespace}-tab2", 'class' => null],
+				['label' => 'Sitemap', 'url' => "#{$namespace}-tab2", 'class' => null],
 			],
 			'crumbs' => [
 				['label' => 'SEO', 'url' => 'index'],
-			]
+			],
 		));
 	}
 

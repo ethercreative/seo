@@ -6,6 +6,15 @@
 	value: settings.sitemapName is defined ? settings.sitemapName : ''
 }) }}
 
+{{ forms.textField({
+	type: "number",
+	label: "Pagination Limit",
+	instructions: "The max number of elements to limit each page to. Lower resource servers should reduce this number if sitemap pages are failing to generate.",
+	name: "sitemapLimit",
+	id: "sitemapLimit",
+	value: settings.sitemapLimit
+}) }}
+
 {# {{ forms.textField({
 	label: 'Public Path',
 	instructions: 'If you are not using database redirect method, we need to know where your public directory is. Environment variables in single braces are allowed.',
