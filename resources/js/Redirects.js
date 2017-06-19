@@ -23,6 +23,7 @@ export default class Redirects {
 		
 		this.tableForm.addEventListener("submit", this.onUpdate);
 		this.newForm.addEventListener("submit", this.onSubmitNew);
+		this.bulkForm.addEventListener("submit", this.onSubmitBulk);
 		
 		this.initTable();
 	}
@@ -62,7 +63,7 @@ export default class Redirects {
 		
 		if (to.value.trim() === "") {
 			to.classList.add("error");
-			valid = true;
+			valid = false;
 		} else to.classList.remove("error");
 		
 		if (!valid) return;
@@ -90,6 +91,53 @@ export default class Redirects {
 		});
 	};
 	
+	onSubmitBulk = e => {
+		e.preventDefault();
+		const form = e.target
+			, spinner = form.getElementsByClassName("spinner")[0];
+		
+		const redirects = form.elements[this.namespaceField("redirects")]
+			, separator = form.elements[this.namespaceField("separator")]
+			, type      = form.elements[this.namespaceField("type")];
+		
+		// Validate
+		let valid = true;
+		if (redirects.value.trim() === "") {
+			redirects.classList.add("error");
+			valid = false;
+		} else redirects.classList.remove("error");
+		
+		if (separator.value === "") {
+			separator.classList.add("error");
+			valid = false;
+		} else separator.classList.remove("error");
+		
+		if (!valid) return;
+		
+		// Submit
+		spinner.classList.remove("hidden");
+		
+		this.post("bulkAddRedirects", {
+			redirects: redirects.value,
+			separator: separator.value,
+			type: type.value,
+		}, ({ redirects }) => {
+			redirects.forEach(({ id, uri, to, type }) => {
+				this.table.appendChild(this.rowStatic(
+					id, uri, to, type
+				));
+			});
+			
+			Craft.cp.displayNotice('<strong>SEO:</strong> Redirects added successfully!');
+			spinner.classList.add("hidden");
+			
+			form.reset();
+		}, error => {
+			Craft.cp.displayError('<strong>SEO:</strong> ' + error);
+			spinner.classList.add("hidden");
+		});
+	};
+	
 	// TODO: Remove save / update boilerplate
 	
 	onUpdate = e => {
@@ -111,7 +159,7 @@ export default class Redirects {
 		
 		if (to.value.trim() === "") {
 			to.classList.add("error");
-			valid = true;
+			valid = false;
 		} else to.classList.remove("error");
 		
 		if (!valid) return;

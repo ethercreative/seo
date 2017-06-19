@@ -69,4 +69,25 @@ class Seo_RedirectsController extends BaseController
 		}
 	}
 
+	public function actionBulkAddRedirects ()
+	{
+		$this->requirePostRequest();
+		$this->requireAjaxRequest();
+
+		$redirects = craft()->request->getRequiredPost("redirects");
+		$separator = craft()->request->getRequiredPost("separator");
+		$type = craft()->request->getRequiredPost("type");
+
+		list($success, $error) = craft()->seo_redirect->bulk($redirects, $separator, $type);
+
+		if ($error) {
+			$this->returnErrorJson($error);
+		} else {
+			$this->returnJson([
+				"success" => true,
+			    "redirects" => $success,
+			]);
+		}
+	}
+
 }
