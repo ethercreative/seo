@@ -95,7 +95,7 @@ class SeoPlugin extends BasePlugin {
 			'publicPath' => array(AttributeType::String),
 
 			// Fieldtype Settings
-			'titleSuffix' => array(AttributeType::String)
+			'titleSuffix' => array(AttributeType::String),
 		);
 	}
 

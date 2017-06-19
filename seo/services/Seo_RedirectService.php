@@ -5,10 +5,47 @@ namespace Craft;
 class Seo_RedirectService extends BaseApplicationComponent
 {
 
+	// Get
+	// =========================================================================
+
 	public function getAllRedirects ()
 	{
 		return Seo_RedirectRecord::model()->findAll();
 	}
+
+	public function findRedirectByPath ($path)
+	{
+		$redirects = $this->getAllRedirects();
+
+		foreach ($redirects as $redirect)
+		{
+			$to = false;
+
+			if (trim($redirect['uri'], '/') == $path)
+			{
+				$to = $redirect['to'];
+			}
+			elseif ($uri = $this->_isRedirectRegex($redirect['uri']))
+			{
+				if(preg_match($uri, $path)){
+					$to = preg_replace($uri, $redirect['to'], $path);
+				}
+			}
+
+			if ($to)
+			{
+				return [
+					'to' => strpos($to, '://') !== false ? $to : UrlHelper::getSiteUrl($to),
+					'type' => $redirect['type']
+				];
+			}
+		}
+
+		return false;
+	}
+
+	// Save
+	// =========================================================================
 
 	public function saveAllRedirects ($data)
 	{
@@ -73,36 +110,58 @@ class Seo_RedirectService extends BaseApplicationComponent
 		return true;
 	}
 
-	public function findRedirectByPath ($path)
+	public function save ($uri, $to, $type)
 	{
-		$redirects = $this->getAllRedirects();
+		$doesUriExist = Seo_RedirectRecord::model()->findByAttributes([
+			"uri" => $uri
+		]);
 
-		foreach ($redirects as $redirect)
-		{
-			$to = false;
+		if ($doesUriExist)
+			return "A redirect with that URI already exists";
 
-			if (trim($redirect['uri'], '/') == $path)
-			{
-				$to = $redirect['to'];
-			}
-			elseif ($uri = $this->_isRedirectRegex($redirect['uri']))
-			{
-				if(preg_match($uri, $path)){
-					$to = preg_replace($uri, $redirect['to'], $path);
-				}
-			}
+		$record = new Seo_RedirectRecord();
+		$record->setAttribute('uri', $uri);
+		$record->setAttribute('to', $to);
+		$record->setAttribute('type', $type);
 
-			if ($to)
-			{
-				return [
-					'to' => strpos($to, '://') !== false ? $to : UrlHelper::getSiteUrl($to),
-					'type' => $redirect['type']
-				];
-			}
-		}
+		if (!$record->save())
+			return $record->getErrors();
+
+		return $record->id;
+	}
+
+	public function update ($id, $uri, $to, $type)
+	{
+		$record = Seo_RedirectRecord::model()->findById($id);
+
+		if (!$record)
+			return "Unable to find redirect with ID: {$id}";
+
+		$record->setAttribute('uri', $uri);
+		$record->setAttribute('to', $to);
+		$record->setAttribute('type', $type);
+
+		if (!$record->save())
+			return $record->getErrors();
 
 		return false;
 	}
+
+	// Delete
+	// =========================================================================
+
+	public function delete ($id)
+	{
+		$redirect = Seo_RedirectRecord::model()->deleteByPk($id);
+
+		if ($redirect === 0)
+			return "Unable to find redirect with ID: {$id}";
+
+		return false;
+	}
+
+	// Helpers
+	// =========================================================================
 
 	private function _isRedirectRegex ($uri)
 	{

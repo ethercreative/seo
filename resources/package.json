@@ -2,14 +2,26 @@
   "name": "seo-gulp",
   "version": "0.0.1",
   "devDependencies": {
-    "gulp": "*",
-    "jshint": "*",
-    "gulp-jshint": "*",
-    "gulp-less": "*",
-    "gulp-rename": "*",
-    "gulp-uglify": "*",
-    "gulp-util": "*",
-    "less-plugin-autoprefix": "*",
-    "less-plugin-clean-css": "*"
+    "gulp": "latest",
+    "gulp-sourcemaps": "latest",
+
+    "gulp-less": "latest",
+    "less-plugin-autoprefix": "latest",
+    "gulp-clean-css": "latest",
+
+    "rollup": "latest",
+    "rollup-plugin-babel": "latest",
+    "rollup-plugin-commonjs": "latest",
+    "rollup-plugin-eslint": "latest",
+    "rollup-plugin-node-resolve": "latest",
+    "rollup-plugin-uglify": "latest",
+
+    "uglify-js": "latest",
+    "babel-cli": "latest",
+    "babel-preset-env": "latest",
+    "babel-plugin-external-helpers": "latest",
+    "babel-plugin-transform-class-properties": "latest",
+    "babel-plugin-transform-object-rest-spread": "latest",
+    "babel-eslint": "latest"
   }
 }
