@@ -1,18 +1,18 @@
-var SeoSettings = function (namespace, run) {
-	var self = this;
+import Redirects from "./Redirects";
+
+const SeoSettings = function (namespace, run, csrf) {
 	this.namespace = namespace;
+	this.csrf = {
+		name: csrf[0],
+		token: csrf[1],
+	};
 
 	switch (run) {
 		case 'sitemap':
 			new SeoSettings.EditableTable(this.namespace + '-customUrls', this.namespace + '-addCustomUrl');
 			break;
 		case 'redirects':
-			var table = document.getElementById(this.namespace + '-redirects'),
-				field = document.getElementById(this.namespace + '-redirects-field');
-			new SeoSettings.EditableTable(this.namespace + '-redirects', this.namespace + '-addRedirect', function () {
-				self.redirectsForm(table, field);
-			});
-			this.redirectsForm(table, field);
+			this.redirectsForm();
 			break;
 		case 'settings':
 			this.sitemapName();
@@ -20,47 +20,24 @@ var SeoSettings = function (namespace, run) {
 	}
 };
 
-// SITEMAP
+// Sitemap
+// =============================================================================
 SeoSettings.prototype.sitemapName = function () {
-	var example = document.getElementById(this.namespace + '-sitemapNameExample');
+	const example = document.getElementById(this.namespace + '-sitemapNameExample');
 	document.getElementById(this.namespace + '-sitemapName').addEventListener('input', function () {
 		example.textContent = this.value + '.xml';
 	});
 };
 
-// REDIRECTS
-SeoSettings.prototype.redirectsForm = function (table, field) {
-	function parseRedirectForm() {
-		var o = [];
-		[].slice.call(table.querySelectorAll('tbody tr:not(.hidden)')).forEach(function (el) {
-			o.push({
-				'id': +el.getAttribute('data-id'),
-				'uri': el.querySelector('[data-name="redirects-uri"]').value.trim(),
-				'to': el.querySelector('[data-name="redirects-to"]').value.trim(),
-				'type': el.querySelector('[data-name="redirects-type"]').value
-			});
-		});
-
-		field.value = JSON.stringify(o).replace(/\\n/g, "\\n")
-									    .replace(/\\'/g, "\\'")
-									    .replace(/\\"/g, '\\"')
-									    .replace(/\\&/g, "\\&")
-								        .replace(/\\r/g, "\\r")
-									    .replace(/\\t/g, "\\t")
-									    .replace(/\\b/g, "\\b")
-									    .replace(/\\f/g, "\\f");
-	}
-
-	parseRedirectForm();
-
-	[].slice.call(document.querySelectorAll('[data-name]')).forEach(function (el) {
-		el.addEventListener('input', parseRedirectForm);
-	});
+// Redirects
+// =============================================================================
+SeoSettings.prototype.redirectsForm = function () {
+	new Redirects(this.namespace, this.csrf);
 };
 
-// HELPERS
+// Helpers
+// =============================================================================
 SeoSettings.EditableTable = function (tableId, addButtonId, rowCb) {
-	var self = this;
 	this.rowCb = (typeof rowCb === "function" ? rowCb : function () {});
 	this.table = document.getElementById(tableId).getElementsByTagName('tbody')[0];
 	this.row = this.table.firstElementChild.cloneNode(true);
@@ -68,28 +45,26 @@ SeoSettings.EditableTable = function (tableId, addButtonId, rowCb) {
 
 	this.row.classList.remove('hidden');
 
-	[].slice.call(this.table.getElementsByClassName('delete')).forEach(function (el) {
-		el.addEventListener('click', function () {
+	[].slice.call(this.table.getElementsByClassName('delete')).forEach((el) => {
+		el.addEventListener('click', () => {
 			el.parentNode.parentNode.remove();
-			self.rowCb();
+			this.rowCb();
 		});
 	});
 
-	document.getElementById(addButtonId).addEventListener('click', function () {
-		self.addRow();
+	document.getElementById(addButtonId).addEventListener('click', () => {
+		this.addRow();
 	});
 };
 
 SeoSettings.EditableTable.prototype.addRow = function () {
-	var self = this;
+	const newRow = this.row.cloneNode(true);
 
-	var newRow = this.row.cloneNode(true);
+	newRow.innerHTML = newRow.innerHTML.replace(/{i}/g, this.table.childNodes.length - 2);
 
-	newRow.innerHTML = newRow.innerHTML.replace(/\{i}/g, this.table.childNodes.length - 2);
-
-	newRow.getElementsByClassName('delete')[0].addEventListener('click', function () {
+	newRow.getElementsByClassName('delete')[0].addEventListener('click', () => {
 		newRow.remove();
-		self.rowCb();
+		this.rowCb();
 	});
 
 	this.table.appendChild(newRow);

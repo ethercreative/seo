@@ -91,7 +91,9 @@ class SeoController extends BaseController
 
 		craft()->templates->includeCssResource('seo/css/redirects.css');
 		craft()->templates->includeJsResource('seo/js/seo-settings.min.js');
-		craft()->templates->includeJs("new SeoSettings('{$namespace}', 'redirects');");
+		$csrf = craft()->request->getCsrfToken();
+		$csrfn = craft()->request->csrfTokenName;
+		craft()->templates->includeJs("new SeoSettings('{$namespace}', 'redirects', ['{$csrfn}', '{$csrf}']);");
 
 		$this->renderTemplate('seo/redirects', array(
 			// Global

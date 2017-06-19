@@ -1,3 +1,5 @@
+/* global Craft, Garnish, $, module, define */
+
 var SeoField = function (namespace, hasSection) {
 	if (window.hasSeoField) return;
 
@@ -250,7 +252,7 @@ SeoField.prototype.judgeTitleKeyword = function () {
 			inFirstHalf = false;
 
 		for (var i = 0; i < w.length/2; i++) {
-			if (w[i] == this.keyword.value.toLowerCase()) {
+			if (w[i] === this.keyword.value.toLowerCase()) {
 				inFirstHalf = true;
 				break;
 			}
@@ -428,7 +430,7 @@ SeoField.prototype.judgeDensity = function () {
 	function countInArray (arr, word) {
 		var c = 0, i = 0;
 		for (; i < arr.length; i++)
-			if (arr[i].toLowerCase() == word) c++;
+			if (arr[i].toLowerCase() === word) c++;
 		return c;
 	}
 
@@ -483,7 +485,7 @@ SeoField.prototype.judgeFleschEase = function () {
 // HELPERS
 SeoField.Fail = function (message) {
 	Craft.cp.displayError('<strong>SEO:</strong> ' + message);
-	if (window.console) console.error.apply(console, ['%cSEO: %c' + message, 'font-weight:bold;','font-weight:normal;']);
+	if (window.console) console.error.apply(console, ['%cSEO: %c' + message, 'font-weight:bold;','font-weight:normal;']); // eslint-disable-line no-console
 };
 
 /**

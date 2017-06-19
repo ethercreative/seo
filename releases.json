@@ -150,5 +150,14 @@
       "[Fixed] Fixed bug where products & categories weren't being split out correctly in the sitemap",
       "[Fixed] Sitemap content sections now correctly show as disabled by default"
     ]
+  },
+  {
+    "version": "1.4.2",
+    "downloadUrl": "https://github.com/ethercreative/seo/archive/v1.4.2.zip",
+    "date": "2017-06-19T10:19:00-08:00",
+    "notes": [
+      "[Improved] Redirects now have a new and improved UI.",
+      "[Added] You can now bulk import redirects!"
+    ]
   }
 ]

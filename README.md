@@ -98,6 +98,10 @@ All parameters are optional.
 
 ## Changelog
 
+### 1.4.2
+- Redirects now have a new and improved UI.
+- You can now bulk import redirects!
+
 ### 1.4.1
 - Fixed bug where products & categories weren't being split out correctly in the sitemaps
 - Sitemap content sections now correctly show as disabled by default
