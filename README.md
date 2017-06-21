@@ -98,6 +98,9 @@ All parameters are optional.
 
 ## Changelog
 
+### 1.4.3
+- Fixed CSRF JS bug on the Sitemap #38/#39 - @caleuanhopkins
+
 ### 1.4.2
 - Redirects now have a new and improved UI.
 - You can now bulk import redirects!

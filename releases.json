@@ -159,5 +159,13 @@
       "[Improved] Redirects now have a new and improved UI.",
       "[Added] You can now bulk import redirects!"
     ]
+  },
+  {
+    "version": "1.4.3",
+    "downloadUrl": "https://github.com/ethercreative/seo/archive/v1.4.3.zip",
+    "date": "2017-06-21T12:09:00-08:00",
+    "notes": [
+      "[Fixed] Fixed CSRF JS bug on the Sitemap #38/#39 - @caleuanhopkins"
+    ]
   }
 ]
