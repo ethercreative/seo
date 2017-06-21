@@ -118,7 +118,7 @@ class SeoController extends BaseController
 		$settings = craft()->seo->settings();
 
 		craft()->templates->includeJsResource('seo/js/seo-settings.min.js');
-		craft()->templates->includeJs("new SeoSettings('{$namespace}', 'settings');");
+		craft()->templates->includeJs("new SeoSettings('{$namespace}', 'sitemap', [Craft.csrfTokenName, Craft.csrfTokenValue]);");
 
 		$this->renderTemplate('seo/settings', array(
 			// Global
