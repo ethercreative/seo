@@ -167,5 +167,13 @@
     "notes": [
       "[Fixed] Fixed CSRF JS bug on the Sitemap #38/#39 - @caleuanhopkins"
     ]
+  },
+  {
+    "version": "1.4.4",
+    "downloadUrl": "https://github.com/ethercreative/seo/archive/v1.4.4.zip",
+    "date": "2017-06-21T12:30:00-08:00",
+    "notes": [
+      "[Fixed] More CSRF JS bug fixes #40 - @caleuanhopkins"
+    ]
   }
 ]

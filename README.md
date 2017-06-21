@@ -98,6 +98,9 @@ All parameters are optional.
 
 ## Changelog
 
+### 1.4.4
+- More CSRF JS bug fixes #40 - @caleuanhopkins
+
 ### 1.4.3
 - Fixed CSRF JS bug on the Sitemap #38/#39 - @caleuanhopkins
 
