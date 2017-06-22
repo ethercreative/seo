@@ -1,9 +1,8 @@
 /* global Craft, Garnish, $, module, define */
 
-var SeoField = function (namespace, hasSection) {
+const SeoField = function (namespace, hasSection) {
 	if (window.hasSeoField) return;
-
-	var self = this;
+	
 	window.hasSeoField = true;
 
 	this.namespace = namespace;
@@ -36,8 +35,8 @@ var SeoField = function (namespace, hasSection) {
 		this.calculateScore();
 
 		// Re-calculate the score every second
-		setInterval(function () {
-			self.calculateScore();
+		setInterval(() => {
+			this.calculateScore();
 		}, 1000);
 
 	}
@@ -45,9 +44,9 @@ var SeoField = function (namespace, hasSection) {
 
 // SNIPPET
 SeoField.prototype.title = function () {
-	var title = this.titleField = document.getElementById(this.namespace + '-title'),
-		t = document.getElementById('title'),
-		tInput, titleInput, self = this;
+	const title = this.titleField = document.getElementById(this.namespace + '-title')
+		, t = document.getElementById('title');
+	let tInput, titleInput, initial;
 
 	tInput = function () {
 		title.value = this.value + ' ' + initial;
@@ -60,36 +59,34 @@ SeoField.prototype.title = function () {
 	};
 
 	if (t && title.classList.contains('clean')) {
-		var initial = title.value;
+		initial = title.value;
 		t.addEventListener('input', tInput, false);
 	}
 
 	title.addEventListener('input', titleInput, false);
 
-	title.addEventListener('change', function () { self.calculateScore(); });
+	title.addEventListener('change', () => { this.calculateScore(); });
 };
 
 SeoField.prototype.slug = function () {
-	var slug = this.slugField = document.getElementById(this.namespace + '-slug'),
-		s = document.getElementById('slug'),
-		self = this;
+	const slug = this.slugField = document.getElementById(this.namespace + '-slug')
+		, s = document.getElementById('slug');
 
 	if (s && slug) {
 		slug.textContent = s.value;
 
 		// On a loop because crafts slug generation doesn't trigger any events
-		setInterval(function () {
+		setInterval(() => {
 			if (slug.textContent !== s.value) {
 				slug.textContent = s.value;
-				self.calculateScore();
+				this.calculateScore();
 			}
 		}, 1000);
 	}
 };
 
 SeoField.prototype.desc = function () {
-	var desc = this.descField = document.getElementById(this.namespace + '-description'),
-		self = this;
+	const desc = this.descField = document.getElementById(this.namespace + '-description');
 
 	function adjustHeight () {
 		setTimeout(function () {
@@ -127,64 +124,62 @@ SeoField.prototype.desc = function () {
 		else this.classList.remove('invalid');
 	});
 
-	desc.addEventListener('change', function () { self.calculateScore(); });
+	desc.addEventListener('change', () => { this.calculateScore(); });
 };
 
 // SCORE
 SeoField.prototype.toggle = function () {
-	var self = this,
-		isOpen = false;
+	let isOpen = false;
 
-	this.score.getElementsByClassName('toggle-score')[0].addEventListener('click', function () {
-		self.score.classList.toggle('open');
+	this.score.getElementsByClassName('toggle-score')[0].addEventListener('click', () => {
+		this.score.classList.toggle('open');
 		isOpen = !isOpen;
 
 		if (isOpen) {
-			self.score.getElementsByClassName('details')[0].style.height = self.score.getElementsByClassName('details-inner')[0].clientHeight + 'px';
+			this.score.getElementsByClassName('details')[0].style.height = this.score.getElementsByClassName('details-inner')[0].clientHeight + 'px';
 		} else {
-			self.score.getElementsByClassName('details')[0].style.height = '';
+			this.score.getElementsByClassName('details')[0].style.height = '';
 		}
 	});
 
-	this.toggle.close = function () {
-		self.score.classList.remove('open');
+	this.toggle.close = () => {
+		this.score.classList.remove('open');
 		isOpen = false;
-		self.score.getElementsByClassName('details')[0].style.height = '';
+		this.score.getElementsByClassName('details')[0].style.height = '';
 	};
 };
 
 SeoField.prototype.calculateScore = function () {
 	if (this.keyword && this.keyword.value) {
 		this.currentScore = {};
-		var self = this;
 
 		this.currentScore.titleLength = this.judgeTitleLength();
 		this.currentScore.titleKeyword = this.judgeTitleKeyword();
 		this.currentScore.slug = this.judgeSlug();
 		this.currentScore.desc = this.judgeDesc();
 
-		this.getHTMLForParsing.update(function (content) {
+		this.getHTMLForParsing.update((content) => {
 			if (content.textContent.replace('\r', '').replace('\n', '').replace('\r\n', '').replace(/\s+/gi, '') === '') {
-				self.currentScore.noContent = {
+				this.currentScore.noContent = {
 					score: SeoField.Levels.BAD,
 					reason: 'You have no content, adding some would be a good start!'
 				};
 			} else {
-				self.content = content;
-				self.content.textOnly = self.content.textContent.replace('\r', ' ').replace('\n', ' ').replace('\r\n', ' ').replace(/\s+/gi, ' ');
-				self.content.stats = SeoField.TextStatistics(self.content.textContent);
+				this.content = content;
+				this.content.textOnly = this.content.textContent.replace('\r', ' ').replace('\n', ' ').replace('\r\n', ' ').replace(/\s+/gi, ' ');
+				this.content.stats = SeoField.TextStatistics(this.content.textContent);
 
-				self.currentScore.wordCount = self.judgeWordCount();
-				self.currentScore.firstParagraph = self.judgeFirstParagraph();
-				self.currentScore.images = self.judgeImages();
-				self.currentScore.links = self.judgeLinks();
-				self.currentScore.headings = self.judgeHeadings();
-				self.currentScore.density = self.judgeDensity();
-				self.currentScore.fleschEase = self.judgeFleschEase();
+				this.currentScore.wordCount = this.judgeWordCount();
+				this.currentScore.firstParagraph = this.judgeFirstParagraph();
+				this.currentScore.images = this.judgeImages();
+				this.currentScore.links = this.judgeLinks();
+				this.currentScore.headings = this.judgeHeadings();
+				this.currentScore.density = this.judgeDensity();
+				this.currentScore.fleschEase = this.judgeFleschEase();
 			}
 
-			self.getHTMLForParsing.clean();
-			self.updateScoreHtml();
+			this.getHTMLForParsing.clean();
+			this.updateScoreHtml();
 		});
 	} else {
 		this.toggle.close();
@@ -196,28 +191,28 @@ SeoField.prototype.calculateScore = function () {
 SeoField.prototype.updateScoreHtml = function () {
 	this.score.classList.remove('disabled');
 
-	var sorted = SeoField.sortScore(this.currentScore);
-	var sortedScore = sorted.merged;
+	const sorted = SeoField.sortScore(this.currentScore);
+	const sortedScore = sorted.merged;
 
 	this.list.innerHTML = '';
-	for (var i = 0; i < sortedScore.length; i++) {
-		var j = sortedScore[i];
+	for (let i = 0; i < sortedScore.length; i++) {
+		const j = sortedScore[i];
 		this.list.innerHTML += '<li class="'+ j.score+'">' + j.reason + '</li>';
 	}
 
-	var good = this.bar.getElementsByClassName('good')[0],
-		ok = this.bar.getElementsByClassName('ok')[0],
-		bad = this.bar.getElementsByClassName('bad')[0];
+	const good = this.bar.getElementsByClassName('good')[0]
+		, ok = this.bar.getElementsByClassName('ok')[0]
+		, bad = this.bar.getElementsByClassName('bad')[0];
 
-	var goodW = 1 - ((sortedScore.length - sorted.good.length) / sortedScore.length),
-		okW = 1 - ((sortedScore.length - sorted.ok.length) / sortedScore.length),
-		badW = 1 - ((sortedScore.length - sorted.bad.length) / sortedScore.length);
+	const goodW = 1 - ((sortedScore.length - sorted.good.length) / sortedScore.length)
+		, okW = 1 - ((sortedScore.length - sorted.ok.length) / sortedScore.length)
+		, badW = 1 - ((sortedScore.length - sorted.bad.length) / sortedScore.length);
 
 	good.style.transform = 'scale(' + goodW + ', 1)';
 	ok.style.transform = 'translateX(' + (goodW * 100) + '%) scale(' + okW + ', 1)';
 	bad.style.transform = 'translateX(' + ((goodW + okW) * 100) + '%) scale(' + badW + ', 1)';
 
-	var s = '';
+	let s = '';
 
 	if (badW > goodW) {
 		s = 'bad';
@@ -232,10 +227,9 @@ SeoField.prototype.updateScoreHtml = function () {
 
 // CALCULATOR
 SeoField.prototype.judgeTitleLength = function () {
-	var v = this.titleField.value,
-		ret;
-
-	ret = {
+	const v = this.titleField.value;
+	
+	let ret = {
 		score : (v.length < 40 || v.length > 60) ? SeoField.Levels.BAD : SeoField.Levels.GOOD,
 		reason: (v.length < 40) ? SeoField.Reasons.titleLengthFailMin : (v.length > 60) ? SeoField.Reasons.titleLengthFailMax : SeoField.Reasons.titleLengthSuccess
 	};
@@ -245,20 +239,11 @@ SeoField.prototype.judgeTitleLength = function () {
 };
 
 SeoField.prototype.judgeTitleKeyword = function () {
-	var ret;
+	let ret;
+	const index = this.titleField.value.toLowerCase().indexOf(this.keyword.value.toLowerCase());
 
-	if (this.titleField.value.toLowerCase().indexOf(this.keyword.value.toLowerCase()) > -1) {
-		var w = this.titleField.value.toLowerCase().split(' '),
-			inFirstHalf = false;
-
-		for (var i = 0; i < w.length/2; i++) {
-			if (w[i] === this.keyword.value.toLowerCase()) {
-				inFirstHalf = true;
-				break;
-			}
-		}
-
-		if (inFirstHalf) {
+	if (index > -1) {
+		if (index <= this.titleField.value.length * 0.3) {
 			ret = {
 				score : SeoField.Levels.GOOD,
 				reason: SeoField.Reasons.titleKeywordSuccess
@@ -282,7 +267,8 @@ SeoField.prototype.judgeTitleKeyword = function () {
 SeoField.prototype.judgeSlug = function () {
 	if (!this.slugField) return;
 
-	if (this.slugField.textContent.toLowerCase().indexOf(this.keyword.value.toLowerCase()) > -1) {
+	console.log(this.keyword.value.toLowerCase().replace(/[^a-zA-Z0-9-_]/g, ''));
+	if (this.slugField.textContent.toLowerCase().indexOf(this.keyword.value.toLowerCase().replace(/[^a-zA-Z0-9-_]/g, '')) > -1) {
 		return {
 			score : SeoField.Levels.GOOD,
 			reason: SeoField.Reasons.slugSuccess
@@ -340,11 +326,11 @@ SeoField.prototype.judgeFirstParagraph = function () {
 };
 
 SeoField.prototype.judgeImages = function () {
-	var imgs = this.content.getElementsByTagName('img');
+	const imgs = this.content.getElementsByTagName('img');
 	if (imgs) {
-		var imgsWithAltKeyword = 0;
+		let imgsWithAltKeyword = 0;
 
-		for (var i = 0; i < imgs.length; i++) {
+		for (let i = 0; i < imgs.length; i++) {
 			if (imgs[i].getAttribute('alt') &&
 				imgs[i].getAttribute('alt').toLowerCase().indexOf(this.keyword.value.toLowerCase()))
 				imgsWithAltKeyword++;
@@ -370,10 +356,10 @@ SeoField.prototype.judgeImages = function () {
 };
 
 SeoField.prototype.judgeLinks = function () {
-	var a = this.content.getElementsByTagName('a');
+	const a = this.content.getElementsByTagName('a');
 
 	if (a) {
-		for (var i = 0; i < a.length; i++) {
+		for (let i = 0; i < a.length; i++) {
 			if (SeoField.isExternalUrl(a[i].href)) {
 				return {
 					score : SeoField.Levels.GOOD,
@@ -390,12 +376,12 @@ SeoField.prototype.judgeLinks = function () {
 };
 
 SeoField.prototype.judgeHeadings = function () {
-	var headings = this.content.querySelectorAll('h1,h2,h3,h4,h5,h6');
+	const headings = this.content.querySelectorAll('h1,h2,h3,h4,h5,h6');
 
 	if (headings) {
-		var primary = 0, secondary = 0;
+		let primary = 0, secondary = 0;
 
-		for (var i = 0; i < headings.length; i++) {
+		for (let i = 0; i < headings.length; i++) {
 			if (headings[i].textContent.toLowerCase().indexOf(this.keyword.value.toLowerCase()) > -1) {
 				if (['H1', 'H2'].indexOf(headings[i].nodeName) > -1) {
 					primary++;
@@ -425,18 +411,18 @@ SeoField.prototype.judgeHeadings = function () {
 };
 
 SeoField.prototype.judgeDensity = function () {
-	var words = this.content.stats.words();
+	const words = this.content.stats.words();
 
 	function countInArray (arr, word) {
-		var c = 0, i = 0;
+		let c = 0, i = 0;
 		for (; i < arr.length; i++)
 			if (arr[i].toLowerCase() === word) c++;
 		return c;
 	}
 
-	var keyCount = countInArray(words, this.keyword.value.toLowerCase());
+	const keyCount = countInArray(words, this.keyword.value.toLowerCase());
 
-	var keyPercent = parseFloat((100 + ((keyCount - words.length) / words.length) * 100).toFixed(2));
+	const keyPercent = parseFloat((100 + ((keyCount - words.length) / words.length) * 100).toFixed(2));
 
 	if (keyPercent < 1.0) {
 		return {
@@ -462,7 +448,7 @@ SeoField.prototype.judgeDensity = function () {
 };
 
 SeoField.prototype.judgeFleschEase = function () {
-	var level = this.content.stats.fleschKincaidReadingEase();
+	const level = this.content.stats.fleschKincaidReadingEase();
 
 	if (level >= 80) {
 		return {
@@ -496,8 +482,7 @@ SeoField.GetEntryHTML = function () {
 };
 
 SeoField.GetEntryHTML.prototype.update = function (cb) {
-	var self = this,
-		postData = Garnish.getPostData(document.getElementById('container'));
+	const postData = Garnish.getPostData(document.getElementById('container'));
 
 	if (typeof Craft.livePreview === typeof undefined) {
 		this.score.previousElementSibling.classList.add('hide');
@@ -515,15 +500,15 @@ SeoField.GetEntryHTML.prototype.update = function (cb) {
 				withCredentials: true
 			},
 			crossDomain: true,
-			success: function (data) {
+			success: (data) => {
 				data = data.replace(/<script([^'"]|"(\\.|[^"\\])*"|'(\\.|[^'\\])*')*?<\/script>/g, '');
 
-				self.iframe.contentWindow.document.open();
-				self.iframe.contentWindow.document.write(data);
-				self.iframe.contentWindow.document.close();
+				this.iframe.contentWindow.document.open();
+				this.iframe.contentWindow.document.write(data);
+				this.iframe.contentWindow.document.close();
 
-				if (self.iframe.contentWindow.document.body)
-					cb(self.iframe.contentWindow.document.body);
+				if (this.iframe.contentWindow.document.body)
+					cb(this.iframe.contentWindow.document.body);
 				else
 					SeoField.Fail("Unable to calculate score");
 			}
@@ -549,7 +534,8 @@ SeoField.GetEntryHTML.prototype.clean = function () {
  * @param {string} url
  */
 SeoField.isExternalUrl = (function(){
-	var domainRe = /https?:\/\/((?:[\w\d]+\.)+[\w\d]{2,})/i, res = null;
+	const domainRe = /https?:\/\/((?:[\w\d]+\.)+[\w\d]{2,})/i;
+	let res = null;
 
 	return function(url) {
 		function domain(url) {
@@ -567,8 +553,8 @@ SeoField.isExternalUrl = (function(){
  * @returns {{good: Array, ok: Array, bad: Array, merged: Array.<T>}}
  */
 SeoField.sortScore = function (unsorted) {
-	var good = [], ok = [], bad = [];
-	for (var key in unsorted) {
+	const good = [], ok = [], bad = [];
+	for (let key in unsorted) {
 		if (unsorted.hasOwnProperty(key) && unsorted[key]) {
 			unsorted[key].key = key;
 			switch (unsorted[key].score) {
@@ -605,7 +591,7 @@ SeoField.sortScore = function (unsorted) {
 
 	function cleanText(text) {
 		// all these tags should be preceeded by a full stop.
-		var fullStopTags = ['li', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'dd'];
+		const fullStopTags = ['li', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'dd'];
 
 		fullStopTags.forEach(function(tag) {
 			text = text.replace("</" + tag + ">",".");
@@ -628,7 +614,7 @@ SeoField.sortScore = function (unsorted) {
 		return text;
 	}
 
-	var TextStatistics = function TextStatistics(text) {
+	const TextStatistics = function TextStatistics(text) {
 		this.text = text ? cleanText(text) : this.text;
 	};
 
@@ -697,10 +683,10 @@ SeoField.sortScore = function (unsorted) {
 
 	TextStatistics.prototype.averageSyllablesPerWord = function(text) {
 		text = text ? cleanText(text) : this.text;
-		var syllableCount = 0, wordCount = this.wordCount(text), self = this;
+		let syllableCount = 0, wordCount = this.wordCount(text);
 
-		text.split(/\s+/).forEach(function(word) {
-			syllableCount += self.syllableCount(word);
+		text.split(/\s+/).forEach((word) => {
+			syllableCount += this.syllableCount(word);
 		});
 
 		// Prevent NaN...
@@ -709,16 +695,16 @@ SeoField.sortScore = function (unsorted) {
 
 	TextStatistics.prototype.wordsWithThreeSyllables = function(text, countProperNouns) {
 		text = text ? cleanText(text) : this.text;
-		var longWordCount = 0, self = this;
+		let longWordCount = 0;
 
-		countProperNouns = countProperNouns === false ? false : true;
+		countProperNouns = countProperNouns !== false;
 
-		text.split(/\s+/).forEach(function(word) {
+		text.split(/\s+/).forEach((word) => {
 
 			// We don't count proper nouns or capitalised words if the countProperNouns attribute is set.
 			// Defaults to true.
 			if (!word.match(/^[A-Z]/) || countProperNouns) {
-				if (self.syllableCount(word) > 2) longWordCount ++;
+				if (this.syllableCount(word) > 2) longWordCount ++;
 			}
 		});
 
@@ -732,7 +718,7 @@ SeoField.sortScore = function (unsorted) {
 	};
 
 	TextStatistics.prototype.syllableCount = function(word) {
-		var syllableCount = 0,
+		let syllableCount = 0,
 			prefixSuffixCount = 0,
 			wordPartCount = 0;
 
@@ -741,7 +727,7 @@ SeoField.sortScore = function (unsorted) {
 
 		// Specific common exceptions that don't follow the rule set below are handled individually
 		// Array of problem words (with word as key, syllable count as value)
-		var problemWords = {
+		const problemWords = {
 			"simile":		3,
 			"forever":		3,
 			"shoreline":	2
@@ -751,7 +737,7 @@ SeoField.sortScore = function (unsorted) {
 		if (problemWords.hasOwnProperty(word)) return problemWords[word];
 
 		// These syllables would be counted as two but should be one
-		var subSyllables = [
+		const subSyllables = [
 			/cial/,
 			/tia/,
 			/cius/,
@@ -771,7 +757,7 @@ SeoField.sortScore = function (unsorted) {
 		];
 
 		// These syllables would be counted as one but should be two
-		var addSyllables = [
+		const addSyllables = [
 			/ia/,
 			/riet/,
 			/dien/,
@@ -792,7 +778,7 @@ SeoField.sortScore = function (unsorted) {
 		];
 
 		// Single syllable prefixes and suffixes
-		var prefixSuffix = [
+		const prefixSuffix = [
 			/^un/,
 			/^fore/,
 			/ly$/,

@@ -98,6 +98,10 @@ All parameters are optional.
 
 ## Changelog
 
+### 1.4.5 - CURRENT WIP
+- Improved support of short phrases as the focus keyword
+- Fixed a bug where non-url valid characters caused one of the keyword tests to fail
+
 ### 1.4.4
 - More CSRF JS bug fixes #40 - @caleuanhopkins
 
