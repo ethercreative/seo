@@ -71,10 +71,7 @@ class SeoFieldType extends BaseFieldType implements IPreviewableFieldType {
 
 	public function getSettingsHtml()
 	{
-		$namespaceId = craft()->templates->namespaceInputId(craft()->templates->formatInputId('readability'));
-
 		craft()->templates->includeJsResource('seo/js/seo-settings.min.js');
-		craft()->templates->includeJs("new SeoSettings.SortableList('#{$namespaceId}');");
 
 		return craft()->templates->render('seo/_seo-fieldtype-settings', array(
 			'settings' => $this->getSettings(),

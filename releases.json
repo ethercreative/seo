@@ -175,5 +175,15 @@
     "notes": [
       "[Fixed] More CSRF JS bug fixes #40 - @caleuanhopkins"
     ]
+  },
+  {
+    "version": "1.4.5",
+    "downloadUrl": "https://github.com/ethercreative/seo/archive/v1.4.5.zip",
+    "date": "2017-06-23T10:08:00-08:00",
+    "notes": [
+      "[Improved] support of short phrases as the focus keyword",
+      "[Fixed] a bug where non-url valid characters caused one of the keyword tests to fail",
+      "[Fixed] JS bug when creating an SEO field #41"
+    ]
   }
 ]
