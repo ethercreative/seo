@@ -12,7 +12,13 @@ namespace Craft;
  */
 class SeoPlugin extends BasePlugin {
 
+	// Variables
+	// =========================================================================
+
 	public static $commerceInstalled = false;
+
+	// Details
+	// =========================================================================
 
 	public function getName()
 	{
@@ -49,17 +55,15 @@ class SeoPlugin extends BasePlugin {
 		return 'https://raw.githubusercontent.com/ethercreative/seo/master/releases.json';
 	}
 
-	public function getSettingsUrl()
-	{
-		return 'seo/settings';
-	}
+	// Routes
+	// =========================================================================
 
 	public function hasCpSection()
 	{
-		if (!craft()->isConsole()) {
-			return (craft()->userSession->isAdmin() || craft()->userSession->checkPermission('accessPlugin-seo'));
-	    }
-		return false;
+		return !craft()->isConsole() && (
+			craft()->userSession->isAdmin() ||
+			craft()->userSession->checkPermission('accessPlugin-seo')
+		);
 	}
 
 	public function registerCpRoutes ()
@@ -84,46 +88,53 @@ class SeoPlugin extends BasePlugin {
 		);
 	}
 
+	// Settings
+	// =========================================================================
+
 	protected function defineSettings()
 	{
 		return array(
 			// Sitemap Settings
-			'sitemapName' => array(AttributeType::String, 'default' => 'sitemap'),
-			'sitemapLimit'=> [AttributeType::Number, 'default' => 1000],
+			"sitemapName"  => [AttributeType::String, "default" => "sitemap"],
+			"sitemapLimit" => [AttributeType::Number, "default" => 1000],
 
 			// Redirect Settings
-			'publicPath' => array(AttributeType::String),
+			"publicPath"   => [AttributeType::String],
 
 			// Fieldtype Settings
-			'titleSuffix' => array(AttributeType::String),
+			"titleSuffix"  => [AttributeType::String],
+			"metaTemplate" => [AttributeType::String],
 		);
 	}
 
-	public function registerUserPermissions()
+	public function getSettingsUrl()
 	{
-		return array(
-			'manageSitemap' => array('label' => Craft::t('Manage Sitemap')),
-			'manageRedirects' => array('label' => Craft::t('Manage Redirects')),
-		);
+		return 'seo/settings';
 	}
+
+	public function prepSettings($settings)
+	{
+		return parent::prepSettings($settings);
+	}
+
+	// Misc
+	// =========================================================================
 
 	public function init()
 	{
-
-		$commerce = craft()->db->createCommand()
-			->select('id')
-			->from('plugins')
-			->where("class = 'Commerce'")
-			->queryScalar();
-
-		if ($commerce) {
-			SeoPlugin::$commerceInstalled = true;
-		}
+		// Check if commerce is installed
+		SeoPlugin::$commerceInstalled =
+			(bool) craft()->db->createCommand()
+			                 ->select('id')
+			                 ->from('plugins')
+			                 ->where("class = 'Commerce'")
+			                 ->queryScalar();
 
 		// TODO: On category / section update, update sitemap
 
 		if (craft()->request->isSiteRequest() && !craft()->request->isLivePreview())
 		{
+			// If request 404s, try to redirect
 			craft()->onException = function(\CExceptionEvent $event)
 			{
 				if(property_exists($event->exception, 'statusCode') && $event->exception->statusCode)
@@ -141,12 +152,37 @@ class SeoPlugin extends BasePlugin {
 					}
 				}
 			};
+
+			// Include Meta Markup in head via `{% hook "seo" %}`
+			craft()->templates->hook("seo", function(&$context)
+			{
+				$metaTemplateName = $this->getSettings()["metaTemplate"];
+
+				if ($metaTemplateName) {
+					return craft()->templates->render(
+						$metaTemplateName,
+						$context
+					);
+				} else {
+					$oldTemplateMode = craft()->templates->getTemplateMode();
+					craft()->templates->setTemplateMode(TemplateMode::CP);
+					$rendered = craft()->templates->render(
+						"seo/_seoDefaultMeta",
+						$context
+					);
+					craft()->templates->setTemplateMode($oldTemplateMode);
+					return $rendered;
+				}
+			});
 		}
 	}
 
-	public function prepSettings($settings)
+	public function registerUserPermissions()
 	{
-		return parent::prepSettings($settings);
+		return array(
+			'manageSitemap' => array('label' => Craft::t('Manage Sitemap')),
+			'manageRedirects' => array('label' => Craft::t('Manage Redirects')),
+		);
 	}
 
 }

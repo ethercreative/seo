@@ -439,7 +439,9 @@ class Seo_SitemapService extends BaseApplicationComponent
 		$criteria->sectionId = $id;
 		$criteria->limit = 1;
 		$criteria->order = "dateUpdated";
-		return $criteria->first()->dateUpdated;
+
+		$element = $criteria->first();
+		return $element ? $element->dateUpdated : "";
 	}
 
 	private function _getPageCount ($type, $id)

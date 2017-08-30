@@ -41,33 +41,9 @@ Before using the SEO field type, you’ll need to ensure all the settings are co
 
 ### Fieldtype Usage
 
-Replace or modify your current SEO head code with, or to match, the following:
+Replace your `title` tag, and any other SEO related meta tags with `{% hook "seo" "%}`. That's it!
 
-```twig
-{# SEO Start #}
-{% if seo is not defined %}
-    {% set seo = craft.seo.custom(siteName, '', false) %}
-{% endif %}
-
-<title>{{ seo.title }}</title>
-<meta name="description" content="{{ seo.description }}" />
-
-<meta property='og:title' content='{{ seo.title }}' />
-<meta property='og:url' content='{{ craft.request.url }}' />
-<meta property='og:site_name' content='{{ siteName }}' />
-<meta property='og:description' content='{{ seo.description }}' />
-
-<meta property='twitter:site' content='{# Your Twitter Handle (no @) #}' />
-<meta property='twitter:title' content='{{ seo.title }}' />
-<meta property='twitter:description' content='{{ seo.description }}' />
-<meta property='twitter:url' content='{{ craft.request.url }}' />
-
-<link rel="home" href="{{ siteUrl }}" />
-<link rel="canonical" href="{{ craft.request.url }}">
-{# SEO End #}
-```
-
-The code snippet above assumes that you will be creating a variable call `seo` in your templates that will return either the SEO field or a custom SEO object (see below).
+This assumes that you will be creating a variable call `seo` in your templates that will return either the SEO field or a custom SEO object (see below). You can modify the output of this hook by setting your own SEO Meta Template in the SEO Settings. You can [view the default template here](https://github.com/ethercreative/seo/blob/master/seo/templates/_seoDefaultMeta.twig).
 
 ### Custom SEO Object
 
@@ -81,22 +57,17 @@ The last parameter is a boolean that tell the plugin whether or not to include t
 
 All parameters are optional.
 
+## Upcoming Features
 
-## TODO
-- [ ] Make field more self contained (to allow for multiple per page, e.g. product variants that have SEO fields)
-- [ ] Add caching to sitemap
-- [ ] Add locale support for custom sitemap urls
-- [ ] Add redirect support for .htaccess & web.config to improve performance
-- [ ] Add hooks for plugin support
-- [ ] Include more fields in snippet (i.e. Type, Image, etc.)
-- [ ] Allow for multiple focus keywords
-- [ ] Make the SEO dashboard more useful. Somehow.
-- [ ] Add schema / rich snippet support to the fieldtype.
-- [ ] Add support for Routes.
-- [ ] Include [TextRank](https://github.com/crodas/TextRank) functionality?
-- [ ] AI to assist with copywriting..? (IBM has some interesting stuff on this)
+Checkout our [Trello Board](https://trello.com/b/XvBY9m5l/seo-plugin) to see what new features we're working on.
+
+If you have a feature suggestion, [leave an issue](https://github.com/ethercreative/seo/issues) with the prefix `[FR]`.  
 
 ## Changelog
+
+### 1.5.0
+- [Fixed] `sitemap.xml` breaking if no elements can be found in a given criteria #43
+- [Improved] You can now use `{% hook "seo" %}` to output all your SEO meta!
 
 ### 1.4.5
 - Improved support of short phrases as the focus keyword

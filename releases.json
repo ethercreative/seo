@@ -185,5 +185,14 @@
       "[Fixed] a bug where non-url valid characters caused one of the keyword tests to fail",
       "[Fixed] JS bug when creating an SEO field #41"
     ]
+  },
+  {
+    "version": "1.5.0",
+    "downloadUrl": "https://github.com/ethercreative/seo/archive/v1.5.0.zip",
+    "date": "2017-08-30T10:08:00-08:00",
+    "notes": [
+      "[Fixed] `sitemap.xml` breaking if no elements can be found in a given criteria #43",
+      "[Improved] You can now use `{% hook \"seo\" %}` to output all your SEO meta!"
+    ]
   }
 ]
