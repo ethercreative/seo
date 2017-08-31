@@ -61,7 +61,7 @@ function rl (i, o) {
 }
 
 gulp.task('js', function () {
-	rl("js/seo-field.js", "../seo/resources/js/seo-field.min.js");
+	rl("js/SeoField.js", "../seo/resources/js/SeoField.min.js");
 	rl("js/seo-settings.js", "../seo/resources/js/seo-settings.min.js");
 });
 

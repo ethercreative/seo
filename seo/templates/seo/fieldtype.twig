@@ -1,0 +1,64 @@
+<div class="seo--wrap">
+	<nav class="seo--tabs" id="{{ id }}Tabs">
+		<a href="#" data-seo-tab="optimisation" class="active">{{ "Optimisation"|t }}</a>
+		<a href="#" data-seo-tab="social">{{ "Social"|t }}</a>
+		<a href="#" data-seo-tab="keywords">{{ "Keyword Report"|t }}</a>
+	</nav>
+
+	<div id="{{ id }}Pages">
+		<div class="seo--tab active" data-seo-tab="optimisation">
+			<div class="seo--label">
+				<div>
+					<em>{{ "Snippet"|t }}</em>
+					{{ "This is how the page might look in Google. Click the text to edit"|t }}
+				</div>
+			</div>
+
+			<code>TODO: Snippet</code>
+
+			<div class="seo--label">
+				<div>
+					<em>{{ "Focus Keywords"|t }}</em>
+					{{ "Add upwards of 4 relevant key words and phrases to review the SEO page score"|t }}
+				</div>
+				<div id="{{ id }}Suggested">
+					<small>{{ "Suggested keywords"|t }}</small>
+					<a href="#">Kent Design Agency</a>
+					<a href="#">Digital Agency Kent</a>
+				</div>
+			</div>
+
+			<div class="seo--keywords-input" id="{{ id }}KeywordsInput">
+				<a href="#">
+					<span class="seo--light good" title="Good Rating">
+						Good Rating
+					</span>
+					Web Design Agency
+					<object>
+						<a href="#" title="Remove">Remove</a>
+					</object>
+				</a>
+
+				<a href="#" class="active">
+					<span class="seo--light average" title="Average Rating">
+						Average Rating
+					</span>
+					Digital Agency
+					<object>
+						<a href="#" title="Remove">Remove</a>
+					</object>
+				</a>
+
+				<input placeholder="Type a keyword then hit enter to add...">
+			</div>
+		</div>
+
+		<div class="seo--tab" data-seo-tab="social">
+			TODO: Social Previews
+		</div>
+
+		<div class="seo--tab" data-seo-tab="keywords">
+			TODO: Keyword Report
+		</div>
+	</div>
+</div>
