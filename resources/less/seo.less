@@ -18,6 +18,9 @@
 		width: calc(~"100% + "@craft-padding *2);
 		margin: @craft-padding/3 0 0 -@craft-padding;
 
+		//font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", HelveticaNeue, sans-serif !important;
+		//font-weight: 300;
+
 		border-bottom: 1px solid #E3E5E8;
 	}
 
@@ -163,6 +166,15 @@
 		&.poor { background-color: @seo-poor }
 	}
 
+	&--panel {
+		padding: 30px;
+
+		background: #fff;
+		border: 1px solid #E3E5E8;
+		border-radius: 2px;
+		box-shadow: 0 2px 6px 0 rgba(35,36,46,0.08);
+	}
+
 	// Snippet
 	// =========================================================================
 
@@ -174,6 +186,7 @@
 	&--keywords-input {
 		display: flex;
 		align-items: center;
+		margin: 0 0 15px;
 		padding: 5px 0;
 
 		background-color: #F6F6F7;
@@ -301,6 +314,111 @@
 						background-color: #5186D9;
 					}
 				}
+			}
+		}
+	}
+
+	&--keywords-details {
+		&-header {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			flex-wrap: wrap;
+			margin: 0 0 20px;
+		}
+
+		&-keyword {
+			margin: 5px 10px 5px 0;
+
+			color: #000;
+			font-size: 22px;
+			font-weight: normal;
+			letter-spacing: 0;
+		}
+
+		&-rating {
+			margin: 10px 0;
+
+			font-size: 14px;
+			white-space: nowrap;
+			letter-spacing: 0;
+
+			div {
+				margin-right: 5px;
+				vertical-align: middle;
+			}
+		}
+
+		&-meta {
+			display: grid;
+			align-items: stretch;
+			grid-gap: 12px;
+			grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+
+			div {
+				display: flex;
+				align-items: center;
+				padding: 13px 15px;
+
+				color: #798C9C;
+				font-size: 12px;
+				letter-spacing: 0;
+				line-height: 16px;
+
+				border: 1px solid #E3E5E8;
+				border-radius: 2px;
+			}
+
+			em {
+				display: inline-block;
+				margin: 0 10px 0 0;
+
+				color: #000;
+				font-size: 18px;
+				font-style: normal;
+				letter-spacing: 0;
+			}
+		}
+
+		&-chart {
+			margin: 20px 0 30px;
+		}
+
+		&-bar {
+			margin-bottom: 30px;
+
+			font-size: 0;
+			line-height: normal;
+
+			div {
+				display: inline-block;
+				height: 5px;
+			}
+
+			.good { background-color: @seo-good }
+			.average { background-color: @seo-average }
+			.poor { background-color: @seo-poor }
+		}
+
+		&-checklist {
+			margin: 0 0 0 26px;
+
+			li {
+				position: relative;
+
+				color: #686868;
+				font-size: 12px;
+				line-height: 20px;
+
+				&:not(:last-child) {
+					margin-bottom: 10px;
+				}
+			}
+
+			.seo--light {
+				position: absolute;
+				top: 5px;
+				left: -26px;
 			}
 		}
 	}

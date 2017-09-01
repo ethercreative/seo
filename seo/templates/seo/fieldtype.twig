@@ -1,12 +1,23 @@
+{% macro rating(level, tag = "div") %}
+	{% set name = level|capitalize ~ " Rating" %}
+	<{{ tag }} class="seo--light {{ level }}" title="{{ name }}">
+		{{ name }}
+	</{{ tag }}>
+{% endmacro %}
+
+{% import _self as _ %}
+
 <div class="seo--wrap">
 	<nav class="seo--tabs" id="{{ id }}Tabs">
 		<a href="#" data-seo-tab="optimisation" class="active">{{ "Optimisation"|t }}</a>
 		<a href="#" data-seo-tab="social">{{ "Social"|t }}</a>
-		<a href="#" data-seo-tab="keywords">{{ "Keyword Report"|t }}</a>
+		<a href="#" data-seo-tab="report">{{ "Keyword Report"|t }}</a>
 	</nav>
 
 	<div id="{{ id }}Pages">
 		<div class="seo--tab active" data-seo-tab="optimisation">
+
+			{# Snippet #}
 			<div class="seo--label">
 				<div>
 					<em>{{ "Snippet"|t }}</em>
@@ -14,8 +25,11 @@
 				</div>
 			</div>
 
-			<code>TODO: Snippet</code>
+			<div class="seo--panel">
+				Hello
+			</div>
 
+			{# Focus Keywords #}
 			<div class="seo--label">
 				<div>
 					<em>{{ "Focus Keywords"|t }}</em>
@@ -28,11 +42,10 @@
 				</div>
 			</div>
 
+			{# Keyword Input #}
 			<div class="seo--keywords-input" id="{{ id }}KeywordsInput">
 				<a href="#">
-					<span class="seo--light good" title="Good Rating">
-						Good Rating
-					</span>
+					{{ _.rating("good", "span") }}
 					Web Design Agency
 					<object>
 						<a href="#" title="Remove">Remove</a>
@@ -40,16 +53,95 @@
 				</a>
 
 				<a href="#" class="active">
-					<span class="seo--light average" title="Average Rating">
-						Average Rating
-					</span>
+					{{ _.rating("average", "span") }}
 					Digital Agency
 					<object>
 						<a href="#" title="Remove">Remove</a>
 					</object>
 				</a>
 
-				<input placeholder="Type a keyword then hit enter to add...">
+				{% if isPro %}
+					<input placeholder="Type a keyword then hit enter to add...">
+				{% else %}
+					{# Only show if we've already got a keyword #}
+					<input placeholder="Go pro to add more keywords!" disabled>
+				{% endif %}
+			</div>
+
+			{# Keyword Details #}
+			<div class="seo--panel">
+
+				{# Keyword Details: Name #}
+				<header class="seo--keywords-details-header">
+					<h2 class="seo--keywords-details-keyword">
+						Digital Agency
+					</h2>
+
+					<div class="seo--keywords-details-rating">
+						{{ _.rating("average") }}
+						Room for improvement
+					</div>
+				</header>
+
+				{# Keyword Details: Meta #}
+				<div class="seo--keywords-details-meta">
+					<div>
+						<em>43</em>
+						Position in Google
+					</div>
+
+					<div>
+						<em>1234</em>
+						Monthly Searches
+					</div>
+
+					<div>
+						<em>High</em>
+						Competition
+					</div>
+				</div>
+
+				{# Keyword Details: Chart #}
+				<div class="seo--keywords-details-chart">
+					<code>TODO: Chart</code>
+				</div>
+
+				{# Keyword Details: Checklist #}
+				<div class="seo--label">
+					<div>
+						<em>{{ "Opitmisation Checklist"|t }}</em>
+						{{ "Use this handy chart to optimise your page for the desired keywords"|t }}
+					</div>
+				</div>
+
+				<div class="seo--keywords-details-bar">
+					<div class="good" style="width:30%"></div>
+					<div class="average" style="width:50%"></div>
+					<div class="poor" style="width:20%"></div>
+				</div>
+
+				<ul class="seo--keywords-details-checklist">
+					<li>
+						{{ _.rating("good") }}
+						<p>The title is between the recommended minimum and
+						   maximum length.</p>
+					</li>
+
+					<li>
+						{{ _.rating("average") }}
+						<p>Half or more of the images have alt tags containing
+						   the keyword. To improve this, try adding keywords to
+						   all the images alt tags.</p>
+					</li>
+
+					<li>
+						{{ _.rating("poor") }}
+						<p>The Flesch Reading ease score is 17.3 which is
+						   considered best for university graduates. Try
+						   reducing your sentence length to improve
+						   readability.</p>
+					</li>
+				</ul>
 			</div>
 		</div>
 
@@ -57,7 +149,7 @@
 			TODO: Social Previews
 		</div>
 
-		<div class="seo--tab" data-seo-tab="keywords">
+		<div class="seo--tab" data-seo-tab="report">
 			TODO: Keyword Report
 		</div>
 	</div>
