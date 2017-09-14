@@ -65,6 +65,11 @@ If you have a feature suggestion, [leave an issue](https://github.com/ethercreat
 
 ## Changelog
 
+### 1.5.1
+- [Improved] The redirects table is now properly responsive!
+- [Improved] You can click anywhere in a redirects row to edit that redirect.
+- [Improved] Added more descriptive instructions to the redirects bulk upload section.
+
 ### 1.5.0
 - [Fixed] `sitemap.xml` breaking if no elements can be found in a given criteria #43
 - [Improved] You can now use `{% hook "seo" %}` to output all your SEO meta!

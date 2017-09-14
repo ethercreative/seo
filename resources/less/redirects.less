@@ -1,45 +1,30 @@
 .redirects {
 
 	&--table {
-		position: relative;
-
-		.row {
-			position: relative;
-
-			display: flex;
-			height: 34px;
-			margin-bottom: -1px;
-
-			line-height: 34px;
-
-			background: #ffffff;
-			border: 1px solid #f4f4f4;
-			border-left: none;
-			//border-right: none;
-
-			.cell {
-				padding: 0 5px;
-				width: 100%;
-				border-left: 1px solid #f4f4f4;
+		@media (max-width: 640px) {
+			&, thead, tbody, th, td, tr {
+				display: block;
 			}
 
-			//&.delete {
-			//	position: absolute;
-			//	z-index: 0;
-			//	left: 0;
-			//	right: 0;
-			//}
-			//
-			//&.delete ~ .row {
-			//	position: relative;
-			//	z-index: 1;
-			//	transform: translate3d(0, 34px, 0);
-			//}
-			//
-			//&.out ~ .row {
-			//	transition: transform 0.3s ease;
-			//	transform: translate3d(0, 0, 0);
-			//}
+			thead tr {
+				position: absolute;
+				top: -9999px;
+				left: -9999px;
+			}
+
+			td {
+				padding: 10px !important;
+				border-top: none !important;
+			}
+
+			.thin {
+				width: calc(~"100% - 20px") !important;
+				border-bottom: 2px solid #e3e5e8 !important;
+			}
+
+			.element.small {
+				padding: 0 !important;
+			}
 		}
 	}
 
@@ -56,8 +41,21 @@
 			display: flex;
 			margin-bottom: 10px;
 
+			@media (max-width: 640px) {
+				flex-wrap: wrap;
+
+				> input {
+					margin-bottom: 10px;
+					margin-right: 0 !important;
+				}
+			}
+
 			&.down {
 				flex-direction: column;
+
+				.field {
+					margin-bottom: 10px;
+				}
 
 				textarea,
 				input {
@@ -83,6 +81,14 @@
 
 			color: #8f98a3;
 
+			&:not(:last-of-type) {
+				margin-bottom: 10px;
+			}
+
+			input {
+				margin-bottom: 0 !important;
+			}
+
 			span {
 				margin-left: 10px;
 			}
@@ -96,8 +102,18 @@
 			padding-left: 10px;
 		}
 
+		td {
+			@media (max-width: 640px) {
+				padding: 5px 10px !important;
+			}
+		}
+
 		td:last-child {
 			padding-right: 10px;
+
+			@media (max-width: 640px) {
+				padding: 0 !important;
+			}
 		}
 	}
 
@@ -105,7 +121,12 @@
 		background-color: #f4f4f4;
 
 		td {
-			padding: 5px 10px;
+			padding: 5px 10px !important;
+
+			@media (max-width: 640px) {
+				border-bottom-width: 2px !important;
+				border-bottom-style: solid !important;
+			}
 		}
 
 		input {
