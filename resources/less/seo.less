@@ -178,7 +178,77 @@
 	// Snippet
 	// =========================================================================
 
-	// TODO: Snippet CSS
+	&--snippet {
+		position: relative;
+
+		&-wrap {
+			max-width: 600px;
+		}
+
+		&-title {
+			display: block;
+			width: 100%;
+			margin-bottom: 3px;
+
+			color: #1A0DAB;
+			font-family: Arial, sans-serif;
+			font-size: 18px;
+			letter-spacing: 0;
+			line-height: normal;
+
+			appearance: none;
+			background: none;
+		}
+
+		&-url {
+			color: #006621;
+			font-family: Arial, sans-serif;
+			font-size: 14px;
+			letter-spacing: 0;
+			line-height: normal;
+		}
+
+		&-description {
+			display: block;
+			width: 100%;
+
+			color: #545454;
+			font-family: Arial, sans-serif;
+			font-size: 12px;
+			letter-spacing: 0;
+			line-height: 18px;
+
+			appearance: none;
+			background: none;
+		}
+
+		&-title,
+		&-description {
+			border: 1px solid transparent;
+
+			transition: border-color 0.2s ease;
+		}
+
+		&-edit {
+			position: absolute;
+			right: 10px;
+			bottom: 10px;
+
+			color: #BCBCBC;
+			font-size: 10px;
+			font-weight: bold;
+			letter-spacing: 0.1em;
+			line-height: normal;
+			text-transform: uppercase;
+		}
+
+		&:hover {
+			.seo--snippet-title,
+			.seo--snippet-description {
+				border-color: #eee;
+			}
+		}
+	}
 
 	// Focus Keywords
 	// =========================================================================
@@ -389,6 +459,10 @@
 
 			font-size: 0;
 			line-height: normal;
+
+			border-radius: 2px;
+
+			overflow: hidden;
 
 			div {
 				display: inline-block;

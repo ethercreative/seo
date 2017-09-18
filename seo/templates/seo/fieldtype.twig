@@ -25,8 +25,32 @@
 				</div>
 			</div>
 
-			<div class="seo--panel">
-				Hello
+			<div class="seo--panel seo--snippet">
+				<div class="seo--snippet-wrap">
+					<input type="text"
+					       class="seo--snippet-title{{ isNew or value is null ? ' clean' : '' }}"
+					       value="{{ value is not null ? value.title : titleSuffix }}"
+					       name="{{ name }}[title]"
+					       id="{{ id }}Title"
+					       placeholder="SEO Title">
+
+					<span class="seo--snippet-url">
+						{{ siteUrl }}...
+					</span>
+
+					<textarea
+							class="seo--snippet-description"
+							name="{{ name }}[description]"
+							rows="2"
+							id="{{ id }}Description"
+							placeholder="Click to add a description!"
+							oninput="this.style.height='';this.style.height=this.scrollHeight+'px';"
+					>{{ value is not null ? value.description : '' }}</textarea>
+				</div>
+
+				<label class="seo--snippet-edit" for="{{ id }}Title">
+					Click to edit
+				</label>
 			</div>
 
 			{# Focus Keywords #}
