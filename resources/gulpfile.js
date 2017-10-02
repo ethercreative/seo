@@ -19,7 +19,7 @@ var gulp = require('gulp'),
 // JS
 function rl (i, o) {
 	rollup({
-		entry: i,
+		input: i,
 		plugins: [
 			eslint({
 				useEslintrc: false,
@@ -50,12 +50,12 @@ function rl (i, o) {
 			commonjs(),
 			uglify({}, minify)
 		],
-		sourceMap: true
+		sourcemap: true
 	}).then(function (bundle) {
 		bundle.write({
 			format: 'es',
-			sourceMap: true,
-			dest: o
+			sourcemap: true,
+			file: o
 		});
 	}).catch(function(err) { console.error(err); });
 }

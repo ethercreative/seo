@@ -20,7 +20,8 @@ export default class FocusKeywords {
 	
 	initInput () {
 		// Variables
-		this.inputWrap = document.getElementById(this.namespace + "KeywordsInput");
+		this.inputWrap =
+			document.getElementById(this.namespace + "KeywordsInput");
 		this.input = this.inputWrap.lastElementChild;
 		
 		// Events
