@@ -4,18 +4,15 @@
   "devDependencies": {
     "gulp": "latest",
     "gulp-sourcemaps": "latest",
-
     "gulp-less": "latest",
     "less-plugin-autoprefix": "latest",
     "gulp-clean-css": "latest",
-
     "rollup": "latest",
     "rollup-plugin-babel": "latest",
     "rollup-plugin-commonjs": "latest",
     "rollup-plugin-eslint": "latest",
     "rollup-plugin-node-resolve": "latest",
     "rollup-plugin-uglify": "latest",
-
     "uglify-js": "latest",
     "babel-cli": "latest",
     "babel-preset-env": "latest",
