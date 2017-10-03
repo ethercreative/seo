@@ -7,11 +7,10 @@
 
 {% import _self as _ %}
 
-<div class="seo--wrap">
+<div class="seo--wrap" id="{{ id }}Field">
 	<nav class="seo--tabs" id="{{ id }}Tabs">
 		<a href="#" data-seo-tab="optimisation" class="active">{{ "Optimisation"|t }}</a>
 		<a href="#" data-seo-tab="social">{{ "Social"|t }}</a>
-		<a href="#" data-seo-tab="report">{{ "Keyword Report"|t }}</a>
 	</nav>
 
 	<div id="{{ id }}Pages">
@@ -35,7 +34,10 @@
 					       placeholder="SEO Title">
 
 					<span class="seo--snippet-url">
-						{{ siteUrl }}...
+						{{ url != '/' ? url : siteUrl }}
+						{%- if not isHome and not isSingle -%}
+							<span id="{{ id }}Slug">...</span>
+						{% endif %}
 					</span>
 
 					<textarea
@@ -44,7 +46,6 @@
 							rows="2"
 							id="{{ id }}Description"
 							placeholder="Click to add a description!"
-							oninput="this.style.height='';this.style.height=this.scrollHeight+'px';"
 					>{{ value is not null ? value.description : '' }}</textarea>
 				</div>
 
@@ -57,7 +58,7 @@
 			<div class="seo--label">
 				<div>
 					<em>{{ "Focus Keywords"|t }}</em>
-					{{ "Add upwards of 4 relevant key words and phrases to review the SEO page score"|t }}
+					{{ "Add relevant key words and phrases to review the SEO page score"|t }}
 				</div>
 				<div id="{{ id }}Suggested">
 					<small>{{ "Suggested keywords"|t }}</small>
@@ -67,22 +68,13 @@
 			</div>
 
 			{# Keyword Input #}
+			<input type="hidden" id="{{ id }}Keywords"
+			       name="{{ name }}[keywords]"
+			       value="{{ value is not null ? value.keywords : "" }}">
+			<input type="hidden" id="{{ id }}Score" name="{{ name }}[score]"
+			       value="{{ value is not null ? value.score : "neutral" }}">
 			<div class="seo--keywords-input" id="{{ id }}KeywordsInput">
-				<a href="#">
-					{{ _.rating("good", "span") }}
-					Web Design Agency
-					<object>
-						<a href="#" title="Remove">Remove</a>
-					</object>
-				</a>
-
-				<a href="#" class="active">
-					{{ _.rating("average", "span") }}
-					Digital Agency
-					<object>
-						<a href="#" title="Remove">Remove</a>
-					</object>
-				</a>
+				{# Keywords populated by magic #}
 
 				{% if isPro %}
 					<input placeholder="Type a keyword then hit enter to add...">
@@ -148,10 +140,6 @@
 
 		<div class="seo--tab" data-seo-tab="social">
 			TODO: Social Previews
-		</div>
-
-		<div class="seo--tab" data-seo-tab="report">
-			TODO: Keyword Report
 		</div>
 	</div>
 </div>

@@ -37,6 +37,7 @@ function rl (i, o) {
 					"no-loop-func": [2],
 					"no-console": [1],
 					"no-mixed-spaces-and-tabs": [0],
+					"no-unused-vars": [1],
 				},
 				envs: ["browser", "es6"]
 			}),

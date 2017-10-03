@@ -1,6 +1,14 @@
 /* globals Craft */
-
-import { createElement } from "./Helpers";
+/**
+ * SEO Redirects
+ *
+ * @author    Tam McDonald
+ * @copyright Ether Creative 2017
+ * @link      https://ethercreative.co.uk
+ * @package   SEO
+ * @since     1.5.0
+ */
+import { t } from "./helpers";
 
 const REDIRECT_TYPES = {
 	"301": "301 (Permanent)",
@@ -80,13 +88,15 @@ export default class Redirects {
 				id, uri.value, to.value, type.value
 			));
 			
-			Craft.cp.displayNotice('<strong>SEO:</strong> Redirect added successfully!');
+			Craft.cp.displayNotice(
+				"<strong>SEO:</strong> Redirect added successfully!"
+			);
 			spinner.classList.add("hidden");
 			
 			form.reset();
 			uri.focus();
 		}, error => {
-			Craft.cp.displayError('<strong>SEO:</strong> ' + error);
+			Craft.cp.displayError("<strong>SEO:</strong> " + error);
 			spinner.classList.add("hidden");
 		});
 	};
@@ -293,13 +303,13 @@ export default class Redirects {
 	}
 	
 	rowStatic (id = -1, uri = "", to = "", type = 301) {
-		const row = createElement("tr", { "tabindex": 0, "data-id": id }, [
+		const row = t("tr", { "tabindex": 0, "data-id": id }, [
 			// URI
-			createElement("td", { "class": "redirects--title-col" }, [
-				createElement("div", { "class": "element small" }, [
-					createElement("div", { "class": "label" }, [
-						createElement("span", { "class": "title" }, [
-							createElement("a", {
+			t("td", { "class": "redirects--title-col" }, [
+				t("div", { "class": "element small" }, [
+					t("div", { "class": "label" }, [
+						t("span", { "class": "title" }, [
+							t("a", {
 								"href": "#",
 								"title": "Edit Redirect",
 								"data-id": id,
@@ -314,14 +324,14 @@ export default class Redirects {
 			]),
 			
 			// To
-			createElement("td", {}, to),
+			t("td", {}, to),
 			
 			// Type
-			createElement("td", {}, REDIRECT_TYPES[type]),
+			t("td", {}, REDIRECT_TYPES[type]),
 			
 			// Delete
-			createElement("td", { "class": "thin action" }, [
-				createElement("a", {
+			t("td", { "class": "thin action" }, [
+				t("a", {
 					"class": "delete icon",
 					"title": "Delete",
 					"click": e => this.onDeleteClick(e, row)
@@ -334,15 +344,15 @@ export default class Redirects {
 	
 	rowEdit (id, uri, to, type) {
 		return [
-			createElement("tr", { "class": "redirects--edit-row" }, [
+			t("tr", { "class": "redirects--edit-row" }, [
 				// URI
-				createElement("td", {}, [
-					createElement("input", {
+				t("td", {}, [
+					t("input", {
 						"value": id,
 						"type": "hidden",
 						"name": this.namespaceField("id")
 					}),
-					createElement("input", {
+					t("input", {
 						"value": uri,
 						"type": "text",
 						"class": "text fullwidth",
@@ -351,8 +361,8 @@ export default class Redirects {
 				]),
 				
 				// To
-				createElement("td", {}, [
-					createElement("input", {
+				t("td", {}, [
+					t("input", {
 						"value": to,
 						"type": "text",
 						"class": "text fullwidth",
@@ -361,33 +371,37 @@ export default class Redirects {
 				]),
 				
 				// Type
-				createElement("td", {}, [
-					createElement("div", { "class": "select" }, [
-						createElement("select", {
+				t("td", {}, [
+					t("div", { "class": "select" }, [
+						t("select", {
 							"name": this.namespaceField("type")
 						}, Object.keys(REDIRECT_TYPES).map(value => {
 							const opts = { value };
 							if (type === value) opts["selected"] = "selected";
 							
-							return createElement("option", opts, REDIRECT_TYPES[value]);
+							return t(
+								"option",
+								opts,
+								REDIRECT_TYPES[value]
+							);
 						}))
 					])
 				]),
 				
 				// Spinner
-				createElement("td", {}, [
-					createElement("div", { "class": "spinner hidden" })
+				t("td", {}, [
+					t("div", { "class": "spinner hidden" })
 				])
 			]),
 			
-			createElement("tr", { "class": "redirects--edit-controls" }, [
-				createElement("td", { "colspan": 4 }, [
-					createElement("input", {
+			t("tr", { "class": "redirects--edit-controls" }, [
+				t("td", { "colspan": 4 }, [
+					t("input", {
 						"class": "btn submit",
 						"type": "submit",
 						"value": "Update",
 					}),
-					createElement("input", {
+					t("input", {
 						"class": "btn",
 						"type": "button",
 						"value": "Cancel",

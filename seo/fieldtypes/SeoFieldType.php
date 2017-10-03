@@ -23,52 +23,87 @@ class SeoFieldType extends BaseFieldType implements IPreviewableFieldType {
 
 	public function getInputHtml($name, $value)
 	{
+		if (empty($this->element)) return "";
+
 		$id = craft()->templates->formatInputId($name);
 		$namespaceId = craft()->templates->namespaceInputId($id);
 
 		$settings = $this->getSettings();
-		$settingsGlobal = craft()->plugins->getPlugin('seo')->getSettings();
-		$hasSection = false;
+		$settingsGlobal = craft()->plugins->getPlugin("seo")->getSettings();
+
+		/** @var SectionModel $section */
+		$section = $this->element->getSection();
+
+		$hasPreview = false;
 		$isEntry = false;
-		if (!empty($this->element)) {
-			switch ($this->element->getElementType()) {
-				case "Entry":
-					$isEntry = true;
-					$hasSection = craft()->sections->isSectionTemplateValid($this->element->section);
-					break;
-				case "Commerce_Product":
-					$hasSection = craft()->commerce_productTypes->isProductTypeTemplateValid($this->element->type);
-					break;
+		$isHome = $this->element->uri == "__home__";
+		$isNew = $this->element->getTitle() == null;
+		$isSingle = $section->type == "single";
+
+		// Backwards compatibility, keyword -> keywords
+		if (array_key_exists("keyword", $value)) {
+			if (!empty($value["keyword"])) {
+				$value["keywords"] = [
+					[
+						"keyword" => $value["keyword"],
+						"score"   => $this->_scoreCompat($value["score"]),
+					],
+				];
+			} else {
+				$value["keywords"] = [];
 			}
-			$hasSectionString = $hasSection ? 'true' : 'false';
 
-			craft()->templates->includeCssResource('seo/css/seo.css');
-			craft()->templates->includeJsFile("https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.min.js");
-			craft()->templates->includeJsResource('seo/js/SeoField.min.js');
-			craft()->templates->includeJs("new SeoField('{$namespaceId}', {$hasSectionString});");
+			unset($value["keyword"]);
 
-			$url = $this->element->getUrl();
-
-			if ($hasSection && $isEntry && $this->element->uri != '__home__' && $this->element->section->type != 'single')
-				$url = substr($url, 0, strrpos( $url, '/')) . '/';
-
-			$titleSuffix = $settings->titleSuffix ?: $settingsGlobal->titleSuffix;
-
-			if ($hasSection && $isEntry && $value['title'] == null && $this->element->section->type == 'single')
-				$titleSuffix = $this->element->title . ' ' . $titleSuffix;
-
-			return craft()->templates->render('seo/seo/fieldtype', array(
-				'id' => $id,
-				'name' => $name,
-				'value' => $value,
-				'titleSuffix' => $titleSuffix,
-				'hasSection' => $hasSection,
-				'isNew' => $this->element->title === null,
-				'isHome' => $this->element->uri == '__home__',
-				'url' => $url,
-				'isPro' => true,
-			));
+			$value["score"] = "neutral";
 		}
+
+		// TODO: Handle category entry type
+		// TODO: Add hook for handling of custom element types
+
+		switch ($this->element->getElementType()) {
+			case ElementType::Entry:
+				$isEntry = true;
+				$hasPreview = craft()->sections->isSectionTemplateValid($this->element->section);
+				break;
+			case "Commerce_Product":
+				$hasPreview = craft()->commerce_productTypes->isProductTypeTemplateValid($this->element->type);
+				break;
+		}
+
+		// Note: Keep in sync with default opts in SeoField.js
+		$seoOptions = JsonHelper::encode([
+			"hasPreview" => $hasPreview,
+			"isNew" => $isNew,
+		]);
+
+		craft()->templates->includeCssResource("seo/css/seo.css");
+		craft()->templates->includeJsResource("seo/js/SeoField.min.js");
+		craft()->templates->includeJs("new SeoField('{$namespaceId}', {$seoOptions});");
+
+		$url = $this->element->getUrl();
+
+		if ($hasPreview && $isEntry && !$isHome && !$isSingle)
+			$url = substr($url, 0, strrpos( $url, "/")) . "/";
+
+		$titleSuffix = $settings->titleSuffix ?: $settingsGlobal->titleSuffix;
+
+		if ($hasPreview && $isEntry && $value["title"] == null && $isSingle)
+			$titleSuffix = $this->element->title . " " . $titleSuffix;
+
+		return craft()->templates->render("seo/seo/fieldtype", array(
+			"id" => $id,
+			"name" => $name,
+			"value" => $value,
+			"titleSuffix" => $titleSuffix,
+			"hasSection" => $hasPreview,
+			"url" => $url,
+			"isPro" => true,
+
+			"isNew" => $isNew,
+			"isHome" => $isHome,
+			"isSingle" => $isSingle,
+		));
 	}
 
 	public function getSettingsHtml()
@@ -101,6 +136,25 @@ class SeoFieldType extends BaseFieldType implements IPreviewableFieldType {
 		}
 
 		return $ret;
+	}
+
+	// Helpers
+	// =========================================================================
+
+	/**
+	 * Just to make my life harder, I've changed the scores :D
+	 *
+	 * @param string $score
+	 *
+	 * @return string
+	 */
+	private function _scoreCompat ($score) {
+		return [
+			"" => "neutral",
+			"good" => "good",
+			"ok" => "average",
+			"bad" => "poor",
+        ][$score];
 	}
 
 }

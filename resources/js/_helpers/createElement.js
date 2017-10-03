@@ -11,7 +11,7 @@
  *     as text).
  * @return {Element} - The created element
  */
-export function createElement (
+export default function createElement (
 	tag = "div",
 	attributes = {},
 	children = []
