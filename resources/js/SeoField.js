@@ -17,8 +17,6 @@ class SeoField {
 	// Variables
 	// =========================================================================
 	
-	static isInitialized = false;
-	
 	// Set in Snippet
 	snippetFields = {
 		title: null,
@@ -50,7 +48,7 @@ class SeoField {
 		// TODO: Social
 		
 		if (!this.options.hasPreview) return;
-		// TODO: Disable
+		// TODO: Disable all preview related functionality
 		
 		new FocusKeywords(namespace, this);
 	}

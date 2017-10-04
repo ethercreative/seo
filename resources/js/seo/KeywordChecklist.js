@@ -55,11 +55,13 @@ export default class KeywordChecklist {
 			this.keyword = keyword;
 			this.keywordLower = keyword.toLowerCase();
 			
+			// Remove line breaks, tabs, and surplus spaces from page text
 			this.text = content.textContent.replace(
 				/(\r\n|\r|\n|\t|\s+)/gmi,
 				""
 			);
 			
+			// If there's no text, complain
 			if (this.text.trim() === "") {
 				this.addRating(
 					SEO_RATING.POOR,
@@ -72,10 +74,13 @@ export default class KeywordChecklist {
 			this.content = content;
 			this.stats = new TextStatistics(this.text);
 			
+			// Run all `judge` functions
 			Object.getOwnPropertyNames(KeywordChecklist.prototype)
 			      .filter(f => f.indexOf("judge") > -1)
 			      .forEach(f => { this[f](); });
-			
+
+			// Sort the results by rating, keeping track of the number of times
+			// each rating occurs
 			this.ratingOccurrence = {};
 			
 			this.ratings.sort((a, b) => {
@@ -90,6 +95,7 @@ export default class KeywordChecklist {
 				this.ratingOccurrence[rating]++;
 			});
 			
+			// Find the most prevalent rating
 			const overallRating =
 				Object.keys(this.ratingOccurrence)
 				      .reduce(
@@ -98,8 +104,10 @@ export default class KeywordChecklist {
 						        ? a : b
 				      );
 			
+			// Re-render the checklist
 			this.renderChecklist();
 			
+			// Run the callback
 			onNewRating(overallRating);
 		}).catch(err => {
 			console.log(err);

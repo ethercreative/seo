@@ -270,6 +270,8 @@
 	&--keywords-input {
 		display: flex;
 		align-items: center;
+		// Forcing a height due to a weird re-layout height flash in chrome
+		height: 36px;
 		margin: 0 0 15px;
 		padding: 5px 0;
 
@@ -331,6 +333,10 @@
 					background-color 0.1s ease,
 					border-color 0.1s ease,
 					box-shadow 0.1s ease;
+
+			span {
+				pointer-events: none;
+			}
 
 			&:hover,
 			&.active {

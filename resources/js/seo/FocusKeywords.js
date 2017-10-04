@@ -15,7 +15,13 @@ import { SEO_RATING_LABEL } from "../const";
 
 export default class FocusKeywords {
 	
+	// Variables
+	// =========================================================================
+	
 	activeKeywordIndex = null;
+	
+	// FocusKeywords
+	// =========================================================================
 	
 	constructor (namespace, SEO) {
 		this.namespace = namespace;
@@ -57,20 +63,24 @@ export default class FocusKeywords {
 	 * Initializes the keywords (if any exist)
 	 */
 	initKeywords () {
-		// Set initial keywords, adding the index variable
-		this.keywords = JSON.parse(this.keywordsField.value).map((k, i) => ({
-			...k,
-			index: i,
-		}));
-		
-		// Initial keywords
-		this.keywords.forEach(({ keyword, rating }, i) => {
-			this.createKeyword(keyword, rating, i);
-		});
+		try {
+			// Set initial keywords, adding the index variable
+			this.keywords = JSON.parse(this.keywordsField.value).map((k, i) => {
+				this.createKeyword(k.keyword, k.rating, i);
+				
+				return {
+					...k,
+					index: i,
+				};
+			});
+		} catch (_) {
+			this.keywords = [];
+		}
 		
 		// Set the first keyword (if we have one) to be active
 		this.keywords.length && this.setActiveKeyword(0);
 		
+		// Fire the keywords change callback
 		this.onKeywordsChange();
 	}
 	
@@ -93,6 +103,7 @@ export default class FocusKeywords {
 	startObserving () {
 		if (!this.mo) return;
 		
+		// TODO: Only want to watch form elements that will be posted
 		this.mo.observe(this.keywordsField.form, {
 			childList: true,
 			attributes: true,
@@ -117,9 +128,13 @@ export default class FocusKeywords {
 	 * @param index
 	 */
 	setActiveKeyword (index) {
+		// If the index is out of bounds, nullify
 		if (!this.keywords.length > index) this.activeKeywordIndex = null;
+		
+		// If the index is current, ignore
 		if (this.activeKeywordIndex === index) return;
 		
+		// If we have an old index, deactivate it
 		if (
 			this.activeKeywordIndex !== null
 		    && this.keywords.length > this.activeKeywordIndex
@@ -128,6 +143,7 @@ export default class FocusKeywords {
 			    .classList.remove("active");
 		}
 		
+		// If our new index isn't out of bounds, activate it
 		if (this.keywords.length > index) {
 			this.activeKeywordIndex = index|0;
 			this.getKeywordElementAtIndex(this.activeKeywordIndex)
@@ -135,8 +151,6 @@ export default class FocusKeywords {
 			
 			// Re-calculate
 			this.recalculateKeyword();
-		} else {
-			this.activeKeywordIndex = null;
 		}
 	}
 	
@@ -147,6 +161,7 @@ export default class FocusKeywords {
 		// Stop watching the form to prevent an update loop
 		this.stopObserving();
 		
+		// If we have an active keyword, recalculate its details
 		if (this.activeKeywordIndex !== null) {
 			const keyword = this.keywords[this.activeKeywordIndex];
 			
@@ -169,6 +184,7 @@ export default class FocusKeywords {
 	 * Update the hidden inputs when the keywords change
 	 */
 	onKeywordsChange = () => {
+		// Store the keywords in the hidden field, keep track of the ratings
 		const ratingOccurrence = {};
 		
 		this.keywordsField.value = JSON.stringify(
@@ -182,11 +198,14 @@ export default class FocusKeywords {
 			})
 		);
 		
+		// If we don't have any ratings, clear the hidden score field
+		// TODO: Change the score field to rating
 		if (!Object.keys(ratingOccurrence).length) {
 			this.scoreField.value = "";
 			return;
 		}
 		
+		// Set the score field to the most prevalent rating
 		this.scoreField.value =
 			Object.keys(ratingOccurrence)
 			      .reduce(
@@ -202,6 +221,7 @@ export default class FocusKeywords {
 	 * @param {string} rating
 	 */
 	onNewRating = (keywordIndex, rating) => {
+		// Update the rating on the keyword
 		const keyword = this.keywords[keywordIndex];
 		keyword.rating = rating;
 		
@@ -222,6 +242,7 @@ export default class FocusKeywords {
 			document.createTextNode(SEO_RATING_LABEL[rating])
 		);
 		
+		// Fire the keywords change callback
 		this.onKeywordsChange();
 	};
 	
@@ -251,8 +272,6 @@ export default class FocusKeywords {
 		
 		const i = e.target.parentNode.parentNode.dataset.index|0;
 		
-		this.activeKeywordIndex === i && this.setActiveKeyword(0);
-		
 		// Remove keyword
 		const elem = this.getKeywordElementAtIndex(i);
 		elem.parentNode.removeChild(elem);
@@ -272,6 +291,9 @@ export default class FocusKeywords {
 				index: i,
 			};
 		});
+		
+		// If we're deleting the active keyword, reset to the first one
+		this.activeKeywordIndex === i && this.setActiveKeyword(0);
 		
 		this.onKeywordsChange();
 	};
@@ -318,12 +340,15 @@ export default class FocusKeywords {
 		if (!nextKeyword) return;
 		
 		// Check if this is a duplicate and activate original if it is
-		this.keywords.forEach(({ keyword, index }) => {
-			if (nextKeyword === keyword) {
+		let i = this.keywords.length;
+		while (i--) {
+			let { keyword, index } = this.keywords[i];
+			if (nextKeyword.toLowerCase() === keyword.toLowerCase()) {
 				dupe = true;
 				this.setActiveKeyword(index);
+				break;
 			}
-		});
+		}
 		
 		// If it's not a duplicate, create a new keyword
 		!dupe && this.createKeyword(nextKeyword);
@@ -343,8 +368,10 @@ export default class FocusKeywords {
 	 * @param {number|null=} index
 	 */
 	createKeyword = (keyword, rating = "neutral", index = null) => {
+		// Use the given index, or the next available one
 		const nextIndex = index !== null ? index : this.keywords.length;
 		
+		// Create the keyword token
 		const elem = t("a", {
 			href: "#",
 			click: this.onKeywordClick,
@@ -359,11 +386,13 @@ export default class FocusKeywords {
 			}, "Remove"))
 		]);
 		
+		// Add the keyword token to the input
 		this.inputWrap.insertBefore(
 			elem,
 			this.inputWrap.lastElementChild
 		);
 		
+		// If the given index is null (meaning a new keyword) store the keyword
 		if (index === null) {
 			this.keywords.push({
 				keyword,
@@ -371,7 +400,10 @@ export default class FocusKeywords {
 				index: nextIndex,
 			});
 			
+			// Make the new keyword active
 			this.setActiveKeyword(nextIndex);
+			
+			// Fire the keywords change callback
 			this.onKeywordsChange();
 		}
 	};

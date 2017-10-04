@@ -15,7 +15,7 @@ export default class Tabs {
 	activeTab = { tab: null, page: null };
 	pages = {};
 	
-	// Constructor
+	// Tabs
 	// =========================================================================
 	
 	constructor (namespace) {

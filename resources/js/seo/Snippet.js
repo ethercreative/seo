@@ -43,6 +43,7 @@ export default class Snippet {
 	title () {
 		const mainTitleField = document.getElementById("title");
 		
+		// Check to see if we should be syncing the title
 		if (
 			(
 				!mainTitleField
@@ -54,10 +55,12 @@ export default class Snippet {
 		// This should be just the suffix (if there is one)
 		const initial = this.titleField.value;
 		
+		// On Craft title field input, sync the title
 		const onMainTitleFieldInput = () => {
 			this.titleField.value = `${mainTitleField.value} ${initial}`;
 		};
 		
+		// On SEO title field input, stop syncing
 		const onTitleInput = () => {
 			this.titleField.classList.remove("clean");
 			
@@ -70,6 +73,7 @@ export default class Snippet {
 			this.titleField.removeEventListener("input", onTitleInput, false);
 		};
 		
+		// Add event listeners
 		mainTitleField.addEventListener(
 			"input",
 			onMainTitleFieldInput,
@@ -77,18 +81,21 @@ export default class Snippet {
 		);
 		
 		this.titleField.addEventListener("input", onTitleInput, false);
+		
+		// Trigger the Craft title field listener to sync, just in case we don't
+		// have an SEO title but the entry has one and the user doesn't change
+		// it (usually if the entry was created before the SEO field was added)
+		onMainTitleFieldInput();
 	}
 	
 	/**
 	 * Sync up the SEO slug with crafts
-	 * (Purely aesthetic, but nice to have)
 	 */
 	slug () {
 		const mainSlugField = document.getElementById("slug");
 		
+		// Skip if we don't have a slug field (i.e. the homepage)
 		if (!mainSlugField) return;
-		
-		this.slugField.textContent = mainSlugField.value;
 		
 		const onSlugChange = () => {
 			this.slugField.textContent = mainSlugField.value;
@@ -100,6 +107,9 @@ export default class Snippet {
 		// the slugs in sync
 		document.getElementById("title")
 		        .addEventListener("input", debounce(onSlugChange, 500));
+		
+		// Sync straight away (see above in title() as to why)
+		onSlugChange();
 	}
 	
 	/**
@@ -133,7 +143,6 @@ export default class Snippet {
 		});
 		
 		// Adjust height TextArea size changes
-		// ---------------------------------------------------------------------
 		
 		// On tab change
 		if (document.getElementById("tabs")) {

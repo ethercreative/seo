@@ -41,7 +41,7 @@ class SeoFieldType extends BaseFieldType implements IPreviewableFieldType {
 		$isSingle = $section->type == "single";
 
 		// Backwards compatibility, keyword -> keywords
-		if (array_key_exists("keyword", $value)) {
+		if ($value && array_key_exists("keyword", $value)) {
 			if (!empty($value["keyword"])) {
 				$value["keywords"] = [
 					[

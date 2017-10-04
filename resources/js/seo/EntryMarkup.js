@@ -40,6 +40,7 @@ class EntryMarkup {
 				document.getElementById("container")
 			);
 			
+			// Skip if no changes have been made to the content
 			if (this.postData && Craft.compare(nextPostData, this.postData)) {
 				resolve(this.frame.contentWindow.document.body);
 				return;
@@ -47,6 +48,7 @@ class EntryMarkup {
 			
 			this.postData = nextPostData;
 			
+			// Get the markup from the live preview
 			$.ajax({
 				url: Craft.livePreview.previewUrl,
 				method: "POST",
@@ -54,7 +56,7 @@ class EntryMarkup {
 				xhrFields: { withCredentials: true },
 				crossDomain: true,
 				success: data => {
-					// TODO: Remove all `autoplay` attributes
+					// Remove all <script/> & <style/> tags
 					data = data.replace(
 						/<script([^'"]|"(\\.|[^"\\])*"|'(\\.|[^'\\])*')*?<\/script>/g,
 						""
@@ -65,6 +67,7 @@ class EntryMarkup {
 						""
 					);
 					
+					// Write the markup to our iFrame
 					this.frame.contentWindow.document.open();
 					this.frame.contentWindow.document.write(data);
 					this.frame.contentWindow.document.close();
