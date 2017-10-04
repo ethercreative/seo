@@ -55,6 +55,9 @@ class SeoFieldType extends BaseFieldType implements IPreviewableFieldType {
 
 			unset($value["keyword"]);
 
+			$value["keywords"] = JsonHelper::encode($value["keywords"]);
+
+			// TODO: Rename score to rating
 			$value["score"] = "neutral";
 		}
 

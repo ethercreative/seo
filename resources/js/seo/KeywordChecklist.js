@@ -101,7 +101,8 @@ export default class KeywordChecklist {
 			this.renderChecklist();
 			
 			onNewRating(overallRating);
-		}).catch(() => {
+		}).catch(err => {
+			console.log(err);
 			// TODO: Disable checklist, show error overlaying
 			// Note to self: This also catches JS errors
 		});
@@ -117,14 +118,12 @@ export default class KeywordChecklist {
 		for (let i = 0; i < this.bar.children.length; i++) {
 			let fill = this.bar.children[i];
 			let rating = fill.className;
-			let fillWidth = (currentFillSize / ratingCount) * 100;
+			
+			fill.style.transform = `translateX(${currentFillSize}%)`;
 			
 			if (this.ratingOccurrence.hasOwnProperty(rating)) {
-				let size = this.ratingOccurrence[rating];
-				fill.style.transform = `translateX(${fillWidth}%)`;
-				currentFillSize += size;
-			} else {
-				fill.style.transform = `translateX(${fillWidth}%)`;
+				currentFillSize +=
+					(this.ratingOccurrence[rating] / ratingCount) * 100;
 			}
 		}
 		
@@ -146,16 +145,13 @@ export default class KeywordChecklist {
 	judgeTitleLength () {
 		const l = this.SEO.snippetFields.title.value.length;
 		
-		const reason =
-			l < 40
-				? SEO_REASONS.titleLengthFailMin
-				: l > 60
-					? SEO_REASONS.titleLengthFailMax
-					: SEO_RATING.titleLengthSuccess;
-		
 		this.addRating(
 			l < 40 || l > 60 ? SEO_RATING.POOR : SEO_RATING.GOOD,
-			reason.replace("{l}", l)
+			l < 40
+				? SEO_REASONS.titleLengthFailMin.replace("{l}", l)
+				: l > 60
+					? SEO_REASONS.titleLengthFailMax.replace("{l}", l)
+					: SEO_REASONS.titleLengthSuccess
 		);
 	}
 	
@@ -275,6 +271,8 @@ export default class KeywordChecklist {
 	
 	/**
 	 * Judge the number of images with the keyword in their alts
+	 *
+	 * TODO: Look into <picture> & <figure> tag effect on SEO
 	 */
 	judgeImages () {
 		const imgs = this.content.getElementsByTagName("img");
@@ -426,8 +424,6 @@ export default class KeywordChecklist {
 	
 	/**
 	 * Judges the Flesch-Kincaid reading ease
-	 *
-	 * TODO: This is wrong, it should be aiming between grades 6 & 8
 	 */
 	judgeFleschEase () {
 		const level = this.stats.fleschKincaidReadingEase();

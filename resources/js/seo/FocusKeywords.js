@@ -205,7 +205,10 @@ export default class FocusKeywords {
 		const keyword = this.keywords[keywordIndex];
 		keyword.rating = rating;
 		
-		// TODO: Re-render keyword rating in input
+		// Re-render keyword rating in input
+		const elem = this.getKeywordElementAtIndex(keywordIndex);
+		elem.removeChild(elem.firstElementChild);
+		elem.insertBefore(createRating(rating, "span"), elem.firstChild);
 		
 		// Set keyword details keyword
 		this.keywordElem.textContent = keyword.keyword;

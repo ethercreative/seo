@@ -60,6 +60,11 @@ class EntryMarkup {
 						""
 					);
 					
+					data = data.replace(
+						/<style([^'"]|"(\\.|[^"\\])*"|'(\\.|[^'\\])*')*?<\/style>/g,
+						""
+					);
+					
 					this.frame.contentWindow.document.open();
 					this.frame.contentWindow.document.write(data);
 					this.frame.contentWindow.document.close();
