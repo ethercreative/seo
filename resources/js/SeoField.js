@@ -5,7 +5,7 @@
  * @copyright Ether Creative 2017
  * @link      https://ethercreative.co.uk
  * @package   SEO
- * @since     1.5.0
+ * @since     2.0.0
  */
 
 import Tabs from "./seo/Tabs";
@@ -43,8 +43,6 @@ class SeoField {
 	 * @constructor
 	 */
 	constructor (namespace, options) {
-		if (SeoField.watchForSeoField(namespace)) return;
-		
 		this.options = options;
 		
 		new Tabs(namespace);
@@ -52,39 +50,9 @@ class SeoField {
 		// TODO: Social
 		
 		if (!this.options.hasPreview) return;
+		// TODO: Disable
 		
 		new FocusKeywords(namespace, this);
-		// TODO: Keyword report
-	}
-	
-	// Helpers
-	// =========================================================================
-	
-	/**
-	 * Ensure we've only got one active SEO field
-	 * (particularly useful for SEO fields in quick edit HUDs)
-	 *
-	 * @param {string} namespace
-	 * @returns {boolean}
-	 */
-	static watchForSeoField (namespace) {
-		if (SeoField.isInitialized) return true;
-		
-		SeoField.isInitialized = true;
-		const field = document.getElementById(`${namespace}Field`);
-		
-		const observer = new MutationObserver(mutations => {
-			mutations.forEach(mutation => {
-				if (mutation.removedNodes.length) {
-					SeoField.isInitialized = false;
-					observer.disconnect();
-				}
-			});
-		});
-		
-		observer.observe(field.parentNode, { childList: true });
-		
-		return false;
 	}
 	
 }

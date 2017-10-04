@@ -5,8 +5,6 @@
  * https://github.com/DaveChild/Text-Statistics
  *
  * Modified & re-written for ES6 by Tam<hi@tam.sx>
- *
- * TODO: Ensure Rollup removes any functions we're not using
  */
 
 export default class TextStatistics {
@@ -343,7 +341,7 @@ export default class TextStatistics {
 			wordCount = this.wordCount();
 		
 		this.text.split(/\s+/).forEach(word => {
-			syllableCount += this.syllableCount(word);
+			syllableCount += TextStatistics.syllableCount(word);
 		});
 		
 		return (syllableCount || 1) / (wordCount || 1);

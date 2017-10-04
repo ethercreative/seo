@@ -62,7 +62,7 @@
 				</div>
 				<div id="{{ id }}Suggested">
 					<small>{{ "Suggested keywords"|t }}</small>
-					<a href="#">Kent Design Agency</a>
+					<a href="#">TODO</a>
 					<a href="#">Digital Agency Kent</a>
 				</div>
 			</div>
@@ -89,13 +89,15 @@
 
 				{# Keyword Details: Name #}
 				<header class="seo--keywords-details-header">
-					<h2 class="seo--keywords-details-keyword">
-						Digital Agency
+					<h2 class="seo--keywords-details-keyword"
+					    id="{{ id }}Keyword">
+						<em>No Keyword Selected</em>
 					</h2>
 
-					<div class="seo--keywords-details-rating">
-						{{ _.rating("average") }}
-						Room for improvement
+					<div class="seo--keywords-details-rating"
+					     id="{{ id }}Rating">
+						{{ _.rating("neutral") }}
+						Not yet rated
 					</div>
 				</header>
 
@@ -107,32 +109,17 @@
 					</div>
 				</div>
 
-				<div class="seo--keywords-details-bar">
-					<div class="good" style="width:30%"></div>
-					<div class="average" style="width:50%"></div>
-					<div class="poor" style="width:20%"></div>
+				<div class="seo--keywords-details-bar"
+				     id="{{ id }}KeywordBar">
+					<div class="good"></div>
+					<div class="average"></div>
+					<div class="poor"></div>
 				</div>
 
-				<ul class="seo--keywords-details-checklist">
-					<li>
-						{{ _.rating("good") }}
-						<p>The title is between the recommended minimum and
-						   maximum length.</p>
-					</li>
-
-					<li>
-						{{ _.rating("average") }}
-						<p>Half or more of the images have alt tags containing
-						   the keyword. To improve this, try adding keywords to
-						   all the images alt tags.</p>
-					</li>
-
-					<li>
-						{{ _.rating("poor") }}
-						<p>The Flesch Reading ease score is 17.3 which is
-						   considered best for university graduates. Try
-						   reducing your sentence length to improve
-						   readability.</p>
+				<ul class="seo--keywords-details-checklist"
+				    id="{{ id }}KeywordChecklist">
+					<li style="text-align:center">
+						No keyword selected
 					</li>
 				</ul>
 			</div>

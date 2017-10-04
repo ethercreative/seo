@@ -19,10 +19,16 @@ export default function createElement (
 	const elem = document.createElement(tag);
 	
 	for (let [key, value] of Object.entries(attributes)) {
+		if (!value) continue;
+		
 		if (typeof value === typeof (() => {})) {
-			elem.addEventListener(key, value);
+			if (key === "ref") value(elem);
+			else elem.addEventListener(key, value);
 			continue;
 		}
+		
+		if (key === "style")
+			value = value.replace(/[\t\r\n]/g, " ").trim();
 		
 		elem.setAttribute(key, value);
 	}
@@ -31,6 +37,8 @@ export default function createElement (
 		children = [children];
 	
 	children.map(child => {
+		if (!child) return;
+		
 		try {
 			elem.appendChild(child);
 		} catch (_) {

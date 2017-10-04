@@ -49,7 +49,9 @@ function rl (i, o) {
 			}),
 			babel(),
 			commonjs(),
-			uglify({}, minify)
+			uglify({
+				toplevel: true,
+			}, minify)
 		],
 		sourcemap: true
 	}).then(function (bundle) {

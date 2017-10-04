@@ -5,60 +5,13 @@
  * @copyright Ether Creative 2017
  * @link      https://ethercreative.co.uk
  * @package   SEO
- * @since     1.5.0
+ * @since     2.0.0
  */
 
-import { TextStatistics, fail, t, capitalize } from "../helpers";
+import { t, createRating, debounce } from "../helpers";
 
-const SEO_RATING = {
-	NONE: "neutral",
-	GOOD: "good",
-	AVERAGE: "average",
-	POOR: "poor",
-};
-
-// TODO: Make translatable
-const SEO_REASONS = {
-	titleLengthFailMin: "The title contains {l} characters which is less than the recommended minimum of 40 characters.",
-	titleLengthFailMax: "The title contains {l} characters which is greater than the recommended maximum of 60 characters.",
-	titleLengthSuccess: "The title is between the recommended minimum and maximum length.",
-	
-	titleKeywordFail: "The title does not contain the keyword. Try adding it near the beginning of the title.",
-	titleKeywordSuccess: "The title contains the keyword near the beginning.",
-	titleKeywordPosFail: "The title contains the keyword, but not near the beginning. Try to move it closer to the start of the title.",
-	
-	slugFail: "The URL does not contain the keyword. Try adding it to the slug.",
-	slugSuccess: "The URL contains the keyword.",
-	
-	descFail: "The description does not contain the keyword. Try adding it near the beginning of the description.",
-	descSuccess: "The description contains the keyword.",
-	
-	wordCountFail: "Your text contains {l} words, this is less than the recommended 300 word minimum.",
-	wordCountSuccess: "Your text contains {l} words, this is more than the recommended 300 word minimum.",
-	
-	firstParagraphFail: "The keyword does not appear in the first paragraph of your text. Try adding it.",
-	firstParagraphSuccess: "The keyword appears in the first paragraph of your text.",
-	
-	imagesFail: "Less than half of the images have alt tags containing the keyword, try adding it to more images.",
-	imagesOk: "Half or more of the images have alt tags containing the keyword. To improve this, try adding keywords to all the images alt tags.",
-	imagesSuccess: "All of the images have alt tags containing the keyword.",
-	
-	linksFail: "The page does not contain any outgoing links. Try adding some.",
-	linksSuccess: "The page contains outgoing links.",
-	
-	headingsFail: "The page does not contain any headings that contain the keyword. Try adding some with the keyword.",
-	headingsOk: "The page contains some lower importance headings that contain the keyword. Try adding the keyword to some h2's.",
-	headingsSuccess: "The page contains higher importance headings with the keyword.",
-	
-	densityFail: "The keyword does not appear in the text. It is important to include it in your content.",
-	densityFailUnder: "The keyword density is {d}%, which is well under the advised 2.5%. Try increasing the number of times the keyword is used.",
-	densityOk: "The keyword density is {d}%, which is over the advised 2.5%. The keyword appears {c} times.",
-	densitySuccess: "The keyword density is {d}%, which is near the advised 2.5%.",
-	
-	fleschFail: "The Flesch Reading ease score is {l} which is considered best for university graduates. Try reducing your sentence length to improve readability.",
-	fleschOk: "The Flesch Reading ease score is {l} which is average, and considered easily readable by most users.",
-	fleschSuccess: "The Flesch Reading ease score is {l} meaning your content is readable by all ages.",
-};
+import KeywordChecklist from "./KeywordChecklist";
+import { SEO_RATING_LABEL } from "../const";
 
 export default class FocusKeywords {
 	
@@ -67,12 +20,18 @@ export default class FocusKeywords {
 	constructor (namespace, SEO) {
 		this.namespace = namespace;
 		this.SEO = SEO;
+		this.keywordsChecklist = new KeywordChecklist(namespace, SEO);
 		
 		this.keywordsField = document.getElementById(`${namespace}Keywords`);
 		this.scoreField = document.getElementById(`${namespace}Score`);
 		
+		this.keywordElem = document.getElementById(`${namespace}Keyword`);
+		this.ratingElem = document.getElementById(`${namespace}Rating`);
+		
 		this.initInput();
 		this.initKeywords();
+		
+		this.initWatcher();
 	}
 	
 	// Initializers
@@ -105,8 +64,8 @@ export default class FocusKeywords {
 		}));
 		
 		// Initial keywords
-		this.keywords.forEach(({ keyword, score }, i) => {
-			this.createKeyword(keyword, score, i);
+		this.keywords.forEach(({ keyword, rating }, i) => {
+			this.createKeyword(keyword, rating, i);
 		});
 		
 		// Set the first keyword (if we have one) to be active
@@ -115,8 +74,42 @@ export default class FocusKeywords {
 		this.onKeywordsChange();
 	}
 	
+	/**
+	 * Watches for any changes in the form containing the SEO field, triggering
+	 * an update when a change occurs
+	 */
+	initWatcher () {
+		this.mo = new MutationObserver(debounce(this.recalculateKeyword, 500));
+		
+		this.startObserving();
+	}
+	
 	// Actions
 	// =========================================================================
+	
+	/**
+	 * Start watching the form
+	 */
+	startObserving () {
+		if (!this.mo) return;
+		
+		this.mo.observe(this.keywordsField.form, {
+			childList: true,
+			attributes: true,
+			characterData: true,
+			subtree: true,
+		});
+	}
+	
+	/**
+	 * Stop watching the form
+	 */
+	stopObserving () {
+		if (!this.mo) return;
+		
+		this.mo.disconnect();
+		this.mo.takeRecords();
+	}
 	
 	/**
 	 * Sets the active keyword & triggers an update to the keyword details
@@ -124,6 +117,9 @@ export default class FocusKeywords {
 	 * @param index
 	 */
 	setActiveKeyword (index) {
+		if (!this.keywords.length > index) this.activeKeywordIndex = null;
+		if (this.activeKeywordIndex === index) return;
+		
 		if (
 			this.activeKeywordIndex !== null
 		    && this.keywords.length > this.activeKeywordIndex
@@ -136,10 +132,35 @@ export default class FocusKeywords {
 			this.activeKeywordIndex = index|0;
 			this.getKeywordElementAtIndex(this.activeKeywordIndex)
 			    .classList.add("active");
+			
+			// Re-calculate
+			this.recalculateKeyword();
+		} else {
+			this.activeKeywordIndex = null;
+		}
+	}
+	
+	/**
+	 * Re-calculate the checklist & rating
+	 */
+	recalculateKeyword = () => {
+		// Stop watching the form to prevent an update loop
+		this.stopObserving();
+		
+		if (this.activeKeywordIndex !== null) {
+			const keyword = this.keywords[this.activeKeywordIndex];
+			
+			this.keywordsChecklist.calculate(
+				keyword.keyword,
+				this.onNewRating.bind(this, keyword.index)
+			);
 		}
 		
-		// TODO: Trigger results update
-	}
+		setTimeout(() => {
+			// Start watching the form again, now updates are complete
+			this.startObserving();
+		}, 1);
+	};
 	
 	// Events
 	// =========================================================================
@@ -148,21 +169,57 @@ export default class FocusKeywords {
 	 * Update the hidden inputs when the keywords change
 	 */
 	onKeywordsChange = () => {
-		const ratings = Object.values(SEO_RATING).reduce((a, b) => {
-			a[b] = 0;
-			return a;
-		}, {});
+		const ratingOccurrence = {};
 		
 		this.keywordsField.value = JSON.stringify(
-			this.keywords.map(({ keyword, score }) => {
-				ratings[score]++;
-				return { keyword, score };
+			this.keywords.map(({ keyword, rating }) => {
+				if (!ratingOccurrence.hasOwnProperty(rating))
+					ratingOccurrence[rating] = 0;
+				
+				ratingOccurrence[rating]++;
+				
+				return { keyword, rating };
 			})
 		);
 		
-		this.scoreField.value = Object.keys(ratings).reduce((a, b) => {
-			return ratings[b] > a.score ? { rating: b, score: ratings[b] } : a;
-		}, { rating: SEO_RATING.NONE, score: 0 }).rating;
+		if (!Object.keys(ratingOccurrence).length) {
+			this.scoreField.value = "";
+			return;
+		}
+		
+		this.scoreField.value =
+			Object.keys(ratingOccurrence)
+			      .reduce(
+				      (a, b) =>
+					      ratingOccurrence[a] > ratingOccurrence[b] ? a : b
+			      );
+	};
+	
+	/**
+	 * Fired when the keyword checklist generates a new keyword rating
+	 *
+	 * @param {number} keywordIndex
+	 * @param {string} rating
+	 */
+	onNewRating = (keywordIndex, rating) => {
+		const keyword = this.keywords[keywordIndex];
+		keyword.rating = rating;
+		
+		// TODO: Re-render keyword rating in input
+		
+		// Set keyword details keyword
+		this.keywordElem.textContent = keyword.keyword;
+		
+		// Set keyword details rating
+		while (this.ratingElem.firstChild)
+			this.ratingElem.removeChild(this.ratingElem.firstChild);
+		
+		this.ratingElem.appendChild(createRating(rating));
+		this.ratingElem.appendChild(
+			document.createTextNode(SEO_RATING_LABEL[rating])
+		);
+		
+		this.onKeywordsChange();
 	};
 	
 	// Events: Keywords
@@ -276,37 +333,21 @@ export default class FocusKeywords {
 	// =========================================================================
 	
 	/**
-	 * Creates a rating element
-	 *
-	 * @param {string} level
-	 * @param {string=} tag
-	 * @return {Element}
-	 */
-	createRating = (level, tag = "div") => {
-		const name = capitalize(level);
-		
-		return t(tag, {
-			"class": `seo--light ${level}`,
-			"title": name,
-		}, name);
-	};
-	
-	/**
 	 * Creates a new keyword and adds it to the keyword input
 	 *
 	 * @param {string} keyword
-	 * @param {string=} score
+	 * @param {string=} rating
 	 * @param {number|null=} index
 	 */
-	createKeyword = (keyword, score = "neutral", index = null) => {
+	createKeyword = (keyword, rating = "neutral", index = null) => {
 		const nextIndex = index !== null ? index : this.keywords.length;
 		
 		const elem = t("a", {
 			href: "#",
 			click: this.onKeywordClick,
-			"data-index": nextIndex,
+			"data-index": String(nextIndex),
 		}, [
-			this.createRating(score, "span"),
+			createRating(rating, "span"),
 			keyword,
 			t("object", {}, t("a", {
 				href: "#",
@@ -323,7 +364,7 @@ export default class FocusKeywords {
 		if (index === null) {
 			this.keywords.push({
 				keyword,
-				score,
+				rating,
 				index: nextIndex,
 			});
 			

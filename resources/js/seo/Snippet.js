@@ -1,5 +1,15 @@
 /* globals Craft */
 
+/**
+ * Snippet
+ *
+ * @author    Tam McDonald
+ * @copyright Ether Creative 2017
+ * @link      https://ethercreative.co.uk
+ * @package   SEO
+ * @since     2.0.0
+ */
+
 import { debounce } from "../helpers";
 
 export default class Snippet {

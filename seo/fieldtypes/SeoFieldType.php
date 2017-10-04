@@ -46,7 +46,7 @@ class SeoFieldType extends BaseFieldType implements IPreviewableFieldType {
 				$value["keywords"] = [
 					[
 						"keyword" => $value["keyword"],
-						"score"   => $this->_scoreCompat($value["score"]),
+						"rating"  => $this->_scoreCompat($value["score"]),
 					],
 				];
 			} else {
