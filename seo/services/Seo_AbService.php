@@ -4,7 +4,13 @@ namespace Craft;
 
 class Seo_AbService extends BaseApplicationComponent {
 
+	// Variables
+	// =========================================================================
+
 	static private $ab = null;
+
+	// Public
+	// =========================================================================
 
 	/**
 	 * Gets the current sessions A/B value
@@ -64,20 +70,115 @@ class Seo_AbService extends BaseApplicationComponent {
 		if ($this->getAb() || empty($elements)) return;
 
 		// Check to see if we've got any fields with A/B enabled
-		$fieldLayout = $elements[0]->getFieldLayout();
-		// TODO: Lookup layout ID & field IDs
-		// TODO: Map field IDs to their handles for later use
+		$fieldLayoutId = $elements[0]->getFieldLayout()->id;
+		$fields = $this->_getEnabledFieldsFromLayoutId($fieldLayoutId);
+
+		// If we don't have any enabled fields
+		if (empty($fields)) return;
 
 		// Get the ID's of the elements
 		$ids = array_map(function (BaseElementModel $element) {
 			return $element->id;
 		}, $elements);
 
-		// TODO: Get all stored B data for each element ID
+		// Get the b data
+		$bData = $this->_getBDataForElements($ids);
 
-		// TODO: Loop through each element, then each elements A/B enabled
-		// TODO[cont.]: fields and check to see if we have B data for that
-		// TODO[cont.]: field. If we do, replace the data on the element.
+		// Replace the data
+		foreach ($elements as $element) {
+			if (!array_key_exists($element->id, $bData)) continue;
+
+			foreach ($bData[$element->id] as $fieldId => $data) {
+				/** @var BaseFieldType $type */
+				list($handle, $type) = $fields[$fieldId];
+				$element->getContent()->$handle = $type->prepValue($data);
+			}
+		}
+	}
+
+	// Private
+	// =========================================================================
+
+	/**
+	 * Returns an array of enabled fields from the given layout (ID)
+	 *
+	 * [fieldId => [handle => "", type => BaseFieldType], ... ]
+	 *
+	 * @param int $layoutId
+	 *
+	 * @return array
+	 */
+	private function _getEnabledFieldsFromLayoutId ($layoutId)
+	{
+		$fieldIds =
+			craft()->db->createCommand()
+			           ->select("fieldId")
+			           ->from("seo_ab_fields")
+			           ->where("layoutId = :layoutId", compact("layoutId"))
+			           ->queryAll();
+
+		// Map [["fieldId" => int], ... ] to [int, ... ]
+		$fieldIds = array_map(function ($field) {
+			return $field["fieldId"];
+		}, $fieldIds);
+
+		// Get the layouts fields
+		$layoutFields = craft()->fields->getLayoutFieldsById($layoutId);
+
+		// Reduce to only the fields that have A/B enabled, and
+		return array_reduce(
+			$layoutFields,
+			function (array $fields, FieldLayoutFieldModel $f) use ($fieldIds) {
+				if (!in_array($f->fieldId, $fieldIds)) return;
+
+				$field = $f->getField();
+				$fields[$field->id] = [
+					"handle" => $field->handle,
+					"type"   => $field->getFieldType(),
+				];
+			},
+			[]
+		);
+	}
+
+	/**
+	 * Gets all B data for the given element ids
+	 *
+	 * [elementId => [fieldId => data, ... ], ... ]
+	 *
+	 * @param int[] $elementIds
+	 *
+	 * @return array
+	 */
+	private function _getBDataForElements (array $elementIds)
+	{
+		$elementIds = implode(",", $elementIds);
+
+		$locale = craft()->locale->id;
+
+		$data =
+			craft()->db->createCommand()
+			           ->select("elementId, fieldId, data")
+			           ->from("seo_ab_data")
+			           ->where("elementId IN :elementIds", compact("elementIds"))
+			           ->andWhere("locale = :locale", compact("locale"))
+			           ->queryAll();
+
+		// Map [["elementId" => int, ... ], ... ]
+		// to
+		// [elementId => [fieldId => data, ... ], ... ]
+		return array_reduce(
+			$data,
+			function (array $mappedData, array $row) {
+				list($elementId, $fieldId, $data) = $row;
+
+				if (!array_key_exists($elementId, $data))
+					$data[$elementId] = [];
+
+				$mappedData[$elementId][$fieldId] = $data;
+			},
+			[]
+		);
 	}
 
 }

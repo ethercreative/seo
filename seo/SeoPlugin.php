@@ -37,7 +37,7 @@ class SeoPlugin extends BasePlugin {
 
 	public function getSchemaVersion()
 	{
-		return '0.1.0';
+		return '0.1.1';
 	}
 
 	public function getDeveloper()
