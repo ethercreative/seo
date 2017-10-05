@@ -12,6 +12,9 @@ class Seo_AbService extends BaseApplicationComponent {
 	// Public
 	// =========================================================================
 
+	// Get / Set AB
+	// -------------------------------------------------------------------------
+
 	/**
 	 * Gets the current sessions A/B value
 	 *
@@ -58,6 +61,9 @@ class Seo_AbService extends BaseApplicationComponent {
 		return $ab;
 	}
 
+	// Injection
+	// -------------------------------------------------------------------------
+
 	/**
 	 * Injects the AB values into an array of elements
 	 *
@@ -97,20 +103,128 @@ class Seo_AbService extends BaseApplicationComponent {
 		}
 	}
 
+	/**
+	 * Injects the necessary JS (& CSS) into the admin
+	 */
+	public function injectJS ()
+	{
+		$allEnabledFields = JsonHelper::encode($this->_getAllEnabledFields());
+		craft()->templates->includeJsResource("seo/js/SeoAB.min.js");
+		craft()->templates->includeJs("new SeoAB($allEnabledFields);");
+		craft()->templates->includeCss(<<<xyzzy
+.seo-ab-enabled {
+	position: relative;
+}
+.seo-ab-enabled:after {
+	content: "AB";
+	position: absolute;
+	top: 50%;
+	right: 30px;
+	
+	font-weight: bold;
+	font-size: 9px;
+	line-height: normal;
+	
+	transform: translateY(-50%);
+}
+xyzzy
+		);
+	}
+
+	// Events
+	// -------------------------------------------------------------------------
+
+	/**
+	 * Called when a layout is saved
+	 *
+	 * @param FieldLayoutModel $layout
+	 */
+	public function onFieldLayoutSave (FieldLayoutModel $layout)
+	{
+		$layoutId = $layout->id;
+
+		$nextFieldIds = craft()->request->getPost("seoAB");
+		$prevFieldIds = $this->_getEnabledFieldsFromLayoutId($layout, true);
+
+		$addedIds = array_map(function ($fieldId) use ($layoutId) {
+			return [$layoutId, $fieldId];
+		}, array_diff($nextFieldIds, $prevFieldIds));
+
+		$removedIds = array_diff($prevFieldIds, $nextFieldIds);
+
+		// Insert new
+		if (!empty($addedIds)) {
+			craft()->db->createCommand()->insertAll(
+				"seo_ab_fields",
+				["layoutId", "fieldId"],
+				$addedIds,
+				false
+			);
+		}
+
+		// Remove old
+		if (!empty($removedIds)) {
+			craft()->db->createCommand()->delete(
+				"seo_ab_fields",
+				[
+					"and",
+					["layoutId = :layoutId", compact("layoutId")],
+					["in", "fieldId", $removedIds]
+				]
+			);
+		}
+	}
+
 	// Private
 	// =========================================================================
 
 	/**
-	 * Returns an array of enabled fields from the given layout (ID)
+	 * Gets the enabled fields for the given layout ID
+	 *
+	 * [layoutId => [fieldId, fieldId, ... ], ... ]
+	 *
+	 * @return array
+	 */
+	private function _getAllEnabledFields ()
+	{
+		$fieldIds =
+			craft()->db->createCommand()
+			           ->select("layoutId, fieldId")
+			           ->from("seo_ab_fields")
+			           ->queryAll(false);
+
+		// Map [[layoutId => int, fieldId => int], ... ]
+		// to [layoutId => [fieldId, fieldId, ... ], ... ]
+		return array_reduce(
+			$fieldIds,
+			function (array $fields, $row) {
+				list($layoutId, $fieldId) = $row;
+
+				if (!array_key_exists($layoutId, $fields))
+					$fields[$layoutId] = [];
+
+				$fields[$layoutId][] = $fieldId;
+
+				return $fields;
+			},
+			[]
+		);
+	}
+
+	/**
+	 * Returns an array of enabled fields from the given layout
 	 *
 	 * [fieldId => [handle => "", type => BaseFieldType], ... ]
 	 *
 	 * @param FieldLayoutModel $layout
+	 * @param bool             $idsOnly
 	 *
 	 * @return array
 	 */
-	private function _getEnabledFieldsFromLayoutId (FieldLayoutModel $layout)
-	{
+	private function _getEnabledFieldsFromLayoutId (
+		FieldLayoutModel $layout,
+		$idsOnly = false
+	) {
 		$layoutId = $layout->id;
 
 		$fieldIds =
@@ -125,17 +239,20 @@ class Seo_AbService extends BaseApplicationComponent {
 			return $field["fieldId"];
 		}, $fieldIds);
 
+		if ($idsOnly) return $fieldIds;
+
 		// Reduce to only the fields that have A/B enabled, and
 		return array_reduce(
 			$layout->getFields(),
 			function (array $fields, FieldLayoutFieldModel $f) use ($fieldIds) {
-				if (!in_array($f->fieldId, $fieldIds)) return;
+				if (!in_array($f->fieldId, $fieldIds)) return $fields;
 
 				$field = $f->getField();
 				$fields[$field->id] = [
 					"handle" => $field->handle,
 					"type"   => $field->getFieldType(),
 				];
+				return $fields;
 			},
 			[]
 		);
@@ -162,11 +279,10 @@ class Seo_AbService extends BaseApplicationComponent {
 			           ->from("seo_ab_data")
 			           ->where("elementId IN :elementIds", compact("elementIds"))
 			           ->andWhere("locale = :locale", compact("locale"))
-			           ->queryAll();
+			           ->queryAll(false);
 
 		// Map [["elementId" => int, ... ], ... ]
-		// to
-		// [elementId => [fieldId => data, ... ], ... ]
+		// to [elementId => [fieldId => data, ... ], ... ]
 		return array_reduce(
 			$data,
 			function (array $mappedData, array $row) {
@@ -176,6 +292,8 @@ class Seo_AbService extends BaseApplicationComponent {
 					$data[$elementId] = [];
 
 				$mappedData[$elementId][$fieldId] = $data;
+
+				return $mappedData;
 			},
 			[]
 		);

@@ -128,6 +128,8 @@ class SeoPlugin extends BasePlugin {
 
 		// TODO: On category / section update, update sitemap
 
+		// Site requests (not live preview)
+		// ---------------------------------------------------------------------
 		if (
 			craft()->request->isSiteRequest()
 			&& !craft()->request->isLivePreview()
@@ -148,13 +150,23 @@ class SeoPlugin extends BasePlugin {
 			});
 		}
 
+		// CP Requests (not ajax)
+		// ---------------------------------------------------------------------
 		if (
 			craft()->request->isCpRequest()
 			&& !craft()->request->isAjaxRequest()
 		) {
 			// Load in SEO A/B JS
-			craft()->templates->includeJsResource("seo/js/SeoAB.min.js");
-			craft()->templates->includeJs("new SeoAB();");
+			craft()->seo_ab->injectJS();
+		}
+
+		// CP Requests (all)
+		// ---------------------------------------------------------------------
+		if (craft()->request->isCpRequest())
+		{
+			craft()->on("fields.onSaveFieldLayout", function (Event $event) {
+				craft()->seo_ab->onFieldLayoutSave($event->params["layout"]);
+			});
 		}
 	}
 
