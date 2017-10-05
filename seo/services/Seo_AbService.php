@@ -70,8 +70,9 @@ class Seo_AbService extends BaseApplicationComponent {
 		if ($this->getAb() || empty($elements)) return;
 
 		// Check to see if we've got any fields with A/B enabled
-		$fieldLayoutId = $elements[0]->getFieldLayout()->id;
-		$fields = $this->_getEnabledFieldsFromLayoutId($fieldLayoutId);
+		$fields = $this->_getEnabledFieldsFromLayoutId(
+			$elements[0]->getFieldLayout()
+		);
 
 		// If we don't have any enabled fields
 		if (empty($fields)) return;
@@ -104,12 +105,14 @@ class Seo_AbService extends BaseApplicationComponent {
 	 *
 	 * [fieldId => [handle => "", type => BaseFieldType], ... ]
 	 *
-	 * @param int $layoutId
+	 * @param FieldLayoutModel $layout
 	 *
 	 * @return array
 	 */
-	private function _getEnabledFieldsFromLayoutId ($layoutId)
+	private function _getEnabledFieldsFromLayoutId (FieldLayoutModel $layout)
 	{
+		$layoutId = $layout->id;
+
 		$fieldIds =
 			craft()->db->createCommand()
 			           ->select("fieldId")
@@ -122,12 +125,9 @@ class Seo_AbService extends BaseApplicationComponent {
 			return $field["fieldId"];
 		}, $fieldIds);
 
-		// Get the layouts fields
-		$layoutFields = craft()->fields->getLayoutFieldsById($layoutId);
-
 		// Reduce to only the fields that have A/B enabled, and
 		return array_reduce(
-			$layoutFields,
+			$layout->getFields(),
 			function (array $fields, FieldLayoutFieldModel $f) use ($fieldIds) {
 				if (!in_array($f->fieldId, $fieldIds)) return;
 

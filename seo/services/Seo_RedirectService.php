@@ -5,6 +5,34 @@ namespace Craft;
 class Seo_RedirectService extends BaseApplicationComponent
 {
 
+	// Event Handlers
+	// =========================================================================
+
+	/**
+	 * Handle any 404 exceptions
+	 *
+	 * @param \CExceptionEvent $event
+	 */
+	public function onException (\CExceptionEvent $event)
+	{
+		if(
+			property_exists($event->exception, 'statusCode')
+			&& $event->exception->statusCode
+		) {
+			if ($event->exception->statusCode == 404) {
+				$path = craft()->request->getPath();
+				$query = craft()->request->getQueryStringWithoutPath();
+
+				if ($query) $path .= '?' . $query;
+
+				if ($loc = craft()->seo_redirect->findRedirectByPath($path)) {
+					$event->handled = true;
+					craft()->request->redirect($loc['to'], true, $loc['type']);
+				}
+			}
+		}
+	}
+
 	// Get
 	// =========================================================================
 

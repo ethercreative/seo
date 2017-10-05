@@ -35,4 +35,32 @@ class SeoService extends BaseApplicationComponent
 		}
 	}
 
+	/**
+	 * Render the SEO meta template, and inject at the hook
+	 *
+	 * @param $context
+	 *
+	 * @return string
+	 */
+	public function hook (&$context)
+	{
+		$metaTemplateName = $this->settings()["metaTemplate"];
+
+		if ($metaTemplateName) {
+			return craft()->templates->render(
+				$metaTemplateName,
+				$context
+			);
+		} else {
+			$oldTemplateMode = craft()->templates->getTemplateMode();
+			craft()->templates->setTemplateMode(TemplateMode::CP);
+			$rendered = craft()->templates->render(
+				"seo/_seoDefaultMeta",
+				$context
+			);
+			craft()->templates->setTemplateMode($oldTemplateMode);
+			return $rendered;
+		}
+	}
+
 }

@@ -123,63 +123,38 @@ class SeoPlugin extends BasePlugin {
 	public function init()
 	{
 		// Check if commerce is installed
-		// TODO: Move this to a function, and only call when necessary
 		SeoPlugin::$commerceInstalled =
-			(bool) craft()->db->createCommand()
-			                 ->select('id')
-			                 ->from('plugins')
-			                 ->where("class = 'Commerce'")
-			                 ->queryScalar();
+			craft()->plugins->getPlugin("commerce") != null;
 
 		// TODO: On category / section update, update sitemap
 
-		if (craft()->request->isSiteRequest() && !craft()->request->isLivePreview())
-		{
+		if (
+			craft()->request->isSiteRequest()
+			&& !craft()->request->isLivePreview()
+		) {
 			// If request 404s, try to redirect
-			craft()->onException = function(\CExceptionEvent $event)
-			{
-				if(property_exists($event->exception, 'statusCode') && $event->exception->statusCode)
-				{
-					if ($event->exception->statusCode == 404) {
-						$path = craft()->request->getPath();
-						$query = craft()->request->getQueryStringWithoutPath();
-
-						if ($query) $path .= '?' . $query;
-
-						if ($loc = craft()->seo_redirect->findRedirectByPath($path)) {
-							$event->handled = true;
-							craft()->request->redirect($loc['to'], true, $loc['type']);
-						}
-					}
-				}
+			craft()->onException = function(\CExceptionEvent $event) {
+				craft()->seo_redirect->onException($event);
 			};
 
 			// Include Meta Markup in head via `{% hook "seo" %}`
-			craft()->templates->hook("seo", function(&$context)
-			{
-				$metaTemplateName = $this->getSettings()["metaTemplate"];
-
-				if ($metaTemplateName) {
-					return craft()->templates->render(
-						$metaTemplateName,
-						$context
-					);
-				} else {
-					$oldTemplateMode = craft()->templates->getTemplateMode();
-					craft()->templates->setTemplateMode(TemplateMode::CP);
-					$rendered = craft()->templates->render(
-						"seo/_seoDefaultMeta",
-						$context
-					);
-					craft()->templates->setTemplateMode($oldTemplateMode);
-					return $rendered;
-				}
+			craft()->templates->hook("seo", function(&$context) {
+				return craft()->seo->hook($context);
 			});
 
 			// Inject A/B
 			craft()->on("elements.onPopulateElements", function (Event $event) {
 				craft()->seo_ab->inject($event->params["elements"]);
 			});
+		}
+
+		if (
+			craft()->request->isCpRequest()
+			&& !craft()->request->isAjaxRequest()
+		) {
+			// Load in SEO A/B JS
+			craft()->templates->includeJsResource("seo/js/SeoAB.min.js");
+			craft()->templates->includeJs("new SeoAB();");
 		}
 	}
 
