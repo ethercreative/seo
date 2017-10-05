@@ -37,7 +37,7 @@ class SeoPlugin extends BasePlugin {
 
 	public function getSchemaVersion()
 	{
-		return '0.0.12';
+		return '0.1.0';
 	}
 
 	public function getDeveloper()
@@ -117,12 +117,13 @@ class SeoPlugin extends BasePlugin {
 		return parent::prepSettings($settings);
 	}
 
-	// Misc
+	// Initializer
 	// =========================================================================
 
 	public function init()
 	{
 		// Check if commerce is installed
+		// TODO: Move this to a function, and only call when necessary
 		SeoPlugin::$commerceInstalled =
 			(bool) craft()->db->createCommand()
 			                 ->select('id')
@@ -174,8 +175,16 @@ class SeoPlugin extends BasePlugin {
 					return $rendered;
 				}
 			});
+
+			// Inject A/B
+			craft()->on("elements.onPopulateElements", function (Event $event) {
+				craft()->seo_ab->inject($event->params["elements"]);
+			});
 		}
 	}
+
+	// Hooks
+	// =========================================================================
 
 	public function registerUserPermissions()
 	{

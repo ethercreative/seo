@@ -121,19 +121,19 @@ class SeoFieldType extends BaseFieldType implements IPreviewableFieldType {
 
 	public function getTableAttributeHtml($value)
 	{
-		$ret = '';
+		$ret = "";
 
-		switch ($value['score']) {
-			case '':
+		switch ($value["score"]) {
+			case "":
 				$ret = '<span class="status active" style="margin-top:5px;background:#ccc;" title="Unranked"></span>';
 				break;
-			case 'bad':
-				$ret = '<span class="status active" style="margin-top:5px;background:#ff4750;" title="Bad"></span>';
+			case "poor":
+				$ret = '<span class="status active" style="margin-top:5px;background:#ff4750;" title="Poor"></span>';
 				break;
-			case 'ok':
-				$ret = '<span class="status active" style="margin-top:5px;background:#ffab47;" title="Okay"></span>';
+			case "average":
+				$ret = '<span class="status active" style="margin-top:5px;background:#ffab47;" title="Average"></span>';
 				break;
-			case 'good':
+			case "good":
 				$ret = '<span class="status active" style="margin-top:5px;background:#3eda80;" title="Good"></span>';
 				break;
 		}
