@@ -38,7 +38,7 @@ export default function debounce (func, wait = 300, immediate = false) {
 		const context = this
 			, args = arguments;
 		
-		if (args[0].constructor.name === "SyntheticEvent")
+		if (args[0].constructor.name === 'SyntheticEvent')
 			args[0].persist();
 		
 		const later = function() {

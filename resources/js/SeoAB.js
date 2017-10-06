@@ -9,7 +9,7 @@
  * @since     2.0.0
  */
 
-import LayoutDesigner from "./seoAB/LayoutDesigner";
+import LayoutDesigner from './seoAB/LayoutDesigner';
 
 class SeoAB {
 	
@@ -54,14 +54,14 @@ class SeoAB {
 		fieldLayoutDesigner.prototype.initField = function (field) {
 			initField.apply(this, arguments);
 			
-			// Add our "Enable A/B" menu item
+			// Add our 'Enable A/B' menu item
 			LayoutDesigner.addMenuItem(SEO, field);
 		};
 		
 		fieldLayoutDesigner.prototype.onFieldOptionSelect = function (opt) {
 			onFieldOptionSelect.apply(this, arguments);
 			
-			if (opt.dataset.action !== "seo-ab") return;
+			if (opt.dataset.action !== 'seo-ab') return;
 			
 			// Fire our on enable select event
 			LayoutDesigner.onEnableOptionSelected(opt);

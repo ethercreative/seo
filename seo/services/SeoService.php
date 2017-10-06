@@ -44,7 +44,7 @@ class SeoService extends BaseApplicationComponent
 	 */
 	public function hook (&$context)
 	{
-		$metaTemplateName = $this->settings()["metaTemplate"];
+		$metaTemplateName = $this->settings()['metaTemplate'];
 
 		if ($metaTemplateName) {
 			return craft()->templates->render(
@@ -55,7 +55,7 @@ class SeoService extends BaseApplicationComponent
 			$oldTemplateMode = craft()->templates->getTemplateMode();
 			craft()->templates->setTemplateMode(TemplateMode::CP);
 			$rendered = craft()->templates->render(
-				"seo/_seoDefaultMeta",
+				'seo/_seoDefaultMeta',
 				$context
 			);
 			craft()->templates->setTemplateMode($oldTemplateMode);

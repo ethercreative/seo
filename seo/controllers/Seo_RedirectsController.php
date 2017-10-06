@@ -23,17 +23,17 @@ class Seo_RedirectsController extends BaseController
 		$this->requirePostRequest();
 		$this->requireAjaxRequest();
 
-		$uri = craft()->request->getRequiredPost("uri");
-		$to = craft()->request->getRequiredPost("to");
-		$type = craft()->request->getRequiredPost("type");
+		$uri = craft()->request->getRequiredPost('uri');
+		$to = craft()->request->getRequiredPost('to');
+		$type = craft()->request->getRequiredPost('type');
 
 		$err = craft()->seo_redirect->save($uri, $to, $type);
 		if (!is_numeric($err)) {
 			$this->returnErrorJson($err);
 		} else {
 			$this->returnJson([
-				"success" => true,
-			    "id" => $err,
+				'success' => true,
+			    'id' => $err,
 			]);
 		}
 	}
@@ -43,15 +43,15 @@ class Seo_RedirectsController extends BaseController
 		$this->requirePostRequest();
 		$this->requireAjaxRequest();
 
-		$id = craft()->request->getRequiredPost("id");
-		$uri = craft()->request->getRequiredPost("uri");
-		$to = craft()->request->getRequiredPost("to");
-		$type = craft()->request->getRequiredPost("type");
+		$id = craft()->request->getRequiredPost('id');
+		$uri = craft()->request->getRequiredPost('uri');
+		$to = craft()->request->getRequiredPost('to');
+		$type = craft()->request->getRequiredPost('type');
 
 		if ($err = craft()->seo_redirect->update($id, $uri, $to, $type)) {
 			$this->returnErrorJson($err);
 		} else {
-			$this->returnJson([ "success" => true ]);
+			$this->returnJson([ 'success' => true ]);
 		}
 	}
 
@@ -60,12 +60,12 @@ class Seo_RedirectsController extends BaseController
 		$this->requirePostRequest();
 		$this->requireAjaxRequest();
 
-		$id = craft()->request->getRequiredPost("id");
+		$id = craft()->request->getRequiredPost('id');
 
 		if ($err = craft()->seo_redirect->delete($id)) {
 			$this->returnErrorJson($err);
 		} else {
-			$this->returnJson([ "success" => true ]);
+			$this->returnJson([ 'success' => true ]);
 		}
 	}
 
@@ -74,9 +74,9 @@ class Seo_RedirectsController extends BaseController
 		$this->requirePostRequest();
 		$this->requireAjaxRequest();
 
-		$redirects = craft()->request->getRequiredPost("redirects");
-		$separator = craft()->request->getRequiredPost("separator");
-		$type = craft()->request->getRequiredPost("type");
+		$redirects = craft()->request->getRequiredPost('redirects');
+		$separator = craft()->request->getRequiredPost('separator');
+		$type = craft()->request->getRequiredPost('type');
 
 		list($success, $error) = craft()->seo_redirect->bulk($redirects, $separator, $type);
 
@@ -84,8 +84,8 @@ class Seo_RedirectsController extends BaseController
 			$this->returnErrorJson($error);
 		} else {
 			$this->returnJson([
-				"success" => true,
-			    "redirects" => $success,
+				'success' => true,
+			    'redirects' => $success,
 			]);
 		}
 	}

@@ -13,8 +13,15 @@ class m160809_144009_seo_AddProductTypeToSitemapGroupColumn extends BaseMigratio
 	 */
 	public function safeUp()
 	{
-		craft()->db->createCommand()
-			->alterColumn('seo_sitemaps', 'group', array('values' => 'sections,categories,customUrls,productTypes', 'column' => 'enum', 'required' => true));
+		craft()->db->createCommand()->alterColumn(
+			'seo_sitemaps',
+			'group',
+			array(
+				'values' => 'sections,categories,customUrls,productTypes',
+				'column' => 'enum',
+				'required' => true
+			)
+		);
 
 		return true;
 	}

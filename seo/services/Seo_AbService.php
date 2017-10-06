@@ -24,7 +24,7 @@ class Seo_AbService extends BaseApplicationComponent {
 	{
 		if (self::$ab != null) return self::$ab;
 
-		$cookie = craft()->request->getCookie("seo_ab");
+		$cookie = craft()->request->getCookie('seo_ab');
 
 		if (
 			$cookie
@@ -48,13 +48,13 @@ class Seo_AbService extends BaseApplicationComponent {
 	{
 		$ab = rand(0, 1);
 
-		$cookie = new HttpCookie("seo_ab", "");
+		$cookie = new HttpCookie('seo_ab', '');
 		$cookie->value = craft()->security->hashData(
 			base64_encode(serialize($ab))
 		);
 		// Expire in ~1 month
 		$cookie->expire = time() + 86400 * 30;
-		$cookie->path = "/";
+		$cookie->path = '/';
 
 		craft()->request->getCookies()->add($cookie->name, $cookie);
 
@@ -109,7 +109,7 @@ class Seo_AbService extends BaseApplicationComponent {
 	public function injectJS ()
 	{
 		$allEnabledFields = JsonHelper::encode($this->_getAllEnabledFields());
-		craft()->templates->includeJsResource("seo/js/SeoAB.min.js");
+		craft()->templates->includeJsResource('seo/js/SeoAB.min.js');
 		craft()->templates->includeJs("new SeoAB($allEnabledFields);");
 		craft()->templates->includeCss(<<<xyzzy
 .seo-ab-enabled {
@@ -143,7 +143,7 @@ xyzzy
 	{
 		$layoutId = $layout->id;
 
-		$nextFieldIds = craft()->request->getPost("seoAB");
+		$nextFieldIds = craft()->request->getPost('seoAB');
 		if (!$nextFieldIds) return;
 		$prevFieldIds = $this->_getEnabledFieldsFromLayoutId($layout, true);
 
@@ -156,8 +156,8 @@ xyzzy
 		// Insert new
 		if (!empty($addedIds)) {
 			craft()->db->createCommand()->insertAll(
-				"seo_ab_fields",
-				["layoutId", "fieldId"],
+				'seo_ab_fields',
+				['layoutId', 'fieldId'],
 				$addedIds,
 				false
 			);
@@ -166,11 +166,11 @@ xyzzy
 		// Remove old
 		if (!empty($removedIds)) {
 			craft()->db->createCommand()->delete(
-				"seo_ab_fields",
+				'seo_ab_fields',
 				[
-					"and",
-					["layoutId = :layoutId", compact("layoutId")],
-					["in", "fieldId", $removedIds]
+					'and',
+					['layoutId = :layoutId', compact('layoutId')],
+					['in', 'fieldId', $removedIds]
 				]
 			);
 		}
@@ -190,8 +190,8 @@ xyzzy
 	{
 		$fieldIds =
 			craft()->db->createCommand()
-			           ->select("layoutId, fieldId")
-			           ->from("seo_ab_fields")
+			           ->select('layoutId, fieldId')
+			           ->from('seo_ab_fields')
 			           ->queryAll(false);
 
 		// Map [[layoutId => int, fieldId => int], ... ]
@@ -215,7 +215,7 @@ xyzzy
 	/**
 	 * Returns an array of enabled fields from the given layout
 	 *
-	 * [fieldId => [handle => "", type => BaseFieldType], ... ]
+	 * [fieldId => [handle => '', type => BaseFieldType], ... ]
 	 *
 	 * @param FieldLayoutModel $layout
 	 * @param bool             $idsOnly
@@ -230,14 +230,14 @@ xyzzy
 
 		$fieldIds =
 			craft()->db->createCommand()
-			           ->select("fieldId")
-			           ->from("seo_ab_fields")
-			           ->where("layoutId = :layoutId", compact("layoutId"))
+			           ->select('fieldId')
+			           ->from('seo_ab_fields')
+			           ->where('layoutId = :layoutId', compact('layoutId'))
 			           ->queryAll();
 
-		// Map [["fieldId" => int], ... ] to [int, ... ]
+		// Map [['fieldId' => int], ... ] to [int, ... ]
 		$fieldIds = array_map(function ($field) {
-			return $field["fieldId"];
+			return $field['fieldId'];
 		}, $fieldIds);
 
 		if ($idsOnly) return $fieldIds;
@@ -250,8 +250,8 @@ xyzzy
 
 				$field = $f->getField();
 				$fields[$field->id] = [
-					"handle" => $field->handle,
-					"type"   => $field->getFieldType(),
+					'handle' => $field->handle,
+					'type'   => $field->getFieldType(),
 				];
 				return $fields;
 			},
@@ -270,19 +270,19 @@ xyzzy
 	 */
 	private function _getBDataForElements (array $elementIds)
 	{
-		$elementIds = implode(",", $elementIds);
+		$elementIds = implode(',', $elementIds);
 
 		$locale = craft()->locale->id;
 
 		$data =
 			craft()->db->createCommand()
-			           ->select("elementId, fieldId, data")
-			           ->from("seo_ab_data")
-			           ->where("elementId IN :elementIds", compact("elementIds"))
-			           ->andWhere("locale = :locale", compact("locale"))
+			           ->select('elementId, fieldId, data')
+			           ->from('seo_ab_data')
+			           ->where('elementId IN :elementIds', compact('elementIds'))
+			           ->andWhere('locale = :locale', compact('locale'))
 			           ->queryAll(false);
 
-		// Map [["elementId" => int, ... ], ... ]
+		// Map [['elementId' => int, ... ], ... ]
 		// to [elementId => [fieldId => data, ... ], ... ]
 		return array_reduce(
 			$data,

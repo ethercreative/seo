@@ -5,8 +5,8 @@ export default function fail (message) {
 		console,
 		[
 			`%cSEO: %c ${message}`,
-			"font-weight: bold;",
-			"font-weight: normal;",
+			'font-weight: bold;',
+			'font-weight: normal;',
 		]
 	);
 }

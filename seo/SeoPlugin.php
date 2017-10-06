@@ -96,15 +96,15 @@ class SeoPlugin extends BasePlugin {
 	{
 		return array(
 			// Sitemap Settings
-			"sitemapName"  => [AttributeType::String, "default" => "sitemap"],
-			"sitemapLimit" => [AttributeType::Number, "default" => 1000],
+			'sitemapName'  => [AttributeType::String, 'default' => 'sitemap'],
+			'sitemapLimit' => [AttributeType::Number, 'default' => 1000],
 
 			// Redirect Settings
-			"publicPath"   => [AttributeType::String],
+			'publicPath'   => [AttributeType::String],
 
 			// Fieldtype Settings
-			"titleSuffix"  => [AttributeType::String],
-			"metaTemplate" => [AttributeType::String],
+			'titleSuffix'  => [AttributeType::String],
+			'metaTemplate' => [AttributeType::String],
 		);
 	}
 
@@ -125,7 +125,7 @@ class SeoPlugin extends BasePlugin {
 	{
 		// Check if commerce is installed
 		SeoPlugin::$commerceInstalled =
-			craft()->plugins->getPlugin("commerce") != null;
+			craft()->plugins->getPlugin('commerce') != null;
 
 		// TODO: On category / section update, update sitemap
 
@@ -140,14 +140,14 @@ class SeoPlugin extends BasePlugin {
 				craft()->seo_redirect->onException($event);
 			};
 
-			// Include Meta Markup in head via `{% hook "seo" %}`
-			craft()->templates->hook("seo", function(&$context) {
+			// Include Meta Markup in head via `{% hook 'seo' %}`
+			craft()->templates->hook('seo', function(&$context) {
 				return craft()->seo->hook($context);
 			});
 
 			// Inject A/B
-			craft()->on("elements.onPopulateElements", function (Event $event) {
-				craft()->seo_ab->inject($event->params["elements"]);
+			craft()->on('elements.onPopulateElements', function (Event $event) {
+				craft()->seo_ab->inject($event->params['elements']);
 			});
 		}
 
@@ -172,8 +172,8 @@ class SeoPlugin extends BasePlugin {
 		// ---------------------------------------------------------------------
 		if (craft()->request->isCpRequest())
 		{
-			craft()->on("fields.onSaveFieldLayout", function (Event $event) {
-				craft()->seo_ab->onFieldLayoutSave($event->params["layout"]);
+			craft()->on('fields.onSaveFieldLayout', function (Event $event) {
+				craft()->seo_ab->onFieldLayoutSave($event->params['layout']);
 			});
 		}
 	}

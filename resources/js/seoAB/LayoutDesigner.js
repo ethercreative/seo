@@ -9,7 +9,7 @@
  * @since     2.0.0
  */
 
-import { t } from "../helpers";
+import { t } from '../helpers';
 
 export default class LayoutDesigner {
 	
@@ -44,16 +44,16 @@ export default class LayoutDesigner {
 	 * @param $field
 	 */
 	static addMenuItem (SEO, $field) {
-		const $editBtn = $field.find(".settings");
-		const menuBtn = $editBtn.data("menubtn");
+		const $editBtn = $field.find('.settings');
+		const menuBtn = $editBtn.data('menubtn');
 		const menu = menuBtn.menu;
 		const $menu = menu.$container;
-		const $ul = $menu.children("ul");
+		const $ul = $menu.children('ul');
 		const abItem =
 			$('<li><a data-action="seo-ab">Enable A/B</a></li>')
 			.appendTo($ul);
 		
-		const option = abItem.children("a")
+		const option = abItem.children('a')
 			, fieldId = $field[0].dataset.id;
 		
 		if (SEO.allEnabledFieldIds.indexOf(fieldId) > -1)
@@ -66,28 +66,28 @@ export default class LayoutDesigner {
 	// =========================================================================
 	
 	static onEnableOptionSelected (option) {
-		const field = $(option).data("menu").$anchor.parent()[0];
+		const field = $(option).data('menu').$anchor.parent()[0];
 		
-		if (field.classList.contains("seo-ab-enabled")) {
-			field.classList.remove("seo-ab-enabled");
-			field.removeChild(field.querySelector("input[name='seoAB[]']"));
+		if (field.classList.contains('seo-ab-enabled')) {
+			field.classList.remove('seo-ab-enabled');
+			field.removeChild(field.querySelector('input[name="seoAB[]"]'));
 			
 			setTimeout(() => {
-				option.textContent = "Enable A/B";
+				option.textContent = 'Enable A/B';
 			});
 			
 			return;
 		}
 		
-		field.classList.add("seo-ab-enabled");
-		field.appendChild(t("input", {
-			type: "hidden",
-			name: "seoAB[]",
+		field.classList.add('seo-ab-enabled');
+		field.appendChild(t('input', {
+			type: 'hidden',
+			name: 'seoAB[]',
 			value: field.dataset.id,
 		}));
 		
 		setTimeout(() => {
-			option.textContent = "Disable A/B";
+			option.textContent = 'Disable A/B';
 		});
 	}
 	

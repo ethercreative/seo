@@ -128,40 +128,40 @@ export default class TextStatistics {
 	 */
 	static cleanText (text) {
 		// All these tags should be preceded by a full stop
-		["li", "p", "h1", "h2", "h3", "h4", "h5", "h6", "dd"].forEach(tag => {
+		['li', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'dd'].forEach(tag => {
 			text.replace(`</${tag}>`, ".");
 		});
 		
 		text = text
 				// Strip tags
-				.replace(/<[^>]+>/g, "")
+				.replace(/<[^>]+>/g, '')
 				
 				// Replace commas, hyphens etc (count them as spaces)
-				.replace(/[,:;()-]/g, " ")
+				.replace(/[,:;()-]/g, ' ')
 				
 				// Unify terminators
-		        .replace(/[.!?]/g, ".")
+		        .replace(/[.!?]/g, '.')
 				
 				// Strip leading whitespace
-				.replace(/^\s+/g,"")
+				.replace(/^\s+/g, '')
 				
 				// Replace new lines with spaces
-				.replace(/[ ]*(\n|\r\n|\r)[ ]*/g," ")
+				.replace(/[ ]*(\n|\r\n|\r)[ ]*/g, ' ')
 				
 				// Check for duplicated terminators
-				.replace(/([.])[. ]+/g,".")
+				.replace(/([.])[. ]+/g, '.')
 				
 				// Pad sentence terminators
-				.replace(/[ ]*([.])/g,". ")
+				.replace(/[ ]*([.])/g, '. ')
 				
 				// Remove multiple spaces
-				.replace(/\s+/g," ")
+				.replace(/\s+/g, ' ')
 				
 				// Strip trailing whitespace
-				.replace(/\s+$/g,"")
+				.replace(/\s+$/g, '')
 				
 				// Strip apostrophe
-				.replace(/'/g,"");
+				.replace(/'/g, '');
 		
 		// Add final terminator, just in case it's missing
 		text += ".";
@@ -180,15 +180,15 @@ export default class TextStatistics {
 			prefixSuffixCount = 0;
 		
 		// Prepare word - make lower case & remove non-word characters
-		word = word.toLowerCase().replace(/[^a-z]/g, "");
+		word = word.toLowerCase().replace(/[^a-z]/g, '');
 		
 		// Specific common exceptions that don't follow the rule set below are
 		// handled individually.
 		// Array of problem words (with word as key, syllable count as value)
 		const problemWords = {
-			"simile":       3,
-			"forever":      3,
-			"shoreline":    2,
+			'simile':       3,
+			'forever':      3,
+			'shoreline':    2,
 		};
 		
 		// Return if we've hit a problem word
@@ -249,14 +249,14 @@ export default class TextStatistics {
 		// Remove prefixes & suffixes, and count how many were takes
 		prefixSuffix.forEach(regex => {
 			if (word.match(regex)) {
-				word = word.replace(regex, "");
+				word = word.replace(regex, '');
 				prefixSuffixCount++;
 			}
 		});
 		
 		let wordPartCount = word
 			.split(/[^aeiouy]+/ig)
-			.filter(wordPart => !!wordPart.replace(/\s+/ig,"").length)
+			.filter(wordPart => !!wordPart.replace(/\s+/ig, '').length)
 			.length;
 		
 		// Get preliminary syllable count
@@ -289,7 +289,7 @@ export default class TextStatistics {
 	 * @return {Number}
 	 */
 	letterCount () {
-		return this.text.replace(/[^a-z]+/ig, "").length;
+		return this.text.replace(/[^a-z]+/ig, '').length;
 	}
 	
 	/**
@@ -299,7 +299,7 @@ export default class TextStatistics {
 	 */
 	sentenceCount () {
 		// FIXME: This will be tripped up by "Mr." or "U.K."
-		return this.text.replace(/[^.!?]/g, "").length || 1;
+		return this.text.replace(/[^.!?]/g, '').length || 1;
 	}
 	
 	/**

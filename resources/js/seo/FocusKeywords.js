@@ -8,10 +8,10 @@
  * @since     2.0.0
  */
 
-import { t, createRating, debounce } from "../helpers";
+import { t, createRating, debounce } from '../helpers';
 
-import KeywordChecklist from "./KeywordChecklist";
-import { SEO_RATING_LABEL } from "../const";
+import KeywordChecklist from './KeywordChecklist';
+import { SEO_RATING_LABEL } from '../const';
 
 export default class FocusKeywords {
 	
@@ -49,14 +49,14 @@ export default class FocusKeywords {
 	initInput () {
 		// Variables
 		this.inputWrap =
-			document.getElementById(this.namespace + "KeywordsInput");
+			document.getElementById(this.namespace + 'KeywordsInput');
 		this.input = this.inputWrap.lastElementChild;
 		
 		// Events
-		this.inputWrap.addEventListener("click", this.onInputWrapClick);
-		this.input.addEventListener("focus", this.onInputFocus);
-		this.input.addEventListener("blur", this.onInputBlur);
-		this.input.addEventListener("keydown", this.onInputKeyDown);
+		this.inputWrap.addEventListener('click', this.onInputWrapClick);
+		this.input.addEventListener('focus', this.onInputFocus);
+		this.input.addEventListener('blur', this.onInputBlur);
+		this.input.addEventListener('keydown', this.onInputKeyDown);
 	}
 	
 	/**
@@ -140,14 +140,14 @@ export default class FocusKeywords {
 		    && this.keywords.length > this.activeKeywordIndex
 		) {
 			this.getKeywordElementAtIndex(this.activeKeywordIndex)
-			    .classList.remove("active");
+			    .classList.remove('active');
 		}
 		
 		// If our new index isn't out of bounds, activate it
 		if (this.keywords.length > index) {
 			this.activeKeywordIndex = index|0;
 			this.getKeywordElementAtIndex(this.activeKeywordIndex)
-			    .classList.add("active");
+			    .classList.add('active');
 			
 			// Re-calculate
 			this.recalculateKeyword();
@@ -201,7 +201,7 @@ export default class FocusKeywords {
 		// If we don't have any ratings, clear the hidden score field
 		// TODO: Change the score field to rating
 		if (!Object.keys(ratingOccurrence).length) {
-			this.scoreField.value = "";
+			this.scoreField.value = '';
 			return;
 		}
 		
@@ -228,7 +228,7 @@ export default class FocusKeywords {
 		// Re-render keyword rating in input
 		const elem = this.getKeywordElementAtIndex(keywordIndex);
 		elem.removeChild(elem.firstElementChild);
-		elem.insertBefore(createRating(rating, "span"), elem.firstChild);
+		elem.insertBefore(createRating(rating, 'span'), elem.firstChild);
 		
 		// Set keyword details keyword
 		this.keywordElem.textContent = keyword.keyword;
@@ -284,7 +284,7 @@ export default class FocusKeywords {
 				this.activeKeywordIndex = i;
 			
 			this.getKeywordElementAtIndex(i)
-			    .setAttribute("data-index", i);
+			    .setAttribute('data-index', i);
 			
 			return {
 				...k,
@@ -315,14 +315,14 @@ export default class FocusKeywords {
 	 * Fired when the keywords input is focused
 	 */
 	onInputFocus = () => {
-		this.inputWrap.classList.add("focused");
+		this.inputWrap.classList.add('focused');
 	};
 	
 	/**
 	 * Fired when the keywords input is blurred
 	 */
 	onInputBlur = () => {
-		this.inputWrap.classList.remove("focused");
+		this.inputWrap.classList.remove('focused');
 	};
 	
 	/**
@@ -354,7 +354,7 @@ export default class FocusKeywords {
 		!dupe && this.createKeyword(nextKeyword);
 		
 		// Reset the input
-		e.target.value = "";
+		e.target.value = '';
 	};
 	
 	// Helpers
@@ -367,23 +367,23 @@ export default class FocusKeywords {
 	 * @param {string=} rating
 	 * @param {number|null=} index
 	 */
-	createKeyword = (keyword, rating = "neutral", index = null) => {
+	createKeyword = (keyword, rating = 'neutral', index = null) => {
 		// Use the given index, or the next available one
 		const nextIndex = index !== null ? index : this.keywords.length;
 		
 		// Create the keyword token
-		const elem = t("a", {
-			href: "#",
+		const elem = t('a', {
+			href: '#',
 			click: this.onKeywordClick,
-			"data-index": String(nextIndex),
+			'data-index': String(nextIndex),
 		}, [
-			createRating(rating, "span"),
+			createRating(rating, 'span'),
 			keyword,
-			t("object", {}, t("a", {
-				href: "#",
-				title: "Remove",
+			t('object', {}, t('a', {
+				href: '#',
+				title: 'Remove',
 				click: this.onKeywordRemoveClick,
-			}, "Remove"))
+			}, 'Remove'))
 		]);
 		
 		// Add the keyword token to the input

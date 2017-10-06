@@ -23,42 +23,42 @@ class SeoFieldType extends BaseFieldType implements IPreviewableFieldType {
 
 	public function getInputHtml($name, $value)
 	{
-		if (empty($this->element)) return "";
+		if (empty($this->element)) return '';
 
 		$id = craft()->templates->formatInputId($name);
 		$namespaceId = craft()->templates->namespaceInputId($id);
 
 		$settings = $this->getSettings();
-		$settingsGlobal = craft()->plugins->getPlugin("seo")->getSettings();
+		$settingsGlobal = craft()->plugins->getPlugin('seo')->getSettings();
 
 		/** @var SectionModel $section */
 		$section = $this->element->getSection();
 
 		$hasPreview = false;
 		$isEntry = false;
-		$isHome = $this->element->uri == "__home__";
+		$isHome = $this->element->uri == '__home__';
 		$isNew = $this->element->getTitle() == null;
-		$isSingle = $section->type == "single";
+		$isSingle = $section->type == 'single';
 
 		// Backwards compatibility, keyword -> keywords
-		if ($value && array_key_exists("keyword", $value)) {
-			if (!empty($value["keyword"])) {
-				$value["keywords"] = [
+		if ($value && array_key_exists('keyword', $value)) {
+			if (!empty($value['keyword'])) {
+				$value['keywords'] = [
 					[
-						"keyword" => $value["keyword"],
-						"rating"  => $this->_scoreCompat($value["score"]),
+						'keyword' => $value['keyword'],
+						'rating'  => $this->_scoreCompat($value['score']),
 					],
 				];
 			} else {
-				$value["keywords"] = [];
+				$value['keywords'] = [];
 			}
 
-			unset($value["keyword"]);
+			unset($value['keyword']);
 
-			$value["keywords"] = JsonHelper::encode($value["keywords"]);
+			$value['keywords'] = JsonHelper::encode($value['keywords']);
 
 			// TODO: Rename score to rating
-			$value["score"] = "neutral";
+			$value['score'] = 'neutral';
 		}
 
 		// TODO: Handle category entry type
@@ -69,43 +69,43 @@ class SeoFieldType extends BaseFieldType implements IPreviewableFieldType {
 				$isEntry = true;
 				$hasPreview = craft()->sections->isSectionTemplateValid($this->element->section);
 				break;
-			case "Commerce_Product":
+			case 'Commerce_Product':
 				$hasPreview = craft()->commerce_productTypes->isProductTypeTemplateValid($this->element->type);
 				break;
 		}
 
 		// Note: Keep in sync with default opts in SeoField.js
 		$seoOptions = JsonHelper::encode([
-			"hasPreview" => $hasPreview,
-			"isNew" => $isNew,
+			'hasPreview' => $hasPreview,
+			'isNew' => $isNew,
 		]);
 
-		craft()->templates->includeCssResource("seo/css/seo.css");
-		craft()->templates->includeJsResource("seo/js/SeoField.min.js");
+		craft()->templates->includeCssResource('seo/css/seo.css');
+		craft()->templates->includeJsResource('seo/js/SeoField.min.js');
 		craft()->templates->includeJs("new SeoField('{$namespaceId}', {$seoOptions});");
 
 		$url = $this->element->getUrl();
 
 		if ($hasPreview && $isEntry && !$isHome && !$isSingle)
-			$url = substr($url, 0, strrpos( $url, "/")) . "/";
+			$url = substr($url, 0, strrpos( $url, '/')) . '/';
 
 		$titleSuffix = $settings->titleSuffix ?: $settingsGlobal->titleSuffix;
 
-		if ($hasPreview && $isEntry && $value["title"] == null && $isSingle)
-			$titleSuffix = $this->element->title . " " . $titleSuffix;
+		if ($hasPreview && $isEntry && $value['title'] == null && $isSingle)
+			$titleSuffix = $this->element->title . ' ' . $titleSuffix;
 
-		return craft()->templates->render("seo/seo/fieldtype", array(
-			"id" => $id,
-			"name" => $name,
-			"value" => $value,
-			"titleSuffix" => $titleSuffix,
-			"hasSection" => $hasPreview,
-			"url" => $url,
-			"isPro" => true,
+		return craft()->templates->render('seo/seo/fieldtype', array(
+			'id' => $id,
+			'name' => $name,
+			'value' => $value,
+			'titleSuffix' => $titleSuffix,
+			'hasSection' => $hasPreview,
+			'url' => $url,
+			'isPro' => true,
 
-			"isNew" => $isNew,
-			"isHome" => $isHome,
-			"isSingle" => $isSingle,
+			'isNew' => $isNew,
+			'isHome' => $isHome,
+			'isSingle' => $isSingle,
 		));
 	}
 
@@ -121,19 +121,19 @@ class SeoFieldType extends BaseFieldType implements IPreviewableFieldType {
 
 	public function getTableAttributeHtml($value)
 	{
-		$ret = "";
+		$ret = '';
 
-		switch ($value["score"]) {
-			case "":
+		switch ($value['score']) {
+			case '':
 				$ret = '<span class="status active" style="margin-top:5px;background:#ccc;" title="Unranked"></span>';
 				break;
-			case "poor":
+			case 'poor':
 				$ret = '<span class="status active" style="margin-top:5px;background:#ff4750;" title="Poor"></span>';
 				break;
-			case "average":
+			case 'average':
 				$ret = '<span class="status active" style="margin-top:5px;background:#ffab47;" title="Average"></span>';
 				break;
-			case "good":
+			case 'good':
 				$ret = '<span class="status active" style="margin-top:5px;background:#3eda80;" title="Good"></span>';
 				break;
 		}
@@ -153,10 +153,10 @@ class SeoFieldType extends BaseFieldType implements IPreviewableFieldType {
 	 */
 	private function _scoreCompat ($score) {
 		return [
-			"" => "neutral",
-			"good" => "good",
-			"ok" => "average",
-			"bad" => "poor",
+			'' => 'neutral',
+			'good' => 'good',
+			'ok' => 'average',
+			'bad' => 'poor',
         ][$score];
 	}
 

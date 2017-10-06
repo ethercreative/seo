@@ -14,8 +14,8 @@ class m171005_123900_seo_AddLocaleColumnToABDataTable extends BaseMigration
 	public function safeUp()
 	{
 		$this->addColumn(
-			"seo_ab_data",
-			"locale",
+			'seo_ab_data',
+			'locale',
 			ColumnType::Locale
 		);
 

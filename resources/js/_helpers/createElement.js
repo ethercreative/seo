@@ -12,7 +12,7 @@
  * @return {Element} - The created element
  */
 export default function createElement (
-	tag = "div",
+	tag = 'div',
 	attributes = {},
 	children = []
 ) {
@@ -22,13 +22,13 @@ export default function createElement (
 		if (!value) continue;
 		
 		if (typeof value === typeof (() => {})) {
-			if (key === "ref") value(elem);
+			if (key === 'ref') value(elem);
 			else elem.addEventListener(key, value);
 			continue;
 		}
 		
-		if (key === "style")
-			value = value.replace(/[\t\r\n]/g, " ").trim();
+		if (key === 'style')
+			value = value.replace(/[\t\r\n]/g, ' ').trim();
 		
 		elem.setAttribute(key, value);
 	}

@@ -8,12 +8,12 @@
  * @since     2.0.0
  */
 
-import EntryMarkup from "./EntryMarkup";
-import { SEO_RATING, SEO_REASONS } from "../const";
+import EntryMarkup from './EntryMarkup';
+import { SEO_RATING, SEO_REASONS } from '../const';
 import {
 	countInArray, createRating, isExternalUrl, t,
 	TextStatistics
-} from "../helpers";
+} from '../helpers';
 
 export default class KeywordChecklist {
 	
@@ -58,7 +58,7 @@ export default class KeywordChecklist {
 			// Remove line breaks, tabs, and surplus spaces from page text
 			this.text = content.textContent.replace(
 				/(\r\n|\r|\n|\t|\s+)/gmi,
-				""
+				''
 			);
 			
 			// If there's no text, complain
@@ -76,7 +76,7 @@ export default class KeywordChecklist {
 			
 			// Run all `judge` functions
 			Object.getOwnPropertyNames(KeywordChecklist.prototype)
-			      .filter(f => f.indexOf("judge") > -1)
+			      .filter(f => f.indexOf('judge') > -1)
 			      .forEach(f => { this[f](); });
 
 			// Sort the results by rating, keeping track of the number of times
@@ -156,7 +156,7 @@ export default class KeywordChecklist {
 		this.addRating(
 			l < 40 || l > 60 ? SEO_RATING.POOR : SEO_RATING.GOOD,
 			l < 40
-				? SEO_REASONS.titleLengthFailMin.replace("{l}", l)
+				? SEO_REASONS.titleLengthFailMin.replace('{l}', l)
 				: l > 60
 					? SEO_REASONS.titleLengthFailMax.replace("{l}", l)
 					: SEO_REASONS.titleLengthSuccess
@@ -200,7 +200,7 @@ export default class KeywordChecklist {
 			return;
 		
 		const slug = this.SEO.snippetFields.slug.textContent.toLowerCase();
-		const keyword = this.keywordLower.replace(/[^a-zA-Z0-9-_]/g, "");
+		const keyword = this.keywordLower.replace(/[^a-zA-Z0-9-_]/g, '');
 		
 		if (slug.indexOf(keyword) > -1) {
 			this.addRating(
@@ -247,14 +247,14 @@ export default class KeywordChecklist {
 		if (count > 300) {
 			this.addRating(
 				SEO_RATING.GOOD,
-				SEO_REASONS.wordCountSuccess.replace("{l}", count)
+				SEO_REASONS.wordCountSuccess.replace('{l}', count)
 			);
 			return;
 		}
 		
 		this.addRating(
 			SEO_RATING.POOR,
-			SEO_REASONS.wordCountFail.replace("{l}", count)
+			SEO_REASONS.wordCountFail.replace('{l}', count)
 		);
 	}
 	
@@ -262,7 +262,7 @@ export default class KeywordChecklist {
 	 * Judge keyword in first paragraph
 	 */
 	judgeFirstParagraph () {
-		const p = this.content.querySelector("p");
+		const p = this.content.querySelector('p');
 		
 		if (p && p.textContent.toLowerCase().indexOf(this.keywordLower) > -1) {
 			this.addRating(
@@ -283,7 +283,7 @@ export default class KeywordChecklist {
 	 * TODO: Look into <picture> & <figure> tag effect on SEO
 	 */
 	judgeImages () {
-		const imgs = this.content.getElementsByTagName("img");
+		const imgs = this.content.getElementsByTagName('img');
 		
 		if (!imgs.length) return;
 		
@@ -291,7 +291,7 @@ export default class KeywordChecklist {
 			i = imgs.length;
 		
 		while (i--) {
-			let alt = imgs[i].getAttribute("alt");
+			let alt = imgs[i].getAttribute('alt');
 			if (alt && alt.toLowerCase().indexOf(this.keywordLower) > -1)
 				withKeywordAlt++;
 		}
@@ -324,7 +324,7 @@ export default class KeywordChecklist {
 	 * TODO: Should this be counting instead just seeing if one exists?
 	 */
 	judgeLinks () {
-		const a = this.content.getElementsByTagName("a");
+		const a = this.content.getElementsByTagName('a');
 		
 		if (!a.length) return;
 		
@@ -346,7 +346,7 @@ export default class KeywordChecklist {
 	 * Judge the number of headings (and their level) that contain the keyword
 	 */
 	judgeHeadings () {
-		const headings = this.content.querySelectorAll("h1, h2, h3, h4, h5, h6");
+		const headings = this.content.querySelectorAll('h1, h2, h3, h4, h5, h6');
 		
 		if (!headings.length) return;
 		
@@ -360,7 +360,7 @@ export default class KeywordChecklist {
 			if (h.textContent.toLowerCase().indexOf(this.keywordLower) === -1)
 				continue;
 			
-			if (["h1", "h2"].indexOf(h.nodeName.toLowerCase()) > -1) primary++;
+			if (['h1', 'h2'].indexOf(h.nodeName.toLowerCase()) > -1) primary++;
 			else secondary++;
 		}
 		
@@ -401,7 +401,7 @@ export default class KeywordChecklist {
 		if (keyPercent < 1.0) {
 			this.addRating(
 				SEO_RATING.POOR,
-				SEO_REASONS.densityFailUnder.replace("{d}", keyPercent)
+				SEO_REASONS.densityFailUnder.replace('{d}', keyPercent)
 			);
 			return;
 		}
@@ -409,7 +409,7 @@ export default class KeywordChecklist {
 		if (keyPercent <= 2.5) {
 			this.addRating(
 				SEO_RATING.GOOD,
-				SEO_REASONS.densitySuccess.replace("{d}", keyPercent)
+				SEO_REASONS.densitySuccess.replace('{d}', keyPercent)
 			);
 			return;
 		}
@@ -418,8 +418,8 @@ export default class KeywordChecklist {
 			this.addRating(
 				SEO_RATING.AVERAGE,
 				SEO_REASONS.densityOk
-				           .replace("{d}", keyPercent)
-				           .replace("{c}", keyCount)
+				           .replace('{d}', keyPercent)
+				           .replace('{c}', keyCount)
 			);
 			return;
 		}
@@ -439,7 +439,7 @@ export default class KeywordChecklist {
 		if (level >= 80) {
 			this.addRating(
 				SEO_RATING.GOOD,
-				SEO_REASONS.fleschSuccess.replace("{l}", level)
+				SEO_REASONS.fleschSuccess.replace('{l}', level)
 			);
 			return;
 		}
@@ -447,14 +447,14 @@ export default class KeywordChecklist {
 		if (level >= 60) {
 			this.addRating(
 				SEO_RATING.AVERAGE,
-				SEO_REASONS.fleschOk.replace("{l}", level)
+				SEO_REASONS.fleschOk.replace('{l}', level)
 			);
 			return;
 		}
 		
 		this.addRating(
 			SEO_RATING.POOR,
-			SEO_REASONS.fleschFail.replace("{l}", level)
+			SEO_REASONS.fleschFail.replace('{l}', level)
 		);
 		return;
 	}
@@ -499,9 +499,9 @@ export default class KeywordChecklist {
 	 * @return {Element}
 	 */
 	renderChecklistItem = ({ rating, reason }) => {
-		return t("li", {}, [
+		return t('li', {}, [
 			createRating(rating),
-			t("p", {}, reason)
+			t('p', {}, reason)
 		]);
 	};
 	

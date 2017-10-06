@@ -176,28 +176,28 @@ class Seo_SitemapService extends BaseApplicationComponent
 
 		// Generate Loop: Sections
 		$this->_generateLoop(
-			"sections",
+			'sections',
 			$this->getValidSections(),
 			$sitemapData
 		);
 
 		// Generate Loop: Categories
 		$this->_generateLoop(
-			"categories",
+			'categories',
 			$this->getValidCategories(),
 			$sitemapData
 		);
 
 		// Generate Loop: Product Types
 		$this->_generateLoop(
-			"productTypes",
+			'productTypes',
 			$this->getValidProductTypes(),
 			$sitemapData
 		);
 
 		// Generate: Custom
-		if (array_key_exists("customUrls", $sitemapData))
-			$this->_generateIndex("custom", 0);
+		if (array_key_exists('customUrls', $sitemapData))
+			$this->_generateIndex('custom', 0);
 
 		return $this->_document->saveXML();
 	}
@@ -208,29 +208,29 @@ class Seo_SitemapService extends BaseApplicationComponent
 			return;
 
 		foreach ($data as $item)
-			if (array_key_exists($item["id"], $sitemapData[$handle]))
-				if ($sitemapData[$handle][$item["id"]]["enabled"])
-					$this->_generateIndex($handle, $item["id"]);
+			if (array_key_exists($item['id'], $sitemapData[$handle]))
+				if ($sitemapData[$handle][$item['id']]['enabled'])
+					$this->_generateIndex($handle, $item['id']);
 	}
 
 	private function _generateIndex ($group, $id)
 	{
 		switch ($group) {
-			case "custom":
+			case 'custom':
 				$last = Seo_SitemapRecord::model()->find()->dateUpdated;
 				$pages = 1;
 				break;
-			case "sections":
+			case 'sections':
 				$last = $this->_getUpdated(ElementType::Entry, $id);
 				$pages = $this->_getPageCount(ElementType::Entry, $id);
 				break;
-			case "categories":
+			case 'categories':
 				$last = $this->_getUpdated(ElementType::Category, $id);
 				$pages = $this->_getPageCount(ElementType::Category, $id);
 				break;
-			case "productTypes":
-				$last = $this->_getUpdated("Commerce_Product", $id);
-				$pages = $this->_getPageCount("Commerce_Product", $id);
+			case 'productTypes':
+				$last = $this->_getUpdated('Commerce_Product', $id);
+				$pages = $this->_getPageCount('Commerce_Product', $id);
 				break;
 			default:
 				$last = DateTimeHelper::currentTimeForDb();
@@ -239,17 +239,17 @@ class Seo_SitemapService extends BaseApplicationComponent
 
 		for ($i = 0; $i < $pages; $i++)
 		{
-			$sitemap = $this->_document->createElement("sitemap");
+			$sitemap = $this->_document->createElement('sitemap');
 			$this->_index->appendChild($sitemap);
 
 			$loc = $this->_document->createElement(
-				"loc",
+				'loc',
 				$this->_indexUrl($group, $id, $i)
 			);
 			$sitemap->appendChild($loc);
 
 			$lastMod = $this->_document->createElement(
-				"lastmod",
+				'lastmod',
 				$last
 			);
 			$sitemap->appendChild($lastMod);
@@ -259,9 +259,9 @@ class Seo_SitemapService extends BaseApplicationComponent
 	private function _indexUrl ($group, $id, $page)
 	{
 		return UrlHelper::getUrl(
-			$this->settings()->sitemapName . "_" . $group .
-			($id > 0 ? "_" . $id : "") .
-			($id > 0 ? "_" . $page : "") . ".xml"
+			$this->settings()->sitemapName . '_' . $group .
+			($id > 0 ? '_' . $id : '') .
+			($id > 0 ? '_' . $page : '') . '.xml'
 		);
 	}
 
@@ -273,23 +273,23 @@ class Seo_SitemapService extends BaseApplicationComponent
 		$this->_createDocument();
 		$sitemapData = $this->getSitemap();
 
-		if (!array_key_exists("customUrls", $sitemapData))
+		if (!array_key_exists('customUrls', $sitemapData))
 			return $this->_document->saveXML();
 
-		foreach ($sitemapData["customUrls"] as $custom) if ($custom["enabled"])
+		foreach ($sitemapData['customUrls'] as $custom) if ($custom['enabled'])
 		{
-			$url = $this->_document->createElement("url");
+			$url = $this->_document->createElement('url');
 			$loc = $this->_document->createElement(
-				"loc",
-				UrlHelper::getUrl($custom["url"])
+				'loc',
+				UrlHelper::getUrl($custom['url'])
 			);
 			$frequency = $this->_document->createElement(
-				"changefreq",
-				$custom["frequency"]
+				'changefreq',
+				$custom['frequency']
 			);
 			$priority = $this->_document->createElement(
-				"priority",
-				$custom["priority"]
+				'priority',
+				$custom['priority']
 			);
 
 			$url->appendChild($loc);
@@ -310,43 +310,43 @@ class Seo_SitemapService extends BaseApplicationComponent
 		$this->_createDocument();
 		$sitemapData = $this->getSitemap();
 
-		if (!array_key_exists($variables["section"], $sitemapData))
+		if (!array_key_exists($variables['section'], $sitemapData))
 			goto out;
 
-		$sitemapSection = $sitemapData[$variables["section"]];
+		$sitemapSection = $sitemapData[$variables['section']];
 
-		if (!array_key_exists($variables["id"], $sitemapSection))
+		if (!array_key_exists($variables['id'], $sitemapSection))
 			goto out;
 
-		$sitemapSectionById = $sitemapSection[$variables["id"]];
+		$sitemapSectionById = $sitemapSection[$variables['id']];
 
-		if (!$sitemapSectionById["enabled"])
+		if (!$sitemapSectionById['enabled'])
 			goto out;
 
 		$type = null;
 		$idHandle = null;
 
-		switch ($variables["section"]) {
-			case "sections":
+		switch ($variables['section']) {
+			case 'sections':
 				$type = ElementType::Entry;
-				$idHandle = "sectionId";
+				$idHandle = 'sectionId';
 				break;
-			case "categories":
+			case 'categories':
 				$type = ElementType::Category;
-				$idHandle = "groupId";
+				$idHandle = 'groupId';
 				break;
-			case "productTypes":
-				$type = "Commerce_Product";
-				$idHandle = "typeId";
+			case 'productTypes':
+				$type = 'Commerce_Product';
+				$idHandle = 'typeId';
 				break;
 			default:
 				goto out;
 		}
 
 		$elements = craft()->elements->getCriteria($type);
-		$elements->{$idHandle} = $variables["id"];
+		$elements->{$idHandle} = $variables['id'];
 		$elements->limit = $this->settings()->sitemapLimit;
-		$elements->offset = $this->settings()->sitemapLimit * $variables["page"];
+		$elements->offset = $this->settings()->sitemapLimit * $variables['page'];
 
 		// TODO: Paginate
 		foreach ($elements->find() as $item)
@@ -354,24 +354,24 @@ class Seo_SitemapService extends BaseApplicationComponent
 			if ($item->url == null)
 				continue;
 
-			$url = $this->_document->createElement("url");
+			$url = $this->_document->createElement('url');
 			$this->_urlSet->appendChild($url);
 
 			$loc = $this->_document->createElement(
-				"loc",
+				'loc',
 				UrlHelper::getUrl($item->url)
 			);
 			$mod = $this->_document->createElement(
-				"lastmod",
+				'lastmod',
 				$item->dateUpdated
 			);
 			$freq = $this->_document->createElement(
-				"changefreq",
-				$sitemapSectionById["frequency"]
+				'changefreq',
+				$sitemapSectionById['frequency']
 			);
 			$priority = $this->_document->createElement(
-				"priority",
-				$sitemapSectionById["priority"]
+				'priority',
+				$sitemapSectionById['priority']
 			);
 
 			$url->appendChild($loc);
@@ -381,17 +381,17 @@ class Seo_SitemapService extends BaseApplicationComponent
 
 			if (is_array($item->locales) && count($item->locales) > 1) {
 				foreach ($item->locales as $locale => $settings) {
-					$locale = $type == ElementType::Category || $type == "Commerce_Product" ? $settings : $locale;
+					$locale = $type == ElementType::Category || $type == 'Commerce_Product' ? $settings : $locale;
 
 					if ($locale !== craft()->language) {
-						$alt = $this->_document->createElement("xhtml:link");
-						$alt->setAttribute("rel", "alternate");
+						$alt = $this->_document->createElement('xhtml:link');
+						$alt->setAttribute('rel', 'alternate');
 						$alt->setAttribute(
-							"hreflang",
+							'hreflang',
 							str_replace('_', '-', $locale)
 						);
 						$alt->setAttribute(
-							"href",
+							'href',
 							UrlHelper::getSiteUrl(
 								($item->uri == '__home__') ? '' : $item->uri,
 								null,
@@ -423,7 +423,7 @@ class Seo_SitemapService extends BaseApplicationComponent
 
 		if ($withUrlSet)
 		{
-			$urlSet = $document->createElement("urlset");
+			$urlSet = $document->createElement('urlset');
 			$urlSet->setAttribute('xmlns', 'http://www.sitemaps.org/schemas/sitemap/0.9');
 			$urlSet->setAttribute('xmlns:xhtml', 'http://www.w3.org/1999/xhtml');
 			$document->appendChild($urlSet);
@@ -438,10 +438,10 @@ class Seo_SitemapService extends BaseApplicationComponent
 		$criteria = craft()->elements->getCriteria($type);
 		$criteria->sectionId = $id;
 		$criteria->limit = 1;
-		$criteria->order = "dateUpdated";
+		$criteria->order = 'dateUpdated';
 
 		$element = $criteria->first();
-		return $element ? $element->dateUpdated : "";
+		return $element ? $element->dateUpdated : '';
 	}
 
 	private function _getPageCount ($type, $id)

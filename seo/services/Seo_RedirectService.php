@@ -103,7 +103,10 @@ class Seo_RedirectService extends BaseApplicationComponent
 		}
 
 		if (!empty($idsToDelete)) {
-			craft()->db->createCommand()->delete('seo_redirects', array('in', 'id', $idsToDelete));
+			craft()->db->createCommand()->delete(
+				'seo_redirects',
+				array('in', 'id', $idsToDelete)
+			);
 		}
 
 		// Update current redirects
@@ -141,7 +144,7 @@ class Seo_RedirectService extends BaseApplicationComponent
 	public function save ($uri, $to, $type)
 	{
 		$doesUriExist = Seo_RedirectRecord::model()->findByAttributes([
-			"uri" => $uri
+			'uri' => $uri
 		]);
 
 		if ($doesUriExist)
@@ -191,10 +194,10 @@ class Seo_RedirectService extends BaseApplicationComponent
 			$record->save();
 
 			$newFormatted[] = [
-				"id" => $record->id,
-				"uri" => $record->uri,
-				"to" => $record->to,
-				"type" => $record->type,
+				'id' => $record->id,
+				'uri' => $record->uri,
+				'to' => $record->to,
+				'type' => $record->type,
 			];
 		}
 
@@ -219,13 +222,13 @@ class Seo_RedirectService extends BaseApplicationComponent
 
 	private function _isRedirectRegex ($uri)
 	{
-		if (preg_match("/^#(.+)#$/", $uri))
+		if (preg_match('/^#(.+)#$/', $uri))
 		{
 			return $uri;
 		}
-		elseif (strpos($uri, "*"))
+		elseif (strpos($uri, '*'))
 		{
-			return "#^".str_replace(array("*","/"), array("(.*)", "\/"), $uri).'#';
+			return '#^'.str_replace(array('*','/'), array('(.*)', '\/'), $uri).'#';
 		}
 
 		return false;
