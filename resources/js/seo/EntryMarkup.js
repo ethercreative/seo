@@ -9,7 +9,7 @@
  * @since     2.0.0
  */
 
-import { t, fail } from "../helpers";
+import { c, fail } from "../helpers";
 
 class EntryMarkup {
 	
@@ -94,7 +94,7 @@ class EntryMarkup {
 	clean () {
 		this.frame && document.body.removeChild(this.frame);
 		
-		this.frame = t("iframe", {
+		this.frame = c("iframe", {
 			frameborder: "0",
 			style: `
 				width: 0;

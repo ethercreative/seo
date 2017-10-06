@@ -37,7 +37,7 @@ class SeoPlugin extends BasePlugin {
 
 	public function getSchemaVersion()
 	{
-		return '0.1.1';
+		return '0.1.2';
 	}
 
 	public function getDeveloper()
@@ -147,7 +147,7 @@ class SeoPlugin extends BasePlugin {
 
 			// Inject A/B
 			craft()->on('elements.onPopulateElements', function (Event $event) {
-				craft()->seo_ab->inject($event->params['elements']);
+				craft()->seo_ab->injectBElement($event->params['elements']);
 			});
 		}
 
@@ -157,7 +157,30 @@ class SeoPlugin extends BasePlugin {
 			craft()->request->isCpRequest()
 			&& !craft()->request->isAjaxRequest()
 		) {
-			//
+			// Hook into edit templates
+			$hooks = [
+				'cp.entries.edit.right-pane',
+				'cp.categories.edit.right-pane',
+				'cp.commerce.product.edit.right-pane',
+			];
+
+			foreach ($hooks as $hook) {
+				craft()->templates->hook(
+					$hook,
+					function (&$context) {
+						return craft()->seo_ab->injectElementEdit($context);
+					}
+				);
+			}
+
+			// Listen for element save
+			craft()->on('elements.onSaveElement', function (Event $event) {
+				if (craft()->request->getPost("seoAbCapable")) {
+					/** @var BaseElementModel $element */
+					$element = $event->params["element"];
+					craft()->seo_ab->onSaveB($element);
+				}
+			});
 		}
 	}
 

@@ -11,7 +11,7 @@
 import EntryMarkup from './EntryMarkup';
 import { SEO_RATING, SEO_REASONS } from '../const';
 import {
-	countInArray, createRating, isExternalUrl, t,
+	countInArray, createRating, isExternalUrl, c,
 	TextStatistics
 } from '../helpers';
 
@@ -499,9 +499,9 @@ export default class KeywordChecklist {
 	 * @return {Element}
 	 */
 	renderChecklistItem = ({ rating, reason }) => {
-		return t('li', {}, [
+		return c('li', {}, [
 			createRating(rating),
-			t('p', {}, reason)
+			c('p', {}, reason)
 		]);
 	};
 	

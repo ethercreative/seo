@@ -1,5 +1,5 @@
 import _createElement from './_helpers/createElement';
-export { _createElement as t };
+export { _createElement as c };
 
 import _TextStatistics from './_helpers/TextStatistics';
 export { _TextStatistics as TextStatistics };

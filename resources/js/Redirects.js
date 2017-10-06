@@ -8,7 +8,7 @@
  * @package   SEO
  * @since     1.5.0
  */
-import { t } from "./helpers";
+import { c } from "./helpers";
 
 const REDIRECT_TYPES = {
 	"301": "301 (Permanent)",
@@ -303,13 +303,13 @@ export default class Redirects {
 	}
 	
 	rowStatic (id = -1, uri = "", to = "", type = 301) {
-		const row = t("tr", { "tabindex": 0, "data-id": id }, [
+		const row = c("tr", { "tabindex": 0, "data-id": id }, [
 			// URI
-			t("td", { "class": "redirects--title-col" }, [
-				t("div", { "class": "element small" }, [
-					t("div", { "class": "label" }, [
-						t("span", { "class": "title" }, [
-							t("a", {
+			c("td", { "class": "redirects--title-col" }, [
+				c("div", { "class": "element small" }, [
+					c("div", { "class": "label" }, [
+						c("span", { "class": "title" }, [
+							c("a", {
 								"href": "#",
 								"title": "Edit Redirect",
 								"data-id": id,
@@ -324,14 +324,14 @@ export default class Redirects {
 			]),
 			
 			// To
-			t("td", {}, to),
+			c("td", {}, to),
 			
 			// Type
-			t("td", {}, REDIRECT_TYPES[type]),
+			c("td", {}, REDIRECT_TYPES[type]),
 			
 			// Delete
-			t("td", { "class": "thin action" }, [
-				t("a", {
+			c("td", { "class": "thin action" }, [
+				c("a", {
 					"class": "delete icon",
 					"title": "Delete",
 					"click": e => this.onDeleteClick(e, row)
@@ -344,15 +344,15 @@ export default class Redirects {
 	
 	rowEdit (id, uri, to, type) {
 		return [
-			t("tr", { "class": "redirects--edit-row" }, [
+			c("tr", { "class": "redirects--edit-row" }, [
 				// URI
-				t("td", {}, [
-					t("input", {
+				c("td", {}, [
+					c("input", {
 						"value": id,
 						"type": "hidden",
 						"name": this.namespaceField("id")
 					}),
-					t("input", {
+					c("input", {
 						"value": uri,
 						"type": "text",
 						"class": "text fullwidth",
@@ -361,8 +361,8 @@ export default class Redirects {
 				]),
 				
 				// To
-				t("td", {}, [
-					t("input", {
+				c("td", {}, [
+					c("input", {
 						"value": to,
 						"type": "text",
 						"class": "text fullwidth",
@@ -371,15 +371,15 @@ export default class Redirects {
 				]),
 				
 				// Type
-				t("td", {}, [
-					t("div", { "class": "select" }, [
-						t("select", {
+				c("td", {}, [
+					c("div", { "class": "select" }, [
+						c("select", {
 							"name": this.namespaceField("type")
 						}, Object.keys(REDIRECT_TYPES).map(value => {
 							const opts = { value };
 							if (type === value) opts["selected"] = "selected";
 							
-							return t(
+							return c(
 								"option",
 								opts,
 								REDIRECT_TYPES[value]
@@ -389,19 +389,19 @@ export default class Redirects {
 				]),
 				
 				// Spinner
-				t("td", {}, [
-					t("div", { "class": "spinner hidden" })
+				c("td", {}, [
+					c("div", { "class": "spinner hidden" })
 				])
 			]),
 			
-			t("tr", { "class": "redirects--edit-controls" }, [
-				t("td", { "colspan": 4 }, [
-					t("input", {
+			c("tr", { "class": "redirects--edit-controls" }, [
+				c("td", { "colspan": 4 }, [
+					c("input", {
 						"class": "btn submit",
 						"type": "submit",
 						"value": "Update",
 					}),
-					t("input", {
+					c("input", {
 						"class": "btn",
 						"type": "button",
 						"value": "Cancel",

@@ -8,7 +8,7 @@
  * @since     2.0.0
  */
 
-import { t, createRating, debounce } from '../helpers';
+import { c, createRating, debounce } from '../helpers';
 
 import KeywordChecklist from './KeywordChecklist';
 import { SEO_RATING_LABEL } from '../const';
@@ -372,14 +372,14 @@ export default class FocusKeywords {
 		const nextIndex = index !== null ? index : this.keywords.length;
 		
 		// Create the keyword token
-		const elem = t('a', {
+		const elem = c('a', {
 			href: '#',
 			click: this.onKeywordClick,
 			'data-index': String(nextIndex),
 		}, [
 			createRating(rating, 'span'),
 			keyword,
-			t('object', {}, t('a', {
+			c('object', {}, c('a', {
 				href: '#',
 				title: 'Remove',
 				click: this.onKeywordRemoveClick,

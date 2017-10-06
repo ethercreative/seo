@@ -1,0 +1,28 @@
+{% import "_includes/forms" as forms %}
+
+<input type="hidden" name="seoAbCapable" value="1">
+<div class="pane meta">
+	{% set statusInput %}
+		<div class="left">
+			{{ forms.lightswitch({
+				id: 'seo_AbEnabled',
+				name: 'seo_AbEnabled',
+				on: isEnabled
+			}) }}
+		</div>
+	{% endset %}
+
+	{{ forms.field({
+		label: "A/B Enabled",
+		id: 'seo_AbEnabled'
+	}, statusInput) }}
+</div>
+
+<div id="seoBFields" style="display:none">
+	{% include "_includes/fields" with {
+		fields:  fields,
+		element: element,
+		static:  false,
+		namespace: 'seoAb'
+	} only %}
+</div>

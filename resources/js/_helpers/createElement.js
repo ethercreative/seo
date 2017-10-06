@@ -28,7 +28,7 @@ export default function createElement (
 		}
 		
 		if (key === 'style')
-			value = value.replace(/[\t\r\n]/g, ' ').trim();
+			value = value.replace(/(?:\r\n|\r|\n|\t|\s+)/g, ' ').trim();
 		
 		elem.setAttribute(key, value);
 	}

@@ -13,16 +13,14 @@ class m171005_105200_seo_CreateABTables extends BaseMigration
 	 */
 	public function safeUp()
 	{
-		// Create the craft_seo_ab_fields table
-		// A row in this table, means fieldId in layoutId is enabled for A/B
-		$this->createTable('seo_ab_fields', [
-			'layoutId'  => ['required' => true, 'column' => ColumnType::Int],
-			'fieldId'   => ['required' => true, 'column' => ColumnType::Int],
+		// Create the craft_seo_ab_enabled table
+		// A row in this table means the element is enabled for A/B
+		$this->createTable('seo_ab_enabled', [
+			'elementId' => ['required' => true, 'column' => ColumnType::Int],
 		], null, false, false);
 
-		// Add indexes to ab_fields
-		$this->createIndex('seo_ab_fields', 'layoutId');
-		$this->createIndex('seo_ab_fields', 'fieldId');
+		// Add indexes to ab_enabled
+		$this->createIndex('seo_ab_enabled', 'elementId');
 
 		// Create the craft_seo_ab_data table
 		$this->createTable('seo_ab_data', [

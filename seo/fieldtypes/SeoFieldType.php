@@ -31,14 +31,18 @@ class SeoFieldType extends BaseFieldType implements IPreviewableFieldType {
 		$settings = $this->getSettings();
 		$settingsGlobal = craft()->plugins->getPlugin('seo')->getSettings();
 
-		/** @var SectionModel $section */
-		$section = $this->element->getSection();
+		$section = null;
+
+		if ($this->element->getElementType() == ElementType::Entry) {
+			/** @var SectionModel $section */
+			$section = $this->element->getSection();
+		}
 
 		$hasPreview = false;
 		$isEntry = false;
 		$isHome = $this->element->uri == '__home__';
 		$isNew = $this->element->getTitle() == null;
-		$isSingle = $section->type == 'single';
+		$isSingle = $section ? $section->type == 'single' : true;
 
 		// Backwards compatibility, keyword -> keywords
 		if ($value && array_key_exists('keyword', $value)) {
