@@ -157,24 +157,7 @@ class SeoPlugin extends BasePlugin {
 			craft()->request->isCpRequest()
 			&& !craft()->request->isAjaxRequest()
 		) {
-			try {
-				// Load in SEO A/B JS
-				// TODO: Only inject where necessary
-				craft()->seo_ab->injectJS();
-			} catch (\Exception $e) {
-				// Craft runs the init function before checking if the schema
-				// has updated apparently, so we need to catch the DB error
-				// thrown by an out-of-date database :(
-			}
-		}
-
-		// CP Requests (all)
-		// ---------------------------------------------------------------------
-		if (craft()->request->isCpRequest())
-		{
-			craft()->on('fields.onSaveFieldLayout', function (Event $event) {
-				craft()->seo_ab->onFieldLayoutSave($event->params['layout']);
-			});
+			//
 		}
 	}
 

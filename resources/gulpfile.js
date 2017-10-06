@@ -65,7 +65,7 @@ function rl (i, o) {
 
 gulp.task('js', function () {
 	// rl("js/SeoField.js", "../seo/resources/js/SeoField.min.js");
-	rl("js/SeoAB.js", "../seo/resources/js/SeoAB.min.js");
+	// rl("js/SeoAB.js", "../seo/resources/js/SeoAB.min.js");
 	// rl("js/seo-settings.js", "../seo/resources/js/seo-settings.min.js");
 });
 

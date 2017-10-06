@@ -103,36 +103,22 @@ class Seo_AbService extends BaseApplicationComponent {
 		}
 	}
 
-	/**
-	 * Injects the necessary JS (& CSS) into the admin
-	 */
-	public function injectJS ()
-	{
-		$allEnabledFields = JsonHelper::encode($this->_getAllEnabledFields());
-		craft()->templates->includeJsResource('seo/js/SeoAB.min.js');
-		craft()->templates->includeJs("new SeoAB($allEnabledFields);");
-		craft()->templates->includeCss(<<<xyzzy
-.seo-ab-enabled {
-	position: relative;
-}
-.seo-ab-enabled:after {
-	content: "AB";
-	position: absolute;
-	top: 50%;
-	right: 30px;
-	
-	font-weight: bold;
-	font-size: 9px;
-	line-height: normal;
-	
-	transform: translateY(-50%);
-}
-xyzzy
-		);
-	}
-
 	// Events
 	// -------------------------------------------------------------------------
+
+	/**
+	 * Fired when elements in the CP are populated
+	 *
+	 * @param BaseElementModel[] $elements
+	 */
+	public function onPopulateElements (array $elements)
+	{
+		if (empty($elements)) return;
+
+		// Store the field layout id of the first element
+		SeoPlugin::$possibleFieldLayoutIds[] =
+			$elements[0]->getFieldLayout()->id;
+	}
 
 	/**
 	 * Called when a layout is saved
@@ -178,39 +164,6 @@ xyzzy
 
 	// Private
 	// =========================================================================
-
-	/**
-	 * Gets the enabled fields for the given layout ID
-	 *
-	 * [layoutId => [fieldId, fieldId, ... ], ... ]
-	 *
-	 * @return array
-	 */
-	private function _getAllEnabledFields ()
-	{
-		$fieldIds =
-			craft()->db->createCommand()
-			           ->select('layoutId, fieldId')
-			           ->from('seo_ab_fields')
-			           ->queryAll(false);
-
-		// Map [[layoutId => int, fieldId => int], ... ]
-		// to [layoutId => [fieldId, fieldId, ... ], ... ]
-		return array_reduce(
-			$fieldIds,
-			function (array $fields, $row) {
-				list($layoutId, $fieldId) = $row;
-
-				if (!array_key_exists($layoutId, $fields))
-					$fields[$layoutId] = [];
-
-				$fields[$layoutId][] = $fieldId;
-
-				return $fields;
-			},
-			[]
-		);
-	}
 
 	/**
 	 * Returns an array of enabled fields from the given layout
