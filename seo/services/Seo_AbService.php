@@ -144,6 +144,7 @@ xyzzy
 		$layoutId = $layout->id;
 
 		$nextFieldIds = craft()->request->getPost("seoAB");
+		if (!$nextFieldIds) return;
 		$prevFieldIds = $this->_getEnabledFieldsFromLayoutId($layout, true);
 
 		$addedIds = array_map(function ($fieldId) use ($layoutId) {

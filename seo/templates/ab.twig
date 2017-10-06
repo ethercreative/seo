@@ -1,0 +1,8 @@
+{% extends "_layouts/cp" %}
+{% set title = "AB" %}
+
+{% block content %}
+	{% include "_includes/fieldlayoutdesigner" with {
+		fieldLayout: fieldLayout,
+	} only %}
+{% endblock %}

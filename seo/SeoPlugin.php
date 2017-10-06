@@ -69,10 +69,11 @@ class SeoPlugin extends BasePlugin {
 	public function registerCpRoutes ()
 	{
 		return [
-			'seo' => array('action' => 'seo/index'),
-			'seo/sitemap' => array('action' => 'seo/sitemapPage'),
-			'seo/redirects' => array('action' => 'seo/redirectsPage'),
-			'seo/settings' => array('action' => 'seo/settings'),
+			'seo' => ['action' => 'seo/index'],
+			'seo/sitemap' => ['action' => 'seo/sitemapPage'],
+			'seo/redirects' => ['action' => 'seo/redirectsPage'],
+			'seo/settings' => ['action' => 'seo/settings'],
+			'seo/ab' => ['action' => 'seo/ab']
 		];
 	}
 
@@ -84,7 +85,7 @@ class SeoPlugin extends BasePlugin {
 			$this->getSettings()->sitemapName . '_custom.xml' =>
 				['action' => 'seo/sitemap/custom'],
 			$this->getSettings()->sitemapName . '_(?P<section>\w*)_(?P<id>\d*)_(?P<page>\d*)\.xml' =>
-				["action" => "seo/sitemap/sitemap"],
+				['action' => 'seo/sitemap/sitemap'],
 		);
 	}
 
@@ -156,8 +157,15 @@ class SeoPlugin extends BasePlugin {
 			craft()->request->isCpRequest()
 			&& !craft()->request->isAjaxRequest()
 		) {
-			// Load in SEO A/B JS
-			craft()->seo_ab->injectJS();
+			try {
+				// Load in SEO A/B JS
+				// TODO: Only inject where necessary
+				craft()->seo_ab->injectJS();
+			} catch (\Exception $e) {
+				// Craft runs the init function before checking if the schema
+				// has updated apparently, so we need to catch the DB error
+				// thrown by an out-of-date database :(
+			}
 		}
 
 		// CP Requests (all)

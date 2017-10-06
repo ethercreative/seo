@@ -25,8 +25,9 @@ class SeoController extends BaseController
 		parent::init();
 	}
 
+	// Data
+	// =========================================================================
 
-	// DATA
 	public function actionSaveRedirects ()
 	{
 		$this->actionSaveData();
@@ -45,8 +46,9 @@ class SeoController extends BaseController
 		$this->redirectToPostedUrl();
 	}
 
+	// Pages
+	// =========================================================================
 
-	// PAGES
 	public function actionIndex ()
 	{
 		$this->renderTemplate('seo/index', [
@@ -136,6 +138,13 @@ class SeoController extends BaseController
 				['label' => 'SEO', 'url' => 'index'],
 			],
 		));
+	}
+
+	public function actionAB ()
+	{
+		$this->renderTemplate('seo/ab', [
+			'fieldLayout' => craft()->fields->getLayoutById(15),
+		]);
 	}
 
 }
