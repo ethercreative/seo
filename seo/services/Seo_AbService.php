@@ -68,12 +68,13 @@ class Seo_AbService extends BaseApplicationComponent {
 	 * Injects the AB values into an array of elements
 	 *
 	 * @param BaseElementModel[] $elements
+	 * @param bool               $force
 	 */
-	public function injectBElement (array $elements)
+	public function injectBElement (array $elements, $force = false)
 	{
 		// If this is an A session (or there aren't any elements)
 		// we don't need to do anything
-		if ($this->getAb() || empty($elements)) return;
+		if (($this->getAb() || empty($elements)) && !$force) return;
 
 		$fields = $this->_getFieldsFromLayout($elements[0]->getFieldLayout());
 
@@ -94,7 +95,8 @@ class Seo_AbService extends BaseApplicationComponent {
 				$field = $fields[$fieldId];
 				$handle = $field['handle'];
 				$type = $field['type'];
-				$element->getContent()->$handle = $type->prepValue($data);
+				$type->setElement($element);
+				$element->getContent()->$handle = $data;
 			}
 		}
 	}
@@ -121,7 +123,8 @@ class Seo_AbService extends BaseApplicationComponent {
 
 		if ($element == null) return null;
 
-		$this->injectBElement([&$element]);
+		// FIXME: Injection works on the front-end, but not here on the back-end
+		$this->injectBElement([&$element], true);
 
 		$fields = $element->getFieldLayout()->getFields();
 		$isEnabled = $this->_isEnabled(
@@ -188,13 +191,13 @@ class Seo_AbService extends BaseApplicationComponent {
 		);
 
 		foreach ($bData as $handle => $data) {
-			$dataRaw = $data;
+//			$dataRaw = $data;
 			$data = JsonHelper::encode($data);
 
 			$fieldId = $fields[$handle]['id'];
 
-			$key = compact('elementId', 'locale', 'fieldId');
-			$update = compact('elementId', 'locale', 'fieldId', 'data');
+			$key = compact('elementId', 'locale', 'fieldId', 'data');
+			$update = compact('elementId', 'locale', 'fieldId');
 
 			$rows = craft()->db->createCommand()
 			                   ->insertOrUpdate('seo_ab_data', $key, $update, false);

@@ -2,8 +2,8 @@
 
 namespace Craft;
 
-class m171006_125600_AddLocaleColumnToABEnabledTable extends BaseMigration
-{
+class m171010_150200_seo_AddABUniqueIndex extends BaseMigration {
+
 	/**
 	 * Any migration code in here is wrapped inside of a transaction.
 	 *
@@ -11,10 +11,10 @@ class m171006_125600_AddLocaleColumnToABEnabledTable extends BaseMigration
 	 */
 	public function safeUp()
 	{
-		$this->addColumn(
-			'seo_ab_enabled',
-			'locale',
-			ColumnType::Locale
+		$this->createIndex(
+			'seo_ab_data',
+			'elementId,fieldId,locale',
+			true
 		);
 
 		return true;
