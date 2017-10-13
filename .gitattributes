@@ -5,3 +5,4 @@
 /resources export-ignore
 README.md export-ignore
 releases.json export-ignore
+CHANGELOG.md export-ignore
