@@ -1,3 +1,5 @@
-README.md     export-ignore
-releases.json export-ignore
-/resources    export-ignore
+README.md       export-ignore
+releases.json   export-ignore
+/resources      export-ignore
+.gitignore      export-ignore
+.gitattributes  export-ignore
