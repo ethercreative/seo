@@ -494,4 +494,160 @@
 		}
 	}
 
+	// Social
+	// =========================================================================
+
+	&--social {
+		position: relative;
+
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 40px;
+
+		border: 1px solid #C9CCD0;
+		box-shadow: 0 2px 6px 0 rgba(35,36,46,0.08);
+		border-radius: 2px;
+
+		> svg {
+			position: absolute;
+			top: 10px;
+			right: 8px;
+		}
+
+		&.twitter {
+			background-color: #E6ECF0;
+		}
+
+		&.facebook {
+			background-color: #E9EBEE;
+		}
+
+		&-preview {
+			width: 100%;
+			max-width: 504px;
+
+			background-color: #fff;
+			border: 1px solid #E6ECF0;
+			box-shadow: 0 2px 4px 0 rgba(0,0,0,0.10);
+			border-radius: 4px;
+
+			&-image {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				width: 100%;
+				height: 252px;
+
+				background: #fff center no-repeat;
+				background-size: cover;
+
+				&:hover {
+					text-decoration: none;
+				}
+
+				div {
+					max-width: 332px;
+
+					text-align: center;
+				}
+
+				svg {
+					vertical-align: middle;
+				}
+
+				h4 {
+					margin: 16px 0 10px;
+
+
+					color: #BAC2C9;
+					font-size: 24px;
+					font-weight: bold;
+					letter-spacing: 0;
+				}
+
+				p {
+					color: #BAC2C9;
+					font-size: 14px;
+					letter-spacing: 0;
+					line-height: 22px;
+				}
+			}
+
+			&-content {
+				padding: 11px 15px;
+
+				border-top: 1px solid #D5DEE4;
+
+				input,
+				textarea {
+					display: block;
+					width: calc(~"100% - 2px");
+					margin-left: -1px;
+
+					color: #000;
+					font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+					border: none;
+					appearance: none;
+
+					&::-webkit-input-placeholder { color: #000; }
+					&::-moz-placeholder { color: #000; }
+					&:-ms-input-placeholder { color: #000; }
+					&:-moz-placeholder { color: #000; }
+				}
+
+				input {
+					margin-bottom: 2px;
+
+					.twitter & {
+						font-size: 14px;
+						font-weight: bold;
+					}
+
+					.facebook & {
+						color: rgb(29, 33, 41);
+						font-family: Georgia, Lucida Grande, Tahoma, Verdana, Arial, sans-serif;
+						font-size: 18px;
+						letter-spacing: 0;
+					}
+				}
+
+				textarea {
+					font-size: 14px;
+					font-weight: normal;
+					line-height: 1.3em;
+
+					.facebook & {
+						color: rgb(29, 33, 41);
+						font-size: 12px;
+						font-family: system-ui, -apple-system, BlinkMacSystemFont, ".SFNSText-Regular", sans-serif;
+						letter-spacing: 0;
+						line-height: 16px;
+					}
+				}
+
+				span {
+					display: block;
+
+					white-space: nowrap;
+					text-overflow: ellipsis;
+					overflow: hidden;
+
+					.twitter & {
+						color: #8899A6;
+						font-size: 14px;
+					}
+
+					.facebook & {
+						color: rgb(144, 148, 156);
+						font-size: 11px;
+						font-family: system-ui, -apple-system, BlinkMacSystemFont, ".SFNSText-Regular", sans-serif;
+						text-transform: uppercase;
+					}
+				}
+			}
+		}
+	}
+
 }

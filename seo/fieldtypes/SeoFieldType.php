@@ -98,6 +98,18 @@ class SeoFieldType extends BaseFieldType implements IPreviewableFieldType {
 		if ($hasPreview && $isEntry && $value['title'] == null && $isSingle)
 			$titleSuffix = $this->element->title . ' ' . $titleSuffix;
 
+		// Social: Site URL
+		// ---------------------------------------------------------------------
+		preg_match(
+			"((http?s?:\/\/)?(www.)?(.*)\/)",
+			craft()->siteUrl,
+			$socialPreviewUrl
+		);
+		$socialPreviewUrl = $socialPreviewUrl[3];
+
+
+		// Return
+		// =====================================================================
 		return craft()->templates->render('seo/seo/fieldtype', array(
 			'id' => $id,
 			'name' => $name,
@@ -110,6 +122,8 @@ class SeoFieldType extends BaseFieldType implements IPreviewableFieldType {
 			'isNew' => $isNew,
 			'isHome' => $isHome,
 			'isSingle' => $isSingle,
+
+			'socialPreviewUrl' => $socialPreviewUrl,
 		));
 	}
 
