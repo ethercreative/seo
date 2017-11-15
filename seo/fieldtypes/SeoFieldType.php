@@ -25,6 +25,8 @@ class SeoFieldType extends BaseFieldType implements IPreviewableFieldType {
 	{
 		if (empty($this->element)) return '';
 
+		// Variables
+		// ---------------------------------------------------------------------
 		$id = craft()->templates->formatInputId($name);
 		$namespaceId = craft()->templates->namespaceInputId($id);
 
@@ -44,7 +46,10 @@ class SeoFieldType extends BaseFieldType implements IPreviewableFieldType {
 		$isNew = $this->element->getTitle() == null;
 		$isSingle = $section ? $section->type == 'single' : true;
 
-		// Backwards compatibility, keyword -> keywords
+		// Backwards compatibility
+		// ---------------------------------------------------------------------
+
+		// Convert keyword -> keywords
 		if ($value && array_key_exists('keyword', $value)) {
 			if (!empty($value['keyword'])) {
 				$value['keywords'] = [
@@ -64,6 +69,9 @@ class SeoFieldType extends BaseFieldType implements IPreviewableFieldType {
 			// TODO: Rename score to rating
 			$value['score'] = 'neutral';
 		}
+
+		// Meta
+		// ---------------------------------------------------------------------
 
 		// TODO: Handle category entry type
 		// TODO: Add hook for handling of custom element types

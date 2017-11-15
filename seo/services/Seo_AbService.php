@@ -74,31 +74,31 @@ class Seo_AbService extends BaseApplicationComponent {
 	{
 		// If this is an A session (or there aren't any elements)
 		// we don't need to do anything
-		if (($this->getAb() || empty($elements)) && !$force) return;
-
-		$fields = $this->_getFieldsFromLayout($elements[0]->getFieldLayout());
-
-		// Get the ID's of the elements
-		$ids = array_map(function (BaseElementModel $element) {
-			return $element->id;
-		}, $elements);
-
-		// Get the b data
-		$bData = $this->_getBDataForElements($ids);
-
-		// Replace the data
-		foreach ($elements as $element) {
-			if (!array_key_exists($element->id, $bData)) continue;
-
-			foreach ($bData[$element->id] as $fieldId => $data) {
-				/** @var BaseFieldType $type */
-				$field = $fields[$fieldId];
-				$handle = $field['handle'];
-				$type = $field['type'];
-				$type->setElement($element);
-				$element->getContent()->$handle = $data;
-			}
-		}
+//		if (($this->getAb() || empty($elements)) && !$force) return;
+//
+//		$fields = $this->_getFieldsFromLayout($elements[0]->getFieldLayout());
+//
+//		// Get the ID's of the elements
+//		$ids = array_map(function (BaseElementModel $element) {
+//			return $element->id;
+//		}, $elements);
+//
+//		// Get the b data
+//		$bData = $this->_getBDataForElements($ids);
+//
+//		// Replace the data
+//		foreach ($elements as $element) {
+//			if (!array_key_exists($element->id, $bData)) continue;
+//
+//			foreach ($bData[$element->id] as $fieldId => $data) {
+//				/** @var BaseFieldType $type */
+//				$field = $fields[$fieldId];
+//				$handle = $field['handle'];
+//				$type = $field['type'];
+//				$type->setElement($element);
+//				$element->getContent()->$handle = $data;
+//			}
+//		}
 	}
 
 	/**

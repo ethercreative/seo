@@ -141,14 +141,18 @@ class SeoPlugin extends BasePlugin {
 			};
 
 			// Include Meta Markup in head via `{% hook 'seo' %}`
-			craft()->templates->hook('seo', function(&$context) {
+			craft()->templates->hook(
+				'seo',
+				function(&$context) {
 				return craft()->seo->hook($context);
-			});
+			}
+			);
 
 			// Inject A/B
-			craft()->on('elements.onPopulateElements', function (Event $event) {
-				craft()->seo_ab->injectBElement($event->params['elements']);
-			});
+			craft()->on(
+				'elements.onPopulateElements',
+				[$this, 'onPopulateElements']
+			);
 		}
 
 		// CP Requests (not ajax)
@@ -174,13 +178,25 @@ class SeoPlugin extends BasePlugin {
 			}
 
 			// Listen for element save
-			craft()->on('elements.onSaveElement', function (Event $event) {
-				if (craft()->request->getPost("seoAbCapable")) {
-					/** @var BaseElementModel $element */
-					$element = $event->params["element"];
-					craft()->seo_ab->onSaveB($element);
-				}
-			});
+			craft()->on(
+				'elements.onSaveElement',
+				[$this, 'onSaveElement']
+			);
+		}
+	}
+
+	// Events
+	// =========================================================================
+
+	public function onPopulateElements (Event $event) {
+		craft()->seo_ab->injectBElement($event->params['elements']);
+	}
+
+	public function onSaveElement (Event $event) {
+		if (craft()->request->getPost("seoAbCapable")) {
+			/** @var BaseElementModel $element */
+			$element = $event->params["element"];
+			craft()->seo_ab->onSaveB($element);
 		}
 	}
 

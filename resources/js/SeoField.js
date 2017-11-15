@@ -8,9 +8,10 @@
  * @since     2.0.0
  */
 
-import Tabs from './seo/Tabs';
-import FocusKeywords from './seo/FocusKeywords';
-import Snippet from './seo/Snippet';
+import Tabs from "./seo/Tabs";
+import FocusKeywords from "./seo/FocusKeywords";
+import Snippet from "./seo/Snippet";
+import Social from "./seo/Social";
 
 class SeoField {
 	
@@ -45,7 +46,7 @@ class SeoField {
 		
 		new Tabs(namespace);
 		new Snippet(namespace, this);
-		// TODO: Social
+		new Social(namespace, this);
 		
 		if (!this.options.hasPreview) return;
 		// TODO: Disable all preview related functionality

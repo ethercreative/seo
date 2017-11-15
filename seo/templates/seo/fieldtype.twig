@@ -5,7 +5,18 @@
 	</{{ tag }}>
 {% endmacro %}
 
-{% macro social(label, handle, url, icon) %}
+{% macro social(id, name, value, label, handle, url, icon) %}
+	{% set this = {
+		image: "",
+		title: "",
+		description: "",
+	} %}
+	{% if "social" in value|keys %}
+		{% if handle in value.social|keys %}
+			{% set this = value.social[handle] %}
+		{% endif %}
+	{% endif %}
+
 	<div class="seo--label">
 		<div>
 			<em>{{ label }}</em>
@@ -17,8 +28,21 @@
 		{{ icon|raw }}
 
 		<div class="seo--social-preview">
-			<a href="#" class="seo--social-preview-image">
-				<div>
+			<a
+				href="#"
+				class="seo--social-preview-image"
+				data-seo-social-image="{{ id|namespaceInputId }}"
+				style="background-image:url({{
+					this.image
+						? craft.assets.id(this.image).first().url
+				}})"
+			>
+				<input
+					type="hidden"
+					name="{{ name }}[social][{{ handle }}][image]"
+					value="{{ this.image }}"
+				>
+				<div{{ this.image ? (' style="display:none"')|raw }}>
 					<svg width="59px" height="38px" viewBox="0 0 59 38" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 						<g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
 							<g transform="translate(-604.000000, -385.000000)" fill="#BBC2C8" fill-rule="nonzero">
@@ -36,10 +60,13 @@
 				<input
 					type="text"
 					placeholder="This is the title of the page. You can edit it though"
+					name="{{ name }}[social][{{ handle }}][title]"
+					value="{{ this.title }}"
 				>
 				<textarea
 					placeholder="Integer posuere erat a ante venenatis dapibus posuere velit aliquet. Aenean lacinia bibendum nulla sed consectetur. Donec sed odio dui."
-				></textarea>
+					name="{{ name }}[social][{{ handle }}][description]"
+				>{{ this.description }}</textarea>
 				<span>
 					{{ url }}
 				</span>
@@ -69,12 +96,14 @@
 
 			<div class="seo--panel seo--snippet">
 				<div class="seo--snippet-wrap">
-					<input type="text"
-					       class="seo--snippet-title{{ isNew or value is null ? ' clean' : '' }}"
-					       value="{{ value is not null ? value.title : titleSuffix }}"
-					       name="{{ name }}[title]"
-					       id="{{ id }}Title"
-					       placeholder="SEO Title">
+					<input
+						type="text"
+						class="seo--snippet-title{{ isNew or value is null ? ' clean' : '' }}"
+						value="{{ value is not null ? value.title : titleSuffix }}"
+						name="{{ name }}[title]"
+						id="{{ id }}Title"
+						placeholder="SEO Title"
+					>
 
 					<span class="seo--snippet-url">
 						{{ url != '/' ? url : siteUrl }}
@@ -84,11 +113,11 @@
 					</span>
 
 					<textarea
-							class="seo--snippet-description"
-							name="{{ name }}[description]"
-							rows="2"
-							id="{{ id }}Description"
-							placeholder="Click to add a description!"
+						class="seo--snippet-description"
+						name="{{ name }}[description]"
+						rows="2"
+						id="{{ id }}Description"
+						placeholder="Click to add a description!"
 					>{{ value is not null ? value.description : '' }}</textarea>
 				</div>
 
@@ -111,11 +140,18 @@
 			</div>
 
 			{# Keyword Input #}
-			<input type="hidden" id="{{ id }}Keywords"
-			       name="{{ name }}[keywords]"
-			       value="{{ value is not null ? value.keywords : "" }}">
-			<input type="hidden" id="{{ id }}Score" name="{{ name }}[score]"
-			       value="{{ value is not null ? value.score : "neutral" }}">
+			<input
+				type="hidden"
+				id="{{ id }}Keywords"
+				name="{{ name }}[keywords]"
+				value="{{ value is not null ? value.keywords : "" }}"
+			>
+			<input
+				type="hidden"
+				id="{{ id }}Score"
+				name="{{ name }}[score]"
+				value="{{ value is not null ? value.score : "neutral" }}"
+			>
 			<div class="seo--keywords-input" id="{{ id }}KeywordsInput">
 				{# Keywords populated by magic #}
 
@@ -179,7 +215,7 @@
 					</g>
 				</svg>
 			{% endset %}
-			{{ _.social("Twitter", "twitter", socialPreviewUrl, twitterIcon) }}
+			{{ _.social(id, name, value, "Twitter", "twitter", socialPreviewUrl, twitterIcon) }}
 
 			{# Facebook #}
 			{% set facebookIcon %}
@@ -194,7 +230,7 @@
 					</g>
 				</svg>
 			{% endset %}
-			{{ _.social("Facebook", "facebook", socialPreviewUrl, facebookIcon) }}
+			{{ _.social(id, name, value, "Facebook", "facebook", socialPreviewUrl, facebookIcon) }}
 		</div>
 	</div>
 </div>
