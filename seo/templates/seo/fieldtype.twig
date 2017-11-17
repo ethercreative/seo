@@ -6,16 +6,7 @@
 {% endmacro %}
 
 {% macro social(id, name, value, label, handle, url, icon) %}
-	{% set this = {
-		image: "",
-		title: "",
-		description: "",
-	} %}
-	{% if "social" in value|keys %}
-		{% if handle in value.social|keys %}
-			{% set this = value.social[handle] %}
-		{% endif %}
-	{% endif %}
+	{% set this = value.social[handle] %}
 
 	<div class="seo--label">
 		<div>
@@ -30,19 +21,16 @@
 		<div class="seo--social-preview">
 			<a
 				href="#"
-				class="seo--social-preview-image"
+				class="seo--social-preview-image{{ this.image ? ' has-image' }}"
 				data-seo-social-image="{{ id|namespaceInputId }}"
-				style="background-image:url({{
-					this.image
-						? craft.assets.id(this.image).first().url
-				}})"
+				style="background-image:url({{ this.image ? this.image.url }})"
 			>
 				<input
 					type="hidden"
 					name="{{ name }}[social][{{ handle }}][image]"
-					value="{{ this.image }}"
+					value="{{ this.image ? this.image.id }}"
 				>
-				<div{{ this.image ? (' style="display:none"')|raw }}>
+				<div class="upload-prompt">
 					<svg width="59px" height="38px" viewBox="0 0 59 38" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 						<g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
 							<g transform="translate(-604.000000, -385.000000)" fill="#BBC2C8" fill-rule="nonzero">
@@ -51,10 +39,11 @@
 						</g>
 					</svg>
 					<h4>Select an Image</h4>
-					<p>Drag and drop, or click to select from you Assets. If
-					   you don’t select an image, the preview may be
-					   different. <object><a href="#">Show me</a></object></p>
+					<p>If you don't select an image, the default (specified in
+					   the SEO settings) will be used if available.</p>
 				</div>
+
+				<span class="remove">Remove Image</span>
 			</a>
 			<div class="seo--social-preview-content">
 				<input
@@ -66,6 +55,7 @@
 				<textarea
 					placeholder="Integer posuere erat a ante venenatis dapibus posuere velit aliquet. Aenean lacinia bibendum nulla sed consectetur. Donec sed odio dui."
 					name="{{ name }}[social][{{ handle }}][description]"
+					data-seo-social-desc="{{ id|namespaceInputId }}"
 				>{{ this.description }}</textarea>
 				<span>
 					{{ url }}

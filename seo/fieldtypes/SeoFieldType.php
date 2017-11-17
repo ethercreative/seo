@@ -4,6 +4,17 @@ namespace Craft;
 
 class SeoFieldType extends BaseFieldType implements IPreviewableFieldType {
 
+	// Variables
+	// =========================================================================
+
+	public static $socialDefaults = [
+		'twitter' => ['title' => '', 'image' => null, 'description' => ''],
+		'facebook' => ['title' => '', 'image' => null, 'description' => ''],
+	];
+
+	// Methods
+	// =========================================================================
+
 	public function getName()
 	{
 		return Craft::t('SEO');
@@ -165,6 +176,25 @@ class SeoFieldType extends BaseFieldType implements IPreviewableFieldType {
 		}
 
 		return $ret;
+	}
+
+	public function prepValue ($value)
+	{
+		if (array_key_exists('social', $value)) {
+			$social = array_merge(self::$socialDefaults, $value['social']);
+			foreach ($social as $k => $s) {
+				if ($s['image'] !== '') {
+					$s['image'] = craft()->assets->getFileById($s['image']);
+				}
+
+				$social[$k] = $s;
+			}
+			$value['social'] = $social;
+		} else {
+			$value['social'] = self::$socialDefaults;
+		}
+
+		return $value;
 	}
 
 	// Helpers

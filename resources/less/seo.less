@@ -220,6 +220,7 @@
 		&-description {
 			display: block;
 			width: 100%;
+			//height: 3em;
 
 			color: #545454;
 			font-family: Arial, sans-serif;
@@ -533,6 +534,8 @@
 			border-radius: 4px;
 
 			&-image {
+				position: relative;
+
 				display: flex;
 				align-items: center;
 				justify-content: center;
@@ -572,6 +575,34 @@
 					font-size: 14px;
 					letter-spacing: 0;
 					line-height: 22px;
+				}
+
+				.remove {
+					position: absolute;
+					top: 10px;
+					right: 10px;
+
+					display: none;
+					padding: 3px 10px;
+
+					color: #fff;
+					font-size: 8px;
+					letter-spacing: 1px;
+					text-transform: uppercase;
+
+					background-color: rgba(0,0,0,0.5);
+					border-radius: 3px;
+
+					transition: background-color 0.15s ease;
+
+					&:hover {
+						background-color: #000;
+					}
+				}
+
+				&.has-image {
+					.upload-prompt { display: none }
+					.remove { display: inline-block }
 				}
 			}
 

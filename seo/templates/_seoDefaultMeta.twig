@@ -6,18 +6,28 @@
 		{% set seo = craft.seo.custom(siteName, '', false) %}
 	{% endif %}
 
+	{% set social = craft.seo.social(seo) %}
+	{% set locale = craft.i18n.getCurrentLocale() %}
+
 	<title>{{ seo.title }}</title>
 	<meta name="description" content="{{ seo.description }}" />
 
-	<meta property="og:title" content="{{ seo.title }}" />
+	{% set fb = social.facebook -%}
 	<meta property="og:url" content="{{ craft.request.url }}" />
+	<meta property="og:type" content="website" />
+	<meta property="og:title" content="{{ fb.title }}" />
+	<meta property="og:image" content="{{ craft.seo.facebookImage(fb.image) }}" />
+	<meta property="og:description" content="{{ fb.description }}" />
 	<meta property="og:site_name" content="{{ siteName }}" />
-	<meta property="og:description" content="{{ seo.description }}" />
+	<meta property="og:locale" content="{{ locale }}" />
 
-	<meta property="twitter:site" content="{# Your Twitter Handle (no @) #}" />
-	<meta property="twitter:title" content="{{ seo.title }}" />
-	<meta property="twitter:description" content="{{ seo.description }}" />
-	<meta property="twitter:url" content="{{ craft.request.url }}" />
+	{% set tw = social.twitter -%}
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:site" content="{# Your Twitter Handle  #}" />
+	<meta name="twitter:url" content="{{ craft.request.url }}" />
+	<meta name="twitter:title" content="{{ tw.title }}" />
+	<meta name="twitter:description" content="{{ tw.description }}" />
+	<meta name="twitter:image" content="{{ craft.seo.twitterImage(tw.image) }}" />
 
 	<link rel="home" href="{{ siteUrl }}" />
 	<link rel="canonical" href="{{ craft.request.url }}">

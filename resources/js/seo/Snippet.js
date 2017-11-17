@@ -161,8 +161,10 @@ export default class Snippet {
 		// On window resize
 		window.addEventListener("resize", adjustHeight);
 		
-		// Set initial height
-		adjustHeight();
+		// Set initial height (extra delay to fix FF bug)
+		setTimeout(() => {
+			adjustHeight();
+		}, 15);
 	}
 	
 }
