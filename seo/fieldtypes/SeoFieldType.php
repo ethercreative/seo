@@ -2,6 +2,8 @@
 
 namespace Craft;
 
+// TODO: Tidy
+
 class SeoFieldType extends BaseFieldType implements IPreviewableFieldType {
 
 	// Variables

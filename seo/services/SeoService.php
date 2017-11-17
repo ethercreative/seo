@@ -55,7 +55,7 @@ class SeoService extends BaseApplicationComponent
 			$oldTemplateMode = craft()->templates->getTemplateMode();
 			craft()->templates->setTemplateMode(TemplateMode::CP);
 			$rendered = craft()->templates->render(
-				'seo/_seoDefaultMeta',
+				'seo/seo/_meta',
 				$context
 			);
 			craft()->templates->setTemplateMode($oldTemplateMode);
