@@ -12,6 +12,7 @@ import Tabs from "./field/Tabs";
 import FocusKeywords from "./field/FocusKeywords";
 import Snippet from "./field/Snippet";
 import Social from "./field/Social";
+import Readability from "./field/Readability";
 
 class SeoField {
 	
@@ -52,6 +53,7 @@ class SeoField {
 		// TODO: Disable all preview related functionality
 		
 		new FocusKeywords(namespace, this);
+		new Readability(namespace);
 	}
 	
 }
