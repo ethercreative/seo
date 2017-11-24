@@ -274,7 +274,7 @@ export default class Redirects {
 		});
 		
 		const xhr = new XMLHttpRequest();
-		xhr.open('POST', "/", true);
+		xhr.open('POST', window.location.href, true);
 		xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
 		
 		xhr.onload = function() {
