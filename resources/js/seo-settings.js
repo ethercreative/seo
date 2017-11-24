@@ -1,4 +1,4 @@
-import Redirects from "./Redirects";
+import Redirects from "./settings/Redirects";
 
 const SeoSettings = function (namespace, run, csrf) {
 	this.namespace = namespace;

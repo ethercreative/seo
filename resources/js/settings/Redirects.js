@@ -8,7 +8,7 @@
  * @package   SEO
  * @since     1.5.0
  */
-import { c } from "./helpers";
+import { c } from "../helpers";
 
 const REDIRECT_TYPES = {
 	"301": "301 (Permanent)",
