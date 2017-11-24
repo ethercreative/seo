@@ -381,25 +381,32 @@ class Seo_SitemapService extends BaseApplicationComponent
 
 			if (is_array($item->locales) && count($item->locales) > 1) {
 				foreach ($item->locales as $locale => $settings) {
-					$locale = $type == ElementType::Category || $type == 'Commerce_Product' ? $settings : $locale;
+					$locale =
+						$type == ElementType::Category || $type == 'Commerce_Product'
+							? $settings
+							: $locale;
 
 					if ($locale !== craft()->language) {
-						$alt = $this->_document->createElement('xhtml:link');
-						$alt->setAttribute('rel', 'alternate');
-						$alt->setAttribute(
-							'hreflang',
-							str_replace('_', '-', $locale)
-						);
-						$alt->setAttribute(
-							'href',
-							UrlHelper::getSiteUrl(
-								($item->uri == '__home__') ? '' : $item->uri,
-								null,
-								null,
-								$locale
-							)
-						);
-						$url->appendChild($alt);
+						$localeElementCriteria =
+							craft()->elements->getCriteria($item->elementType);
+						$localeElementCriteria->id = $item->id;
+						$localeElementCriteria->locale = $locale;
+
+						$localeElement = $localeElementCriteria->first();
+
+						if (!empty($localeElement)) {
+							$alt = $this->_document->createElement("xhtml:link");
+							$alt->setAttribute("rel", "alternate");
+							$alt->setAttribute(
+								"hreflang",
+								str_replace('_', '-', $locale)
+							);
+							$alt->setAttribute(
+								"href",
+								$localeElementCriteria->first()->url
+							);
+							$url->appendChild($alt);
+						}
 					}
 				}
 			}
