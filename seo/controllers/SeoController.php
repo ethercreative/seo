@@ -37,7 +37,12 @@ class SeoController extends BaseController
 	{
 		$this->requirePostRequest();
 
-		if (craft()->seo->saveData(craft()->request->getRequiredPost('name'), craft()->request->getRequiredPost('data'))) {
+		if (
+			craft()->seo->saveData(
+				craft()->request->getRequiredPost('name'),
+				craft()->request->getRequiredPost('data')
+			)
+		) {
 			craft()->userSession->setNotice(Craft::t('Updated.'));
 		} else {
 			craft()->userSession->setError(Craft::t('Couldn’t update.'));
@@ -94,10 +99,12 @@ class SeoController extends BaseController
 		$namespace = 'data';
 
 		craft()->templates->includeCssResource('seo/css/redirects.css');
-		craft()->templates->includeJsResource('seo/js/seo-settings.min.js');
+		craft()->templates->includeJsResource('seo/js/SeoSettings.min.js');
 		$csrf = craft()->request->getCsrfToken();
 		$csrfn = craft()->request->csrfTokenName;
-		craft()->templates->includeJs("new SeoSettings('{$namespace}', 'redirects', ['{$csrfn}', '{$csrf}']);");
+		craft()->templates->includeJs(
+			"new SeoSettings('{$namespace}', 'redirects', ['{$csrfn}', '{$csrf}']);"
+		);
 
 		$this->renderTemplate('seo/redirects', array(
 			// Global
@@ -121,8 +128,10 @@ class SeoController extends BaseController
 
 		$settings = craft()->seo->settings();
 
-		craft()->templates->includeJsResource('seo/js/seo-settings.min.js');
-		craft()->templates->includeJs("new SeoSettings('{$namespace}', 'settings', [Craft.csrfTokenName, Craft.csrfTokenValue]);");
+		craft()->templates->includeJsResource('seo/js/SeoSettings.min.js');
+		craft()->templates->includeJs(
+			"new SeoSettings('{$namespace}', 'settings', [Craft.csrfTokenName, Craft.csrfTokenValue]);"
+		);
 
 		$this->renderTemplate('seo/settings', array(
 			// Global
