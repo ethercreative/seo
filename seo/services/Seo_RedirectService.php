@@ -45,6 +45,7 @@ class Seo_RedirectService extends BaseApplicationComponent
 	{
 		$redirects = $this->getAllRedirects();
 
+		// Loop over available redirects
 		foreach ($redirects as $redirect)
 		{
 			$to = false;
@@ -55,7 +56,7 @@ class Seo_RedirectService extends BaseApplicationComponent
 			}
 			elseif ($uri = $this->_isRedirectRegex($redirect['uri']))
 			{
-				if(preg_match($uri, $path)){
+				if (preg_match($uri, $path)) {
 					$to = preg_replace($uri, $redirect['to'], $path);
 				}
 			}
@@ -63,8 +64,10 @@ class Seo_RedirectService extends BaseApplicationComponent
 			if ($to)
 			{
 				return [
-					'to' => strpos($to, '://') !== false ? $to : UrlHelper::getSiteUrl($to),
-					'type' => $redirect['type']
+					'to' => strpos($to, '://') !== false
+						? $to
+						: UrlHelper::getSiteUrl($to),
+					'type' => $redirect['type'],
 				];
 			}
 		}
@@ -222,6 +225,21 @@ class Seo_RedirectService extends BaseApplicationComponent
 
 	private function _isRedirectRegex ($uri)
 	{
+		// Escape all non-escaped ? not inside parentheses
+		$i = preg_match_all(
+			'/(?<!\\\\)\?(?![^(]*\))/',
+			$uri,
+			$matches,
+			PREG_OFFSET_CAPTURE
+		);
+
+		while ($i--)
+		{
+			$x = $matches[0][$i][1];
+			$uri = substr_replace($uri, '\?', $x, 1);
+		}
+
+		// Check if contains a regex
 		if (preg_match('/^#(.+)#$/', $uri))
 		{
 			return $uri;

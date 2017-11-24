@@ -108,7 +108,7 @@ class SeoController extends BaseController
 				['label' => 'SEO', 'url' => 'index'],
 			],
 
-			// Redirecs
+			// Redirects
 			'redirects' => craft()->seo_redirect->getAllRedirects(),
 		));
 	}

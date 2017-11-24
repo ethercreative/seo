@@ -20,6 +20,8 @@ const SeoSettings = function (namespace, run, csrf) {
 	}
 };
 
+window.SeoSettings = SeoSettings;
+
 // Sitemap
 // =============================================================================
 SeoSettings.prototype.sitemapName = function () {
