@@ -8,10 +8,10 @@
  * @since     2.0.0
  */
 
-import Tabs from "./seo/Tabs";
-import FocusKeywords from "./seo/FocusKeywords";
-import Snippet from "./seo/Snippet";
-import Social from "./seo/Social";
+import Tabs from "./field/Tabs";
+import FocusKeywords from "./field/FocusKeywords";
+import Snippet from "./field/Snippet";
+import Social from "./field/Social";
 
 class SeoField {
 	

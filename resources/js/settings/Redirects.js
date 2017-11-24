@@ -6,7 +6,7 @@
  * @copyright Ether Creative 2017
  * @link      https://ethercreative.co.uk
  * @package   SEO
- * @since     1.5.0
+ * @since     2.0.0
  */
 import { c } from "../helpers";
 
