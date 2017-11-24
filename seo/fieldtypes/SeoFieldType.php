@@ -182,6 +182,9 @@ class SeoFieldType extends BaseFieldType implements IPreviewableFieldType {
 
 	public function prepValue ($value)
 	{
+		if (empty($value))
+			return null;
+
 		if (array_key_exists('social', $value)) {
 			$social = array_merge(self::$socialDefaults, $value['social']);
 			foreach ($social as $k => $s) {

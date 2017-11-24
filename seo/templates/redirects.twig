@@ -57,66 +57,6 @@
 				URI: <code>blog/([0-9]{4})/(.*)</code> To: <code>news/$2</code>
 			</div>
 		</div>
-
-		{#<br>
-
-		<div class="input">
-			<input type="hidden" name="redirects" id="redirects-field">
-
-			<table class="shadow-box editable" id="redirects">
-				<thead>
-					<tr>
-						<th class="header">URI</th>
-						<th class="header">To</th>
-						<th class="header">Type</th>
-						<th class="header"></th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr class="hidden" data-id="-1">
-						<td class="textual">
-							<textarea rows="1" style="height:46px" data-name="redirects-uri"></textarea>
-						</td>
-						<td class="textual">
-							<textarea rows="1" style="height:46px" data-name="redirects-to"></textarea>
-						</td>
-						<td class="thin">
-							{{ ui.selectField({
-								name: 'redirects-type',
-								options: redirectType,
-								value: '301'
-							}) }}
-						</td>
-						<td class="thin action">
-							<a class="delete icon" title="Delete"></a>
-						</td>
-					</tr>
-
-				{% for redirect in redirects %}
-					<tr data-id="{{ redirect.id }}">
-						<td class="textual">
-							<textarea rows="1" style="height:46px" data-name="redirects-uri">{{ redirect.uri }}</textarea>
-						</td>
-						<td class="textual">
-							<textarea rows="1" style="height:46px" data-name="redirects-to">{{ redirect.to }}</textarea>
-						</td>
-						<td class="thin">
-							{{ ui.selectField({
-								name: 'redirects-type',
-								options: redirectType,
-								value: redirect.type|default('301')
-							}) }}
-						</td>
-						<td class="thin action">
-							<a class="delete icon" title="Delete"></a>
-						</td>
-					</tr>
-				{% endfor %}
-				</tbody>
-			</table>
-
-			<div class="btn add icon" tabindex="0" id="addRedirect">Add a Redirect</div>
-		</div>#}
 	</div>
 
 	<div class="elementindex">
@@ -191,8 +131,10 @@
 				required: true
 			}) }}
 		</div>
-		<div class="btngroup">
-			<input type="submit" class="btn submit" value="Add Redirect">
+		<div>
+			<div class="btngroup">
+				<input type="submit" class="btn submit" value="Add Redirect">
+			</div>
 			<div class="spinner hidden"></div>
 		</div>
 	</form>
@@ -229,8 +171,10 @@
 			</label>
 		</div>
 
-		<div class="btngroup">
-			<input type="submit" class="btn submit" value="Add Redirects">
+		<div>
+			<div class="btngroup">
+				<input type="submit" class="btn submit" value="Add Redirects">
+			</div>
 			<div class="spinner hidden"></div>
 		</div>
 	</form>

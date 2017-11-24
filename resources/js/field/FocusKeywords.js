@@ -151,6 +151,9 @@ export default class FocusKeywords {
 			
 			// Re-calculate
 			this.recalculateKeyword();
+		} else {
+			// Otherwise, clear the keywords readout
+			this.keywordsChecklist.clear(this.onEmptyRating);
 		}
 	}
 	
@@ -207,11 +210,9 @@ export default class FocusKeywords {
 		
 		// Set the score field to the most prevalent rating
 		this.scoreField.value =
-			Object.keys(ratingOccurrence)
-			      .reduce(
-				      (a, b) =>
-					      ratingOccurrence[a] > ratingOccurrence[b] ? a : b
-			      );
+			Object.keys(ratingOccurrence).reduce(
+				(a, b) => ratingOccurrence[a] > ratingOccurrence[b] ? a : b
+			);
 	};
 	
 	/**
@@ -244,6 +245,23 @@ export default class FocusKeywords {
 		
 		// Fire the keywords change callback
 		this.onKeywordsChange();
+	};
+	
+	/**
+	 * Fired when the keyword checklist is cleared
+	 */
+	onEmptyRating = () => {
+		// Clear the keyword details keyword
+		this.keywordElem.innerHTML = "<em>No keyword selected</em>";
+		
+		// Set keyword details rating to neutral
+		while (this.ratingElem.firstChild)
+			this.ratingElem.removeChild(this.ratingElem.firstChild);
+		
+		this.ratingElem.appendChild(createRating("neutral"));
+		this.ratingElem.appendChild(
+			document.createTextNode(SEO_RATING_LABEL["neutral"])
+		);
 	};
 	
 	// Events: Keywords

@@ -133,22 +133,30 @@ class SeoController extends BaseController
 			"new SeoSettings('{$namespace}', 'settings', [Craft.csrfTokenName, Craft.csrfTokenValue]);"
 		);
 
-		$this->renderTemplate('seo/settings', array(
+		$this->renderTemplate('seo/settings', [
 			// Global
-			'namespace' => $namespace,
-			'settings' => $settings,
-			'subnav' => $this->subNav,
+			'namespace'          => $namespace,
+			'settings'           => $settings,
+			'subnav'             => $this->subNav,
 			'selectedSubnavItem' => 'settings',
 
 			// Misc
 			'tabs' => [
-				['label' => 'Fieldtype', 'url' => "#{$namespace}-tab1", 'class' => null],
-				['label' => 'Sitemap', 'url' => "#{$namespace}-tab2", 'class' => null],
+				[
+					'label' => 'Fieldtype',
+					'url'   => "#{$namespace}-tab1",
+					'class' => null,
+				],
+				[
+					'label' => 'Sitemap',
+					'url'   => "#{$namespace}-tab2",
+					'class' => null,
+				],
 			],
 			'crumbs' => [
 				['label' => 'SEO', 'url' => 'index'],
 			],
-		));
+		]);
 	}
 
 	public function actionAB ()

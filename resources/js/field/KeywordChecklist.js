@@ -117,6 +117,30 @@ export default class KeywordChecklist {
 	}
 	
 	/**
+	 * Clears the checklist
+	 */
+	clear (onEmptyRating) {
+		// Clear bar
+		let i = this.bar.children.length;
+		while (i--) {
+			const fill = this.bar.children[i];
+			fill.style.transform = "";
+		}
+		
+		// Clear checklist
+		while (this.checklist.firstElementChild)
+			this.checklist.removeChild(this.checklist.firstElementChild);
+		
+		const empty = document.createElement("li");
+		empty.style.textAlign = "center";
+		empty.textContent = "No keyword selected";
+		
+		this.checklist.appendChild(empty);
+		
+		onEmptyRating();
+	}
+	
+	/**
 	 * Renders the checklist & bar
 	 */
 	renderChecklist () {
