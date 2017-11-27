@@ -11,12 +11,10 @@
 		"ignore": false,
 		"input": [
 			"js/SeoField.js",
-			"js/SeoAB.js",
 			"js/SeoSettings.js"
 		],
 		"output": [
 			"../seo/resources/js/SeoField.min.js",
-			"../seo/resources/js/SeoAB.min.js",
 			"../seo/resources/js/SeoSettings.min.js"
 		],
 		"watch": [
