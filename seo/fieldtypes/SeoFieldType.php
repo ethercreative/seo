@@ -23,6 +23,9 @@ class SeoFieldType extends BaseFieldType implements IPreviewableFieldType {
 	// Methods
 	// =========================================================================
 
+	// Methods: Meta
+	// -------------------------------------------------------------------------
+
 	public function getName()
 	{
 		return Craft::t('SEO');
@@ -33,12 +36,55 @@ class SeoFieldType extends BaseFieldType implements IPreviewableFieldType {
 		return AttributeType::Mixed;
 	}
 
+	// Methods: Settings
+	// -------------------------------------------------------------------------
+
 	protected function defineSettings()
 	{
 		return array(
-			'titleSuffix' => array(AttributeType::String)
+			'titleSuffix' => [AttributeType::String],
+			'socialImage' => [AttributeType::Number],
 		);
 	}
+
+	public static function getSettingsVariables ()
+	{
+		$assetSources = craft()->assetSources->getAllSources();
+
+		$assetElementType = new ElementTypeVariable(
+			craft()->elements->getElementType(ElementType::Asset)
+		);
+
+		$assetCriteria = craft()->elements->getCriteria(
+			ElementType::Asset
+		);
+
+		return compact(
+			'assetSources',
+			'assetCriteria',
+			'assetElementType'
+		);
+	}
+
+	public function getSettingsHtml ()
+	{
+		craft()->templates->includeJsResource('seo/js/SeoSettings.min.js');
+
+		return craft()->templates->render(
+			'seo/seo/_settings',
+			array_merge(
+				[
+					'settings'       => $this->getSettings(),
+					'globalSettings' =>
+						craft()->plugins->getPlugin('seo')->getSettings(),
+				],
+				self::getSettingsVariables()
+			)
+		);
+	}
+
+	// Methods: Input / Value
+	// -------------------------------------------------------------------------
 
 	public function getInputHtml($name, $value)
 	{
@@ -151,16 +197,6 @@ class SeoFieldType extends BaseFieldType implements IPreviewableFieldType {
 			'isSingle' => $isSingle,
 
 			'socialPreviewUrl' => $socialPreviewUrl,
-		));
-	}
-
-	public function getSettingsHtml()
-	{
-		craft()->templates->includeJsResource('seo/js/seo-settings.min.js');
-
-		return craft()->templates->render('seo/seo/_settings', array(
-			'settings' => $this->getSettings(),
-			'globalSettings' => craft()->plugins->getPlugin('seo')->getSettings()
 		));
 	}
 

@@ -133,30 +133,35 @@ class SeoController extends BaseController
 			"new SeoSettings('{$namespace}', 'settings', [Craft.csrfTokenName, Craft.csrfTokenValue]);"
 		);
 
-		$this->renderTemplate('seo/settings', [
-			// Global
-			'namespace'          => $namespace,
-			'settings'           => $settings,
-			'subnav'             => $this->subNav,
-			'selectedSubnavItem' => 'settings',
+		$this->renderTemplate('seo/settings', array_merge(
+			[
+				// Global
+				'namespace'          => $namespace,
+				'settings'           => $settings,
+				'subnav'             => $this->subNav,
+				'selectedSubnavItem' => 'settings',
 
-			// Misc
-			'tabs' => [
-				[
-					'label' => 'Fieldtype',
-					'url'   => "#{$namespace}-tab1",
-					'class' => null,
+				// Misc
+				'tabs' => [
+					[
+						'label' => 'Fieldtype',
+						'url'   => "#{$namespace}-tab1",
+						'class' => null,
+					],
+					[
+						'label' => 'Sitemap',
+						'url'   => "#{$namespace}-tab2",
+						'class' => null,
+					],
 				],
-				[
-					'label' => 'Sitemap',
-					'url'   => "#{$namespace}-tab2",
-					'class' => null,
+				'crumbs' => [
+					['label' => 'SEO', 'url' => 'index'],
 				],
 			],
-			'crumbs' => [
-				['label' => 'SEO', 'url' => 'index'],
-			],
-		]);
+
+			// FIXME: This class doesn't exist when it's needed for some reason
+			SeoFieldType::getSettingsVariables()
+		));
 	}
 
 }
