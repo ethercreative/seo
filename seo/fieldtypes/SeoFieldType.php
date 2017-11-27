@@ -9,9 +9,15 @@ class SeoFieldType extends BaseFieldType implements IPreviewableFieldType {
 	// Variables
 	// =========================================================================
 
-	public static $socialDefaults = [
-		'twitter' => ['title' => '', 'image' => null, 'description' => ''],
-		'facebook' => ['title' => '', 'image' => null, 'description' => ''],
+	public static $defaultValue = [
+		'title'       => '',
+		'description' => '',
+		'keywords'    => '',
+		'score'       => 'neutral',
+		'social'      => [
+			'twitter'  => ['title' => '', 'image' => null, 'description' => ''],
+			'facebook' => ['title' => '', 'image' => null, 'description' => ''],
+		],
 	];
 
 	// Methods
@@ -183,10 +189,12 @@ class SeoFieldType extends BaseFieldType implements IPreviewableFieldType {
 	public function prepValue ($value)
 	{
 		if (empty($value))
-			return null;
+			return self::$defaultValue;
+
+		$socialDefaults = self::$defaultValue['social'];
 
 		if (array_key_exists('social', $value)) {
-			$social = array_merge(self::$socialDefaults, $value['social']);
+			$social = array_merge($socialDefaults, $value['social']);
 			foreach ($social as $k => $s) {
 				if ($s['image'] !== '') {
 					$s['image'] = craft()->assets->getFileById($s['image']);
@@ -196,7 +204,7 @@ class SeoFieldType extends BaseFieldType implements IPreviewableFieldType {
 			}
 			$value['social'] = $social;
 		} else {
-			$value['social'] = self::$socialDefaults;
+			$value['social'] = $socialDefaults;
 		}
 
 		return $value;

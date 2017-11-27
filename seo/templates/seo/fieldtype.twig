@@ -89,8 +89,8 @@
 				<div class="seo--snippet-wrap">
 					<input
 						type="text"
-						class="seo--snippet-title{{ isNew or value is null ? ' clean' : '' }}"
-						value="{{ value is not null ? value.title : titleSuffix }}"
+						class="seo--snippet-title{{ isNew ? ' clean' }}"
+						value="{{ value.title ?: titleSuffix }}"
 						name="{{ name }}[title]"
 						id="{{ id }}Title"
 						placeholder="SEO Title"
@@ -109,7 +109,7 @@
 						rows="2"
 						id="{{ id }}Description"
 						placeholder="Click to add a description!"
-					>{{ value is not null ? value.description : '' }}</textarea>
+					>{{ value.description }}</textarea>
 				</div>
 
 				<label class="seo--snippet-edit" for="{{ id }}Title">
@@ -123,75 +123,77 @@
 					<em>{{ "Focus Keywords"|t }}</em>
 					{{ "Add relevant key words and phrases to review the SEO page score"|t }}
 				</div>
-				<div id="{{ id }}Suggested">
+				{#<div id="{{ id }}Suggested">
 					<small>{{ "Suggested keywords"|t }}</small>
 					<a href="#">TODO</a>
 					<a href="#">Digital Agency Kent</a>
-				</div>
+				</div>#}
 			</div>
 
-			{# Keyword Input #}
-			<input
-				type="hidden"
-				id="{{ id }}Keywords"
-				name="{{ name }}[keywords]"
-				value="{{ value is not null ? value.keywords : "" }}"
-			>
-			<input
-				type="hidden"
-				id="{{ id }}Score"
-				name="{{ name }}[score]"
-				value="{{ value is not null ? value.score : "neutral" }}"
-			>
-			<div class="seo--keywords-input" id="{{ id }}KeywordsInput">
-				{# Keywords populated by magic #}
+			<div class="seo--preview-dependent">
+				{# Keyword Input #}
+				<input
+					type="hidden"
+					id="{{ id }}Keywords"
+					name="{{ name }}[keywords]"
+					value="{{ value.keywords }}"
+				>
+				<input
+					type="hidden"
+					id="{{ id }}Score"
+					name="{{ name }}[score]"
+					value="{{ value.score }}"
+				>
+				<div class="seo--keywords-input" id="{{ id }}KeywordsInput">
+					{# Keywords populated by magic #}
 
-				{% if isPro %}
-					<input placeholder="Type a keyword then hit enter to add...">
-				{% else %}
-					{# Only show if we've already got a keyword #}
-					<input placeholder="Go pro to add more keywords!" disabled>
-				{% endif %}
-			</div>
-
-			{# Keyword Details #}
-			<div class="seo--panel">
-
-				{# Keyword Details: Name #}
-				<header class="seo--keywords-details-header">
-					<h2 class="seo--keywords-details-keyword"
-					    id="{{ id }}Keyword">
-						<em>No Keyword Selected</em>
-					</h2>
-
-					<div class="seo--keywords-details-rating"
-					     id="{{ id }}Rating">
-						{{ _.rating("neutral") }}
-						Not yet rated
-					</div>
-				</header>
-
-				{# Keyword Details: Checklist #}
-				<div class="seo--label">
-					<div>
-						<em>{{ "Opitmisation Checklist"|t }}</em>
-						{{ "Use this handy chart to optimise your page for the desired keywords"|t }}
-					</div>
+					{% if isPro %}
+						<input placeholder="Type a keyword then hit enter to add...">
+					{% else %}
+						{# Only show if we've already got a keyword #}
+						<input placeholder="Go pro to add more keywords!" disabled>
+					{% endif %}
 				</div>
 
-				<div class="seo--keywords-details-bar"
-				     id="{{ id }}KeywordBar">
-					<div class="good"></div>
-					<div class="average"></div>
-					<div class="poor"></div>
-				</div>
+				{# Keyword Details #}
+				<div class="seo--panel">
 
-				<ul class="seo--keywords-details-checklist"
-				    id="{{ id }}KeywordChecklist">
-					<li style="text-align:center">
-						No keyword selected
-					</li>
-				</ul>
+					{# Keyword Details: Name #}
+					<header class="seo--keywords-details-header">
+						<h2 class="seo--keywords-details-keyword"
+						    id="{{ id }}Keyword">
+							<em>No Keyword Selected</em>
+						</h2>
+
+						<div class="seo--keywords-details-rating"
+						     id="{{ id }}Rating">
+							{{ _.rating("neutral") }}
+							Not yet rated
+						</div>
+					</header>
+
+					{# Keyword Details: Checklist #}
+					<div class="seo--label">
+						<div>
+							<em>{{ "Opitmisation Checklist"|t }}</em>
+							{{ "Use this handy chart to optimise your page for the desired keywords"|t }}
+						</div>
+					</div>
+
+					<div class="seo--keywords-details-bar"
+					     id="{{ id }}KeywordBar">
+						<div class="good"></div>
+						<div class="average"></div>
+						<div class="poor"></div>
+					</div>
+
+					<ul class="seo--keywords-details-checklist"
+					    id="{{ id }}KeywordChecklist">
+						<li style="text-align:center">
+							No keyword selected
+						</li>
+					</ul>
+				</div>
 			</div>
 		</div>
 
