@@ -159,11 +159,4 @@ class SeoController extends BaseController
 		]);
 	}
 
-	public function actionAB ()
-	{
-		$this->renderTemplate('seo/ab', [
-			'fieldLayout' => craft()->fields->getLayoutById(15),
-		]);
-	}
-
 }

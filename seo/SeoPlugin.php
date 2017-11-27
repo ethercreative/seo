@@ -73,7 +73,6 @@ class SeoPlugin extends BasePlugin {
 			'seo/sitemap' => ['action' => 'seo/sitemapPage'],
 			'seo/redirects' => ['action' => 'seo/redirectsPage'],
 			'seo/settings' => ['action' => 'seo/settings'],
-			'seo/ab' => ['action' => 'seo/ab']
 		];
 	}
 
@@ -147,56 +146,6 @@ class SeoPlugin extends BasePlugin {
 				return craft()->seo->hook($context);
 			}
 			);
-
-			// Inject A/B
-			craft()->on(
-				'elements.onPopulateElements',
-				[$this, 'onPopulateElements']
-			);
-		}
-
-		// CP Requests (not ajax)
-		// ---------------------------------------------------------------------
-		if (
-			craft()->request->isCpRequest()
-			&& !craft()->request->isAjaxRequest()
-		) {
-			// Hook into edit templates
-			$hooks = [
-				'cp.entries.edit.right-pane',
-				'cp.categories.edit.right-pane',
-				'cp.commerce.product.edit.right-pane',
-			];
-
-			foreach ($hooks as $hook) {
-				craft()->templates->hook(
-					$hook,
-					function (&$context) {
-						return craft()->seo_ab->injectElementEdit($context);
-					}
-				);
-			}
-
-			// Listen for element save
-			craft()->on(
-				'elements.onSaveElement',
-				[$this, 'onSaveElement']
-			);
-		}
-	}
-
-	// Events
-	// =========================================================================
-
-	public function onPopulateElements (Event $event) {
-		craft()->seo_ab->injectBElement($event->params['elements']);
-	}
-
-	public function onSaveElement (Event $event) {
-		if (craft()->request->getPost("seoAbCapable")) {
-			/** @var BaseElementModel $element */
-			$element = $event->params["element"];
-			craft()->seo_ab->onSaveB($element);
 		}
 	}
 
