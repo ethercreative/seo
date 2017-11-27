@@ -1,8 +1,8 @@
-{% include 'seo/_seo-fieldtype-settings' with {default:true} %}
+{% include 'seo/seo/_settings' with { default: true } %}
 
 {{ forms.textField({
 	label: "SEO Meta Template",
-	instructions: "The template you want to use when rendering the SEO Meta. Leave blank to use the default template (<a href='https://github.com/ethercreative/seo/blob/master/seo/templates/_seoDefaultMeta.twig' target='_blank'>which you can see here</a>).",
+	instructions: "The template you want to use when rendering the SEO Meta. Leave blank to use the default template (<a href='https://github.com/ethercreative/seo/blob/master/seo/templates/seo/_meta.twig' target='_blank'>which you can see here</a>).",
 	name: "metaTemplate",
 	id: "metaTemplate",
 	value: settings.metaTemplate
