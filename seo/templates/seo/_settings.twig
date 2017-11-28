@@ -19,7 +19,7 @@
 		instructions: 'The image that will be used when the page is shared via social networks. This can be modified on a per-entry basis.',
 		name: 'socialImage',
 		id: 'socialImage',
-		value: settings.socialImage,
+		elements: settings.socialImage|length ? craft.assets.id(settings.socialImage) : null,
 
 		limit: 1,
 		elementType: assetElementType,

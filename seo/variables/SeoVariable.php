@@ -28,12 +28,10 @@ class SeoVariable
 		$social = [];
 
 		if (!array_key_exists('social', $value)) {
-			return SeoFieldType::$socialDefaults;
+			return SeoFieldType::$defaultValue['social'];
 		}
 
 		foreach ($value['social'] as $name => $v) {
-			// TODO: Get default fallback image
-
 			$social[$name] = [
 				'title' => $v['title'] ?: $value['title'],
 				'image' => $v['image'],

@@ -43,26 +43,7 @@ class SeoFieldType extends BaseFieldType implements IPreviewableFieldType {
 	{
 		return array(
 			'titleSuffix' => [AttributeType::String],
-			'socialImage' => [AttributeType::Number],
-		);
-	}
-
-	public static function getSettingsVariables ()
-	{
-		$assetSources = craft()->assetSources->getAllSources();
-
-		$assetElementType = new ElementTypeVariable(
-			craft()->elements->getElementType(ElementType::Asset)
-		);
-
-		$assetCriteria = craft()->elements->getCriteria(
-			ElementType::Asset
-		);
-
-		return compact(
-			'assetSources',
-			'assetCriteria',
-			'assetElementType'
+			'socialImage' => [AttributeType::Mixed],
 		);
 	}
 
@@ -78,7 +59,7 @@ class SeoFieldType extends BaseFieldType implements IPreviewableFieldType {
 					'globalSettings' =>
 						craft()->plugins->getPlugin('seo')->getSettings(),
 				],
-				self::getSettingsVariables()
+				SeoPlugin::getFieldTypeSettingsVariables()
 			)
 		);
 	}
@@ -234,6 +215,8 @@ class SeoFieldType extends BaseFieldType implements IPreviewableFieldType {
 			foreach ($social as $k => $s) {
 				if ($s['image'] !== '') {
 					$s['image'] = craft()->assets->getFileById($s['image']);
+				} else {
+					$s['image'] = $this->_socialFallbackImage();
 				}
 
 				$social[$k] = $s;
@@ -263,6 +246,19 @@ class SeoFieldType extends BaseFieldType implements IPreviewableFieldType {
 			'ok' => 'average',
 			'bad' => 'poor',
         ][$score];
+	}
+
+	private function _socialFallbackImage ()
+	{
+		$settings = craft()->plugins->getPlugin('seo')->getSettings();
+
+		$fieldFallback = $this->getSettings()['socialImage'];
+
+		return !empty($fieldFallback)
+			? craft()->assets->getFileById($fieldFallback[0])
+			: !empty($settings['socialImage'])
+				? craft()->assets->getFileById($settings['socialImage'][0])
+				: null;
 	}
 
 }

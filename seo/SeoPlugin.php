@@ -103,6 +103,7 @@ class SeoPlugin extends BasePlugin {
 
 			// Fieldtype Settings
 			'titleSuffix'  => [AttributeType::String],
+			'socialImage'  => [AttributeType::Mixed],
 			'metaTemplate' => [AttributeType::String],
 		);
 	}
@@ -157,6 +158,28 @@ class SeoPlugin extends BasePlugin {
 		return array(
 			'manageSitemap' => array('label' => Craft::t('Manage Sitemap')),
 			'manageRedirects' => array('label' => Craft::t('Manage Redirects')),
+		);
+	}
+
+	// Misc
+	// =========================================================================
+
+	public static function getFieldTypeSettingsVariables ()
+	{
+		$assetSources = craft()->assetSources->getAllSources();
+
+		$assetElementType = new ElementTypeVariable(
+			craft()->elements->getElementType(ElementType::Asset)
+		);
+
+		$assetCriteria = craft()->elements->getCriteria(
+			ElementType::Asset
+		);
+
+		return compact(
+			'assetSources',
+			'assetCriteria',
+			'assetElementType'
 		);
 	}
 

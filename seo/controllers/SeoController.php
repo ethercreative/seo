@@ -2,6 +2,8 @@
 
 namespace Craft;
 
+use function Composer\Autoload\includeFile;
+
 class SeoController extends BaseController
 {
 
@@ -160,7 +162,7 @@ class SeoController extends BaseController
 			],
 
 			// FIXME: This class doesn't exist when it's needed for some reason
-			SeoFieldType::getSettingsVariables()
+			SeoPlugin::getFieldTypeSettingsVariables()
 		));
 	}
 
