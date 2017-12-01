@@ -41,6 +41,7 @@ class SeoService extends BaseApplicationComponent
 	 * @param $context
 	 *
 	 * @return string
+	 * @throws Exception
 	 */
 	public function hook (&$context)
 	{
@@ -55,7 +56,7 @@ class SeoService extends BaseApplicationComponent
 			$oldTemplateMode = craft()->templates->getTemplateMode();
 			craft()->templates->setTemplateMode(TemplateMode::CP);
 			$rendered = craft()->templates->render(
-				'seo/seo/_meta',
+				'seo/_seo/meta',
 				$context
 			);
 			craft()->templates->setTemplateMode($oldTemplateMode);

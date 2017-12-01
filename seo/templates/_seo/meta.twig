@@ -16,7 +16,7 @@
 	{% set fb = social.facebook -%}
 	<meta property="fb:app_id" content="{# TODO: Facebook App ID #}">
 	<meta property="og:url" content="{{ craft.request.url }}" />
-	<meta property="og:type" content="website" {# TODO: Change type based off available schema #} />
+	<meta property="og:type" content="website" />
 	<meta property="og:title" content="{{ fb.title }}" />
 	<meta property="og:image" content="{{ craft.seo.facebookImage(fb.image) }}" />
 	<meta property="og:description" content="{{ fb.description }}" />

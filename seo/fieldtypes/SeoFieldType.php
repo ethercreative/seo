@@ -52,7 +52,7 @@ class SeoFieldType extends BaseFieldType implements IPreviewableFieldType {
 		craft()->templates->includeJsResource('seo/js/SeoSettings.min.js');
 
 		return craft()->templates->render(
-			'seo/seo/_settings',
+			'seo/_seo/settings',
 			array_merge(
 				[
 					'settings'       => $this->getSettings(),
@@ -164,7 +164,7 @@ class SeoFieldType extends BaseFieldType implements IPreviewableFieldType {
 
 		// Return
 		// =====================================================================
-		return craft()->templates->render('seo/seo/fieldtype', array(
+		return craft()->templates->render('seo/_seo/fieldtype', array(
 			'id' => $id,
 			'name' => $name,
 			'value' => $value,

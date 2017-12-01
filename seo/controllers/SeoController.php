@@ -2,8 +2,6 @@
 
 namespace Craft;
 
-use function Composer\Autoload\includeFile;
-
 class SeoController extends BaseController
 {
 
