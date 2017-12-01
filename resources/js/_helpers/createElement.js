@@ -11,18 +11,24 @@
  *     as text).
  * @return {Element} - The created element
  */
-export function createElement (
-	tag = "div",
+export default function createElement (
+	tag = 'div',
 	attributes = {},
 	children = []
 ) {
 	const elem = document.createElement(tag);
 	
 	for (let [key, value] of Object.entries(attributes)) {
+		if (!value) continue;
+		
 		if (typeof value === typeof (() => {})) {
-			elem.addEventListener(key, value);
+			if (key === 'ref') value(elem);
+			else elem.addEventListener(key, value);
 			continue;
 		}
+		
+		if (key === 'style')
+			value = value.replace(/(?:\r\n|\r|\n|\t|\s+)/g, ' ').trim();
 		
 		elem.setAttribute(key, value);
 	}
@@ -31,6 +37,8 @@ export function createElement (
 		children = [children];
 	
 	children.map(child => {
+		if (!child) return;
+		
 		try {
 			elem.appendChild(child);
 		} catch (_) {

@@ -32,12 +32,12 @@ class SeoPlugin extends BasePlugin {
 
 	public function getVersion()
 	{
-		return '1.4.7';
+		return '2.0.0-beta';
 	}
 
 	public function getSchemaVersion()
 	{
-		return '0.0.12';
+		return '0.1.3';
 	}
 
 	public function getDeveloper()
@@ -69,10 +69,10 @@ class SeoPlugin extends BasePlugin {
 	public function registerCpRoutes ()
 	{
 		return [
-			'seo' => array('action' => 'seo/index'),
-			'seo/sitemap' => array('action' => 'seo/sitemapPage'),
-			'seo/redirects' => array('action' => 'seo/redirectsPage'),
-			'seo/settings' => array('action' => 'seo/settings'),
+			'seo' => ['action' => 'seo/index'],
+			'seo/sitemap' => ['action' => 'seo/sitemapPage'],
+			'seo/redirects' => ['action' => 'seo/redirectsPage'],
+			'seo/settings' => ['action' => 'seo/settings'],
 		];
 	}
 
@@ -84,7 +84,7 @@ class SeoPlugin extends BasePlugin {
 			$this->getSettings()->sitemapName . '_custom.xml' =>
 				['action' => 'seo/sitemap/custom'],
 			$this->getSettings()->sitemapName . '_(?P<section>\w*)_(?P<id>\d*)_(?P<page>\d*)\.xml' =>
-				["action" => "seo/sitemap/sitemap"],
+				['action' => 'seo/sitemap/sitemap'],
 		);
 	}
 
@@ -95,15 +95,16 @@ class SeoPlugin extends BasePlugin {
 	{
 		return array(
 			// Sitemap Settings
-			"sitemapName"  => [AttributeType::String, "default" => "sitemap"],
-			"sitemapLimit" => [AttributeType::Number, "default" => 1000],
+			'sitemapName'  => [AttributeType::String, 'default' => 'sitemap'],
+			'sitemapLimit' => [AttributeType::Number, 'default' => 1000],
 
 			// Redirect Settings
-			"publicPath"   => [AttributeType::String],
+			'publicPath'   => [AttributeType::String],
 
 			// Fieldtype Settings
-			"titleSuffix"  => [AttributeType::String],
-			"metaTemplate" => [AttributeType::String],
+			'titleSuffix'  => [AttributeType::String],
+			'socialImage'  => [AttributeType::Mixed],
+			'metaTemplate' => [AttributeType::String],
 		);
 	}
 
@@ -117,71 +118,68 @@ class SeoPlugin extends BasePlugin {
 		return parent::prepSettings($settings);
 	}
 
-	// Misc
+	// Initializer
 	// =========================================================================
 
 	public function init()
 	{
 		// Check if commerce is installed
 		SeoPlugin::$commerceInstalled =
-			(bool) craft()->db->createCommand()
-			                 ->select('id')
-			                 ->from('plugins')
-			                 ->where("class = 'Commerce'")
-			                 ->queryScalar();
+			craft()->plugins->getPlugin('commerce') != null;
 
 		// TODO: On category / section update, update sitemap
 
-		if (craft()->request->isSiteRequest() && !craft()->request->isLivePreview())
-		{
+		// Site requests (not live preview)
+		// ---------------------------------------------------------------------
+		if (
+			craft()->request->isSiteRequest()
+			&& !craft()->request->isLivePreview()
+		) {
 			// If request 404s, try to redirect
-			craft()->onException = function(\CExceptionEvent $event)
-			{
-				if(property_exists($event->exception, 'statusCode') && $event->exception->statusCode)
-				{
-					if ($event->exception->statusCode == 404) {
-						$path = craft()->request->getPath();
-						$query = craft()->request->getQueryStringWithoutPath();
-
-						if ($query) $path .= '?' . $query;
-
-						if ($loc = craft()->seo_redirect->findRedirectByPath($path)) {
-							$event->handled = true;
-							craft()->request->redirect($loc['to'], true, $loc['type']);
-						}
-					}
-				}
+			craft()->onException = function(\CExceptionEvent $event) {
+				craft()->seo_redirect->onException($event);
 			};
 
-			// Include Meta Markup in head via `{% hook "seo" %}`
-			craft()->templates->hook("seo", function(&$context)
-			{
-				$metaTemplateName = $this->getSettings()["metaTemplate"];
-
-				if ($metaTemplateName) {
-					return craft()->templates->render(
-						$metaTemplateName,
-						$context
-					);
-				} else {
-					$oldTemplateMode = craft()->templates->getTemplateMode();
-					craft()->templates->setTemplateMode(TemplateMode::CP);
-					$rendered = craft()->templates->render(
-						"seo/_seoDefaultMeta",
-						$context
-					);
-					craft()->templates->setTemplateMode($oldTemplateMode);
-					return $rendered;
-				}
-			});
+			// Include Meta Markup in head via `{% hook 'seo' %}`
+			craft()->templates->hook(
+				'seo',
+				function(&$context) {
+				return craft()->seo->hook($context);
+			}
+			);
 		}
 	}
+
+	// Hooks
+	// =========================================================================
 
 	public function registerUserPermissions()
 	{
 		return array(
 			'manageSitemap' => array('label' => Craft::t('Manage Sitemap')),
 			'manageRedirects' => array('label' => Craft::t('Manage Redirects')),
+		);
+	}
+
+	// Misc
+	// =========================================================================
+
+	public static function getFieldTypeSettingsVariables ()
+	{
+		$assetSources = craft()->assetSources->getAllSources();
+
+		$assetElementType = new ElementTypeVariable(
+			craft()->elements->getElementType(ElementType::Asset)
+		);
+
+		$assetCriteria = craft()->elements->getCriteria(
+			ElementType::Asset
+		);
+
+		return compact(
+			'assetSources',
+			'assetCriteria',
+			'assetElementType'
 		);
 	}
 

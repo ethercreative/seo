@@ -25,8 +25,9 @@ class SeoController extends BaseController
 		parent::init();
 	}
 
+	// Data
+	// =========================================================================
 
-	// DATA
 	public function actionSaveRedirects ()
 	{
 		$this->actionSaveData();
@@ -36,7 +37,12 @@ class SeoController extends BaseController
 	{
 		$this->requirePostRequest();
 
-		if (craft()->seo->saveData(craft()->request->getRequiredPost('name'), craft()->request->getRequiredPost('data'))) {
+		if (
+			craft()->seo->saveData(
+				craft()->request->getRequiredPost('name'),
+				craft()->request->getRequiredPost('data')
+			)
+		) {
 			craft()->userSession->setNotice(Craft::t('Updated.'));
 		} else {
 			craft()->userSession->setError(Craft::t('Couldn’t update.'));
@@ -45,8 +51,9 @@ class SeoController extends BaseController
 		$this->redirectToPostedUrl();
 	}
 
+	// Pages
+	// =========================================================================
 
-	// PAGES
 	public function actionIndex ()
 	{
 		$this->renderTemplate('seo/index', [
@@ -61,8 +68,10 @@ class SeoController extends BaseController
 
 		$namespace = 'data';
 
-		craft()->templates->includeJsResource('seo/js/seo-settings.min.js');
-		craft()->templates->includeJs("new SeoSettings('{$namespace}', 'sitemap', [Craft.csrfTokenName, Craft.csrfTokenValue]);");
+		craft()->templates->includeJsResource('seo/js/SeoSettings.min.js');
+		craft()->templates->includeJs(
+			"new SeoSettings('{$namespace}', 'sitemap');"
+		);
 
 		$this->renderTemplate('seo/sitemap', array(
 			// Global
@@ -90,10 +99,12 @@ class SeoController extends BaseController
 		$namespace = 'data';
 
 		craft()->templates->includeCssResource('seo/css/redirects.css');
-		craft()->templates->includeJsResource('seo/js/seo-settings.min.js');
+		craft()->templates->includeJsResource('seo/js/SeoSettings.min.js');
 		$csrf = craft()->request->getCsrfToken();
 		$csrfn = craft()->request->csrfTokenName;
-		craft()->templates->includeJs("new SeoSettings('{$namespace}', 'redirects', ['{$csrfn}', '{$csrf}']);");
+		craft()->templates->includeJs(
+			"new SeoSettings('{$namespace}', 'redirects', ['{$csrfn}', '{$csrf}']);"
+		);
 
 		$this->renderTemplate('seo/redirects', array(
 			// Global
@@ -106,7 +117,7 @@ class SeoController extends BaseController
 				['label' => 'SEO', 'url' => 'index'],
 			],
 
-			// Redirecs
+			// Redirects
 			'redirects' => craft()->seo_redirect->getAllRedirects(),
 		));
 	}
@@ -117,24 +128,39 @@ class SeoController extends BaseController
 
 		$settings = craft()->seo->settings();
 
-		craft()->templates->includeJsResource('seo/js/seo-settings.min.js');
-		craft()->templates->includeJs("new SeoSettings('{$namespace}', 'sitemap', [Craft.csrfTokenName, Craft.csrfTokenValue]);");
+		craft()->templates->includeJsResource('seo/js/SeoSettings.min.js');
+		craft()->templates->includeJs(
+			"new SeoSettings('{$namespace}', 'settings', [Craft.csrfTokenName, Craft.csrfTokenValue]);"
+		);
 
-		$this->renderTemplate('seo/settings', array(
-			// Global
-			'namespace' => $namespace,
-			'settings' => $settings,
-			'subnav' => $this->subNav,
-			'selectedSubnavItem' => 'settings',
+		$this->renderTemplate('seo/settings', array_merge(
+			[
+				// Global
+				'namespace'          => $namespace,
+				'settings'           => $settings,
+				'subnav'             => $this->subNav,
+				'selectedSubnavItem' => 'settings',
 
-			// Misc
-			'tabs' => [
-				['label' => 'Fieldtype', 'url' => "#{$namespace}-tab1", 'class' => null],
-				['label' => 'Sitemap', 'url' => "#{$namespace}-tab2", 'class' => null],
+				// Misc
+				'tabs' => [
+					[
+						'label' => 'Fieldtype',
+						'url'   => "#{$namespace}-tab1",
+						'class' => null,
+					],
+					[
+						'label' => 'Sitemap',
+						'url'   => "#{$namespace}-tab2",
+						'class' => null,
+					],
+				],
+				'crumbs' => [
+					['label' => 'SEO', 'url' => 'index'],
+				],
 			],
-			'crumbs' => [
-				['label' => 'SEO', 'url' => 'index'],
-			],
+
+			// FIXME: This class doesn't exist when it's needed for some reason
+			SeoPlugin::getFieldTypeSettingsVariables()
 		));
 	}
 

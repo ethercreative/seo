@@ -24,7 +24,7 @@ class Seo_RedirectRecord extends BaseRecord
 		return [
 			'uri' => array(AttributeType::String, 'required' => true),
 			'to' => array(AttributeType::String, 'required' => true),
-			'type' => array(AttributeType::Enum, 'values' => "301,302", 'required' => true),
+			'type' => array(AttributeType::Enum, 'values' => '301,302', 'required' => true),
 		];
 	}
 }

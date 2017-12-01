@@ -1,0 +1,28 @@
+{
+	"less": {
+		"ignore": false,
+		"input": "less/**/*.less",
+		"output": "../seo/resources/css",
+		"watch": [
+			"less/**/*"
+		]
+	},
+	"js": {
+		"ignore": false,
+		"input": [
+			"js/SeoField.js",
+			"js/SeoSettings.js"
+		],
+		"output": [
+			"../seo/resources/js/SeoField.min.js",
+			"../seo/resources/js/SeoSettings.min.js"
+		],
+		"watch": [
+			"js/**/*.js",
+			"!js/**/*.min.js"
+		]
+	},
+	"browserSync": {
+		"ignore": true
+	}
+}

@@ -1,0 +1,237 @@
+{% macro rating(level, tag = "div") %}
+	{% set name = level|capitalize ~ " Rating" %}
+	<{{ tag }} class="seo--light {{ level }}" title="{{ name }}">
+		{{ name }}
+	</{{ tag }}>
+{% endmacro %}
+
+{% macro social(id, name, value, label, handle, url, icon) %}
+	{% set this = value.social[handle] %}
+
+	<div class="seo--label">
+		<div>
+			<em>{{ label }}</em>
+			{{ ("This is how the page will look when shared on " ~ label ~ ". Click the text to edit")|t }}
+		</div>
+	</div>
+
+	<div class="seo--social {{ handle }}">
+		{{ icon|raw }}
+
+		<div class="seo--social-preview">
+			<a
+				href="#"
+				class="seo--social-preview-image{{ this.image ? ' has-image' }}"
+				data-seo-social-image="{{ id|namespaceInputId }}"
+				style="background-image:url({{ this.image ? this.image.url }})"
+			>
+				<input
+					type="hidden"
+					name="{{ name }}[social][{{ handle }}][image]"
+					value="{{ this.image ? this.image.id }}"
+				>
+				<div class="upload-prompt">
+					<svg width="59px" height="38px" viewBox="0 0 59 38" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+						<g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+							<g transform="translate(-604.000000, -385.000000)" fill="#BBC2C8" fill-rule="nonzero">
+								<path d="M652.214062,400.991667 C652.214062,400.833333 652.240402,400.675 652.240402,400.516667 C652.240402,391.940278 645.418527,385 637.003125,385 C630.93192,385 625.716741,388.615278 623.267187,393.840278 C622.200446,393.299306 621.002009,392.982639 619.737723,392.982639 C615.852679,392.982639 612.612946,395.872222 611.993973,399.645833 C607.33192,401.255556 604,405.728472 604,410.993056 C604,417.616667 609.281027,423 615.78683,423 L629.285714,423 L629.285714,412.444444 L622.937946,412.444444 L633.5,401.400694 L644.062054,412.43125 L637.714286,412.43125 L637.714286,422.986806 L652.240402,422.986806 C658.19308,422.986806 663,418.038889 663,411.982639 C663,405.926389 658.166741,401.004861 652.214062,400.991667 Z"></path>
+							</g>
+						</g>
+					</svg>
+					<h4>Select an Image</h4>
+					<p>If you don't select an image, the default (specified in
+					   the SEO settings) will be used if available.</p>
+				</div>
+
+				<span class="remove">Remove Image</span>
+			</a>
+			<div class="seo--social-preview-content">
+				<input
+					type="text"
+					placeholder="This is the title of the page. You can edit it though"
+					name="{{ name }}[social][{{ handle }}][title]"
+					value="{{ this.title }}"
+				>
+				<textarea
+					placeholder="Integer posuere erat a ante venenatis dapibus posuere velit aliquet. Aenean lacinia bibendum nulla sed consectetur. Donec sed odio dui."
+					name="{{ name }}[social][{{ handle }}][description]"
+					data-seo-social-desc="{{ id|namespaceInputId }}"
+				>{{ this.description }}</textarea>
+				<span>
+					{{ url }}
+				</span>
+			</div>
+		</div>
+	</div>
+{% endmacro %}
+
+{% import _self as _ %}
+
+<div class="seo--wrap" id="{{ id }}Field">
+	<nav class="seo--tabs" id="{{ id }}Tabs">
+		<a href="#" data-seo-tab="optimisation" class="active">
+			{{ "Optimisation"|t }}
+		</a>
+		<a href="#" data-seo-tab="social">
+			{{ "Social"|t }}
+		</a>
+	</nav>
+
+	<div id="{{ id }}Pages">
+		<div class="seo--tab active" data-seo-tab="optimisation">
+
+			{# Snippet #}
+			<div class="seo--label">
+				<div>
+					<em>{{ "Snippet"|t }}</em>
+					{{ "This is how the page might look in Google. Click the text to edit"|t }}
+				</div>
+			</div>
+
+			<div class="seo--panel seo--snippet">
+				<div class="seo--snippet-wrap">
+					<input
+						type="text"
+						class="seo--snippet-title{{ isNew ? ' clean' }}"
+						value="{{ value.title ?: titleSuffix }}"
+						name="{{ name }}[title]"
+						id="{{ id }}Title"
+						placeholder="SEO Title"
+					>
+
+					<span class="seo--snippet-url">
+						{{ url != '/' ? url : siteUrl }}
+						{%- if not isHome and not isSingle -%}
+							<span id="{{ id }}Slug">...</span>
+						{% endif %}
+					</span>
+
+					<textarea
+						class="seo--snippet-description"
+						name="{{ name }}[description]"
+						rows="2"
+						id="{{ id }}Description"
+						placeholder="Click to add a description!"
+					>{{ value.description }}</textarea>
+				</div>
+
+				<label class="seo--snippet-edit" for="{{ id }}Title">
+					Click to edit
+				</label>
+			</div>
+
+			{# Focus Keywords #}
+			<div class="seo--label">
+				<div>
+					<em>{{ "Focus Keywords"|t }}</em>
+					{{ "Add relevant key words and phrases to review the SEO page score"|t }}
+				</div>
+				{#<div id="{{ id }}Suggested">
+					<small>{{ "Suggested keywords"|t }}</small>
+					<a href="#">TODO</a>
+					<a href="#">Digital Agency Kent</a>
+				</div>#}
+			</div>
+
+			{% if not hasSection %}
+				<div class="seo--preview-dependent">
+			{% endif %}
+				{# Keyword Input #}
+				<input
+					type="hidden"
+					id="{{ id }}Keywords"
+					name="{{ name }}[keywords]"
+					value="{{ value.keywords }}"
+				>
+				<input
+					type="hidden"
+					id="{{ id }}Score"
+					name="{{ name }}[score]"
+					value="{{ value.score }}"
+				>
+				<div class="seo--keywords-input" id="{{ id }}KeywordsInput">
+					{# Keywords populated by magic #}
+
+					{% if isPro %}
+						<input placeholder="Type a keyword then hit enter to add...">
+					{% else %}
+						{# Only show if we've already got a keyword #}
+						<input placeholder="Go pro to add more keywords!" disabled>
+					{% endif %}
+				</div>
+
+				{# Keyword Details #}
+				<div class="seo--panel">
+
+					{# Keyword Details: Name #}
+					<header class="seo--keywords-details-header">
+						<h2 class="seo--keywords-details-keyword"
+						    id="{{ id }}Keyword">
+							<em>No Keyword Selected</em>
+						</h2>
+
+						<div class="seo--keywords-details-rating"
+						     id="{{ id }}Rating">
+							{{ _.rating("neutral") }}
+							Not yet rated
+						</div>
+					</header>
+
+					{# Keyword Details: Checklist #}
+					<div class="seo--label">
+						<div>
+							<em>{{ "Opitmisation Checklist"|t }}</em>
+							{{ "Use this handy chart to optimise your page for the desired keywords"|t }}
+						</div>
+					</div>
+
+					<div class="seo--keywords-details-bar"
+					     id="{{ id }}KeywordBar">
+						<div class="good"></div>
+						<div class="average"></div>
+						<div class="poor"></div>
+					</div>
+
+					<ul class="seo--keywords-details-checklist"
+					    id="{{ id }}KeywordChecklist">
+						<li style="text-align:center">
+							No keyword selected
+						</li>
+					</ul>
+				</div>
+			{% if not hasSection %}
+				{# End .seo--preview-dependent #}
+				</div>
+			{% endif %}
+		</div>
+
+		<div class="seo--tab" data-seo-tab="social">
+			{# Twitter #}
+			{% set twitterIcon %}
+				<svg width="33px" height="26px" viewBox="0 0 33 26" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+					<g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+						<g transform="translate(-934.000000, -309.000000)" fill="#48A1EB" fill-rule="nonzero">
+							<path d="M966.154987,312.079665 C964.977462,312.601937 963.712681,312.955153 962.384137,313.113723 C963.739529,312.301159 964.780718,311.014564 965.270689,309.481726 C964.002133,310.233882 962.597241,310.780485 961.101737,311.074552 C959.904076,309.798445 958.197985,309.001403 956.309834,309.001403 C952.683709,309.001403 949.7443,311.940812 949.7443,315.566516 C949.7443,316.081238 949.802191,316.581697 949.914196,317.062439 C944.45823,316.788928 939.620601,314.175048 936.382511,310.202839 C935.81745,311.172714 935.493599,312.30032 935.493599,313.503435 C935.493599,315.781298 936.652667,317.790684 938.414131,318.96779 C937.338123,318.933811 936.32546,318.638486 935.440323,318.146837 C935.439904,318.173684 935.439904,318.201371 935.439904,318.229058 C935.439904,321.410097 937.703085,324.063829 940.706257,324.666645 C940.155459,324.816405 939.575296,324.896948 938.976675,324.896948 C938.553823,324.896948 938.142297,324.855837 937.741678,324.77907 C938.576895,327.387496 941.001583,329.285297 943.874711,329.338573 C941.62789,331.099198 938.797131,332.148777 935.720966,332.148777 C935.190723,332.148777 934.66845,332.118154 934.154987,332.056907 C937.060417,333.91947 940.511192,335.006384 944.218698,335.006384 C956.294732,335.006384 962.898019,325.002242 962.898019,316.327063 C962.898019,316.042225 962.891727,315.759065 962.879142,315.478003 C964.161961,314.552594 965.274884,313.396463 966.154987,312.079665 Z"></path>
+						</g>
+					</g>
+				</svg>
+			{% endset %}
+			{{ _.social(id, name, value, "Twitter", "twitter", socialPreviewUrl, twitterIcon) }}
+
+			{# Facebook #}
+			{% set facebookIcon %}
+				<svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+					<g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+						<g transform="translate(-933.000000, -825.000000)" fill-rule="nonzero">
+							<g transform="translate(933.000000, 825.000000)">
+								<path d="M32,30 C32,31.104 31.104,32 30,32 L2,32 C0.896,32 0,31.104 0,30 L0,2 C0,0.896 0.896,0 2,0 L30,0 C31.104,0 32,0.896 32,2 L32,30 Z" fill="#3B5998"></path>
+								<path d="M22,32 L22,20 L26,20 L27,15 L22,15 L22,13 C22,11 23.002,10 25,10 L27,10 L27,5 C26,5 24.76,5 23,5 C19.325,5 17,7.881 17,12 L17,15 L13,15 L13,20 L17,20 L17,32 L22,32 Z" fill="#FFFFFF"></path>
+							</g>
+						</g>
+					</g>
+				</svg>
+			{% endset %}
+			{{ _.social(id, name, value, "Facebook", "facebook", socialPreviewUrl, facebookIcon) }}
+		</div>
+	</div>
+</div>

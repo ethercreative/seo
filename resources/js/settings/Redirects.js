@@ -1,6 +1,14 @@
 /* globals Craft */
-
-import { createElement } from "./Helpers";
+/**
+ * SEO Redirects
+ *
+ * @author    Tam McDonald
+ * @copyright Ether Creative 2017
+ * @link      https://ethercreative.co.uk
+ * @package   SEO
+ * @since     2.0.0
+ */
+import { c } from "../helpers";
 
 const REDIRECT_TYPES = {
 	"301": "301 (Permanent)",
@@ -32,7 +40,7 @@ export default class Redirects {
 		[].slice.call(this.table.getElementsByTagName("tr")).forEach(row => {
 			const links = row.getElementsByTagName("a");
 			
-			row.addEventListener("click", e => {
+			links[0].addEventListener("click", e => {
 				this.onEditClick(e, row);
 			});
 			
@@ -80,13 +88,15 @@ export default class Redirects {
 				id, uri.value, to.value, type.value
 			));
 			
-			Craft.cp.displayNotice('<strong>SEO:</strong> Redirect added successfully!');
+			Craft.cp.displayNotice(
+				"<strong>SEO:</strong> Redirect added successfully!"
+			);
 			spinner.classList.add("hidden");
 			
 			form.reset();
 			uri.focus();
 		}, error => {
-			Craft.cp.displayError('<strong>SEO:</strong> ' + error);
+			Craft.cp.displayError("<strong>SEO:</strong> " + error);
 			spinner.classList.add("hidden");
 		});
 	};
@@ -193,10 +203,7 @@ export default class Redirects {
 	
 	onEditClick = (e, row) => {
 		e.preventDefault();
-		
-		if (e.target.classList.contains("delete")) return;
-		
-		const { id, uri, to, type } = row.dataset;
+		const { id, uri, to, type } = e.target.dataset;
 		this.cancelCurrentEdit();
 		
 		const editRows = this.rowEdit(id, uri, to, type);
@@ -222,14 +229,7 @@ export default class Redirects {
 			row
 		);
 		
-		const focusIndex = e.target.tagName.toLowerCase() === "a" ||
-		                   e.target.firstElementChild ? 1 : 2;
-		
-		const input = editRows[0].getElementsByTagName("input")[focusIndex];
-		input.focus();
-		setTimeout(() => {
-			input.selectionStart = input.selectionEnd = 10000;
-		}, 0);
+		editRows[0].getElementsByTagName("input")[1].focus();
 		
 		this.table.removeChild(row);
 	};
@@ -274,7 +274,7 @@ export default class Redirects {
 		});
 		
 		const xhr = new XMLHttpRequest();
-		xhr.open('POST', "/", true);
+		xhr.open('POST', window.location.href, true);
 		xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
 		
 		xhr.onload = function() {
@@ -303,23 +303,20 @@ export default class Redirects {
 	}
 	
 	rowStatic (id = -1, uri = "", to = "", type = 301) {
-		const row = createElement("tr", {
-			"tabindex": 0,
-			"data-id": id,
-			"data-uri": uri,
-			"data-to": to,
-			"data-type": type,
-			"click": e => this.onEditClick(e, row)
-		}, [
+		const row = c("tr", { "tabindex": 0, "data-id": id }, [
 			// URI
-			createElement("td", { "class": "redirects--title-col" }, [
-				createElement("div", { "class": "element small" }, [
-					createElement("div", { "class": "label" }, [
-						createElement("span", { "class": "title" }, [
-							createElement("a", {
+			c("td", { "class": "redirects--title-col" }, [
+				c("div", { "class": "element small" }, [
+					c("div", { "class": "label" }, [
+						c("span", { "class": "title" }, [
+							c("a", {
 								"href": "#",
 								"title": "Edit Redirect",
-								"click": e => { e.preventDefault(); }
+								"data-id": id,
+								"data-uri": uri,
+								"data-to": to,
+								"data-type": type,
+								"click": e => this.onEditClick(e, row)
 							}, uri)
 						])
 					])
@@ -327,14 +324,14 @@ export default class Redirects {
 			]),
 			
 			// To
-			createElement("td", {}, to),
+			c("td", {}, to),
 			
 			// Type
-			createElement("td", {}, REDIRECT_TYPES[type]),
+			c("td", {}, REDIRECT_TYPES[type]),
 			
 			// Delete
-			createElement("td", { "class": "thin action" }, [
-				createElement("a", {
+			c("td", { "class": "thin action" }, [
+				c("a", {
 					"class": "delete icon",
 					"title": "Delete",
 					"click": e => this.onDeleteClick(e, row)
@@ -347,15 +344,15 @@ export default class Redirects {
 	
 	rowEdit (id, uri, to, type) {
 		return [
-			createElement("tr", { "class": "redirects--edit-row" }, [
+			c("tr", { "class": "redirects--edit-row" }, [
 				// URI
-				createElement("td", {}, [
-					createElement("input", {
+				c("td", {}, [
+					c("input", {
 						"value": id,
 						"type": "hidden",
 						"name": this.namespaceField("id")
 					}),
-					createElement("input", {
+					c("input", {
 						"value": uri,
 						"type": "text",
 						"class": "text fullwidth",
@@ -364,8 +361,8 @@ export default class Redirects {
 				]),
 				
 				// To
-				createElement("td", {}, [
-					createElement("input", {
+				c("td", {}, [
+					c("input", {
 						"value": to,
 						"type": "text",
 						"class": "text fullwidth",
@@ -374,33 +371,37 @@ export default class Redirects {
 				]),
 				
 				// Type
-				createElement("td", {}, [
-					createElement("div", { "class": "select" }, [
-						createElement("select", {
+				c("td", {}, [
+					c("div", { "class": "select" }, [
+						c("select", {
 							"name": this.namespaceField("type")
 						}, Object.keys(REDIRECT_TYPES).map(value => {
 							const opts = { value };
 							if (type === value) opts["selected"] = "selected";
 							
-							return createElement("option", opts, REDIRECT_TYPES[value]);
+							return c(
+								"option",
+								opts,
+								REDIRECT_TYPES[value]
+							);
 						}))
 					])
 				]),
 				
 				// Spinner
-				createElement("td", {}, [
-					createElement("div", { "class": "spinner hidden" })
+				c("td", {}, [
+					c("div", { "class": "spinner hidden" })
 				])
 			]),
 			
-			createElement("tr", { "class": "redirects--edit-controls" }, [
-				createElement("td", { "colspan": 4 }, [
-					createElement("input", {
+			c("tr", { "class": "redirects--edit-controls" }, [
+				c("td", { "colspan": 4 }, [
+					c("input", {
 						"class": "btn submit",
 						"type": "submit",
 						"value": "Update",
 					}),
-					createElement("input", {
+					c("input", {
 						"class": "btn",
 						"type": "button",
 						"value": "Cancel",

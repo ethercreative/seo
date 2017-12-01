@@ -5,6 +5,34 @@ namespace Craft;
 class Seo_RedirectService extends BaseApplicationComponent
 {
 
+	// Event Handlers
+	// =========================================================================
+
+	/**
+	 * Handle any 404 exceptions
+	 *
+	 * @param \CExceptionEvent $event
+	 */
+	public function onException (\CExceptionEvent $event)
+	{
+		if(
+			property_exists($event->exception, 'statusCode')
+			&& $event->exception->statusCode
+		) {
+			if ($event->exception->statusCode == 404) {
+				$path = craft()->request->getPath();
+				$query = craft()->request->getQueryStringWithoutPath();
+
+				if ($query) $path .= '?' . $query;
+
+				if ($loc = craft()->seo_redirect->findRedirectByPath($path)) {
+					$event->handled = true;
+					craft()->request->redirect($loc['to'], true, $loc['type']);
+				}
+			}
+		}
+	}
+
 	// Get
 	// =========================================================================
 
@@ -17,6 +45,7 @@ class Seo_RedirectService extends BaseApplicationComponent
 	{
 		$redirects = $this->getAllRedirects();
 
+		// Loop over available redirects
 		foreach ($redirects as $redirect)
 		{
 			$to = false;
@@ -27,7 +56,7 @@ class Seo_RedirectService extends BaseApplicationComponent
 			}
 			elseif ($uri = $this->_isRedirectRegex($redirect['uri']))
 			{
-				if(preg_match($uri, $path)){
+				if (preg_match($uri, $path)) {
 					$to = preg_replace($uri, $redirect['to'], $path);
 				}
 			}
@@ -35,8 +64,10 @@ class Seo_RedirectService extends BaseApplicationComponent
 			if ($to)
 			{
 				return [
-					'to' => strpos($to, '://') !== false ? $to : UrlHelper::getSiteUrl($to),
-					'type' => $redirect['type']
+					'to' => strpos($to, '://') !== false
+						? $to
+						: UrlHelper::getSiteUrl($to),
+					'type' => $redirect['type'],
 				];
 			}
 		}
@@ -75,7 +106,10 @@ class Seo_RedirectService extends BaseApplicationComponent
 		}
 
 		if (!empty($idsToDelete)) {
-			craft()->db->createCommand()->delete('seo_redirects', array('in', 'id', $idsToDelete));
+			craft()->db->createCommand()->delete(
+				'seo_redirects',
+				array('in', 'id', $idsToDelete)
+			);
 		}
 
 		// Update current redirects
@@ -113,7 +147,7 @@ class Seo_RedirectService extends BaseApplicationComponent
 	public function save ($uri, $to, $type)
 	{
 		$doesUriExist = Seo_RedirectRecord::model()->findByAttributes([
-			"uri" => $uri
+			'uri' => $uri
 		]);
 
 		if ($doesUriExist)
@@ -163,10 +197,10 @@ class Seo_RedirectService extends BaseApplicationComponent
 			$record->save();
 
 			$newFormatted[] = [
-				"id" => $record->id,
-				"uri" => $record->uri,
-				"to" => $record->to,
-				"type" => $record->type,
+				'id' => $record->id,
+				'uri' => $record->uri,
+				'to' => $record->to,
+				'type' => $record->type,
 			];
 		}
 
@@ -191,13 +225,28 @@ class Seo_RedirectService extends BaseApplicationComponent
 
 	private function _isRedirectRegex ($uri)
 	{
-		if (preg_match("/^#(.+)#$/", $uri))
+		// Escape all non-escaped ? not inside parentheses
+		$i = preg_match_all(
+			'/(?<!\\\\)\?(?![^(]*\))/',
+			$uri,
+			$matches,
+			PREG_OFFSET_CAPTURE
+		);
+
+		while ($i--)
+		{
+			$x = $matches[0][$i][1];
+			$uri = substr_replace($uri, '\?', $x, 1);
+		}
+
+		// Check if contains a regex
+		if (preg_match('/^#(.+)#$/', $uri))
 		{
 			return $uri;
 		}
-		elseif (strpos($uri, "*"))
+		elseif (strpos($uri, '*'))
 		{
-			return "#^".str_replace(array("*","/"), array("(.*)", "\/"), $uri).'#';
+			return '#^'.str_replace(array('*','/'), array('(.*)', '\/'), $uri).'#';
 		}
 
 		return false;
