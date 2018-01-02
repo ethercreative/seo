@@ -12,31 +12,31 @@
  * @return {Element} - The created element
  */
 export function createElement (
-	tag = "div",
-	attributes = {},
-	children = []
+    tag = "div",
+    attributes = {},
+    children = []
 ) {
-	const elem = document.createElement(tag);
-	
-	for (let [key, value] of Object.entries(attributes)) {
-		if (typeof value === typeof (() => {})) {
-			elem.addEventListener(key, value);
-			continue;
-		}
-		
-		elem.setAttribute(key, value);
-	}
-	
-	if (!Array.isArray(children))
-		children = [children];
-	
-	children.map(child => {
-		try {
-			elem.appendChild(child);
-		} catch (_) {
-			elem.appendChild(document.createTextNode(child));
-		}
-	});
-	
-	return elem;
+    const elem = document.createElement(tag);
+    
+    for (let [key, value] of Object.entries(attributes)) {
+        if (typeof value === typeof (() => {})) {
+            elem.addEventListener(key, value);
+            continue;
+        }
+        
+        elem.setAttribute(key, value);
+    }
+    
+    if (!Array.isArray(children))
+        children = [children];
+    
+    children.map(child => {
+        try {
+            elem.appendChild(child);
+        } catch (_) {
+            elem.appendChild(document.createTextNode(child));
+        }
+    });
+    
+    return elem;
 }
