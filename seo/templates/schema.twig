@@ -1,0 +1,55 @@
+{% extends "_layouts/cp" %}
+{% set title = 'JSON LD Schema' %}
+
+{% block content %}
+	<div id="seoSchemaWrap">
+		<schema-lane
+			v-for="(s, index) in schema"
+			:key="index"
+			:selected-schema-ids="selectedSchemaIds"
+			:lane-schema="s"
+			:on-click="onSchemaClick(index + 1)"
+		></schema-lane>
+
+		<table
+			v-for="(propGroup, index) in getSelectedPropertiesReversed"
+			class="data fullwidth seo--schema-table"
+		>
+			<thead>
+			<tr>
+				<td colspan="2">
+					<h2>${getSelectedSchemaIdsReversed[index]}</h2>
+				</td>
+			</tr>
+			<tr>
+				<th>Name</th>
+				<th>Comment</th>
+				<th>Accepts</th>
+			</tr>
+			</thead>
+			<tbody>
+			<tr v-for="prop in propGroup">
+				<td>${prop.label}</td>
+				<td v-html="prop.comment"></td>
+				<td>${prop.accepts.join(", ")}</td>
+			</tr>
+			</tbody>
+		</table>
+	</div>
+
+	<template id="seoSchemaLane">
+		<ul class="seo--schema-lane">
+			<li v-for="schema in laneSchema">
+				<button
+					@click="onClick($event, schema.id)"
+					:class="{ active: selectedSchemaIds.indexOf(schema.id) > -1 }"
+				>
+					${schema.label}
+				</button>
+				<span>
+					${schema.comment}
+				</span>
+			</li>
+		</ul>
+	</template>
+{% endblock %}

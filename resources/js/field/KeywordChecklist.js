@@ -110,6 +110,7 @@ export default class KeywordChecklist {
 			// Run the callback
 			onNewRating(overallRating);
 		}).catch(err => {
+			// eslint-disable-next-line no-console
 			console.log(err);
 			// TODO: Disable checklist, show error overlaying
 			// Note to self: This also catches JS errors

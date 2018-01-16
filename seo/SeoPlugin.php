@@ -73,6 +73,7 @@ class SeoPlugin extends BasePlugin {
 			'seo/sitemap' => ['action' => 'seo/sitemapPage'],
 			'seo/redirects' => ['action' => 'seo/redirectsPage'],
 			'seo/settings' => ['action' => 'seo/settings'],
+			'seo/schema' => ['action' => 'seo/schema'],
 		];
 	}
 
@@ -123,6 +124,8 @@ class SeoPlugin extends BasePlugin {
 
 	public function init()
 	{
+		require_once __DIR__ . '/vendor/autoload.php';
+
 		// Check if commerce is installed
 		SeoPlugin::$commerceInstalled =
 			craft()->plugins->getPlugin('commerce') != null;

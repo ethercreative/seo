@@ -1,0 +1,85 @@
+#!/usr/bin/env php
+<?php
+
+/*
+ * HOW TO
+ * ------
+ * 1. Replace `schema.jsonld` with the latest version
+ * 2. Run `./build_db`
+ * 3. ???
+ * 4. Profit!
+ */
+
+$schemaDBPath = '../../seo/resources/schema.sqlite';
+$schema       = json_decode(file_get_contents('./schema.jsonld'));
+
+$db = new SQLite3($schemaDBPath);
+
+$db->query('DROP TABLE IF EXISTS ld');
+$db->query('CREATE TABLE ld (
+	id string PRIMARY KEY,
+	type string NOT NULL,
+	comment string,
+	label string,
+	subClassOf string,
+	domainIncludes string,
+	rangeIncludes string,
+	subPropertyOf string
+)');
+
+function extractIds ($val) {
+	if (array_key_exists('@id', $val))
+		return $val['@id'];
+
+	return implode('|', array_map(function ($a) {
+		if (is_array($a))
+			return $a['@id'];
+
+		if ($a instanceof stdClass)
+			return $a->{'@id'};
+
+		return $a;
+	}, $val));
+};
+
+function esc ($val) {
+	return SQLite3::escapeString($val);
+};
+
+$get = function ($row, $key) {
+	if (!array_key_exists($key, $row))
+		return '';
+
+	$val = $row[$key];
+
+	if ($val instanceof stdClass || is_array($val))
+		return esc(extractIds((array)$val));
+
+	return esc($val);
+};
+
+foreach ($schema->{'@graph'} as $row) {
+	$row = (array)$row;
+
+	$db->query("INSERT INTO ld (
+	id, 
+	type, 
+	comment, 
+	label, 
+	subClassOf, 
+	domainIncludes, 
+	rangeIncludes, 
+	subPropertyOf
+) VALUES (
+	'{$get($row, '@id')}',
+	'{$get($row, '@type')}',
+	'{$get($row, 'rdfs:comment')}',
+	'{$get($row, 'rdfs:label')}',
+	'{$get($row, 'rdfs:subClassOf')}',
+	'{$get($row, 'http://schema.org/domainIncludes')}',
+	'{$get($row, 'http://schema.org/rangeIncludes')}',
+	'{$get($row, 'rdfs:subPropertyOf')}'
+)");
+}
+
+exit;

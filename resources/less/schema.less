@@ -1,0 +1,60 @@
+.seo--schema {
+
+	&-lane {
+		margin-bottom: 24px;
+
+		li {
+			position: relative;
+			display: inline-block;
+			margin: 0 5px 5px 0;
+
+			button {
+				display: inline-block;
+				padding: 10px;
+
+				border: none;
+				border-radius: 3px;
+
+				cursor: pointer;
+
+				&.active {
+					color: #fff;
+					background-color: #0d78f2;
+				}
+			}
+
+			span {
+				position: absolute;
+				z-index: 10;
+				top: 100%;
+				left: 50%;
+
+				display: inline-block;
+				width: 200px;
+				margin-top: 2px;
+				padding: 3px 10px;
+
+				color: #fff;
+				font-size: 12px;
+
+				background-color: rgba(0,0,0,0.8);
+				border-radius: 3px;
+
+				transition: opacity 0.15s ease;
+				transform: translate3d(-50%, 0, 0);
+				opacity: 0;
+
+				pointer-events: none;
+			}
+
+			&:hover span {
+				opacity: 1;
+			}
+		}
+	}
+
+	&-table {
+		margin-bottom: 24px;
+	}
+
+}

@@ -1,0 +1,7 @@
+{
+    "name": "tam/seo",
+    "require": {},
+    "autoload": {
+        "psr-4": {"Seo\\": "Seo/"}
+    }
+}

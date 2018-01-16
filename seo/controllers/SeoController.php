@@ -2,6 +2,8 @@
 
 namespace Craft;
 
+use Seo\Models\Schema;
+
 class SeoController extends BaseController
 {
 
