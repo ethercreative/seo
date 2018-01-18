@@ -79,7 +79,7 @@ export default class Redirects {
 		// Submit
 		spinner.classList.remove("hidden");
 		
-		this.post("addRedirect", {
+		this.post("PUT", {
 			uri: uri.value,
 			to: to.value,
 			type: type.value,
@@ -240,7 +240,7 @@ export default class Redirects {
 		if (!confirm("Delete this redirect?"))
 			return;
 		
-		this.post("removeRedirect", {
+		this.post("DELETE", {
 			id: row.dataset.id
 		}, () => {
 			Craft.cp.displayNotice('<strong>SEO:</strong> Redirect deleted');
@@ -258,7 +258,7 @@ export default class Redirects {
 	}
 	
 	post (
-		action,
+		method,
 		fields = {},
 		onSuccess = () => {},
 		onError = () => {}
@@ -266,7 +266,6 @@ export default class Redirects {
 		const formData = new FormData();
 		
 		formData.append(this.csrf.name, this.csrf.token);
-		formData.append("action", `seo/redirects/${action}`);
 		
 		Object.keys(fields).forEach(key => {
 			if (fields.hasOwnProperty(key))
@@ -274,7 +273,7 @@ export default class Redirects {
 		});
 		
 		const xhr = new XMLHttpRequest();
-		xhr.open('POST', window.location.href, true);
+		xhr.open(method, window.location.href, true);
 		xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
 		
 		xhr.onload = function() {

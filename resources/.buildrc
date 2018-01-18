@@ -2,7 +2,7 @@
 	"less": {
 		"ignore": false,
 		"input": "less/**/*.less",
-		"output": "../seo/resources/css",
+		"output": "../src/resources/css",
 		"watch": [
 			"less/**/*"
 		]
@@ -14,8 +14,8 @@
 			"js/SeoSettings.js"
 		],
 		"output": [
-			"../seo/resources/js/SeoField.min.js",
-			"../seo/resources/js/SeoSettings.min.js"
+			"../src/resources/js/SeoField.min.js",
+			"../src/resources/js/SeoSettings.min.js"
 		],
 		"watch": [
 			"js/**/*.js",

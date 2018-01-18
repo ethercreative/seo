@@ -1,0 +1,33 @@
+{% import "_includes/forms" as forms %}
+{% set default = default is defined ? default : false %}
+
+{{ forms.textField({
+	label: (default ? 'Default ') ~ 'Title Suffix',
+	instructions: 'A string appended, after a space, to the page title. This can be removed on a per-entry basis.',
+	name: 'titleSuffix',
+	id: 'titleSuffix',
+	value: settings.titleSuffix is defined and settings.titleSuffix != ""
+		? settings.titleSuffix
+		: globalSettings is defined
+			? globalSettings.titleSuffix,
+}) }}
+
+{% if volumes %}
+	{{ forms.elementSelectField({
+		label: (default ? 'Default ') ~ 'Social Image',
+		instructions: 'The image that will be used when the page is shared via social networks. This can be modified on a per-entry basis.',
+		name: 'socialImage',
+		id: 'socialImage',
+		elements: settings.socialImage|length ? craft.assets.id(settings.socialImage) : null,
+
+		limit: 1,
+		elementType: 'craft\\elements\\Asset',
+	}) }}
+{% else %}
+	{{ forms.field(
+		{
+			label: (default ? 'Default ') ~ 'Social Image',
+		},
+		'<p class="error">You\'ll need a volume before you can select a social image!</p>'
+	) }}
+{% endif %}

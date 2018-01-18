@@ -1,0 +1,18 @@
+{% import "_includes/forms" as forms %}
+
+{{ forms.textField({
+	label: 'Sitemap Name',
+	instructions: 'The name of your sitemap file. It will be found at <strong>' ~ siteUrl ~ '<code id="sitemapNameExample">' ~ (settings.sitemapName is defined ? settings.sitemapName : '') ~ '.xml</code></strong>',
+	name: 'sitemapName',
+	id: 'sitemapName',
+	value: settings.sitemapName is defined ? settings.sitemapName : ''
+}) }}
+
+{{ forms.textField({
+	type: "number",
+	label: "Pagination Limit",
+	instructions: "The max number of elements to limit each page to. Lower resource servers should reduce this number if sitemap pages are failing to generate.",
+	name: "sitemapLimit",
+	id: "sitemapLimit",
+	value: settings.sitemapLimit
+}) }}

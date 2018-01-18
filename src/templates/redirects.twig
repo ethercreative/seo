@@ -1,0 +1,182 @@
+{% extends "_layouts/cp" %}
+{% set title = 'Redirects' %}
+{#{% set fullPageForm = true %}#}
+
+{% import "_includes/forms" as forms %}
+
+{% block saveButton %}
+	{#<input type="hidden" name="action" value="seo/redirects/saveRedirects">#}
+
+	{#<input type="submit" class="btn submit" value="{{ 'Save'|t }}">#}
+	{#<a href="#" class="btn">Bulk import</a>
+	&nbsp
+	<a class="btn submit add icon" href="#">New redirect</a>#}
+{% endblock %}
+
+{% set redirectType = {
+	'301': '301 (Permanent)',
+	'302': '302 (Temporary)',
+} %}
+
+{% macro selectField(config) %}
+	{%- set class = [
+		'select',
+		(config.class is defined ? config.class : null)
+	]|filter|join(' ') %}
+
+	{%- set options = (config.options is defined ? config.options : []) %}
+	{%- set value = (config.value is defined ? config.value : null) %}
+
+	<div class="{{ class }}">
+		<select
+				{%- if config.id is defined %} id="{{ config.id }}"{% endif %}
+				{%- if config.toggle is defined and config.toggle %} class="fieldtoggle"{% endif %}
+				{%- if config.name is defined %} name="{{ config.name }}"{% endif %}
+				{%- if config.autofocus is defined and config.autofocus and not craft.request.isMobileBrowser(true) %} autofocus{% endif %}
+				{%- if config.disabled is defined and config.disabled %} disabled{% endif %}
+				{%- if config.targetPrefix is defined %} data-target-prefix="{{ config.targetPrefix }}"{% endif %}>
+			{% for key, option in options %}
+				{% set optionLabel = (option.label is defined ? option.label : option) %}
+				{% set optionValue = (option.value is defined ? option.value : key) %}
+				{% set optionDisabled = (option.disabled is defined ? option.disabled : false) %}
+				<option value="{{ optionValue }}"{% if optionValue == value %} selected{% endif %}{% if optionDisabled %} disabled{% endif %}>{{ optionLabel }}</option>
+			{% endfor %}
+		</select>
+	</div>
+{% endmacro %}
+
+{% import _self as ui %}
+
+{% block content %}
+	{% namespace namespace %}
+		<div class="field">
+			<div class="heading">
+				<div class="instructions">
+					Redirects support regex.
+					To redirect from <code>blog/2016/my-post</code> to <code>news/my-post</code> you would add the following redirect:
+					URI: <code>blog/([0-9]{4})/(.*)</code> To: <code>news/$2</code>
+				</div>
+			</div>
+		</div>
+
+		<div class="elementindex">
+			<div class="main">
+				<div class="elements">
+					<form class="tableview" id="tableForm">
+						<table class="data fullwidth">
+							<thead>
+							<tr>
+								<th scope="col" data-attribute="uri">URI</th>
+								<th scope="col" data-attribute="to">To</th>
+								<th scope="col" data-attribute="type">Type</th>
+								<td class="thin checkbox-cell"></td>
+							</tr>
+							</thead>
+							<tbody id="redirectTable">
+							{% for redirect in redirects %}
+								<tr tabindex="0" data-id="{{ redirect.id }}">
+									<td class="redirects--title-col">
+										<div class="element small">
+											<div class="label">
+										<span class="title">
+											<a href="#" title="Edit redirect"
+											   data-id="{{ redirect.id }}"
+											   data-uri="{{ redirect.uri }}"
+											   data-to="{{ redirect.to }}"
+											   data-type="{{ redirect.type|default('301') }}">
+												{{ redirect.uri }}
+											</a>
+										</span>
+											</div>
+										</div>
+									</td>
+									<td>
+										{{ redirect.to }}
+									</td>
+									<td>
+										{{ redirectType[redirect.type|default('301')] }}
+									</td>
+									<td class="thin action">
+										<a class="delete icon" title="Delete"></a>
+									</td>
+								</tr>
+							{% endfor %}
+							</tbody>
+						</table>
+					</form>
+				</div>
+			</div>
+		</div>
+
+		<hr>
+
+		<form class="redirects--form" id="redirectsNew">
+			<h4>Add new redirect</h4>
+			<div class="fields">
+				{{ forms.text({
+					name: "uri",
+					placeholder: "blog/([0-9]{4})/(.*)",
+					required: true
+				}) }}
+
+				{{ forms.text({
+					name: "to",
+					placeholder: "news/$2",
+					required: true
+				}) }}
+
+				{{ ui.selectField({
+					name: "type",
+					options: redirectType,
+					required: true
+				}) }}
+			</div>
+			<div>
+				<div class="btngroup">
+					<input type="submit" class="btn submit" value="Add Redirect">
+					<div class="spinner hidden"></div>
+				</div>
+			</div>
+		</form>
+
+		<hr>
+
+		<form class="redirects--form" id="redirectsBulk">
+			<h4>Bulk add redirects</h4>
+
+			<div class="fields down">
+				{{ forms.textarea({
+					name: "redirects",
+					placeholder: "URI To [Type]\r\nblog/([0-9]{4})/(.*) news/$2\r\nproducts/(.*) shop/$1 302",
+					rows: 3,
+					required: true
+				}) }}
+
+				{{ forms.text({
+					name: "separator",
+					placeholder: "Separator",
+					required: true
+				}) }}
+
+				<label class="type-select">
+					{{ ui.selectField({
+						name: "type",
+						options: redirectType,
+						required: true
+					}) }}
+
+					<span class="instructions">
+					The default redirect type (if one isn't defined)
+				</span>
+				</label>
+			</div>
+
+			<div>
+				<div class="btngroup">
+					<input type="submit" class="btn submit" value="Add Redirects">
+				</div>
+				<div class="spinner hidden"></div>
+			</div>
+		</form>
+	{% endnamespace %}
+{% endblock %}
