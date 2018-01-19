@@ -105,8 +105,8 @@ export default class Snippet {
 		
 		// Slug generation has a debounce that we need to account for to keep
 		// the slugs in sync
-		document.getElementById("title")
-		        .addEventListener("input", debounce(onSlugChange, 500));
+		const title = document.getElementById("title");
+		title && title.addEventListener("input", debounce(onSlugChange, 500));
 		
 		// Sync straight away (see above in title() as to why)
 		onSlugChange();

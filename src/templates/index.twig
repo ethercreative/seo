@@ -1,25 +1,39 @@
 {% extends "_layouts/cp" %}
 {% set title = 'SEO' %}
 
+{% css %}
+	.seo--coming-soon {
+		pointer-events: none;
+		opacity: 0.25;
+	}
+{% endcss %}
+
 {% block content %}
 	<ul class="icons">
 		{% if currentUser.admin or currentUser.can('manageSitemap') %}
-			<li style="pointer-events:none;opacity:0.25">
+			<li class="seo--coming-soon">
 				<a href="{{ url('seo/sitemap') }}" data-icon="globe">
 					Sitemap
 				</a>
 			</li>
 		{% endif %}
 		{% if currentUser.admin or currentUser.can('manageRedirects') %}
-			<li>
+			<li class="seo--coming-soon">
 				<a href="{{ url('seo/redirects') }}" data-icon="routes">
 					Redirects
 				</a>
 			</li>
 		{% endif %}
+		<li class="seo--coming-soon">
+			<a href="{{ url('seo/schema') }}" data-icon="tags">
+				Schema
+			</a>
+		</li>
 		{% if currentUser.admin %}
 			<li>
-				<a href="{{ url('seo/settings') }}" data-icon="settings">
+				<a href="{{ url('settings/plugins/seo') }}"
+				   data-icon="settings"
+				>
 					Settings
 				</a>
 			</li>

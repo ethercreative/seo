@@ -19,12 +19,6 @@ class Settings extends Model
 	/** @var int */
 	public $sitemapLimit = 1000;
 
-	// Variables: Redirects
-	// -------------------------------------------------------------------------
-
-	/** @var string */
-	public $publicPath;
-
 	// Variables: Field Type
 	// -------------------------------------------------------------------------
 
@@ -47,11 +41,11 @@ class Settings extends Model
 	{
 		return [
 			[
-				['sitemapName', 'sitemapLimit', 'publicPath'],
+				['sitemapName', 'sitemapLimit'],
 				'required'
 			],
 			[
-				['sitemapName', 'publicPath', 'titleSuffix', 'metaTemplate'],
+				['sitemapName', 'titleSuffix', 'metaTemplate'],
 				'string'
 			],
 			[

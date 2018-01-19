@@ -4,10 +4,13 @@ namespace ether\seo;
 
 use craft\base\Plugin;
 use craft\events\ExceptionEvent;
+use craft\events\RegisterComponentTypesEvent;
 use craft\events\RegisterUrlRulesEvent;
+use craft\services\Fields;
 use craft\web\ErrorHandler;
 use craft\web\Request;
 use craft\web\UrlManager;
+use ether\seo\fields\SeoField;
 use ether\seo\models\Settings;
 use ether\seo\services\RedirectsService;
 use yii\base\Event;
@@ -56,15 +59,21 @@ class Seo extends Plugin
 		// ---------------------------------------------------------------------
 
 		Event::on(
-			UrlManager::class,
+			UrlManager::className(),
 			UrlManager::EVENT_REGISTER_CP_URL_RULES,
 			[$this, 'onRegisterCPUrlRules']
 		);
 
 		Event::on(
-			ErrorHandler::class,
+			ErrorHandler::className(),
 			ErrorHandler::EVENT_BEFORE_HANDLE_EXCEPTION,
 			[$this, 'onBeforeHandleException']
+		);
+
+		Event::on(
+			Fields::className(),
+			Fields::EVENT_REGISTER_FIELD_TYPES,
+			[$this, 'onRegisterFieldTypes']
 		);
 	}
 
@@ -131,9 +140,19 @@ class Seo extends Plugin
 		$event->rules['DELETE seo/redirects'] = 'seo/redirects/delete';
 	}
 
+	/**
+	 * @param ExceptionEvent $event
+	 *
+	 * @throws \yii\base\Exception
+	 */
 	public function onBeforeHandleException (ExceptionEvent $event)
 	{
 		$this->redirects->onException($event);
+	}
+
+	public function onRegisterFieldTypes (RegisterComponentTypesEvent $event)
+	{
+		$event->types[] = SeoField::class;
 	}
 
 	// Misc

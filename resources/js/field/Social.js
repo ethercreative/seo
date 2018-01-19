@@ -73,7 +73,7 @@ export default class Social {
 		) return;
 		
 		Craft.createElementSelectorModal(
-			"Asset",
+			"craft\\elements\\Asset",
 			{
 				multiSelect: false,
 				criteria: {
