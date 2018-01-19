@@ -6,10 +6,13 @@ use craft\base\Plugin;
 use craft\events\ExceptionEvent;
 use craft\events\RegisterComponentTypesEvent;
 use craft\events\RegisterUrlRulesEvent;
+use craft\events\TemplateEvent;
 use craft\services\Fields;
 use craft\web\ErrorHandler;
 use craft\web\Request;
+use craft\web\twig\variables\CraftVariable;
 use craft\web\UrlManager;
+use craft\web\View;
 use ether\seo\fields\SeoField;
 use ether\seo\models\Settings;
 use ether\seo\services\RedirectsService;
@@ -74,6 +77,18 @@ class Seo extends Plugin
 			Fields::className(),
 			Fields::EVENT_REGISTER_FIELD_TYPES,
 			[$this, 'onRegisterFieldTypes']
+		);
+
+		// Variable
+		Event::on(
+			CraftVariable::class,
+			CraftVariable::EVENT_INIT,
+			[$this, 'onRegisterVariable']
+		);
+
+		\Craft::$app->view->hook(
+			'seo',
+			[$this, 'onRegisterSeoHook']
 		);
 	}
 
@@ -153,6 +168,46 @@ class Seo extends Plugin
 	public function onRegisterFieldTypes (RegisterComponentTypesEvent $event)
 	{
 		$event->types[] = SeoField::class;
+	}
+
+	/**
+	 * @param Event $event
+	 *
+	 * @throws \yii\base\InvalidConfigException
+	 */
+	public function onRegisterVariable (Event $event)
+	{
+		/** @var CraftVariable $variable */
+		$variable = $event->sender;
+		$variable->set('seo', Variable::class);
+	}
+
+	/**
+	 * @param $context
+	 *
+	 * @return string
+	 * @throws \Twig_Error_Loader
+	 * @throws \yii\base\Exception
+	 */
+	public function onRegisterSeoHook (&$context)
+	{
+		$craft = \Craft::$app;
+		$metaTemplateName = $this->getSettings()['metaTemplate'];
+
+		if ($metaTemplateName)
+			return $craft->view->renderTemplate(
+				$metaTemplateName,
+				$context
+			);
+
+		$oldTemplateMode = $craft->view->getTemplateMode();
+		$craft->view->setTemplateMode(View::TEMPLATE_MODE_CP);
+		$rendered = $craft->view->renderTemplate(
+			'seo/_seo/meta',
+			$context
+		);
+		$craft->view->setTemplateMode($oldTemplateMode);
+		return $rendered;
 	}
 
 	// Misc

@@ -72,16 +72,31 @@ class SeoField extends Field implements PreviewableFieldInterface
 		if (empty($value))
 			return self::$defaultValue;
 
-		$value = Json::decode($value);
+		if (!is_array($value))
+			$value = Json::decode($value);
+
+//		\Craft::dd($value);
 
 		$social = array_merge(self::$defaultValue['social'], $value['social']);
-		foreach ($social as $k => $s) {
-			if ($s['image'] === '')
+		foreach ($social as $k => $s)
+		{
+			if ($s['image'] !== '')
+			{
+				if (is_object($s['image']) && get_class($s['image']) === 'craft\elements\Asset')
+					continue;
+
+				if (is_array($s['image'])) {
+					$s['image'] = $s['image']['id'];
+				}
+
 				$s['image'] = \Craft::$app->assets->getAssetById(
-					(int) $s['image']
+					(int)$s['image']
 				);
+			}
 			else
+			{
 				$s['image'] = $this->_socialFallbackImage();
+			}
 
 			$social[$k] = $s;
 		}
@@ -215,6 +230,35 @@ class SeoField extends Field implements PreviewableFieldInterface
 				Seo::getFieldTypeSettingsVariables()
 			)
 		);
+	}
+
+	public function getSearchKeywords ($value, ElementInterface $element): string {
+		if (empty($value))
+			$value = self::$defaultValue;
+
+		return $value['title'] . ' ' . $value['description'];
+	}
+
+	public function getTableAttributeHtml (
+		$value,
+		ElementInterface $element
+	): string {
+		if (empty($value))
+			$value = self::$defaultValue;
+
+		switch ($value['score']) {
+			case 'poor':
+				return '<span class="status active" style="margin-top:5px;background:#ff4750;" title="Poor"></span>';
+				break;
+			case 'average':
+				return '<span class="status active" style="margin-top:5px;background:#ffab47;" title="Average"></span>';
+				break;
+			case 'good':
+				return '<span class="status active" style="margin-top:5px;background:#3eda80;" title="Good"></span>';
+				break;
+			default:
+				return '<span class="status active" style="margin-top:5px;background:#ccc;" title="Unranked"></span>';
+		}
 	}
 
 	// Helpers
