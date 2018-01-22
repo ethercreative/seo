@@ -14,6 +14,7 @@ use craft\web\twig\variables\CraftVariable;
 use craft\web\UrlManager;
 use craft\web\View;
 use ether\seo\fields\SeoField;
+use ether\seo\listeners\GetCraftQLSchema;
 use ether\seo\models\Settings;
 use ether\seo\services\RedirectsService;
 use yii\base\Event;
@@ -86,10 +87,22 @@ class Seo extends Plugin
 			[$this, 'onRegisterVariable']
 		);
 
+		// Template Hook
 		\Craft::$app->view->hook(
 			'seo',
 			[$this, 'onRegisterSeoHook']
 		);
+
+		// CraftQL Support
+		/** @noinspection PhpUndefinedNamespaceInspection */
+		/** @noinspection PhpUnnecessaryFullyQualifiedNameInspection */
+		if (class_exists(\markhuot\CraftQL\CraftQL::class)) {
+			Event::on(
+				SeoField::className(),
+				'craftQlGetFieldSchema',
+				[new GetCraftQLSchema, 'handle']
+			);
+		}
 	}
 
 	// Craft: Settings

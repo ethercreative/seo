@@ -75,15 +75,15 @@ class SeoField extends Field implements PreviewableFieldInterface
 		if (!is_array($value))
 			$value = Json::decode($value);
 
-//		\Craft::dd($value);
-
 		$social = array_merge(self::$defaultValue['social'], $value['social']);
 		foreach ($social as $k => $s)
 		{
 			if ($s['image'] !== '')
 			{
-				if (is_object($s['image']) && get_class($s['image']) === 'craft\elements\Asset')
-					continue;
+				if (
+					is_object($s['image'])
+					&& get_class($s['image']) === 'craft\elements\Asset'
+				) continue;
 
 				if (is_array($s['image'])) {
 					$s['image'] = $s['image']['id'];
