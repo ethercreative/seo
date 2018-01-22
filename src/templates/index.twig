@@ -1,30 +1,24 @@
 {% extends "_layouts/cp" %}
 {% set title = 'SEO' %}
-
-{% css %}
-	.seo--coming-soon {
-		pointer-events: none;
-		opacity: 0.25;
-	}
-{% endcss %}
+{% set selectedSubnavItem = 'dashboard' %}
 
 {% block content %}
 	<ul class="icons">
 		{% if currentUser.admin or currentUser.can('manageSitemap') %}
-			<li class="seo--coming-soon">
+			<li>
 				<a href="{{ url('seo/sitemap') }}" data-icon="globe">
 					Sitemap
 				</a>
 			</li>
 		{% endif %}
 		{% if currentUser.admin or currentUser.can('manageRedirects') %}
-			<li class="seo--coming-soon">
+			<li>
 				<a href="{{ url('seo/redirects') }}" data-icon="routes">
 					Redirects
 				</a>
 			</li>
 		{% endif %}
-		<li class="seo--coming-soon">
+		<li>
 			<a href="{{ url('seo/schema') }}" data-icon="tags">
 				Schema
 			</a>

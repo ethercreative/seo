@@ -29,7 +29,7 @@ export default class Snippet {
 		};
 		
 		this.title();
-		this.slugField && this.slug();
+		this.slugField && SEO.options.hasPreview && this.slug();
 		this.desc();
 	}
 	

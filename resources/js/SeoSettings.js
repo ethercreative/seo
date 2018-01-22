@@ -74,43 +74,46 @@ class SeoSettings {
 	
 	static EditableTable (tableId, addButtonId, rowCb) {
 		const noop = () => {};
-		this.rowCb = typeof rowCb === typeof noop ? rowCb : noop;
-		this.table =
+		SeoSettings.rowCb = typeof rowCb === typeof noop ? rowCb : noop;
+		SeoSettings.table =
 			document.getElementById(tableId).getElementsByTagName("tbody")[0];
-		this.row = this.table.firstElementChild.cloneNode(true);
-		this.table.firstElementChild.remove();
+		SeoSettings.row = SeoSettings.table.firstElementChild.cloneNode(true);
+		SeoSettings.table.firstElementChild.remove();
 		
-		this.row.classList.remove("hidden");
+		SeoSettings.row.classList.remove("hidden");
 		
-		const deleteButtons = this.table.getElementsByClassName("delete");
+		const deleteButtons = SeoSettings.table.getElementsByClassName("delete");
 		let i = deleteButtons.length;
 		while (i--) {
 			const btn = deleteButtons[i];
 			btn.addEventListener("click", () => {
 				btn.parentNode.parentNode.remove();
-				this.rowCb();
+				SeoSettings.rowCb();
 			});
 		}
 		
 		document.getElementById(addButtonId).addEventListener("click", () => {
-			this.addRowToEditableTable();
+			SeoSettings.addRowToEditableTable();
 		});
 	}
 	
 	static addRowToEditableTable () {
-		const newRow = this.row.cloneNode(true);
+		const newRow = SeoSettings.row.cloneNode(true);
 		
 		newRow.innerHTML =
-			newRow.innerHTML.replace(/{i}/g, this.table.childNodes.length - 2);
+			newRow.innerHTML.replace(
+				/{i}/g,
+				SeoSettings.table.childNodes.length - 2
+			);
 		
 		newRow.getElementsByClassName("delete")[0].addEventListener("click", () => {
 			newRow.remove();
-			this.rowCb();
+			SeoSettings.rowCb();
 		});
 		
-		this.table.appendChild(newRow);
+		SeoSettings.table.appendChild(newRow);
 		
-		this.rowCb();
+		SeoSettings.rowCb();
 	}
 	
 }

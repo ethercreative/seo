@@ -163,6 +163,9 @@ class SeoField extends Field implements PreviewableFieldInterface
 		if ($hasPreview && $isEntry && !$isHome && !$isSingle)
 			$url = substr($url, 0, strrpos( $url, '/')) . '/';
 
+		if ($element->slug)
+			$url = str_replace($element->slug, '', $url);
+
 		$titleSuffix = $settings['titleSuffix'] ?: $settingsGlobal['titleSuffix'];
 
 		if ($hasPreview && $isEntry && $value['title'] === null && $isSingle)

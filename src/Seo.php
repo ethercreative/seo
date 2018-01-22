@@ -6,10 +6,8 @@ use craft\base\Plugin;
 use craft\events\ExceptionEvent;
 use craft\events\RegisterComponentTypesEvent;
 use craft\events\RegisterUrlRulesEvent;
-use craft\events\TemplateEvent;
 use craft\services\Fields;
 use craft\web\ErrorHandler;
-use craft\web\Request;
 use craft\web\twig\variables\CraftVariable;
 use craft\web\UrlManager;
 use craft\web\View;
@@ -17,6 +15,7 @@ use ether\seo\fields\SeoField;
 use ether\seo\listeners\GetCraftQLSchema;
 use ether\seo\models\Settings;
 use ether\seo\services\RedirectsService;
+use ether\seo\services\SitemapService;
 use yii\base\Event;
 
 /**
@@ -24,7 +23,8 @@ use yii\base\Event;
  *
  * @package ether\seo
  *
- * @property RedirectsService $redirects
+ * @property SitemapService     $sitemap
+ * @property RedirectsService   $redirects
  */
 class Seo extends Plugin
 {
@@ -56,6 +56,7 @@ class Seo extends Plugin
 		// ---------------------------------------------------------------------
 
 		$this->setComponents([
+			'sitemap' => SitemapService::class,
 			'redirects' => RedirectsService::class,
 		]);
 
@@ -103,6 +104,32 @@ class Seo extends Plugin
 				[new GetCraftQLSchema, 'handle']
 			);
 		}
+	}
+
+	public function getCpNavItem ()
+	{
+		$item = parent::getCpNavItem();
+		$currentUser = \Craft::$app->user;
+
+		$subNav = [
+			'dashboard' => ['label' => 'Dashboard', 'url' => 'seo'],
+		];
+
+		if ($currentUser->getIsAdmin() || $currentUser->can('manageSitemap'))
+			$subNav[] = ['label' => 'Sitemap', 'url' => 'seo/sitemap'];
+
+		if ($currentUser->getIsAdmin() || $currentUser->can('manageRedirects'))
+			$subNav[] = ['label' => 'Redirects', 'url' => 'seo/redirects'];
+
+		if ($currentUser->getIsAdmin() || $currentUser->can('manageSchema'))
+			$subNav[] = ['label' => 'Schema', 'url' => 'seo/schema'];
+
+		if ($currentUser->getIsAdmin())
+			$subNav[] = ['label' => 'Settings', 'url' => 'settings/plugins/seo'];
+
+		$item['subnav'] = $subNav;
+
+		return $item;
 	}
 
 	// Craft: Settings
@@ -153,19 +180,28 @@ class Seo extends Plugin
 		return $this->redirects;
 	}
 
+	public function getSitemap (): SitemapService
+	{
+		return $this->sitemap;
+	}
+
 	// Events
 	// =========================================================================
 
 	public function onRegisterCPUrlRules (RegisterUrlRulesEvent $event)
 	{
-		$event->rules['seo']           = 'seo/seo/index';
-//		$event->rules['seo/sitemap']   = 'seo/sitemap/index';
+		$event->rules['seo'] = 'seo/seo/index';
+
+		// Sitemap
+		// ---------------------------------------------------------------------
+		$event->rules['POST seo/sitemap'] = 'seo/sitemap/save';
+		$event->rules['seo/sitemap'] = 'seo/sitemap/index';
 
 		// Redirects
 		// ---------------------------------------------------------------------
-		$event->rules['seo/redirects'] = 'seo/redirects/index';
-		$event->rules['PUT seo/redirects'] = 'seo/redirects/save';
 		$event->rules['DELETE seo/redirects'] = 'seo/redirects/delete';
+		$event->rules['PUT seo/redirects'] = 'seo/redirects/save';
+		$event->rules['seo/redirects'] = 'seo/redirects/index';
 	}
 
 	/**
