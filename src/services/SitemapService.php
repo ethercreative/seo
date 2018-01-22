@@ -6,6 +6,7 @@ use craft\base\Component;
 use craft\models\CategoryGroup;
 use craft\models\Section;
 use ether\seo\records\SitemapRecord;
+use yii\db\Exception;
 
 class SitemapService extends Component
 {
@@ -39,7 +40,6 @@ class SitemapService extends Component
 		$newSitemap = $data;
 
 		// Delete removed rows
-		// FIXME: Deleting doesn't work :(
 		// ---------------------------------------------------------------------
 		$newById = [];
 		$oldById = [];
@@ -78,10 +78,19 @@ class SitemapService extends Component
 
 		if (!empty($idsToDelete))
 		{
-			\Craft::$app->db->createCommand()->delete(
-				SitemapRecord::$tableName,
-				['in', 'id', $idsToDelete]
-			);
+			try {
+				\Craft::$app->db->createCommand()->delete(
+					SitemapRecord::$tableName,
+					['in', 'id', $idsToDelete]
+				)->execute();
+			} catch (Exception $e) {
+				\Craft::$app->log->logger->log(
+					$e->getMessage(),
+					LOG_ERR,
+					'seo'
+				);
+				return false;
+			}
 		}
 
 		// Update current rows
