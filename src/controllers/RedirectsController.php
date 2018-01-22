@@ -31,6 +31,9 @@ class RedirectsController extends Controller
 
 		return $this->renderTemplate('seo/redirects', [
 			'namespace' => $namespace,
+			'crumbs' => [
+				['label' => 'SEO', 'url' => 'index'],
+			],
 			'redirects' => Seo::$i->redirects->findAllRedirects(),
 		]);
 	}

@@ -29,6 +29,9 @@ class SitemapController extends Controller
 
 		return $this->renderTemplate('seo/sitemap', [
 			'namespace' => $namespace,
+			'crumbs' => [
+				['label' => 'SEO', 'url' => 'index'],
+			],
 
 			'sitemap' => Seo::$i->sitemap->getSitemap(),
 			'sections' => Seo::$i->sitemap->getValidSections(),

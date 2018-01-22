@@ -116,16 +116,20 @@ class Seo extends Plugin
 		];
 
 		if ($currentUser->getIsAdmin() || $currentUser->can('manageSitemap'))
-			$subNav[] = ['label' => 'Sitemap', 'url' => 'seo/sitemap'];
+			$subNav['sitemap'] =
+				['label' => 'Sitemap', 'url' => 'seo/sitemap'];
 
 		if ($currentUser->getIsAdmin() || $currentUser->can('manageRedirects'))
-			$subNav[] = ['label' => 'Redirects', 'url' => 'seo/redirects'];
+			$subNav['redirects'] =
+				['label' => 'Redirects', 'url' => 'seo/redirects'];
 
 		if ($currentUser->getIsAdmin() || $currentUser->can('manageSchema'))
-			$subNav[] = ['label' => 'Schema', 'url' => 'seo/schema'];
+			$subNav['schema'] =
+				['label' => 'Schema', 'url' => 'seo/schema'];
 
 		if ($currentUser->getIsAdmin())
-			$subNav[] = ['label' => 'Settings', 'url' => 'settings/plugins/seo'];
+			$subNav['settings'] =
+				['label' => 'Settings', 'url' => 'settings/plugins/seo'];
 
 		$item['subnav'] = $subNav;
 
@@ -202,6 +206,10 @@ class Seo extends Plugin
 		$event->rules['DELETE seo/redirects'] = 'seo/redirects/delete';
 		$event->rules['PUT seo/redirects'] = 'seo/redirects/save';
 		$event->rules['seo/redirects'] = 'seo/redirects/index';
+
+		// Schema
+		// ---------------------------------------------------------------------
+		$event->rules['seo/schema'] = 'seo/schema/index';
 	}
 
 	/**
