@@ -17,6 +17,7 @@ use ether\seo\models\Settings;
 use ether\seo\services\RedirectsService;
 use ether\seo\services\SitemapService;
 use yii\base\Event;
+use yii\base\Exception;
 
 /**
  * Class Seo
@@ -52,6 +53,8 @@ class Seo extends Plugin
 		parent::init();
 		self::$i = self::getInstance();
 
+		$craft = \Craft::$app;
+
 		// Components
 		// ---------------------------------------------------------------------
 
@@ -77,13 +80,6 @@ class Seo extends Plugin
 			[$this, 'onRegisterSiteUrlRules']
 		);
 
-		// Exceptions (for 404 redirects)
-		Event::on(
-			ErrorHandler::className(),
-			ErrorHandler::EVENT_BEFORE_HANDLE_EXCEPTION,
-			[$this, 'onBeforeHandleException']
-		);
-
 		// Field type
 		Event::on(
 			Fields::className(),
@@ -97,6 +93,19 @@ class Seo extends Plugin
 			CraftVariable::EVENT_INIT,
 			[$this, 'onRegisterVariable']
 		);
+
+		// 404 Exceptions
+		if (
+			$craft->request->isSiteRequest
+			&& !$craft->request->isConsoleRequest
+			&& !$craft->request->isLivePreview
+		) {
+			Event::on(
+				ErrorHandler::className(),
+				ErrorHandler::EVENT_BEFORE_HANDLE_EXCEPTION,
+				[$this, 'onBeforeHandleException']
+			);
+		}
 
 		// Template Hook
 		\Craft::$app->view->hook(
@@ -232,16 +241,6 @@ class Seo extends Plugin
 		$event->rules[$sitemapName . '_custom.xml'] = 'seo/sitemap/xml/custom';
 	}
 
-	/**
-	 * @param ExceptionEvent $event
-	 *
-	 * @throws \yii\base\Exception
-	 */
-	public function onBeforeHandleException (ExceptionEvent $event)
-	{
-		$this->redirects->onException($event);
-	}
-
 	public function onRegisterFieldTypes (RegisterComponentTypesEvent $event)
 	{
 		$event->types[] = SeoField::class;
@@ -257,6 +256,16 @@ class Seo extends Plugin
 		/** @var CraftVariable $variable */
 		$variable = $event->sender;
 		$variable->set('seo', Variable::class);
+	}
+
+	/**
+	 * @param ExceptionEvent $event
+	 *
+	 * @throws \yii\base\Exception
+	 */
+	public function onBeforeHandleException (ExceptionEvent $event)
+	{
+		$this->redirects->onException($event);
 	}
 
 	/**

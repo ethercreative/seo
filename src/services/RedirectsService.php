@@ -22,17 +22,20 @@ class RedirectsService extends Component
 	 *
 	 * @param ExceptionEvent $event
 	 *
+	 * @return void
 	 * @throws \yii\base\Exception
+	 * @throws \yii\base\ExitException
 	 */
 	public function onException (ExceptionEvent $event)
 	{
 		$exception = $event->exception;
+		$craft = \Craft::$app;
 
 		if (!($exception instanceof HttpException) || $exception->statusCode !== 404)
 			return;
 
-		$path = \Craft::$app->request->getFullPath();
-		$query = \Craft::$app->request->getQueryStringWithoutPath();
+		$path = $craft->request->getFullPath();
+		$query = $craft->request->getQueryStringWithoutPath();
 
 		if ($query)
 			$path .= '?' . $query;
@@ -40,7 +43,9 @@ class RedirectsService extends Component
 		if ($redirect = $this->findRedirectByPath($path))
 		{
 			$event->handled = true;
-			\Craft::$app->response->redirect($redirect['to'], $redirect['type']);
+			$craft->response->redirect($redirect['to'], $redirect['type'])
+			                ->send();
+			$craft->end();
 		}
 	}
 
