@@ -6,7 +6,9 @@ use craft\base\Plugin;
 use craft\events\ExceptionEvent;
 use craft\events\RegisterComponentTypesEvent;
 use craft\events\RegisterUrlRulesEvent;
+use craft\events\RegisterUserPermissionsEvent;
 use craft\services\Fields;
+use craft\services\UserPermissions;
 use craft\web\ErrorHandler;
 use craft\web\twig\variables\CraftVariable;
 use craft\web\UrlManager;
@@ -17,7 +19,6 @@ use ether\seo\models\Settings;
 use ether\seo\services\RedirectsService;
 use ether\seo\services\SitemapService;
 use yii\base\Event;
-use yii\base\Exception;
 
 /**
  * Class Seo
@@ -65,6 +66,13 @@ class Seo extends Plugin
 
 		// Events
 		// ---------------------------------------------------------------------
+
+		// User Permissions
+		Event::on(
+			UserPermissions::className(),
+			UserPermissions::EVENT_REGISTER_PERMISSIONS,
+			[$this, 'onRegisterPermissions']
+		);
 
 		// CP URLs
 		Event::on(
@@ -142,9 +150,9 @@ class Seo extends Plugin
 			$subNav['redirects'] =
 				['label' => 'Redirects', 'url' => 'seo/redirects'];
 
-		if ($currentUser->getIsAdmin() || $currentUser->can('manageSchema'))
+		/*if ($currentUser->getIsAdmin() || $currentUser->can('manageSchema'))
 			$subNav['schema'] =
-				['label' => 'Schema', 'url' => 'seo/schema'];
+				['label' => 'Schema', 'url' => 'seo/schema'];*/
 
 		if ($currentUser->getIsAdmin())
 			$subNav['settings'] =
@@ -211,6 +219,21 @@ class Seo extends Plugin
 	// Events
 	// =========================================================================
 
+	public function onRegisterPermissions (RegisterUserPermissionsEvent $event)
+	{
+		$event->permissions['SEO'] = [
+			'manageSitemap' => [
+				'label' => \Craft::t('seo', 'Manage Sitemap'),
+			],
+			'manageRedirects' => [
+				'label' => \Craft::t('seo', 'Manage Redirects'),
+			],
+//			'manageSchema' => [
+//				'label' => \Craft::t('seo', 'Manage Schema'),
+//			],
+		];
+	}
+
 	public function onRegisterCPUrlRules (RegisterUrlRulesEvent $event)
 	{
 		$event->rules['seo'] = 'seo/seo/index';
@@ -229,7 +252,7 @@ class Seo extends Plugin
 
 		// Schema
 		// ---------------------------------------------------------------------
-		$event->rules['seo/schema'] = 'seo/schema/index';
+//		$event->rules['seo/schema'] = 'seo/schema/index';
 	}
 
 	public function onRegisterSiteUrlRules (RegisterUrlRulesEvent $event)
@@ -262,6 +285,7 @@ class Seo extends Plugin
 	 * @param ExceptionEvent $event
 	 *
 	 * @throws \yii\base\Exception
+	 * @throws \yii\base\ExitException
 	 */
 	public function onBeforeHandleException (ExceptionEvent $event)
 	{
