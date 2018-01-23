@@ -194,5 +194,20 @@
       "[Fixed] `sitemap.xml` breaking if no elements can be found in a given criteria #43",
       "[Improved] You can now use `{% hook \"seo\" %}` to output all your SEO meta!"
     ]
+  },
+  {
+    "version": "2.0.0",
+    "downloadUrl": "https://github.com/ethercreative/seo/archive/v2.0.0.zip",
+    "date": "2018-01-23T17:20:00-08:00",
+    "notes": [
+      "[Added] Added ability to specify titles, descriptions, and images for social media",
+      "[Improved] SEO field now supports multiple keywords",
+      "[Improved] Increased the max length for snippet descriptions #56",
+      "[Improved] Optimization checklist is now always visible #51",
+      "[Fixed] Sitemap should now only include entries that are enabled #52",
+      "[Fixed] Redirects with parameters #47 #48 (via @DanielleDeman)",
+      "[Fixed] Fix generating localized URLs for elements #45 #46 (via @ClemensSchneider)",
+      "[Fixed] Fixed save requests #44 (via @roelvanhintum)"
+    ]
   }
 ]

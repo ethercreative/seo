@@ -11,8 +11,7 @@
 		"ignore": false,
 		"input": [
 			"js/SeoField.js",
-			"js/SeoSettings.js",
-			"js/SeoSchema.js"
+			"js/SeoSettings.js"
 		],
 		"output": [
 			"../seo/resources/js/SeoField.min.js",

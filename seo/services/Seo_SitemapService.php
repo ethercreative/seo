@@ -394,7 +394,7 @@ class Seo_SitemapService extends BaseApplicationComponent
 
 						$localeElement = $localeElementCriteria->first();
 
-						if (!empty($localeElement)) {
+						if (!empty($localeElement) && $localeElement->enabled) {
 							$alt = $this->_document->createElement("xhtml:link");
 							$alt->setAttribute("rel", "alternate");
 							$alt->setAttribute(

@@ -44,6 +44,7 @@ class Seo_RedirectService extends BaseApplicationComponent
 	public function findRedirectByPath ($path)
 	{
 		$redirects = $this->getAllRedirects();
+		$path = strtok($path, '?');
 
 		// Loop over available redirects
 		foreach ($redirects as $redirect)

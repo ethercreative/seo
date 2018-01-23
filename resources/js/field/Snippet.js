@@ -134,7 +134,7 @@ export default class Snippet {
 			this.descField.value =
 				this.descField.value.replace(/(\r\n|\r|\n)/gm, " ");
 			
-			if (this.descField.value.length > 160)
+			if (this.descField.value.length > 313)
 				this.descField.classList.add("invalid");
 			else
 				this.descField.classList.remove("invalid");
