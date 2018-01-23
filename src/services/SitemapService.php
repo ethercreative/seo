@@ -4,6 +4,7 @@ namespace ether\seo\services;
 
 use craft\base\Component;
 use craft\base\Element;
+use craft\db\Query;
 use craft\elements\Category;
 use craft\elements\db\CategoryQuery;
 use craft\elements\db\EntryQuery;
@@ -227,6 +228,7 @@ class SitemapService extends Component
 	{
 		$this->_createDocument();
 		$sitemapData = $this->getSitemap();
+		$craft = \Craft::$app;
 
 		if (!array_key_exists($variables['section'], $sitemapData))
 			goto out;
@@ -268,6 +270,13 @@ class SitemapService extends Component
 		$elements->limit = $settings->sitemapLimit;
 		$elements->offset = $settings->sitemapLimit * $variables['page'];
 
+		$currentLocale = $craft->locale->id;
+		$availableLocales = $craft->i18n->getSiteLocaleIds();
+
+		if (($key = array_search($currentLocale, $availableLocales)) !== false) {
+			unset($availableLocales[$key]);
+		}
+
 		foreach ($elements->all() as $item)
 		{
 			if ($item->url === null)
@@ -301,7 +310,46 @@ class SitemapService extends Component
 			$url->appendChild($freq);
 			$url->appendChild($priority);
 
-			// TODO: Locales
+			$enabledLookup =
+				(new Query())->select(['siteId', 'uri'])
+				             ->from('{{%elements_sites}}')
+				             ->where('[[elementId]] = ' . $item->id)
+				             ->andWhere('enabled = true')
+				             ->all();
+
+			$enabledLookup = array_reduce(
+				$enabledLookup,
+				function ($a, $b) {
+					$uri = $b['uri'];
+					$a[$b['siteId']] = $uri === '__home__' ? '' : $uri;
+					return $a;
+				},
+				[]
+			);
+
+			foreach ($item->supportedSites as $siteId)
+			{
+				$id = $siteId['siteId'];
+				$site = $craft->sites->getSiteById($id);
+				$lang = $site->language;
+
+				if (!in_array($lang, $availableLocales))
+					continue;
+
+				if (!array_key_exists($id, $enabledLookup))
+					continue;
+
+				$link = UrlHelper::url($enabledLookup[$id], null, $id);
+
+				$alt = $this->_document->createElement('xhtml:link');
+				$alt->setAttribute('rel', 'alternate');
+				$alt->setAttribute(
+					'hreflang',
+					str_replace('_', '-', $lang)
+				);
+				$alt->setAttribute('href', $link);
+				$url->appendChild($alt);
+			}
 		}
 
 		out:

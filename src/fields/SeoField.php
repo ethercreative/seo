@@ -7,6 +7,7 @@ use craft\base\Field;
 use craft\base\PreviewableFieldInterface;
 use craft\elements\Entry;
 use craft\helpers\Json;
+use craft\helpers\UrlHelper;
 use craft\models\Section;
 use ether\seo\resources\SeoFieldAssets;
 use ether\seo\resources\SeoFieldSettingsAssets;
