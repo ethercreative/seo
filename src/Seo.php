@@ -68,11 +68,13 @@ class Seo extends Plugin
 		// ---------------------------------------------------------------------
 
 		// User Permissions
-		Event::on(
-			UserPermissions::className(),
-			UserPermissions::EVENT_REGISTER_PERMISSIONS,
-			[$this, 'onRegisterPermissions']
-		);
+		if ($craft->getEdition() !== \Craft::Personal) {
+			Event::on(
+				UserPermissions::className(),
+				UserPermissions::EVENT_REGISTER_PERMISSIONS,
+				[$this, 'onRegisterPermissions']
+			);
+		}
 
 		// CP URLs
 		Event::on(
