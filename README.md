@@ -18,11 +18,15 @@ The Page Score also contains a breakdown of your entries score, and tips on wher
 
 ![SEO for Craft CMS](resources/imgs/fieldtype.png)
 
+![SEO Social](resources/imgs/fieldtype-social.png)
+
 ### The Sitemap
 
 SEO for Craft boasts an extremely powerful, yet simple to use Sitemap manager. With automatic support for all your site’s sections and categories (with localisations taken into account), and the ability to easily add custom URLs (useful for public templates that aren’t content managed), keeping your sitemap up-to-date has never been easier.
 
 With SEO for Craft’s sitemap manager you have complete control over what content you want to have appear on your sitemap as well as managing its change frequency and priority in your site.
+
+![SEO Sitemap](resources/imgs/sitemap.png)
 
 ### The Redirects
 
@@ -34,6 +38,8 @@ SEO for Crafts redirect manager lets you easily add 301 & 302 redirects, with fu
 To redirect from `blog/2016/my-post` to `news/my-post` you would add the following redirect:
 
 URI: `blog/([0-9]{4})/(.*)` To: `news/$2`
+
+![SEO Redirects](resources/imgs/redirects.png)
 
 ## Installation & Usage
 
