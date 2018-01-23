@@ -187,12 +187,22 @@
     ]
   },
   {
-    "version": "1.5.0",
-    "downloadUrl": "https://github.com/ethercreative/seo/archive/v1.5.0.zip",
+    "version": "1.4.6",
+    "downloadUrl": "https://github.com/ethercreative/seo/archive/v1.4.7.zip",
     "date": "2017-08-30T10:08:00-08:00",
     "notes": [
       "[Fixed] `sitemap.xml` breaking if no elements can be found in a given criteria #43",
       "[Improved] You can now use `{% hook \"seo\" %}` to output all your SEO meta!"
+    ]
+  },
+  {
+    "version": "1.4.7",
+    "downloadUrl": "https://github.com/ethercreative/seo/archive/v1.4.7.zip",
+    "date": "2017-09-14T10:08:00-08:00",
+    "notes": [
+      "[Improved] The redirects table is now properly responsive!",
+      "[Improved] You can click anywhere in a redirects row to edit that redirect.",
+      "[Improved] Added more descriptive instructions to the redirects bulk upload section."
     ]
   },
   {

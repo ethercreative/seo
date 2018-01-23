@@ -63,7 +63,7 @@
 		<div class="main">
 			<div class="elements">
 				<form class="tableview" id="tableForm">
-					<table class="data fullwidth">
+					<table class="data fullwidth redirects--table">
 						<thead>
 						<tr>
 							<th scope="col" data-attribute="uri">URI</th>
@@ -74,16 +74,16 @@
 						</thead>
 						<tbody id="redirectTable">
 						{% for redirect in redirects %}
-						<tr tabindex="0" data-id="{{ redirect.id }}">
+						<tr tabindex="0"
+						    data-id="{{ redirect.id }}"
+						    data-uri="{{ redirect.uri }}"
+						    data-to="{{ redirect.to }}"
+						    data-type="{{ redirect.type|default('301') }}">
 							<td class="redirects--title-col">
 								<div class="element small">
 									<div class="label">
 										<span class="title">
-											<a href="#" title="Edit redirect"
-											   data-id="{{ redirect.id }}"
-											   data-uri="{{ redirect.uri }}"
-											   data-to="{{ redirect.to }}"
-											   data-type="{{ redirect.type|default('301') }}">
+											<a href="#" title="Edit redirect">
 												{{ redirect.uri }}
 											</a>
 										</span>
@@ -145,6 +145,18 @@
 		<h4>Bulk add redirects</h4>
 
 		<div class="fields down">
+			<div class="field">
+				<div class="heading">
+					<div class="instructions">
+						Here you can add multiple redirects all at once. This
+						is useful if you've got a CSV or spreadsheet of
+						redirects that need adding. Simply copy and paste the
+						redirects, ensuring they match the pattern
+						<code>URI To [type]</code> where type is optional.
+					</div>
+				</div>
+			</div>
+
 			{{ forms.textarea({
 				name: "redirects",
 				placeholder: "URI To [Type]\r\nblog/([0-9]{4})/(.*) news/$2\r\nproducts/(.*) shop/$1 302",
@@ -152,11 +164,17 @@
 				required: true
 			}) }}
 
-			{{ forms.text({
-				name: "separator",
-				placeholder: "Separator",
-				required: true
-			}) }}
+			<label class="type-select">
+				{{ forms.text({
+					name: "separator",
+					placeholder: "Separator",
+					required: true
+				}) }}
+				<span class="instructions">
+					The character used to separate each column
+					(i.e. a comma, space, or tab character)
+				</span>
+			</label>
 
 			<label class="type-select">
 				{{ ui.selectField({

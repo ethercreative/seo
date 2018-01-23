@@ -40,7 +40,7 @@ export default class Redirects {
 		[].slice.call(this.table.getElementsByTagName("tr")).forEach(row => {
 			const links = row.getElementsByTagName("a");
 			
-			links[0].addEventListener("click", e => {
+			row.addEventListener("click", e => {
 				this.onEditClick(e, row);
 			});
 			
@@ -203,7 +203,10 @@ export default class Redirects {
 	
 	onEditClick = (e, row) => {
 		e.preventDefault();
-		const { id, uri, to, type } = e.target.dataset;
+		
+		if (e.target.classList.contains("delete")) return;
+		
+		const { id, uri, to, type } = row.dataset;
 		this.cancelCurrentEdit();
 		
 		const editRows = this.rowEdit(id, uri, to, type);
@@ -229,7 +232,14 @@ export default class Redirects {
 			row
 		);
 		
-		editRows[0].getElementsByTagName("input")[1].focus();
+		const focusIndex = e.target.tagName.toLowerCase() === "a" ||
+		                   e.target.firstElementChild ? 1 : 2;
+		
+		const input = editRows[0].getElementsByTagName("input")[focusIndex];
+		input.focus();
+		setTimeout(() => {
+			input.selectionStart = input.selectionEnd = 10000;
+		}, 0);
 		
 		this.table.removeChild(row);
 	};
@@ -303,7 +313,14 @@ export default class Redirects {
 	}
 	
 	rowStatic (id = -1, uri = "", to = "", type = 301) {
-		const row = c("tr", { "tabindex": 0, "data-id": id }, [
+		const row = c("tr", {
+			"tabindex": 0,
+			"data-id": id,
+			"data-uri": uri,
+			"data-to": to,
+			"data-type": type,
+			"click": e => this.onEditClick(e, row)
+		}, [
 			// URI
 			c("td", { "class": "redirects--title-col" }, [
 				c("div", { "class": "element small" }, [
@@ -312,11 +329,7 @@ export default class Redirects {
 							c("a", {
 								"href": "#",
 								"title": "Edit Redirect",
-								"data-id": id,
-								"data-uri": uri,
-								"data-to": to,
-								"data-type": type,
-								"click": e => this.onEditClick(e, row)
+								"click": e => { e.preventDefault(); }
 							}, uri)
 						])
 					])
