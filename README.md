@@ -4,6 +4,8 @@
 
 SEO for Craft does three things that will help your sites SEO, and does them really damn well *(and it has full localisation and Craft Commerce support!)*.
 
+[Click here for the **Craft 2** version.](https://github.com/ethercreative/seo/tree/v2)
+
 ### The Field Type
 
 The SEO field type helps give users an idea of how their page will look in Google, and how their pages content scores when compared to a specific keyword.
