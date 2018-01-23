@@ -1,4 +1,4 @@
-/* globals Craft */
+/* globals Craft, $ */
 /**
  * SEO Redirects
  *
@@ -79,7 +79,7 @@ export default class Redirects {
 		// Submit
 		spinner.classList.remove("hidden");
 		
-		this.post("PUT", {
+		this.post("POST", {
 			uri: uri.value,
 			to: to.value,
 			type: type.value,
@@ -127,7 +127,7 @@ export default class Redirects {
 		// Submit
 		spinner.classList.remove("hidden");
 		
-		this.post("bulkAddRedirects", {
+		this.post("PUT", {
 			redirects: redirects.value,
 			separator: separator.value,
 			type: type.value,
@@ -177,7 +177,7 @@ export default class Redirects {
 		// Submit
 		spinner.classList.remove("hidden");
 		
-		this.post("updateRedirect", {
+		this.post("POST", {
 			id: id.value,
 			uri: uri.value,
 			to: to.value,
@@ -263,23 +263,26 @@ export default class Redirects {
 		onSuccess = () => {},
 		onError = () => {}
 	) {
-		const formData = new FormData();
+		const formData = new FormData()
+			, jsonData = {};
 		
 		formData.append(this.csrf.name, this.csrf.token);
+		jsonData[this.csrf.name] = this.csrf.token;
 		
 		Object.keys(fields).forEach(key => {
-			if (fields.hasOwnProperty(key))
+			if (fields.hasOwnProperty(key)) {
 				formData.append(key, fields[key]);
+				jsonData[key] = fields[key];
+			}
 		});
 		
-		const xhr = new XMLHttpRequest();
-		xhr.open(method, window.location.href, true);
-		xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
-		
-		xhr.onload = function() {
-			let data = xhr.responseText;
-			if (xhr.status >= 200 && xhr.status < 400) {
-				data = JSON.parse(data);
+		$.ajax({
+			type: method,
+			url: window.location.href,
+			dataType: 'json',
+			data: jsonData,
+		}).done((data, status) => {
+			if (status === "success") {
 				if (data.hasOwnProperty("success")) {
 					onSuccess(data);
 				} else if (data.hasOwnProperty("error")) {
@@ -292,13 +295,9 @@ export default class Redirects {
 			} else {
 				onError(data);
 			}
-		};
-		
-		xhr.onerror = function () {
+		}).fail(() => {
 			onError("An unknown error has occurred");
-		};
-		
-		xhr.send(formData);
+		});
 	}
 	
 	rowStatic (id = -1, uri = "", to = "", type = 301) {

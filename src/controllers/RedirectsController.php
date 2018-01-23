@@ -68,6 +68,33 @@ class RedirectsController extends Controller
 	}
 
 	/**
+	 * @throws \yii\web\BadRequestHttpException
+	 */
+	public function actionBulk ()
+	{
+		$request  = \Craft::$app->request;
+
+		$redirects = $request->getRequiredBodyParam('redirects');
+		$separator = $request->getRequiredBodyParam('separator');
+		$type      = $request->getRequiredBodyParam('type');
+
+		list($success, $error) =
+			Seo::$i->redirects->bulk($redirects, $separator, $type);
+
+		if ($error)
+		{
+			return $this->asErrorJson($error);
+		}
+		else
+		{
+			return $this->asJson([
+				'success' => true,
+				'redirects' => $success,
+			]);
+		}
+	}
+
+	/**
 	 * @throws \Exception
 	 * @throws \Throwable
 	 * @throws \yii\db\StaleObjectException
@@ -75,8 +102,6 @@ class RedirectsController extends Controller
 	 */
 	public function actionDelete ()
 	{
-		$this->requirePostRequest();
-
 		$id = \Craft::$app->request->getRequiredBodyParam('id');
 
 		if ($err = Seo::$i->redirects->delete($id))

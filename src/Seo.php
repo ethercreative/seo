@@ -63,18 +63,28 @@ class Seo extends Plugin
 		// Events
 		// ---------------------------------------------------------------------
 
+		// CP URLs
 		Event::on(
 			UrlManager::className(),
 			UrlManager::EVENT_REGISTER_CP_URL_RULES,
 			[$this, 'onRegisterCPUrlRules']
 		);
 
+		// Site URLs
+		Event::on(
+			UrlManager::className(),
+			UrlManager::EVENT_REGISTER_SITE_URL_RULES,
+			[$this, 'onRegisterSiteUrlRules']
+		);
+
+		// Exceptions (for 404 redirects)
 		Event::on(
 			ErrorHandler::className(),
 			ErrorHandler::EVENT_BEFORE_HANDLE_EXCEPTION,
 			[$this, 'onBeforeHandleException']
 		);
 
+		// Field type
 		Event::on(
 			Fields::className(),
 			Fields::EVENT_REGISTER_FIELD_TYPES,
@@ -83,7 +93,7 @@ class Seo extends Plugin
 
 		// Variable
 		Event::on(
-			CraftVariable::class,
+			CraftVariable::className(),
 			CraftVariable::EVENT_INIT,
 			[$this, 'onRegisterVariable']
 		);
@@ -204,12 +214,22 @@ class Seo extends Plugin
 		// Redirects
 		// ---------------------------------------------------------------------
 		$event->rules['DELETE seo/redirects'] = 'seo/redirects/delete';
-		$event->rules['PUT seo/redirects'] = 'seo/redirects/save';
+		$event->rules['POST seo/redirects'] = 'seo/redirects/save';
+		$event->rules['PUT seo/redirects'] = 'seo/redirects/bulk';
 		$event->rules['seo/redirects'] = 'seo/redirects/index';
 
 		// Schema
 		// ---------------------------------------------------------------------
 		$event->rules['seo/schema'] = 'seo/schema/index';
+	}
+
+	public function onRegisterSiteUrlRules (RegisterUrlRulesEvent $event)
+	{
+		$sitemapName = $this->getSettings()->sitemapName;
+
+		$event->rules[$sitemapName . '.xml'] = 'seo/sitemap/xml/index';
+		$event->rules[$sitemapName . '_<section:\w*>_<id:\d*>_<page:\d*>.xml'] = 'seo/sitemap/xml/core';
+		$event->rules[$sitemapName . '_custom.xml'] = 'seo/sitemap/xml/custom';
 	}
 
 	/**

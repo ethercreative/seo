@@ -140,6 +140,42 @@ class RedirectsService extends Component
 	}
 
 	/**
+	 * Bulk creates redirects
+	 *
+	 * @param $redirects
+	 * @param $separator
+	 * @param $type
+	 *
+	 * @return array
+	 */
+	public function bulk ($redirects, $separator, $type)
+	{
+		$rawRedirects = array_map(function ($line) use ($separator) {
+			return str_getcsv($line, $separator);
+		}, explode(PHP_EOL, $redirects));
+
+		$newFormatted = [];
+
+		foreach ($rawRedirects as $redirect)
+		{
+			$record = new RedirectRecord();
+			$record->uri  = $redirect[0];
+			$record->to   = $redirect[1];
+			$record->type = array_key_exists(2, $redirect) ? $redirect[2] : $type;
+			$record->save();
+
+			$newFormatted[] = [
+				'id'   => $record->id,
+				'uri'  => $record->uri,
+				'to'   => $record->to,
+				'type' => $record->type,
+			];
+		}
+
+		return [$newFormatted, false];
+	}
+
+	/**
 	 * Deletes the redirect with the given ID
 	 *
 	 * @param int $id

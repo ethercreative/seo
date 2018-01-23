@@ -9,6 +9,8 @@ use ether\seo\records\SitemapRecord;
 class Install extends Migration
 {
 
+	// TODO: https://github.com/craftcms/docs/blob/v3/en/updating-plugins.md#writing-an-upgrade-migration
+
 	public function safeUp ()
 	{
 		// Sitemap

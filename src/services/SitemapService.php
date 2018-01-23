@@ -3,9 +3,18 @@
 namespace ether\seo\services;
 
 use craft\base\Component;
+use craft\base\Element;
+use craft\elements\Category;
+use craft\elements\db\CategoryQuery;
+use craft\elements\db\EntryQuery;
+use craft\elements\Entry;
+use craft\helpers\DateTimeHelper;
+use craft\helpers\UrlHelper;
 use craft\models\CategoryGroup;
 use craft\models\Section;
+use ether\seo\models\Settings;
 use ether\seo\records\SitemapRecord;
+use ether\seo\Seo;
 use yii\db\Exception;
 
 class SitemapService extends Component
@@ -148,6 +157,194 @@ class SitemapService extends Component
 		);
 	}
 
+	// Sitemap XML
+	// =========================================================================
+
+	/** @var \DOMDocument */
+	private $_document;
+
+	/** @var \DOMElement */
+	private $_urlSet;
+
+	// Index
+	// -------------------------------------------------------------------------
+
+	/** @var \DOMElement */
+	private $_index;
+
+	/**
+	 * @throws \yii\base\Exception
+	 */
+	public function index ()
+	{
+		$this->_createDocument(false);
+
+		// Add the Sitemap Index
+		$this->_index = $this->_document->createElement('sitemapindex');
+		$this->_index->setAttribute(
+			'xmlns',
+			'http://www.sitemaps.org/schemas/sitemap/0.9'
+		);
+		$this->_index->setAttribute(
+			'xmlns:xhtml',
+			'http://www.w3.org/1999/xhtml'
+		);
+		$this->_document->appendChild($this->_index);
+
+		// Get the saved sitemap data
+		$sitemapData = $this->getSitemap();
+
+		// Generate Loop: Sections
+		$this->_generateLoop(
+			'sections',
+			$this->getValidSections(),
+			$sitemapData
+		);
+
+		// Generate Loop: Categories
+		$this->_generateLoop(
+			'categories',
+			$this->getValidCategories(),
+			$sitemapData
+		);
+
+		// Generate: Custom
+		if (array_key_exists('customUrls', $sitemapData))
+			$this->_generateIndex('custom', 0);
+
+		return $this->_document->saveXML();
+	}
+
+	// Core
+	// -------------------------------------------------------------------------
+
+	/**
+	 * @param array $variables
+	 *
+	 * @return string
+	 */
+	public function core (array $variables)
+	{
+		$this->_createDocument();
+		$sitemapData = $this->getSitemap();
+
+		if (!array_key_exists($variables['section'], $sitemapData))
+			goto out;
+
+		$sitemapSection = $sitemapData[$variables['section']];
+
+		if (!array_key_exists($variables['id'], $sitemapSection))
+			goto out;
+
+		$sitemapSectionById = $sitemapSection[$variables['id']];
+
+		if (!$sitemapSectionById['enabled'])
+			goto out;
+
+		$type = null;
+		$idHandle = null;
+
+		switch ($variables['section'])
+		{
+			case 'sections':
+				$type = Entry::instance();
+				$idHandle = 'sectionId';
+				break;
+
+			case 'categories':
+				$type = Category::instance();
+				$idHandle = 'groupId';
+				break;
+
+			default:
+				goto out;
+		}
+
+		$settings = Seo::$i->getSettings();
+
+		$elements = $type::find();
+		$elements->{$idHandle} = $variables['id'];
+		$elements->siteId = \Craft::$app->sites->currentSite->id;
+		$elements->limit = $settings->sitemapLimit;
+		$elements->offset = $settings->sitemapLimit * $variables['page'];
+
+		foreach ($elements->all() as $item)
+		{
+			if ($item->url === null)
+				continue;
+
+			$url = $this->_document->createElement('url');
+			$this->_urlSet->appendChild($url);
+
+			$loc = $this->_document->createElement(
+				'loc',
+				$item->url
+			);
+
+			$mod = $this->_document->createElement(
+				'lastmod',
+				DateTimeHelper::toIso8601($item->dateUpdated)
+			);
+
+			$freq = $this->_document->createElement(
+				'changefreq',
+				$sitemapSectionById['frequency']
+			);
+
+			$priority = $this->_document->createElement(
+				'priority',
+				$sitemapSectionById['priority']
+			);
+
+			$url->appendChild($loc);
+			$url->appendChild($mod);
+			$url->appendChild($freq);
+			$url->appendChild($priority);
+
+			// TODO: Locales
+		}
+
+		out:
+		return $this->_document->saveXML();
+	}
+
+	// Custom
+	// -------------------------------------------------------------------------
+
+	public function custom ()
+	{
+		$this->_createDocument();
+		$sitemapData = $this->getSitemap();
+
+		if (!array_key_exists('customUrls', $sitemapData))
+			return $this->_document->saveXML();
+
+		foreach ($sitemapData['customUrls'] as $custom) if ($custom->enabled)
+		{
+			$url = $this->_document->createElement('url');
+			$loc = $this->_document->createElement(
+				'loc',
+				UrlHelper::url($custom->url)
+			);
+			$frequency = $this->_document->createElement(
+				'changefreq',
+				$custom->frequency
+			);
+			$priority = $this->_document->createElement(
+				'priority',
+				$custom->priority
+			);
+
+			$url->appendChild($loc);
+			$url->appendChild($frequency);
+			$url->appendChild($priority);
+
+			$this->_urlSet->appendChild($url);
+		}
+
+		return $this->_document->saveXML();
+	}
+
 	// Helpers
 	// =========================================================================
 
@@ -158,11 +355,197 @@ class SitemapService extends Component
 	 */
 	private function _filterOutNoUrls ($thing)
 	{
+		$currentSiteId = \Craft::$app->sites->currentSite->id;
+
 		foreach ($thing->getSiteSettings() as $siteSettings)
-			if ($siteSettings->hasUrls)
+			if ($siteSettings->hasUrls && $siteSettings->siteId === $currentSiteId)
 				return true;
 
 		return false;
+	}
+
+	// Helpers: XML
+	// -------------------------------------------------------------------------
+
+	/**
+	 * Creates the XML document
+	 *
+	 * @param bool $withUrlSet - Will append the URLSet if true
+	 */
+	private function _createDocument ($withUrlSet = true)
+	{
+		// Create the XML Document
+		$document = new \DOMDocument('1.0', 'utf-8');
+
+		// Pretty print for debugging
+		if (\Craft::$app->config->general->devMode)
+			$document->formatOutput = true;
+
+		if ($withUrlSet)
+		{
+			$urlSet = $document->createElement('urlset');
+			$urlSet->setAttribute(
+				'xmlns',
+				'http://www.sitemaps.org/schemas/sitemap/0.9'
+			);
+			$urlSet->setAttribute(
+				'xmlns:xhtml',
+				'http://www.w3.org/1999/xhtml'
+			);
+			$document->appendChild($urlSet);
+			$this->_urlSet = $urlSet;
+		}
+
+		$this->_document = $document;
+	}
+
+	/**
+	 * Get's the latest updated element date for the given element type and
+	 * group / section ID
+	 *
+	 * @param Element $type - The Element Type
+	 * @param int     $id - The section or group ID
+	 *
+	 * @return \DateTime|string
+	 */
+	private function _getUpdated (Element $type, $id)
+	{
+		/** @var EntryQuery|CategoryQuery $criteria */
+		$criteria = $type::find();
+
+		$this->_setCriteriaIdByType($criteria, $type, $id);
+
+		$criteria->limit = 1;
+
+		$element = $criteria->one();
+		return $element ? $element->dateUpdated->format('c') : '';
+	}
+
+	/**
+	 * Get's the page count for the given element type and group / section ID
+	 *
+	 * @param Element $type - The Element Type
+	 * @param int     $id - The section or group ID
+	 *
+	 * @return float
+	 */
+	private function _getPageCount (Element $type, $id)
+	{
+		/** @var EntryQuery|CategoryQuery $criteria */
+		$criteria = $type::find();
+		$this->_setCriteriaIdByType($criteria, $type, $id);
+
+		$sitemapLimit = Seo::$i->getSettings()->sitemapLimit;
+
+		return ceil($criteria->count() / $sitemapLimit);
+	}
+
+	/**
+	 * Sets the section or group ID on the criteria according to the
+	 * given element type
+	 *
+	 * @param EntryQuery|CategoryQuery $criteria - The criteria
+	 * @param Element                  $type - The element type
+	 * @param int                      $id - The section or group ID
+	 */
+	private function _setCriteriaIdByType ($criteria, Element $type, $id)
+	{
+		switch ($type::className()) {
+			case 'Entry':
+				$criteria->sectionId = $id;
+				break;
+			case 'Category':
+				$criteria->groupId = $id;
+				break;
+		}
+	}
+
+	// Helpers: XML Index
+	// -------------------------------------------------------------------------
+
+	/**
+	 * @param $handle
+	 * @param $data
+	 * @param $sitemapData
+	 *
+	 * @throws \yii\base\Exception
+	 */
+	private function _generateLoop ($handle, $data, $sitemapData)
+	{
+		if (!array_key_exists($handle, $sitemapData))
+			return;
+
+		foreach ($data as $item)
+			if (array_key_exists($item['id'], $sitemapData[$handle]))
+				if ($sitemapData[$handle][$item['id']]->enabled)
+					$this->_generateIndex($handle, $item['id']);
+	}
+
+	/**
+	 * @param $group
+	 * @param $id
+	 *
+	 * @throws \yii\base\Exception
+	 */
+	private function _generateIndex ($group, $id)
+	{
+		switch ($group) {
+			case 'custom':
+				$last = DateTimeHelper::toIso8601(
+					SitemapRecord::find()->one()->dateUpdated
+				);
+				$pages = 1;
+				break;
+
+			case 'sections':
+				$last = $this->_getUpdated(Entry::instance(), $id);
+				$pages = $this->_getPageCount(Entry::instance(), $id);
+				break;
+
+			case 'categories':
+				$last = $this->_getUpdated(Category::instance(), $id);
+				$pages = $this->_getPageCount(Category::instance(), $id);
+				break;
+
+			default:
+				$last = DateTimeHelper::currentUTCDateTime()->format('c');
+				$pages = 1;
+		}
+
+		for ($i = 0; $i < $pages; ++$i)
+		{
+			$sitemap = $this->_document->createElement('sitemap');
+			$this->_index->appendChild($sitemap);
+
+			$loc = $this->_document->createElement(
+				'loc',
+				$this->_indexUrl($group, $id, $i)
+			);
+			$sitemap->appendChild($loc);
+
+			$lastMod = $this->_document->createElement('lastmod', $last);
+			$sitemap->appendChild($lastMod);
+		}
+	}
+
+	/**
+	 * @param $group
+	 * @param $id
+	 * @param $page
+	 *
+	 * @return string
+	 * @throws \yii\base\Exception
+	 */
+	private function _indexUrl ($group, $id, $page)
+	{
+		$sitemapName = Seo::$i->getSettings()->sitemapName;
+
+		return UrlHelper::siteUrl(
+			$sitemapName . '_' . $group
+			. ($id > 0 ? '_' . $id : '')
+			. ($id > 0 ? '_' . $page : '')
+			. '.xml'
+		);
 	}
 
 }
