@@ -52,7 +52,7 @@ class SeoPlugin extends BasePlugin {
 
 	public function getReleaseFeedUrl()
 	{
-		return 'https://raw.githubusercontent.com/ethercreative/seo/master/releases.json';
+		return 'https://raw.githubusercontent.com/ethercreative/seo/v2/releases.json';
 	}
 
 	// Routes
