@@ -2,7 +2,11 @@
 
 # SEO for Craft CMS
 
-SEO for Craft does three things that will help your sites SEO, and does them really damn well *(and it has full localisation and Craft Commerce support!)*.
+SEO for Craft does three things that will help your sites SEO, and does them really damn well:
+
+1. [**Optimisation Field Type**](#the-field-type) - Helps your clients write better optimised copy, and manage other SEO meta.
+2. [**Sitemap**](#the-sitemap) - Generates an always up-to-date XML sitemap automatically, with controls for customisation.
+3. [**Redirects**](#the-redirects) - Quickly and easily manage 301 & 302 redirects. Especially useful when migrating from an old site.
 
 [Click here for the **Craft 2** version.](https://github.com/ethercreative/seo/tree/v2)
 
