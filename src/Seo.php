@@ -70,7 +70,7 @@ class Seo extends Plugin
 		// User Permissions
 		if ($craft->getEdition() !== \Craft::Personal) {
 			Event::on(
-				UserPermissions::className(),
+				UserPermissions::class,
 				UserPermissions::EVENT_REGISTER_PERMISSIONS,
 				[$this, 'onRegisterPermissions']
 			);
@@ -78,28 +78,28 @@ class Seo extends Plugin
 
 		// CP URLs
 		Event::on(
-			UrlManager::className(),
+			UrlManager::class,
 			UrlManager::EVENT_REGISTER_CP_URL_RULES,
 			[$this, 'onRegisterCPUrlRules']
 		);
 
 		// Site URLs
 		Event::on(
-			UrlManager::className(),
+			UrlManager::class,
 			UrlManager::EVENT_REGISTER_SITE_URL_RULES,
 			[$this, 'onRegisterSiteUrlRules']
 		);
 
 		// Field type
 		Event::on(
-			Fields::className(),
+			Fields::class,
 			Fields::EVENT_REGISTER_FIELD_TYPES,
 			[$this, 'onRegisterFieldTypes']
 		);
 
 		// Variable
 		Event::on(
-			CraftVariable::className(),
+			CraftVariable::class,
 			CraftVariable::EVENT_INIT,
 			[$this, 'onRegisterVariable']
 		);
@@ -111,7 +111,7 @@ class Seo extends Plugin
 			&& !$craft->request->isLivePreview
 		) {
 			Event::on(
-				ErrorHandler::className(),
+				ErrorHandler::class,
 				ErrorHandler::EVENT_BEFORE_HANDLE_EXCEPTION,
 				[$this, 'onBeforeHandleException']
 			);
@@ -128,7 +128,7 @@ class Seo extends Plugin
 		/** @noinspection PhpUnnecessaryFullyQualifiedNameInspection */
 		if (class_exists(\markhuot\CraftQL\CraftQL::class)) {
 			Event::on(
-				SeoField::className(),
+				SeoField::class,
 				'craftQlGetFieldSchema',
 				[new GetCraftQLSchema, 'handle']
 			);
