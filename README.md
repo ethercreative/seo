@@ -45,6 +45,10 @@ URI: `blog/([0-9]{4})/(.*)` To: `news/$2`
 
 Clone this repo into `craft/plugins/seo`.
 
+### Using Composer
+
+`composer require ether/seo`
+
 Before using the SEO field type, you’ll need to ensure all the settings are correct. You can find the settings under the SEO plugin menu in the sidebar, or via the plugin menu.
 
 ### Fieldtype Usage
