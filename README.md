@@ -51,7 +51,7 @@ Before using the SEO field type, you’ll need to ensure all the settings are co
 
 Replace your `title` tag, and any other SEO related meta tags with `{% hook "seo" %}`. That's it!
 
-This assumes that you will be creating a variable call `seo` in your templates that will return either the SEO field or a custom SEO object (see below). You can modify the output of this hook by setting your own SEO Meta Template in the SEO Settings. You can [view the default template here](https://github.com/ethercreative/seo/blob/master/seo/templates/seo/_meta.twig).
+This assumes that you will be creating a variable call `seo` in your templates that will return either the SEO field or a custom SEO object (see below). You can modify the output of this hook by setting your own SEO Meta Template in the SEO Settings. You can [view the default template here](https://github.com/ethercreative/seo/blob/v3/src/templates/_seo/meta.twig).
 
 ### Custom SEO Object
 
