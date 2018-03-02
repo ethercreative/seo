@@ -7,7 +7,6 @@ use craft\base\Field;
 use craft\base\PreviewableFieldInterface;
 use craft\elements\Entry;
 use craft\helpers\Json;
-use craft\helpers\UrlHelper;
 use craft\models\Section;
 use ether\seo\resources\SeoFieldAssets;
 use ether\seo\resources\SeoFieldSettingsAssets;
@@ -43,6 +42,9 @@ class SeoField extends Field implements PreviewableFieldInterface
 
 	/** @var mixed */
 	public $socialImage;
+
+	/** @var boolean */
+	public $hideSocial;
 
 	// Public Functions
 	// =========================================================================
@@ -185,6 +187,10 @@ class SeoField extends Field implements PreviewableFieldInterface
 		// Render
 		// ---------------------------------------------------------------------
 
+		$hideSocial = array_key_exists('hideSocial', $settings)
+			? $settings['hideSocial']
+			: false;
+
 		$seoOptions = Json::encode(compact(
 			'hasPreview',
 			'isNew'
@@ -211,6 +217,7 @@ class SeoField extends Field implements PreviewableFieldInterface
 				'isSingle' => $isSingle,
 
 				'socialPreviewUrl' => $socialPreviewUrl,
+				'hideSocial' => $hideSocial,
 			]
 		);
 	}

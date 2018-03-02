@@ -1,3 +1,14 @@
+## 3.1.0 - 2018-03-02
+### Fixed
+- Fixed first paragraph check returning both positive and negative
+- Snippet description now has minimum height
+
+### Improved
+- It's now possible to pass social media meta to `craft.seo.custom`
+
+### Added
+- Added option to hide the social tab in the SEO field
+
 ## 3.0.1 - 2018-01-23
 ### Fixed
 - Fixed error when installing on Craft Personal

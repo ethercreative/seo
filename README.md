@@ -2,7 +2,11 @@
 
 # SEO for Craft CMS
 
-SEO for Craft does three things that will help your sites SEO, and does them really damn well *(and it has full localisation and Craft Commerce support!)*.
+SEO for Craft does three things that will help your sites SEO, and does them really damn well:
+
+1. [**Optimisation Field Type**](#the-field-type) - Helps your clients write better optimised copy, and manage other SEO meta.
+2. [**Sitemap**](#the-sitemap) - Generates an always up-to-date XML sitemap automatically, with controls for customisation.
+3. [**Redirects**](#the-redirects) - Quickly and easily manage 301 & 302 redirects. Especially useful when migrating from an old site.
 
 [Click here for the **Craft 2** version.](https://github.com/ethercreative/seo/tree/v2)
 
@@ -45,6 +49,17 @@ URI: `blog/([0-9]{4})/(.*)` To: `news/$2`
 
 Clone this repo into `craft/plugins/seo`.
 
+### Using Composer
+
+**Easy way**
+
+`composer require ether/seo`
+
+**Alternative way**
+1. Append `"ether/seo": "^3.1.0"` to the `require` hash of `composer.json`
+2. `composer update`
+3. Install via CP in `/admin/settings/plugins`
+
 Before using the SEO field type, you’ll need to ensure all the settings are correct. You can find the settings under the SEO plugin menu in the sidebar, or via the plugin menu.
 
 ### Fieldtype Usage
@@ -55,13 +70,23 @@ This assumes that you will be creating a variable call `seo` in your templates t
 
 ### Custom SEO Object
 
-In some cases, you will not have access to an SEO field, but will want to set the page title & description. You can do this by creating a custom SEO object using the function below:
+In some cases, you will not have access to an SEO field, but will want to set the page title, description, & socials. You can do this by creating a custom SEO object using the function below:
 
 ```twig
-craft.seo.custom('The Page Title', 'The page description', $includeDefaultTitleSuffix)
+craft.seo.custom(
+    'The Page Title', 
+    'The page description', 
+    
+    // Whether or not to include the title suffix after your title
+    includeDefaultTitleSuffix = true,
+    
+    // Social media - Any missing fields (excluding images) will be populated by the values above
+    {
+        twitter: { image: myImageField.first() },
+        facebook: { title: '', description: '', image: myImageField.first() },
+    }
+);
 ```
-
-The last parameter is a boolean that tell the plugin whether or not to include the title suffix after your title. It defaults to true.
 
 All parameters are optional.
 

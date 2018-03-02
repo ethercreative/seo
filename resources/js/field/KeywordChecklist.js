@@ -110,7 +110,7 @@ export default class KeywordChecklist {
 			// Run the callback
 			onNewRating(overallRating);
 		}).catch(err => {
-			console.log(err);
+			console.error(err);
 			// TODO: Disable checklist, show error overlaying
 			// Note to self: This also catches JS errors
 		});
@@ -293,6 +293,7 @@ export default class KeywordChecklist {
 				SEO_RATING.GOOD,
 				SEO_REASONS.firstParagraphSuccess
 			);
+			return;
 		}
 		
 		this.addRating(

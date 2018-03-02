@@ -7,3 +7,4 @@ README.md export-ignore
 releases.json export-ignore
 CHANGELOG.md export-ignore
 LICENSE export-ignore
+/.github export-ignore
