@@ -45,6 +45,8 @@ class Seo extends Plugin
 		'https://raw.githubusercontent.com/ethercreative/seo/v3/CHANGELOG.md';
 	public $downloadUrl  =
 		'https://github.com/ethercreative/seo/archive/v3.zip';
+	public $documentationUrl =
+		'https://github.com/ethercreative/seo/blob/v3/README.md';
 
 	// Craft
 	// =========================================================================
