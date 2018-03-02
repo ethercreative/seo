@@ -1,6 +1,7 @@
 ## 3.1.0 - 2018-03-02
 ### Fixed
 - Fixed first paragraph check returning both positive and negative
+- Snippet description now has minimum height
 
 ## 3.0.1 - 2018-01-23
 ### Fixed
