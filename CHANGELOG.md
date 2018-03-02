@@ -1,5 +1,8 @@
 # Changelog
 
+### 2.1.1
+- [Fixed] Fixed hide social switch always showing as off, even when it should be on
+
 ### 2.1.0
 - [Fixed] Fixed first paragraph check returning both positive and negative #64 (via @jtenclay)
 - [Fixed] Snippet description now has minimum height

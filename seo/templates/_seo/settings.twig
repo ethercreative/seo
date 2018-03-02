@@ -41,6 +41,6 @@
 		instructions: 'Will hide the social meta tab when switched on. This is useful if you have pre-existing social media fields.',
 		name: 'hideSocial',
 		id: 'hideSocial',
-		value: "hideSocial" in settings and settings.hideSocial is defined ? settings.hideSocial : false,
+		on: "hideSocial" in settings|keys and settings.hideSocial is defined ? settings.hideSocial : false,
 	}) }}
 {% endif %}
