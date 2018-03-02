@@ -294,6 +294,7 @@ export default class KeywordChecklist {
 				SEO_RATING.GOOD,
 				SEO_REASONS.firstParagraphSuccess
 			);
+			return;
 		}
 		
 		this.addRating(
