@@ -68,13 +68,23 @@ This assumes that you will be creating a variable call `seo` in your templates t
 
 ### Custom SEO Object
 
-In some cases, you will not have access to an SEO field, but will want to set the page title & description. You can do this by creating a custom SEO object using the function below:
+In some cases, you will not have access to an SEO field, but will want to set the page title, description, & socials. You can do this by creating a custom SEO object using the function below:
 
 ```twig
-craft.seo.custom('The Page Title', 'The page description', $includeDefaultTitleSuffix)
+craft.seo.custom(
+    'The Page Title', 
+    'The page description', 
+    
+    // Whether or not to include the title suffix after your title
+    includeDefaultTitleSuffix = true,
+    
+    // Social media - Any missing fields (excluding images) will be populated by the values above
+    {
+        twitter: { image: myImageField.first() },
+        facebook: { title: '', description: '', image: myImageField.first() },
+    }
+);
 ```
-
-The last parameter is a boolean that tell the plugin whether or not to include the title suffix after your title. It defaults to true.
 
 All parameters are optional.
 

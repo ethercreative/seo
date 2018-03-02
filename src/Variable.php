@@ -8,18 +8,35 @@ use ether\seo\fields\SeoField;
 
 class Variable {
 
-	public function custom ($title = '', $description = '', $includeTitleSuffix = true)
-	{
-		return [
+	public function custom (
+		$title = '',
+		$description = '',
+		$includeTitleSuffix = true,
+		$social = []
+	) {
+		$text = [
 			'title' =>
 				$title
 					? $title . (
-						$includeTitleSuffix
-							? ' ' . Seo::$i->getSettings()['titleSuffix']
-							: ''
+					$includeTitleSuffix
+						? ' ' . Seo::$i->getSettings()['titleSuffix']
+						: ''
 					) : '',
 			'description' => $description ?: '',
 		];
+
+		$ret = $text;
+		$ret['social'] = SeoField::$defaultValue['social'];
+
+		foreach ($social as $key => $value)
+		{
+			$ret['social'][$key] = array_merge(
+				$ret['social'][$key],
+				$value
+			);
+		}
+
+		return $ret;
 	}
 
 	// Social
