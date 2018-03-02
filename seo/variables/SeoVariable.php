@@ -5,12 +5,29 @@ namespace Craft;
 class SeoVariable
 {
 
-	public function custom ($title = '', $description = '', $includeTitleSuffix = true)
-	{
-		return [
+	public function custom (
+		$title = '',
+		$description = '',
+		$includeTitleSuffix = true,
+		$social = []
+	) {
+		$text = [
 			'title' => $title ? $title . ($includeTitleSuffix ? ' ' . craft()->seo->settings()->titleSuffix : '') : '',
 			'description' => $description ?: '',
 		];
+
+		$ret = $text;
+		$ret['social'] = SeoFieldType::$defaultValue['social'];
+
+		foreach ($social as $key => $value)
+		{
+			$ret['social'][$key] = array_merge(
+				$ret['social'][$key],
+				$value
+			);
+		}
+
+		return $ret;
 	}
 
 	// Social

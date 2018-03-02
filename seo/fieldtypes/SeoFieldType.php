@@ -44,6 +44,7 @@ class SeoFieldType extends BaseFieldType implements IPreviewableFieldType {
 		return array(
 			'titleSuffix' => [AttributeType::String],
 			'socialImage' => [AttributeType::Mixed],
+			'hideSocial' => [AttributeType::Bool],
 		);
 	}
 
@@ -152,6 +153,12 @@ class SeoFieldType extends BaseFieldType implements IPreviewableFieldType {
 		if ($hasPreview && $isEntry && $value['title'] == null && $isSingle)
 			$titleSuffix = $this->element->title . ' ' . $titleSuffix;
 
+		try {
+			$hideSocial = $settings->hideSocial ?: $settingsGlobal->hideSocial;
+		} catch (\Exception $e) {
+			$hideSocial = false;
+		}
+
 		// Social: Site URL
 		// ---------------------------------------------------------------------
 		preg_match(
@@ -178,6 +185,7 @@ class SeoFieldType extends BaseFieldType implements IPreviewableFieldType {
 			'isSingle' => $isSingle,
 
 			'socialPreviewUrl' => $socialPreviewUrl,
+			'hideSocial' => $hideSocial,
 		));
 	}
 

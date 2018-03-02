@@ -1,5 +1,11 @@
 # Changelog
 
+### 2.1.0
+- [Fixed] Fixed first paragraph check returning both positive and negative #64 (via @jtenclay)
+- [Fixed] Snippet description now has minimum height
+- [Improved] It's now possible to pass social media meta to `craft.seo.custom`
+- [Improved] Added option to hide social media tab 
+
 ### 2.0.0
 - [Added] Added ability to specify titles, descriptions, and images for social media
 - [Improved] SEO field now supports multiple keywords

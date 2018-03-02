@@ -72,9 +72,11 @@
 		<a href="#" data-seo-tab="optimisation" class="active">
 			{{ "Optimisation"|t }}
 		</a>
+		{% if not hideSocial %}
 		<a href="#" data-seo-tab="social">
 			{{ "Social"|t }}
 		</a>
+		{% endif %}
 	</nav>
 
 	<div id="{{ id }}Pages">
