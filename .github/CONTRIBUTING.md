@@ -17,7 +17,7 @@ Check out the code conventions below before hand.
 
 In addition to [Crafts Guidelines](https://github.com/craftcms/docs/blob/v3/en/coding-guidelines.md):
 
-- Use tabs (4 spaces)
+- Use tabs
 - Try to keep within the 80 characters line length
 - If function arguments or array values can't fit on one line, break each value onto it's own line
 - Comment as much as possible
