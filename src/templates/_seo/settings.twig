@@ -31,3 +31,14 @@
 		'<p class="error">You\'ll need a volume before you can select a social image!</p>'
 	) }}
 {% endif %}
+
+{# Only show this option on a per-field basis, not globally #}
+{% if globalSettings is defined %}
+	{{ forms.lightswitchField({
+		label: 'Hide Social Meta Tab',
+		instructions: 'Will hide the social meta tab when switched on. This is useful if you have pre-existing social media fields.',
+		name: 'hideSocial',
+		id: 'hideSocial',
+		on: "hideSocial" in settings|keys and settings.hideSocial is defined ? settings.hideSocial : false,
+	}) }}
+{% endif %}
