@@ -32,7 +32,7 @@ class SeoPlugin extends BasePlugin {
 
 	public function getVersion()
 	{
-		return '2.1.0';
+		return '2.1.2';
 	}
 
 	public function getSchemaVersion()
@@ -144,8 +144,8 @@ class SeoPlugin extends BasePlugin {
 			craft()->templates->hook(
 				'seo',
 				function(&$context) {
-				return craft()->seo->hook($context);
-			}
+					return craft()->seo->hook($context);
+				}
 			);
 		}
 	}

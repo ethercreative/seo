@@ -1,5 +1,8 @@
 # Changelog
 
+### 2.1.2
+- [Fixed] Fixed bug where redirects that had query parameters were being ignored.
+
 ### 2.1.1
 - [Fixed] Fixed hide social switch always showing as off, even when it should be on
 

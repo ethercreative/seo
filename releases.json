@@ -219,5 +219,32 @@
       "[Fixed] Fix generating localized URLs for elements #45 #46 (via @ClemensSchneider)",
       "[Fixed] Fixed save requests #44 (via @roelvanhintum)"
     ]
+  },
+  {
+    "version": "2.1.0",
+    "downloadUrl": "https://github.com/ethercreative/seo/archive/v2.1.0.zip",
+    "date": "2018-03-02T10:08:00-08:00",
+    "notes": [
+      "[Fixed] Fixed first paragraph check returning both positive and negative #64 (via @jtenclay)",
+      "[Fixed] Snippet description now has minimum height",
+      "[Improved] It's now possible to pass social media meta to `craft.seo.custom`",
+      "[Improved] Added option to hide social media tab"
+    ]
+  },
+  {
+    "version": "2.1.1",
+    "downloadUrl": "https://github.com/ethercreative/seo/archive/v2.1.1.zip",
+    "date": "2018-03-02T15:08:00-08:00",
+    "notes": [
+      "[Fixed] Fixed hide social switch always showing as off, even when it should be on"
+    ]
+  },
+  {
+    "version": "2.1.2",
+    "downloadUrl": "https://github.com/ethercreative/seo/archive/v2.1.2.zip",
+    "date": "2018-03-07T17:57:00-08:00",
+    "notes": [
+      "[Fixed] Fixed bug where redirects that had query parameters were being ignored."
+    ]
   }
 ]
