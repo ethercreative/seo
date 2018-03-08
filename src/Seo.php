@@ -2,6 +2,8 @@
 
 namespace ether\seo;
 
+use craft\base\Element;
+use craft\base\Field;
 use craft\base\Plugin;
 use craft\events\ExceptionEvent;
 use craft\events\RegisterComponentTypesEvent;
@@ -310,20 +312,57 @@ class Seo extends Plugin
 	public function onAfterRequest ()
 	{
 		$headers = \Craft::$app->getResponse()->getHeaders();
+		$resolve = \Craft::$app->request->resolve()[1];
+		$variables = array_key_exists('variables', $resolve)
+			? $resolve['variables']
+			: [];
 
-		// FIXME: This won't work. $availableRobots will get robots from ALL entries, not just the main one
-		$robots = array_filter(array_unique(array_merge(
-			SeoField::$availableRobots,
-			$this->getSettings()->robots
-		)));
+		// If devMode always noindex
+		if (\Craft::$app->config->general->devMode)
+		{
+			$headers->set('x-robots-tag', 'none, noimageindex');
+			return;
+		}
 
-		\Craft::dd($robots);
+		$robots = [];
+		$expiry = null;
 
-		// If has robots
-		$headers->set('x-robots-tag', 'hello');
+		// Get all available "top-level" SEO fields
+		foreach ($variables as $variable)
+		{
+			if (!is_subclass_of($variable, Element::class))
+				continue;
 
-		// If will expire
-		$headers->add('x-robots-tag', 'hi');
+			/** @var Element $variable */
+
+			/** @var Field $field */
+			foreach ($variable->fieldLayout->getFields() as $field)
+				if (get_class($field) === SeoField::class)
+					$robots = array_merge(
+						$robots,
+						$variable->{$field->handle}['advanced']['robots']
+					);
+
+			/** @var \DateTime $expiry */
+			if ($expiry = $variable->expiryDate)
+				$expiry = $expiry->format(\DATE_RFC850);
+		}
+
+		// If we don't have any variables (i.e. when just rendering a template)
+		// fallback to the site-wide robots settings
+		if (empty($variables))
+			$robots = $this->getSettings()->robots;
+
+		// Remove empties and duplicates (on the off-chance)
+		$robots = array_filter(array_unique($robots));
+
+		// If we've got robots, add the header
+		if (!empty($robots))
+			$headers->set('x-robots-tag', implode(', ', $robots));
+
+		// If we've got an expiry time, add an additional header
+		if ($expiry)
+			$headers->add('x-robots-tag', 'unavailable_after: ' . $expiry);
 	}
 
 	/**

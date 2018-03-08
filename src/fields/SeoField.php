@@ -37,8 +37,6 @@ class SeoField extends Field implements PreviewableFieldInterface
 		],
 	];
 
-	public static $availableRobots = [];
-
 	// Instance
 	// -------------------------------------------------------------------------
 
@@ -121,11 +119,6 @@ class SeoField extends Field implements PreviewableFieldInterface
 		$value['advanced'] = array_merge(
 			self::$defaultValue['advanced'],
 			$value['advanced'] ?? []
-		);
-
-		self::$availableRobots = array_merge(
-			self::$availableRobots,
-			$value['advanced']['robots']
 		);
 
 		return $value;
