@@ -9,6 +9,7 @@ use craft\events\RegisterUrlRulesEvent;
 use craft\events\RegisterUserPermissionsEvent;
 use craft\services\Fields;
 use craft\services\UserPermissions;
+use craft\web\Application;
 use craft\web\ErrorHandler;
 use craft\web\twig\variables\CraftVariable;
 use craft\web\UrlManager;
@@ -116,6 +117,16 @@ class Seo extends Plugin
 				ErrorHandler::class,
 				ErrorHandler::EVENT_BEFORE_HANDLE_EXCEPTION,
 				[$this, 'onBeforeHandleException']
+			);
+		}
+
+		// Request Headers
+		if ($craft->request->isSiteRequest)
+		{
+			Event::on(
+				Application::class,
+				Application::EVENT_AFTER_REQUEST,
+				[$this, 'onAfterRequest']
 			);
 		}
 
@@ -294,6 +305,25 @@ class Seo extends Plugin
 	public function onBeforeHandleException (ExceptionEvent $event)
 	{
 		$this->redirects->onException($event);
+	}
+
+	public function onAfterRequest ()
+	{
+		$headers = \Craft::$app->getResponse()->getHeaders();
+
+		// FIXME: This won't work. $availableRobots will get robots from ALL entries, not just the main one
+		$robots = array_filter(array_unique(array_merge(
+			SeoField::$availableRobots,
+			$this->getSettings()->robots
+		)));
+
+		\Craft::dd($robots);
+
+		// If has robots
+		$headers->set('x-robots-tag', 'hello');
+
+		// If will expire
+		$headers->add('x-robots-tag', 'hi');
 	}
 
 	/**

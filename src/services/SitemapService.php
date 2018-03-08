@@ -12,11 +12,14 @@ use craft\elements\Entry;
 use craft\helpers\DateTimeHelper;
 use craft\helpers\UrlHelper;
 use craft\models\CategoryGroup;
+use craft\models\CraftIdToken;
 use craft\models\Section;
+use ether\seo\fields\SeoField;
 use ether\seo\models\Settings;
 use ether\seo\records\SitemapRecord;
 use ether\seo\Seo;
 use yii\db\Exception;
+use yii\log\Logger;
 
 class SitemapService extends Component
 {
@@ -243,6 +246,7 @@ class SitemapService extends Component
 		if (!$sitemapSectionById['enabled'])
 			goto out;
 
+		/** @var Element|null $type */
 		$type = null;
 		$idHandle = null;
 
@@ -277,10 +281,21 @@ class SitemapService extends Component
 			unset($availableLocales[$key]);
 		}
 
+		$seoFieldHandle = null;
+		if ($first = $elements->one())
+			foreach ($first->type->fieldLayout->getFields() as $field)
+				if (get_class($field) === SeoField::class)
+					$seoFieldHandle = $field->handle;
+
 		foreach ($elements->all() as $item)
 		{
 			if ($item->url === null)
 				continue;
+
+			$seoField = $item->$seoFieldHandle;
+			if ($robots = $seoField['advanced']['robots'])
+				if (in_array('noindex', $robots))
+					continue;
 
 			$url = $this->_document->createElement('url');
 			$this->_urlSet->appendChild($url);

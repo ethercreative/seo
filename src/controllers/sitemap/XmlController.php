@@ -17,21 +17,21 @@ class XmlController extends Controller
 	{
 		$this->_setHeaders();
 		echo Seo::$i->sitemap->index();
+		exit();
 	}
 
-	/**
-	 * @throws \yii\base\InvalidConfigException
-	 */
 	public function actionCore ()
 	{
 		$this->_setHeaders();
-		echo Seo::$i->sitemap->core(\Craft::$app->request->queryParams);
+		echo Seo::$i->sitemap->core(\Craft::$app->urlManager->getRouteParams());
+		exit();
 	}
 
 	public function actionCustom ()
 	{
 		$this->_setHeaders();
 		echo Seo::$i->sitemap->custom();
+		exit();
 	}
 
 	// Helpers
@@ -39,7 +39,7 @@ class XmlController extends Controller
 
 	private function _setHeaders ()
 	{
-		\Craft::$app->request->headers->fromArray([
+		\Craft::$app->getResponse()->headers->fromArray([
 			'content-type' => 'xml',
 			'charset' => 'utf-8',
 		]);

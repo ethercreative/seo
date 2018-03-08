@@ -1,0 +1,83 @@
+{% import '_includes/forms' as _forms %}
+
+<div class="seo--switch">
+	{{ _forms.lightswitch({
+		name: name ~ "[]",
+		value: "noindex",
+		on: 'noindex' in robots
+	}) }}
+
+	<div>
+		<strong><code>noindex</code></strong>
+		<span> - Do not show this page in search results and do not
+					       show a "Cached" link in search results.</span>
+	</div>
+</div>
+
+<div class="seo--switch">
+	{{ _forms.lightswitch({
+		name: name ~ "[]",
+		value: "nofollow",
+		on: 'nofollow' in robots
+	}) }}
+
+	<div>
+		<strong><code>nofollow</code></strong>
+		<span> - Do not follow the links on this page.</span>
+	</div>
+</div>
+
+<div class="seo--switch">
+	{{ _forms.lightswitch({
+		name: name ~ "[]",
+		value: "noarchive",
+		on: 'noarchive' in robots
+	}) }}
+
+	<div>
+		<strong><code>noarchive</code></strong>
+		<span> - Do not show a "Cached" link in search results.</span>
+	</div>
+</div>
+
+<div class="seo--switch">
+	{{ _forms.lightswitch({
+		name: name ~ "[]",
+		value: "nosnippet",
+		on: 'nosnippet' in robots
+	}) }}
+
+	<div>
+		<strong><code>nosnippet</code></strong>
+		<span> - Do not show a text snippet or video preview in the
+					       search results for this page. A static thumbnail
+					       (if available) will still be visible.</span>
+	</div>
+</div>
+
+<div class="seo--switch">
+	{{ _forms.lightswitch({
+		name: name ~ "[]",
+		value: "notranslate",
+		on: 'notranslate' in robots
+	}) }}
+
+	<div>
+		<strong><code>notranslate</code></strong>
+		<span> - Do not offer translation of this page in search
+					       results.</span>
+	</div>
+</div>
+
+<div class="seo--switch">
+	{{ _forms.lightswitch({
+		name: name ~ "[]",
+		value: "noimageindex",
+		on: 'noimageindex' in robots
+	}) }}
+
+	<div>
+		<strong><code>noimageindex</code></strong>
+		<span> - Do not index images on this page.</span>
+	</div>
+</div>

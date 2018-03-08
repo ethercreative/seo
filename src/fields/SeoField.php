@@ -32,7 +32,12 @@ class SeoField extends Field implements PreviewableFieldInterface
 			'twitter'  => ['title' => '', 'image' => null, 'description' => ''],
 			'facebook' => ['title' => '', 'image' => null, 'description' => ''],
 		],
+		'advanced'    => [
+			'robots' => [],
+		],
 	];
+
+	public static $availableRobots = [];
 
 	// Instance
 	// -------------------------------------------------------------------------
@@ -45,6 +50,9 @@ class SeoField extends Field implements PreviewableFieldInterface
 
 	/** @var boolean */
 	public $hideSocial;
+
+	/** @var array */
+	public $robots;
 
 	// Public Functions
 	// =========================================================================
@@ -78,6 +86,8 @@ class SeoField extends Field implements PreviewableFieldInterface
 		if (!is_array($value))
 			$value = Json::decode($value);
 
+		// Social
+
 		$social = array_merge(self::$defaultValue['social'], $value['social']);
 		foreach ($social as $k => $s)
 		{
@@ -105,6 +115,18 @@ class SeoField extends Field implements PreviewableFieldInterface
 		}
 
 		$value['social'] = $social;
+
+		// Advanced
+
+		$value['advanced'] = array_merge(
+			self::$defaultValue['advanced'],
+			$value['advanced'] ?? []
+		);
+
+		self::$availableRobots = array_merge(
+			self::$availableRobots,
+			$value['advanced']['robots']
+		);
 
 		return $value;
 	}
@@ -184,6 +206,13 @@ class SeoField extends Field implements PreviewableFieldInterface
 		);
 		$socialPreviewUrl = $socialPreviewUrl[3];
 
+		// Advanced
+		// ---------------------------------------------------------------------
+
+		$defaultRobots = array_key_exists('robots', $settings)
+			? $settings['robots']
+			: [];
+
 		// Render
 		// ---------------------------------------------------------------------
 
@@ -218,6 +247,8 @@ class SeoField extends Field implements PreviewableFieldInterface
 
 				'socialPreviewUrl' => $socialPreviewUrl,
 				'hideSocial' => $hideSocial,
+
+				'defaultRobots' => $defaultRobots,
 			]
 		);
 	}

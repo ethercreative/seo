@@ -31,6 +31,9 @@ class Settings extends Model
 	/** @var string */
 	public $metaTemplate;
 
+	/** @var array */
+	public $robots;
+
 	// Methods
 	// =========================================================================
 

@@ -1,3 +1,8 @@
+## 3.2.0 - WIP
+### Fixed
+- Fixed sitemap dynamic urls throwing errors
+- Sitemaps no longer show "headers already sent" warnings 
+
 ## 3.1.0 - 2018-03-02
 ### Fixed
 - Fixed first paragraph check returning both positive and negative

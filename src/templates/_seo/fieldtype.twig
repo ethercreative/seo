@@ -66,6 +66,7 @@
 {% endmacro %}
 
 {% import _self as _ %}
+{% import '_includes/forms' as _forms %}
 
 <div class="seo--wrap" id="{{ id }}Field">
 	<nav class="seo--tabs" id="{{ id }}Tabs">
@@ -77,6 +78,9 @@
 			{{ "Social"|t }}
 		</a>
 		{% endif %}
+		<a href="#" data-seo-tab="advanced">
+			{{ "Advanced"|t }}
+		</a>
 	</nav>
 
 	<div id="{{ id }}Pages">
@@ -234,6 +238,31 @@
 				</svg>
 			{% endset %}
 			{{ _.social(id, name, value, "Facebook", "facebook", socialPreviewUrl, facebookIcon) }}
+		</div>
+
+		<div class="seo--tab" data-seo-tab="advanced">
+
+			{# Ahh! Robots! #}
+			<div class="seo--label">
+				<div>
+					<em>{{ "Robots"|t }}</em>
+					Control how this page is indexed by crawlers (some of these
+					are Google specific). If this element as an expiry date the
+					<code>unavailable_after</code> directive will be set
+					automatically.
+				</div>
+				{#<div id="{{ id }}Suggested">
+					<small>{{ "Suggested keywords"|t }}</small>
+					<a href="#">TODO</a>
+					<a href="#">Digital Agency Kent</a>
+				</div>#}
+			</div>
+
+			{% include 'seo/_seo/robots' with {
+				robots: isNew ? defaultRobots : value.advanced.robots,
+				name: name ~ "[advanced][robots]"
+			} %}
+
 		</div>
 	</div>
 </div>

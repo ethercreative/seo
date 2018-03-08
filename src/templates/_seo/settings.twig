@@ -1,4 +1,5 @@
 {% import "_includes/forms" as forms %}
+{% do view.registerAssetBundle("ether\\seo\\resources\\SeoFieldSettingsAssets") %}
 {% set default = default is defined ? default : false %}
 
 {{ forms.textField({
@@ -42,3 +43,20 @@
 		on: "hideSocial" in settings|keys and settings.hideSocial is defined ? settings.hideSocial : false,
 	}) }}
 {% endif %}
+
+{% set robots %}
+	{% include 'seo/_seo/robots' with {
+		robots: settings.robots
+			? settings.robots
+			: globalSettings is defined
+				? globalSettings.robots,
+		name: 'robots',
+	} %}
+{% endset %}
+{{ forms.field(
+	{
+		label: 'Robots'|t,
+		instructions: 'Set the default robots directives. This can be changed on a per-entry basis'|t,
+	},
+	robots
+) }}
