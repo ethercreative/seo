@@ -20,9 +20,11 @@ The field also contains a *Focus Keyword* input and *Page Score*. This is used t
 
 The Page Score also contains a breakdown of your entries score, and tips on where it can be improved.
 
-![SEO for Craft CMS](resources/imgs/fieldtype.png)
+![SEO for Craft CMS](resources/imgs/fieldtype.jpg)
 
-![SEO Social](resources/imgs/fieldtype-social.png)
+![SEO Social](resources/imgs/fieldtype-social.jpg)
+
+![SEO Advanced](resources/imgs/fieldtype-advanced.jpg)
 
 ### The Sitemap
 
@@ -30,7 +32,7 @@ SEO for Craft boasts an extremely powerful, yet simple to use Sitemap manager. W
 
 With SEO for Craft’s sitemap manager you have complete control over what content you want to have appear on your sitemap as well as managing its change frequency and priority in your site.
 
-![SEO Sitemap](resources/imgs/sitemap.png)
+![SEO Sitemap](resources/imgs/sitemap.jpg)
 
 ### The Redirects
 
@@ -43,7 +45,7 @@ To redirect from `blog/2016/my-post` to `news/my-post` you would add the followi
 
 URI: `blog/([0-9]{4})/(.*)` To: `news/$2`
 
-![SEO Redirects](resources/imgs/redirects.png)
+![SEO Redirects](resources/imgs/redirects.jpg)
 
 ## Installation & Usage
 

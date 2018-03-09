@@ -231,6 +231,13 @@ export default class FocusKeywords {
 	onNewRating = (keywordIndex, rating) => {
 		// Update the rating on the keyword
 		const keyword = this.keywords[keywordIndex];
+		
+		// Catch, on the off chance we try and render after a rating was deleted
+		if (!keyword) {
+			this.onEmptyRating();
+			return;
+		}
+		
 		keyword.rating = rating;
 		
 		// Re-render keyword rating in input

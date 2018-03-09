@@ -419,11 +419,19 @@ export default class KeywordChecklist {
 	 * Judge the density of the keyword within the content
 	 */
 	judgeDensity () {
-		const words = this.stats.words();
-		const keyCount = countInArray(words, this.keywordLower);
+		const words = this.stats.words()
+			, keyword = ~~this.keywordLower.indexOf(' ')
+				? this.keywordLower.split(' ')
+				: this.keywordLower;
+		
+		const keyCount = countInArray(words, keyword)
+			, reduceWordCount = Array.isArray(keyword) ? keyword.length : 0;
+		
+		const wordsLength = words.length - reduceWordCount;
+		
 		const keyPercent = +(
 			100 + (
-				(keyCount - words.length) / words.length
+				(keyCount - wordsLength) / wordsLength
 			) * 100
 		).toFixed(2);
 		
