@@ -2,6 +2,7 @@
 ### TODO
 - [ ] Move the plugins settings page back into the plugins CP area & add tabs
 - [ ] Manage `robots.txt`, with default value (i.e. defining the sitemap url)
+- [ ] Fix focus keywords breaking when live preview is used
 
 ### Added
 - You can now manage your sites 🤖 on a site-wide or per-field basis
