@@ -306,11 +306,13 @@ class SeoField extends Field implements PreviewableFieldInterface
 		$settings = Seo::$i->getSettings();
 		$fieldFallback = $this->getSettings()['socialImage'];
 
-		return !empty($fieldFallback)
-			? $assets->getAssetById((int) $fieldFallback[0])
-			: !empty($settings['socialImage'])
-				? $assets->getAssetById((int) $settings['socialImage'][0])
-				: null;
+		if (!empty($fieldFallback))
+			return $assets->getAssetById((int) $fieldFallback[0]);
+
+		if (!empty($settings['socialImage']))
+			return $assets->getAssetById((int) $settings['socialImage'][0]);
+
+		return null;
 	}
 
 }

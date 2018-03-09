@@ -17,6 +17,7 @@
 - Fixed the keywords checklist not realising content had changed on the page
 - The keywords checklist now knows what spaces are and count words accordingly
 - Fixed keywords checklist not working after live preview is opened
+- Fixed bug where fallback social images would cause SEO field to error
 
 ## 3.1.0 - 2018-03-02
 ### Added
