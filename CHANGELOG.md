@@ -1,5 +1,9 @@
 # Changelog
 
+### 2.1.3
+- [Fixed] Fixed keyword checklist not knowing what spaces are. Word count is now more accurate.
+- [Fixed] Fixed keyword checklist not updating when no content is available.
+
 ### 2.1.2
 - [Fixed] Fixed bug where redirects that had query parameters were being ignored.
 
