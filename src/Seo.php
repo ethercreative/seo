@@ -192,14 +192,10 @@ class Seo extends Plugin
 
 	public function getSettingsResponse ()
 	{
-		// Redirect to our settings page (if we're going to Craft's plugin one)
-		$segments = \Craft::$app->request->segments;
-		if (end($segments) !== 'settings')
-			\Craft::$app->controller->redirect(
-				UrlHelper::cpUrl('seo/settings')
-			);
-
-		return \Craft::$app->runAction('seo/settings/index');
+		// Redirect to our settings page
+		\Craft::$app->controller->redirect(
+			UrlHelper::cpUrl('seo/settings')
+		);
 	}
 
 	// Components
