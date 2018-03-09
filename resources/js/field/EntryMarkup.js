@@ -37,7 +37,7 @@ class EntryMarkup {
 	update () {
 		return new Promise((resolve, reject) => {
 			const nextPostData = Garnish.getPostData(
-				document.getElementById("container")
+				document.getElementById("main-form")
 			);
 			
 			// Skip if no changes have been made to the content

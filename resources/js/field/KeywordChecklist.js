@@ -57,7 +57,7 @@ export default class KeywordChecklist {
 			
 			// Remove line breaks, tabs, and surplus spaces from page text
 			this.text = content.textContent.replace(
-				/(\r\n|\r|\n|\t|\s+)/gmi,
+				/(\r\n|\r|\n|\t+)/gmi,
 				''
 			);
 			
@@ -67,6 +67,10 @@ export default class KeywordChecklist {
 					SEO_RATING.POOR,
 					SEO_REASONS.noContent
 				);
+				
+				// Re-render the checklist
+				this.renderChecklist();
+				
 				onNewRating(SEO_RATING.POOR);
 				return;
 			}

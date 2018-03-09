@@ -103,6 +103,8 @@ export default class FocusKeywords {
 	startObserving () {
 		if (!this.mo) return;
 		
+		// FIXME: I loose the form reference when going into Live Preview mode
+		
 		// TODO: Only want to watch form elements that will be posted
 		this.mo.observe(this.keywordsField.form, {
 			childList: true,

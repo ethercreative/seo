@@ -12,6 +12,8 @@
 ### Fixed
 - Fixed sitemap dynamic urls throwing errors
 - Sitemaps no longer show "headers already sent" warnings 
+- Fixed the keywords checklist not realising content had changed on the page
+- The keywords checklist now knows what spaces are and count words accordingly
 
 ## 3.1.0 - 2018-03-02
 ### Added
