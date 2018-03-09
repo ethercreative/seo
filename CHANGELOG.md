@@ -1,20 +1,22 @@
 ## 3.2.0 - WIP
 ### TODO
-- [ ] Move the plugins settings page back into the plugins CP area & add tabs
-- [ ] Manage `robots.txt`, with default value (i.e. defining the sitemap url)
-- [ ] Fix focus keywords breaking when live preview is used
+- [ ] Manage `robots.txt`, with default value (i.e. defining the sitemap url) per site?
 
 ### Added
 - You can now manage your sites 🤖 on a site-wide or per-field basis
 	- The `X-Robots-Tag` header is added if you've set any robots
 	- If the current entry has an expiry date, the `unavailable_after` directive will be added automatically
-	- The `none` and `noimageindex` directives are automatically added to all pages when in `devMode`. No more accidental indexing of development sites! 
+	- The `none` and `noimageindex` directives are automatically added to all pages when in `devMode`. No more accidental indexing of development sites!
+	
+### Changed
+- Improved the settings page (now with 300% more tabs).
 
 ### Fixed
 - Fixed sitemap dynamic urls throwing errors
 - Sitemaps no longer show "headers already sent" warnings 
 - Fixed the keywords checklist not realising content had changed on the page
 - The keywords checklist now knows what spaces are and count words accordingly
+- Fixed keywords checklist not working after live preview is opened
 
 ## 3.1.0 - 2018-03-02
 ### Added

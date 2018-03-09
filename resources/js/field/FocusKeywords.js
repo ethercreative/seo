@@ -1,3 +1,4 @@
+/* globals Craft */
 /**
  * Focus Keywords
  *
@@ -103,10 +104,14 @@ export default class FocusKeywords {
 	startObserving () {
 		if (!this.mo) return;
 		
-		// FIXME: I loose the form reference when going into Live Preview mode
+		let target = this.keywordsField.form;
+		
+		// If target is null that means we're in livePreview mode
+		if (target === null)
+			target = Craft.livePreview.$editor[0];
 		
 		// TODO: Only want to watch form elements that will be posted
-		this.mo.observe(this.keywordsField.form, {
+		this.mo.observe(target, {
 			childList: true,
 			attributes: true,
 			characterData: true,

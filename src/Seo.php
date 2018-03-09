@@ -2,13 +2,12 @@
 
 namespace ether\seo;
 
-use craft\base\Element;
-use craft\base\Field;
 use craft\base\Plugin;
 use craft\events\ExceptionEvent;
 use craft\events\RegisterComponentTypesEvent;
 use craft\events\RegisterUrlRulesEvent;
 use craft\events\RegisterUserPermissionsEvent;
+use craft\helpers\UrlHelper;
 use craft\services\Fields;
 use craft\services\UserPermissions;
 use craft\web\Application;
@@ -20,6 +19,7 @@ use ether\seo\fields\SeoField;
 use ether\seo\listeners\GetCraftQLSchema;
 use ether\seo\models\Settings;
 use ether\seo\services\RedirectsService;
+use ether\seo\services\SeoService;
 use ether\seo\services\SitemapService;
 use yii\base\Event;
 
@@ -28,6 +28,7 @@ use yii\base\Event;
  *
  * @package ether\seo
  *
+ * @property SeoService         $seo
  * @property SitemapService     $sitemap
  * @property RedirectsService   $redirects
  */
@@ -65,6 +66,7 @@ class Seo extends Plugin
 		// ---------------------------------------------------------------------
 
 		$this->setComponents([
+			'seo' => SeoService::class,
 			'sitemap' => SitemapService::class,
 			'redirects' => RedirectsService::class,
 		]);
@@ -173,7 +175,7 @@ class Seo extends Plugin
 
 		if ($currentUser->getIsAdmin())
 			$subNav['settings'] =
-				['label' => 'Settings', 'url' => 'settings/plugins/seo'];
+				['label' => 'Settings', 'url' => 'seo/settings'];
 
 		$item['subnav'] = $subNav;
 
@@ -188,40 +190,25 @@ class Seo extends Plugin
 		return new Settings();
 	}
 
-	/**
-	 * @return string
-	 * @throws \Twig_Error_Loader
-	 * @throws \yii\base\Exception
-	 */
-	protected function settingsHtml (): string
+	public function getSettingsResponse ()
 	{
-		$settings = $this->getSettings();
-		$settings->validate();
+		// Redirect to our settings page (if we're going to Craft's plugin one)
+		$segments = \Craft::$app->request->segments;
+		if (end($segments) !== 'settings')
+			\Craft::$app->controller->redirect(
+				UrlHelper::cpUrl('seo/settings')
+			);
 
-		$tabs = [
-			[
-				'label' => 'Fieldtype',
-				'url'   => "#settings-tab1",
-				'class' => null,
-			],
-			[
-				'label' => 'Sitemap',
-				'url'   => "#settings-tab2",
-				'class' => null,
-			],
-		];
-
-		return \Craft::$app->view->renderTemplate(
-			'seo/settings',
-			array_merge(
-				compact('settings', 'tabs'),
-				self::getFieldTypeSettingsVariables()
-			)
-		);
+		return \Craft::$app->runAction('seo/settings/index');
 	}
 
 	// Components
 	// =========================================================================
+
+	public function getSeo (): SeoService
+	{
+		return $this->seo;
+	}
 
 	public function getRedirects (): RedirectsService
 	{
@@ -270,6 +257,11 @@ class Seo extends Plugin
 		// Schema
 		// ---------------------------------------------------------------------
 //		$event->rules['seo/schema'] = 'seo/schema/index';
+
+		// Settings
+		// -------------------------------------------------------------------------
+		$event->rules['POST seo/settings'] = 'seo/settings/save';
+		$event->rules['seo/settings'] = 'seo/settings/index';
 	}
 
 	public function onRegisterSiteUrlRules (RegisterUrlRulesEvent $event)
@@ -309,60 +301,13 @@ class Seo extends Plugin
 		$this->redirects->onException($event);
 	}
 
+	/**
+	 * Fired after an application request is handled
+	 * (but before the response is send)
+	 */
 	public function onAfterRequest ()
 	{
-		$headers = \Craft::$app->getResponse()->getHeaders();
-		$resolve = \Craft::$app->request->resolve()[1];
-		$variables = array_key_exists('variables', $resolve)
-			? $resolve['variables']
-			: [];
-
-		// If devMode always noindex
-		if (\Craft::$app->config->general->devMode)
-		{
-			$headers->set('x-robots-tag', 'none, noimageindex');
-			return;
-		}
-
-		$robots = [];
-		$expiry = null;
-
-		// Get all available "top-level" SEO fields
-		foreach ($variables as $variable)
-		{
-			if (!is_subclass_of($variable, Element::class))
-				continue;
-
-			/** @var Element $variable */
-
-			/** @var Field $field */
-			foreach ($variable->fieldLayout->getFields() as $field)
-				if (get_class($field) === SeoField::class)
-					$robots = array_merge(
-						$robots,
-						$variable->{$field->handle}['advanced']['robots']
-					);
-
-			/** @var \DateTime $expiry */
-			if ($expiry = $variable->expiryDate)
-				$expiry = $expiry->format(\DATE_RFC850);
-		}
-
-		// If we don't have any variables (i.e. when just rendering a template)
-		// fallback to the site-wide robots settings
-		if (empty($variables))
-			$robots = $this->getSettings()->robots;
-
-		// Remove empties and duplicates (on the off-chance)
-		$robots = array_filter(array_unique($robots));
-
-		// If we've got robots, add the header
-		if (!empty($robots))
-			$headers->set('x-robots-tag', implode(', ', $robots));
-
-		// If we've got an expiry time, add an additional header
-		if ($expiry)
-			$headers->add('x-robots-tag', 'unavailable_after: ' . $expiry);
+		$this->seo->injectRobots();
 	}
 
 	/**

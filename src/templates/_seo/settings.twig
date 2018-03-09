@@ -42,21 +42,21 @@
 		id: 'hideSocial',
 		on: "hideSocial" in settings|keys and settings.hideSocial is defined ? settings.hideSocial : false,
 	}) }}
-{% endif %}
 
-{% set robots %}
-	{% include 'seo/_seo/robots' with {
-		robots: settings.robots
+	{% set robots %}
+		{% include 'seo/_seo/robots' with {
+			robots: settings.robots
 			? settings.robots
 			: globalSettings is defined
-				? globalSettings.robots,
-		name: 'robots',
-	} %}
-{% endset %}
-{{ forms.field(
-	{
-		label: 'Robots'|t,
-		instructions: 'Set the default global robots directives. This can be changed on a per-entry basis'|t,
-	},
-	robots
-) }}
+			? globalSettings.robots,
+			name: 'robots',
+		} %}
+	{% endset %}
+	{{ forms.field(
+		{
+			label: 'Robots'|t,
+			instructions: 'Set the default global robots directives. This can be changed on a per-entry basis'|t,
+		},
+		robots
+	) }}
+{% endif %}

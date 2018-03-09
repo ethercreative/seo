@@ -1,7 +1,40 @@
-<h2>Field Type</h2>
-{% include "seo/_settings/fieldtype" %}
+{% extends "_layouts/cp" %}
+{% set title = 'Settings' %}
+{% set selectedSubnavItem = 'settings' %}
 
-<hr>
+{% import "_includes/forms" as forms %}
 
-<h2>Sitemap</h2>
-{% include "seo/_settings/sitemap" %}
+{% block content %}
+	<input type="hidden" name="action" value="plugins/save-plugin-settings">
+	<input type="hidden" name="pluginHandle" value="seo">
+	{{ redirectInput("seo/settings") }}
+
+	{% namespace 'settings' %}
+	<div id="fieldtype">
+		{% include "seo/_settings/fieldtype" %}
+	</div>
+
+	<div id="robots" class="hidden">
+		{% set robots %}
+			{% include 'seo/_seo/robots' with {
+				robots: settings.robots
+					? settings.robots
+					: globalSettings is defined
+						? globalSettings.robots,
+				name: 'robots',
+			} %}
+		{% endset %}
+		{{ forms.field(
+			{
+				label: 'Robots'|t,
+				instructions: 'Set the default global robots directives. This can be changed on a per-entry basis'|t,
+			},
+			robots
+		) }}
+	</div>
+
+	<div id="sitemap" class="hidden">
+		{% include "seo/_settings/sitemap" %}
+	</div>
+	{% endnamespace %}
+{% endblock %}
