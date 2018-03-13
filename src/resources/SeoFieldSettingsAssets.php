@@ -17,6 +17,7 @@ class SeoFieldSettingsAssets extends AssetBundle
 
 		$this->css = [
 			'css/seo.css',
+			'css/settings.css',
 		];
 
 		parent::init();

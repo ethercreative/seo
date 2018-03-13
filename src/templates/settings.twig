@@ -2,35 +2,18 @@
 {% set title = 'Settings' %}
 {% set selectedSubnavItem = 'settings' %}
 
-{% import "_includes/forms" as forms %}
-
 {% block content %}
 	<input type="hidden" name="action" value="plugins/save-plugin-settings">
 	<input type="hidden" name="pluginHandle" value="seo">
 	{{ redirectInput("seo/settings") }}
 
-	{% namespace 'settings' %}
+	{% namespace namespace %}
 	<div id="fieldtype">
 		{% include "seo/_settings/fieldtype" %}
 	</div>
 
 	<div id="robots" class="hidden">
-		{% set robots %}
-			{% include 'seo/_seo/robots' with {
-				robots: settings.robots
-					? settings.robots
-					: globalSettings is defined
-						? globalSettings.robots,
-				name: 'robots',
-			} %}
-		{% endset %}
-		{{ forms.field(
-			{
-				label: 'Robots'|t,
-				instructions: 'Set the default global robots directives. This can be changed on a per-entry basis'|t,
-			},
-			robots
-		) }}
+		{% include "seo/_settings/robots" %}
 	</div>
 
 	<div id="sitemap" class="hidden">

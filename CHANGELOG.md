@@ -1,12 +1,10 @@
-## 3.2.0 - WIP
-### TODO
-- [ ] Manage `robots.txt`, with default value (i.e. defining the sitemap url) per site?
-
+## 3.2.0 - 2018-03-13
 ### Added
 - You can now manage your sites 🤖 on a site-wide or per-field basis
 	- The `X-Robots-Tag` header is added if you've set any robots
 	- If the current entry has an expiry date, the `unavailable_after` directive will be added automatically
 	- The `none` and `noimageindex` directives are automatically added to all pages when in `devMode`. No more accidental indexing of development sites!
+- You can now manage your `robots.txt` file from the SEO settings!
 	
 ### Changed
 - Improved the settings page (now with 300% more tabs).

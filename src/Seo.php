@@ -267,6 +267,8 @@ class Seo extends Plugin
 		$event->rules[$sitemapName . '.xml'] = 'seo/sitemap/xml/index';
 		$event->rules[$sitemapName . '_<section:\w*>_<id:\d*>_<page:\d*>.xml'] = 'seo/sitemap/xml/core';
 		$event->rules[$sitemapName . '_custom.xml'] = 'seo/sitemap/xml/custom';
+
+		$event->rules['robots.txt'] = 'seo/seo/robots';
 	}
 
 	public function onRegisterFieldTypes (RegisterComponentTypesEvent $event)

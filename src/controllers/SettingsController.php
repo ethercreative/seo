@@ -3,6 +3,7 @@
 namespace ether\seo\controllers;
 
 use craft\web\Controller;
+use ether\seo\resources\SeoFieldSettingsAssets;
 use ether\seo\Seo;
 use yii\web\HttpException;
 
@@ -11,6 +12,7 @@ class SettingsController extends Controller
 
 	/**
 	 * @throws HttpException
+	 * @throws \yii\base\InvalidConfigException
 	 */
 	public function actionIndex ()
 	{
@@ -20,6 +22,13 @@ class SettingsController extends Controller
 
 		$settings = Seo::$i->getSettings();
 		$settings->validate();
+
+		$namespace = 'settings';
+
+		$this->view->registerAssetBundle(SeoFieldSettingsAssets::class);
+		$this->view->registerJs(
+			"new SeoSettings('{$namespace}', 'settings');"
+		);
 
 		$fullPageForm = true;
 
@@ -46,7 +55,13 @@ class SettingsController extends Controller
 		];
 
 		$this->renderTemplate('seo/settings', array_merge(
-			compact('settings', 'fullPageForm', 'crumbs', 'tabs'),
+			compact(
+				'settings',
+				'namespace',
+				'fullPageForm',
+				'crumbs',
+				'tabs'
+			),
 			Seo::getFieldTypeSettingsVariables()
 		));
 	}

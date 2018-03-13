@@ -34,6 +34,30 @@ class Settings extends Model
 	/** @var array */
 	public $robots;
 
+	// Variables: Robots
+	// -------------------------------------------------------------------------
+
+	/** @var string */
+	public $robotsTxt = <<<xyzzy
+{# Sitemap URL #}
+Sitemap: {{ url(seo.sitemapName ~ ".xml") }}
+
+{# Disallows #}
+{% if craft.app.config.general.devMode %}
+
+{# Disallow access to everything when in devMode #}
+User-agent: *
+Disallow: /
+
+{% else %}
+
+{# Disallow access to cpresources/ when live #}
+User-agent: *
+Disallow: /cpresources/
+
+{% endif %}
+xyzzy;
+
 	// Methods
 	// =========================================================================
 

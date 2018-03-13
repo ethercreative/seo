@@ -11,6 +11,7 @@
  */
 
 import Redirects from "./settings/Redirects";
+import Settings from "./settings/Settings";
 
 class SeoSettings {
 	
@@ -52,21 +53,9 @@ class SeoSettings {
 				new Redirects(this.namespace, this.csrf);
 				break;
 			case "settings":
-				this.sitemapName();
+				new Settings(this.namespace, this.csrf);
 				break;
 		}
-	}
-	
-	// Sitemap
-	// =========================================================================
-	
-	sitemapName () {
-		const eg = document.getElementById(`${this.namespace}-sitemapNameExample`);
-		document.getElementById(
-			`${this.namespace}-sitemapName`
-		).addEventListener("input", ({ target }) => {
-			eg.textContent = `${target.value}.xml`;
-		});
 	}
 	
 	// Helpers
