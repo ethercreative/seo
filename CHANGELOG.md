@@ -1,3 +1,7 @@
+## 3.2.1 - 2018-03-15
+### Fixed
+- Fixed a bug that would cause Element API to error when no robots have been set.
+
 ## 3.2.0 - 2018-03-13
 ### Added
 - You can now manage your sites 🤖 on a site-wide or per-field basis

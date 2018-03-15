@@ -59,7 +59,8 @@ class SeoService extends Component
 			$robots = Seo::$i->getSettings()->robots;
 
 		// Remove empties and duplicates (on the off-chance)
-		$robots = array_filter(array_unique($robots));
+		if (is_array($robots))
+			$robots = array_filter(array_unique($robots));
 
 		// If we've got robots, add the header
 		if (!empty($robots))
