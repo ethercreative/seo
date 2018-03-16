@@ -1,3 +1,7 @@
+## 3.2.2 - 2018-03-16
+### Fixed
+- Fixed a bug where editing entries with an SEO field would error if the current site doesn't have a base URL. 
+
 ## 3.2.1 - 2018-03-15
 ### Fixed
 - Fixed a bug that would cause Element API to error when no robots have been set.
