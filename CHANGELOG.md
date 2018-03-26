@@ -1,3 +1,7 @@
+## 3.3.0 - WIP
+### Fixed
+- Fixed bug where Craft would 500 error when robots were injected for an element without an expiry date (via @saylateam)
+
 ## 3.2.2 - 2018-03-16
 ### Fixed
 - Fixed a bug where editing entries with an SEO field would error if the current site doesn't have a base URL. 
