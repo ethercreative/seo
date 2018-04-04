@@ -75,7 +75,7 @@ class Seo extends Plugin
 		// ---------------------------------------------------------------------
 
 		// User Permissions
-		if ($craft->getEdition() !== \Craft::Personal) {
+		if ($craft->getEdition() !== \Craft::Solo) {
 			Event::on(
 				UserPermissions::class,
 				UserPermissions::EVENT_REGISTER_PERMISSIONS,

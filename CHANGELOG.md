@@ -1,3 +1,7 @@
+## Unreleased
+### Fixed
+- Fixed a bug where the Craft edition referenced no longer existed ([#81](https://github.com/ethercreative/seo/issues/81))
+
 ## 3.2.2 - 2018-03-16
 ### Fixed
 - Fixed a bug where editing entries with an SEO field would error if the current site doesn't have a base URL. 
