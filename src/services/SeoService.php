@@ -47,10 +47,12 @@ class SeoService extends Component
 						$robots,
 						$variable->{$field->handle}['advanced']['robots']
 					);
-
+			
 			/** @var \DateTime $expiry */
-			if ($expiry = $variable->expiryDate)
-				$expiry = $expiry->format(\DATE_RFC850);
+			if (isset($variable->expiryDate))
+				$expiry = $variable->expiryDate->format(\DATE_RFC850);
+			else
+				$expiry = null;
 		}
 
 		// If we don't have any variables (i.e. when just rendering a template)
