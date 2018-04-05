@@ -1,7 +1,7 @@
-## 3.3.0 - WIP
+## 3.2.3 - 2018-04-05
 ### Fixed
 - Fixed bug where Craft would 500 error when robots were injected for an element without an expiry date (via @saylateam)
-- Fixed a bug where the Craft edition referenced no longer existed ([#81](https://github.com/ethercreative/seo/issues/81)) (via @andris-sevcenko)
+- Fixed a bug where the Craft edition referenced no longer existed [#81](https://github.com/ethercreative/seo/issues/81) (via @andris-sevcenko)
 
 ## 3.2.2 - 2018-03-16
 ### Fixed
