@@ -13,6 +13,17 @@
 			? globalSettings.titleSuffix,
 }) }}
 
+{# Only show this option on a per-field basis, not globally #}
+{% if globalSettings is defined %}
+	{{ forms.lightswitchField({
+		label: 'Use suffix as prefix',
+		instructions: 'If you\'ve got one of *those* clients who want the site name to come before the page title, switching this on will do that.',
+		name: 'suffixAsPrefix',
+		id: 'suffixAsPrefix',
+		on: settings.suffixAsPrefix,
+	}) }}
+{% endif %}
+
 {% if volumes %}
 	{{ forms.elementSelectField({
 		label: (default ? 'Default ') ~ 'Social Image',

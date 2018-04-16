@@ -1,8 +1,16 @@
 {
 	"less": {
 		"ignore": false,
-		"input": "less/**/*.less",
-		"output": "../src/resources/css",
+		"input": [
+			"less/seo.less",
+			"less/redirects.less",
+			"less/settings.less"
+		],
+		"output": [
+			"../src/resources/css/seo.css",
+			"../src/resources/css/redirects.css",
+			"../src/resources/css/settings.css"
+		],
 		"watch": [
 			"less/**/*"
 		]

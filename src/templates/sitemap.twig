@@ -75,6 +75,10 @@
 							value="{{ section.id }}"
 						/>
 						<strong>{{ section.name }}</strong>
+
+						{% for siteSettings in section.getSiteSettings() %}
+							<span class="seo--sitemap-tag">{{ siteSettings.site.name }}</span>
+						{% endfor %}
 					</td>
 					<td class="thin" style="text-align:left;">
 						{{ forms.selectField({

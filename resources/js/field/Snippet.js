@@ -57,7 +57,11 @@ export default class Snippet {
 		
 		// On Craft title field input, sync the title
 		const onMainTitleFieldInput = () => {
-			this.titleField.value = `${mainTitleField.value} ${initial}`;
+			if (this.SEO.options.suffixAsPrefix) {
+				this.titleField.value = `${initial} ${mainTitleField.value}`;
+			} else {
+				this.titleField.value = `${mainTitleField.value} ${initial}`;
+			}
 		};
 		
 		// On SEO title field input, stop syncing

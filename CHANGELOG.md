@@ -1,3 +1,10 @@
+## 3.2.4 - 2018-04-16
+### Added
+- Added a "Use suffix as prefix" option to the SEO field settings. For *those* clients.
+
+### Fixed
+- The sitemap settings now show all sections, regardless of what sites they are enabled on.
+
 ## 3.2.3 - 2018-04-05
 ### Fixed
 - Fixed bug where Craft would 500 error when robots were injected for an element without an expiry date (via @saylateam)

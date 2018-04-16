@@ -43,6 +43,9 @@ class SeoField extends Field implements PreviewableFieldInterface
 	/** @var string */
 	public $titleSuffix;
 
+	/** @var bool */
+	public $suffixAsPrefix;
+
 	/** @var mixed */
 	public $socialImage;
 
@@ -185,9 +188,15 @@ class SeoField extends Field implements PreviewableFieldInterface
 			$url = str_replace($element->slug, '', $url);
 
 		$titleSuffix = $settings['titleSuffix'] ?: $settingsGlobal['titleSuffix'];
+		$suffixAsPrefix = $settings['suffixAsPrefix'];
 
 		if ($hasPreview && $isEntry && $value['title'] === null && $isSingle)
-			$titleSuffix = $element->title . ' ' . $titleSuffix;
+		{
+			if ($suffixAsPrefix)
+				$titleSuffix = $titleSuffix . ' ' . $element->title;
+			else
+				$titleSuffix = $element->title . ' ' . $titleSuffix;
+		}
 
 		// Social URL
 		// ---------------------------------------------------------------------
@@ -217,7 +226,8 @@ class SeoField extends Field implements PreviewableFieldInterface
 
 		$seoOptions = Json::encode(compact(
 			'hasPreview',
-			'isNew'
+			'isNew',
+			'suffixAsPrefix'
 		));
 
 		$craft->view->registerAssetBundle(SeoFieldAssets::class);

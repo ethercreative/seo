@@ -418,10 +418,8 @@ class SitemapService extends Component
 	 */
 	private function _filterOutNoUrls ($thing)
 	{
-		$currentSiteId = \Craft::$app->sites->currentSite->id;
-
 		foreach ($thing->getSiteSettings() as $siteSettings)
-			if ($siteSettings->hasUrls && $siteSettings->siteId === $currentSiteId)
+			if ($siteSettings->hasUrls)
 				return true;
 
 		return false;
