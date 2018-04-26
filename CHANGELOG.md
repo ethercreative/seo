@@ -1,3 +1,8 @@
+## 3.2.5 - 2018-04-26
+### Fixed
+- Fixed broken `robots.txt` code editor. #90
+- Fixed sitemaps having wrong Content-Type header. #91
+
 ## 3.2.4 - 2018-04-16
 ### Added
 - Added a "Use suffix as prefix" option to the SEO field settings. For *those* clients.

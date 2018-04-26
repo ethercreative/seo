@@ -4,6 +4,7 @@ namespace ether\seo\controllers\sitemap;
 
 use craft\web\Controller;
 use ether\seo\Seo;
+use yii\web\Response;
 
 class XmlController extends Controller
 {
@@ -15,34 +16,31 @@ class XmlController extends Controller
 	 */
 	public function actionIndex ()
 	{
-		$this->_setHeaders();
-		echo Seo::$i->sitemap->index();
-		exit();
+		return $this->_asXml(Seo::$i->sitemap->index());
 	}
 
 	public function actionCore ()
 	{
-		$this->_setHeaders();
-		echo Seo::$i->sitemap->core(\Craft::$app->urlManager->getRouteParams());
-		exit();
+		return $this->_asXml(
+			Seo::$i->sitemap->core(\Craft::$app->urlManager->getRouteParams())
+		);
 	}
 
 	public function actionCustom ()
 	{
-		$this->_setHeaders();
-		echo Seo::$i->sitemap->custom();
-		exit();
+		return $this->_asXml(Seo::$i->sitemap->custom());
 	}
 
 	// Helpers
 	// =========================================================================
 
-	private function _setHeaders ()
+	private function _asXml ($data)
 	{
-		\Craft::$app->getResponse()->headers->fromArray([
-			'content-type' => 'xml',
-			'charset' => 'utf-8',
-		]);
+		$response = \Craft::$app->getResponse();
+		$response->content = $data;
+		$response->format = Response::FORMAT_XML;
+
+		return $response;
 	}
 
 }
