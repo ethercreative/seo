@@ -17,7 +17,7 @@ class RedirectsController extends Controller
 	public function actionIndex ()
 	{
 		$currentUser = \Craft::$app->user;
-		if (!$currentUser->can('manageRedirects') && !$currentUser->getIsAdmin())
+		if (!$currentUser->checkPermission('manageRedirects') && !$currentUser->getIsAdmin())
 			throw new HttpException(403);
 
 		$namespace = 'data';

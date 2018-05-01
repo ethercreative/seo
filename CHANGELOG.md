@@ -1,3 +1,7 @@
+## 3.2.6 - 2018-05-01
+### Fixed
+- Fixed user permissions not being checked correctly #93
+
 ## 3.2.5 - 2018-04-26
 ### Fixed
 - Fixed broken `robots.txt` code editor. #90

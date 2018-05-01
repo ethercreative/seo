@@ -17,7 +17,7 @@ class SitemapController extends Controller
 	public function actionIndex ()
 	{
 		$currentUser = \Craft::$app->user;
-		if (!$currentUser->can('manageSitemap') && !$currentUser->getIsAdmin())
+		if (!$currentUser->checkPermission('manageSitemap') && !$currentUser->getIsAdmin())
 			throw new HttpException(403);
 
 		$namespace = 'data';

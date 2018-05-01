@@ -161,15 +161,15 @@ class Seo extends Plugin
 			'dashboard' => ['label' => 'Dashboard', 'url' => 'seo'],
 		];
 
-		if ($currentUser->getIsAdmin() || $currentUser->can('manageSitemap'))
+		if ($currentUser->getIsAdmin() || $currentUser->checkPermission('manageSitemap'))
 			$subNav['sitemap'] =
 				['label' => 'Sitemap', 'url' => 'seo/sitemap'];
 
-		if ($currentUser->getIsAdmin() || $currentUser->can('manageRedirects'))
+		if ($currentUser->getIsAdmin() || $currentUser->checkPermission('manageRedirects'))
 			$subNav['redirects'] =
 				['label' => 'Redirects', 'url' => 'seo/redirects'];
 
-		/*if ($currentUser->getIsAdmin() || $currentUser->can('manageSchema'))
+		/*if ($currentUser->getIsAdmin() || $currentUser->checkPermission('manageSchema'))
 			$subNav['schema'] =
 				['label' => 'Schema', 'url' => 'seo/schema'];*/
 
