@@ -1,7 +1,13 @@
-## 3.2.7 - WIP
+## 3.2.7 - 2018-05-10
+**Heads up:** This update includes changes to the SEO `meta.twig`. If you are using a custom version you can review the changes [here](https://github.com/ethercreative/seo/commits/v3/src/templates/_seo/meta.twig).
+
 ### Fixed
 - Fixed SEO field erroring after upgrade from Craft 2 #92
 - Fixed sitemap erroring when entry doesn't have an SEO field #96
+
+### Changed
+- `og:site_name` now uses `seo.title` instead of `siteName` #95 (via @urbantrout)
+- Canonical meta tag now uses `absoluteUrl` #94 (via @matthiaswh)
 
 ## 3.2.6 - 2018-05-01
 ### Fixed
