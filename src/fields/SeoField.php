@@ -89,33 +89,39 @@ class SeoField extends Field implements PreviewableFieldInterface
 
 		// Social
 
-		$social = array_merge(self::$defaultValue['social'], $value['social']);
-		foreach ($social as $k => $s)
+		if (array_key_exists('social', $value))
 		{
-			if ($s['image'] !== '')
+			$social = array_merge(self::$defaultValue['social'], $value['social']);
+			foreach ($social as $k => $s)
 			{
-				if (
-					is_object($s['image'])
-					&& get_class($s['image']) === 'craft\elements\Asset'
-				) continue;
+				if ($s['image'] !== '')
+				{
+					if (
+						is_object($s['image'])
+						&& get_class($s['image']) === 'craft\elements\Asset'
+					) continue;
 
-				if (is_array($s['image'])) {
-					$s['image'] = $s['image']['id'];
+					if (is_array($s['image']))
+					{
+						$s['image'] = $s['image']['id'];
+					}
+
+					$s['image'] = \Craft::$app->assets->getAssetById(
+						(int)$s['image']
+					);
+				}
+				else
+				{
+					$s['image'] = $this->_socialFallbackImage();
 				}
 
-				$s['image'] = \Craft::$app->assets->getAssetById(
-					(int)$s['image']
-				);
-			}
-			else
-			{
-				$s['image'] = $this->_socialFallbackImage();
+				$social[$k] = $s;
 			}
 
-			$social[$k] = $s;
+			$value['social'] = $social;
+		} else {
+			$value['social'] = self::$defaultValue['social'];
 		}
-
-		$value['social'] = $social;
 
 		// Advanced
 

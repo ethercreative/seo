@@ -1,3 +1,8 @@
+## 3.2.7 - WIP
+### Fixed
+- Fixed SEO field erroring after upgrade from Craft 2 #92
+- Fixed sitemap erroring when entry doesn't have an SEO field #96
+
 ## 3.2.6 - 2018-05-01
 ### Fixed
 - Fixed user permissions not being checked correctly #93
