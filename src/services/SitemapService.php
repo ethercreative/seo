@@ -292,10 +292,12 @@ class SitemapService extends Component
 			if ($item->url === null)
 				continue;
 
-			$seoField = $item->$seoFieldHandle;
-			if ($robots = $seoField['advanced']['robots'])
-				if (in_array('noindex', $robots))
-					continue;
+			if ($seoFieldHandle !== null) {
+				$seoField = $item->$seoFieldHandle;
+				if ($robots = $seoField['advanced']['robots'])
+					if (in_array('noindex', $robots))
+						continue;
+			}
 
 			$url = $this->_document->createElement('url');
 			$this->_urlSet->appendChild($url);
