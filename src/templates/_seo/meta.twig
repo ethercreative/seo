@@ -15,7 +15,7 @@
 
 	{% set fb = social.facebook -%}
 	<meta property="fb:app_id" content="{# TODO: Facebook App ID #}">
-	<meta property="og:url" content="{{ craft.app.request.pathInfo }}" />
+	<meta property="og:url" content="{{ craft.app.request.absoluteUrl }}" />
 	<meta property="og:type" content="website" />
 	<meta property="og:title" content="{{ fb.title }}" />
 	<meta property="og:image" content="{{ craft.seo.facebookImage(fb.image) }}" />
@@ -29,7 +29,7 @@
 	{% set tw = social.twitter -%}
 	<meta name="twitter:card" content="summary_large_image" />
 	<meta name="twitter:site" content="{# TODO: Twitter Handle  #}" />
-	<meta name="twitter:url" content="{{ craft.app.request.pathInfo }}" />
+	<meta name="twitter:url" content="{{ craft.app.request.absoluteUrl }}" />
 	<meta name="twitter:title" content="{{ tw.title }}" />
 	<meta name="twitter:description" content="{{ tw.description }}" />
 	<meta name="twitter:image" content="{{ craft.seo.twitterImage(tw.image) }}" />

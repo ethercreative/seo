@@ -8,6 +8,7 @@
 ### Changed
 - `og:site_name` now uses `seo.title` instead of `siteName` #95 (via @urbantrout)
 - Canonical meta tag now uses `absoluteUrl` #94 (via @matthiaswh)
+- Social URLs in `meta.twig` now use `absoluteUrl`
 
 ## 3.2.6 - 2018-05-01
 ### Fixed
