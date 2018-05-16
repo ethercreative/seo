@@ -1,3 +1,7 @@
+## 3.2.8 - 2018-05-16
+### Fixed
+- Fixed bug where `robots.txt` would not be accessible when not logged in. 
+
 ## 3.2.7 - 2018-05-10
 **Heads up:** This update includes changes to the SEO `meta.twig`. If you are using a custom version you can review the changes [here](https://github.com/ethercreative/seo/commits/v3/src/templates/_seo/meta.twig).
 

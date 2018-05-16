@@ -8,6 +8,8 @@ use ether\seo\Seo;
 class SeoController extends Controller
 {
 
+	protected $allowAnonymous = ['robots'];
+
 	public function actionIndex ()
 	{
 		$this->renderTemplate('seo/index');
