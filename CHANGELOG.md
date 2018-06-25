@@ -2,6 +2,9 @@
 ### Fixed
 - Fixed field settings throwing deprecation warning #109
 
+### Changed
+- Redirect list moved below "Add Redirect" fields #107
+
 ## 3.2.8 - 2018-05-16
 ### Fixed
 - Fixed bug where `robots.txt` would not be accessible when not logged in. 

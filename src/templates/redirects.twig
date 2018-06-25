@@ -50,52 +50,6 @@
 			</div>
 		</div>
 
-		<form class="tableview" id="tableForm">
-			<table class="data fullwidth">
-				<thead>
-				<tr>
-					<th scope="col" data-attribute="uri">URI</th>
-					<th scope="col" data-attribute="to">To</th>
-					<th scope="col" data-attribute="type">Type</th>
-					<td class="thin checkbox-cell"></td>
-				</tr>
-				</thead>
-				<tbody id="redirectTable">
-				{% for redirect in redirects %}
-					<tr tabindex="0" data-id="{{ redirect.id }}">
-						<td class="redirects--title-col">
-							<div class="element small">
-								<div class="label">
-							<span class="title">
-								<a href="#" title="Edit redirect"
-								   data-id="{{ redirect.id }}"
-								   data-uri="{{ redirect.uri }}"
-								   data-to="{{ redirect.to }}"
-								   data-type="{{ redirect.type|default('301') }}">
-									{{ redirect.uri }}
-								</a>
-							</span>
-								</div>
-							</div>
-						</td>
-						<td>
-							{{ redirect.to }}
-						</td>
-						<td>
-							{{ redirectType[redirect.type|default('301')] }}
-						</td>
-						<td class="thin action">
-							<a class="delete icon" title="Delete"></a>
-						</td>
-					</tr>
-				{% endfor %}
-				</tbody>
-			</table>
-		</form>
-
-		<br>
-		<br>
-
 		<form class="redirects--form" id="redirectsNew">
 			<h4>Add new redirect</h4>
 			<div class="fields">
@@ -164,6 +118,52 @@
 				</div>
 				<div class="spinner hidden"></div>
 			</div>
+		</form>
+
+		<br>
+		<br>
+
+		<form class="tableview" id="tableForm">
+			<table class="data fullwidth">
+				<thead>
+				<tr>
+					<th scope="col" data-attribute="uri">URI</th>
+					<th scope="col" data-attribute="to">To</th>
+					<th scope="col" data-attribute="type">Type</th>
+					<td class="thin checkbox-cell"></td>
+				</tr>
+				</thead>
+				<tbody id="redirectTable">
+				{% for redirect in redirects %}
+					<tr tabindex="0" data-id="{{ redirect.id }}">
+						<td class="redirects--title-col">
+							<div class="element small">
+								<div class="label">
+							<span class="title">
+								<a href="#" title="Edit redirect"
+								   data-id="{{ redirect.id }}"
+								   data-uri="{{ redirect.uri }}"
+								   data-to="{{ redirect.to }}"
+								   data-type="{{ redirect.type|default('301') }}">
+									{{ redirect.uri }}
+								</a>
+							</span>
+								</div>
+							</div>
+						</td>
+						<td>
+							{{ redirect.to }}
+						</td>
+						<td>
+							{{ redirectType[redirect.type|default('301')] }}
+						</td>
+						<td class="thin action">
+							<a class="delete icon" title="Delete"></a>
+						</td>
+					</tr>
+				{% endfor %}
+				</tbody>
+			</table>
 		</form>
 	{% endnamespace %}
 {% endblock %}
