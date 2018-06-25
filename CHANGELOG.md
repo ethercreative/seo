@@ -2,6 +2,7 @@
 ### Fixed
 - Fixed field settings throwing deprecation warning #109
 - Fixed invalid sitemap urls
+- Robot lightswitches now have a min-width #103
 
 ### Changed
 - Redirect list moved below "Add Redirect" fields #107
