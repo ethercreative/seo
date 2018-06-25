@@ -1,3 +1,7 @@
+## 3.3.0 - 2018-05-25
+### Fixed
+- Fixed field settings throwing deprecation warning #109
+
 ## 3.2.8 - 2018-05-16
 ### Fixed
 - Fixed bug where `robots.txt` would not be accessible when not logged in. 
