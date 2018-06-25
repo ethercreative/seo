@@ -226,6 +226,7 @@ class SitemapService extends Component
 	 * @param array $variables
 	 *
 	 * @return string
+	 * @throws \yii\base\Exception
 	 */
 	public function core (array $variables)
 	{
@@ -277,15 +278,21 @@ class SitemapService extends Component
 		$currentLocale = $craft->locale->id;
 		$availableLocales = $craft->i18n->getSiteLocaleIds();
 
-		if (($key = array_search($currentLocale, $availableLocales)) !== false) {
+		if (($key = array_search($currentLocale, $availableLocales)) !== false)
 			unset($availableLocales[$key]);
-		}
 
 		$seoFieldHandle = null;
 		if ($first = $elements->one())
-			foreach ($first->type->fieldLayout->getFields() as $field)
+		{
+			$fieldLayout =
+				$variables['section'] === 'categories'
+					? $first->fieldLayout
+					: $first->type->fieldLayout;
+
+			foreach ($fieldLayout->getFields() as $field)
 				if (get_class($field) === SeoField::class)
 					$seoFieldHandle = $field->handle;
+		}
 
 		foreach ($elements->all() as $item)
 		{
@@ -346,8 +353,8 @@ class SitemapService extends Component
 
 			foreach ($item->supportedSites as $siteId)
 			{
-				$id = $siteId['siteId'];
-				$site = $craft->sites->getSiteById($id);
+				$id = is_numeric($siteId) ? $siteId : $siteId['siteId'];
+				$site = $id ? $craft->sites->getSiteById($id) : \Craft::$app->sites->currentSite;
 				$lang = $site->language;
 
 				if (!in_array($lang, $availableLocales))
@@ -356,7 +363,7 @@ class SitemapService extends Component
 				if (!array_key_exists($id, $enabledLookup))
 					continue;
 
-				$link = UrlHelper::url($enabledLookup[$id], null, $id);
+				$link = UrlHelper::siteUrl($enabledLookup[$id], null, null, $id);
 
 				$alt = $this->_document->createElement('xhtml:link');
 				$alt->setAttribute('rel', 'alternate');
@@ -365,6 +372,7 @@ class SitemapService extends Component
 					str_replace('_', '-', $lang)
 				);
 				$alt->setAttribute('href', $link);
+
 				$url->appendChild($alt);
 			}
 		}

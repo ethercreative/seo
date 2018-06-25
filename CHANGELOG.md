@@ -1,9 +1,11 @@
 ## 3.3.0 - 2018-05-25
 ### Fixed
 - Fixed field settings throwing deprecation warning #109
+- Fixed invalid sitemap urls
 
 ### Changed
 - Redirect list moved below "Add Redirect" fields #107
+- Empty / suffix only title fields will now populate with the element title
 
 ## 3.2.8 - 2018-05-16
 ### Fixed
