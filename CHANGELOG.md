@@ -1,9 +1,12 @@
 ## 3.3.0 - 2018-05-25
+**Heads up:** This update includes changes to the SEO `meta.twig`. If you are using a custom version you can review the changes [here](https://github.com/ethercreative/seo/commits/v3/src/templates/_seo/meta.twig).
+
 ### Fixed
 - Fixed field settings throwing deprecation warning #109
 - Fixed invalid sitemap urls
 - Robot lightswitches now have a min-width #103
 - Fixed TypeError in SEO variable when social image doesn't have a transform URL #101
+- Fixed SEO hook throwing an error when a populated SEO field was removed from the current element #99
 
 ### Changed
 - Redirect list moved below "Add Redirect" fields #107
