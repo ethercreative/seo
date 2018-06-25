@@ -112,7 +112,7 @@ class Variable {
 
 		$transformUrl = $image->getUrl($transform);
 
-		if (strpos($transformUrl, 'http') === false)
+		if ($transformUrl && strpos($transformUrl, 'http') === false)
 			$transformUrl = UrlHelper::siteUrl($transformUrl);
 
 		return $transformUrl;

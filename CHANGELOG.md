@@ -3,6 +3,7 @@
 - Fixed field settings throwing deprecation warning #109
 - Fixed invalid sitemap urls
 - Robot lightswitches now have a min-width #103
+- Fixed TypeError in SEO variable when social image doesn't have a transform URL #101
 
 ### Changed
 - Redirect list moved below "Add Redirect" fields #107
