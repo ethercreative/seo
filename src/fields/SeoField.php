@@ -87,6 +87,22 @@ class SeoField extends Field implements PreviewableFieldInterface
 		if (!is_array($value))
 			$value = Json::decode($value);
 
+		$settings = $this->getSettings();
+		$settingsGlobal = Seo::$i->getSettings();
+
+		// Title
+
+		$titleSuffix = $settings['titleSuffix'] ?: $settingsGlobal['titleSuffix'];
+		$suffixAsPrefix = $settings['suffixAsPrefix'];
+
+		if (empty($value['title']) || $value['title'] === $titleSuffix)
+		{
+			if ($suffixAsPrefix)
+				$value['title'] = $titleSuffix . ' ' . $element->title;
+			else
+				$value['title'] = $element->title . ' ' . $titleSuffix;
+		}
+
 		// Social
 
 		if (array_key_exists('social', $value))
