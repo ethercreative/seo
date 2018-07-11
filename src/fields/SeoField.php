@@ -149,12 +149,7 @@ class SeoField extends Field implements PreviewableFieldInterface
 		// Filter out empty robots
 		if (array_key_exists('robots', $value['advanced']))
 		{
-			$value['advanced']['robots'] = array_filter(
-				$value['advanced']['robots'],
-				function ($v) {
-					return !!$v;
-				}
-			);
+			$value['advanced']['robots'] = array_filter($value['advanced']['robots']);
 		}
 
 		return $value;
