@@ -353,8 +353,16 @@ export default class FocusKeywords {
 	/**
 	 * Fired when the keywords input is blurred
 	 */
-	onInputBlur = () => {
+	onInputBlur = e => {
 		this.inputWrap.classList.remove('focused');
+
+		if (e.target.value.trim() !== "") {
+			this.onInputKeyDown({
+				target: e.target,
+				keyCode: 13,
+				preventDefault: () => {},
+			});
+		}
 	};
 	
 	/**
