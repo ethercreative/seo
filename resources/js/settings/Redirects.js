@@ -263,17 +263,13 @@ export default class Redirects {
 		onSuccess = () => {},
 		onError = () => {}
 	) {
-		const formData = new FormData()
-			, jsonData = {};
-		
-		formData.append(this.csrf.name, this.csrf.token);
+		const jsonData = {};
+
 		jsonData[this.csrf.name] = this.csrf.token;
 		
 		Object.keys(fields).forEach(key => {
-			if (fields.hasOwnProperty(key)) {
-				formData.append(key, fields[key]);
+			if (fields.hasOwnProperty(key))
 				jsonData[key] = fields[key];
-			}
 		});
 		
 		$.ajax({

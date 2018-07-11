@@ -93,11 +93,16 @@
 					required: true
 				}) }}
 
-				{{ forms.text({
-					name: "separator",
-					placeholder: "Separator",
-					required: true
-				}) }}
+				<label class="type-select">
+					{{ forms.text({
+						name: "separator",
+						placeholder: "Separator",
+						required: true
+					}) }}
+					<span class="instructions">
+						The character used to separate each column. In a CSV, for example, this would be a comma (,).
+					</span>
+				</label>
 
 				<label class="type-select">
 					{{ ui.selectField({
@@ -107,8 +112,8 @@
 					}) }}
 
 					<span class="instructions">
-					The default redirect type (if one isn't defined)
-				</span>
+						The default redirect type (if one isn't defined)
+					</span>
 				</label>
 			</div>
 
