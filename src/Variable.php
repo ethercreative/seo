@@ -3,6 +3,7 @@
 namespace ether\seo;
 
 use craft\elements\Asset;
+use craft\helpers\Template;
 use craft\helpers\UrlHelper;
 use ether\seo\fields\SeoField;
 
@@ -14,12 +15,15 @@ class Variable {
 		$includeTitleSuffix = true,
 		$social = []
 	) {
+		$settings = Seo::$i->getSettings();
+		$socialImage = $this->_socialImageFallback();
+
 		$text = [
 			'title' =>
 				$title
 					? $title . (
 					$includeTitleSuffix
-						? ' ' . Seo::$i->getSettings()['titleSuffix']
+						? ' ' . $settings['titleSuffix']
 						: ''
 					) : '',
 			'description' => $description ?: '',
@@ -34,6 +38,9 @@ class Variable {
 				$ret['social'][$key],
 				$value
 			);
+
+			if (!$ret['social'][$key]['image'] && $socialImage)
+				$ret['social'][$key]['image'] = $socialImage;
 		}
 
 		return $ret;
@@ -52,6 +59,7 @@ class Variable {
 	public function social ($value)
 	{
 		$social = [];
+		$socialImage = $this->_socialImageFallback();
 
 		if (!array_key_exists('social', $value)) {
 			return SeoField::$defaultValue['social'];
@@ -60,7 +68,7 @@ class Variable {
 		foreach ($value['social'] as $name => $v) {
 			$social[$name] = [
 				'title' => $v['title'] ?: $value['title'],
-				'image' => $v['image'],
+				'image' => $v['image'] ?: $socialImage,
 				'description' => $v['description'] ?: $value['description'],
 			];
 		}
@@ -74,7 +82,7 @@ class Variable {
 	/**
 	 * @param Asset|null $image
 	 *
-	 * @return string
+	 * @return \Twig_Markup|string
 	 * @throws \yii\base\Exception
 	 */
 	public function twitterImage ($image)
@@ -88,7 +96,7 @@ class Variable {
 	/**
 	 * @param Asset|null $image
 	 *
-	 * @return string
+	 * @return \Twig_Markup|string
 	 * @throws \yii\base\Exception
 	 */
 	public function facebookImage ($image)
@@ -103,7 +111,7 @@ class Variable {
 	 * @param Asset|null $image
 	 * @param array      $transform
 	 *
-	 * @return string
+	 * @return \Twig_Markup|string
 	 * @throws \yii\base\Exception
 	 */
 	private function _socialImage ($image, array $transform)
@@ -115,7 +123,26 @@ class Variable {
 		if ($transformUrl && strpos($transformUrl, 'http') === false)
 			$transformUrl = UrlHelper::siteUrl($transformUrl);
 
-		return $transformUrl;
+		return Template::raw($transformUrl);
+	}
+
+	/**
+	 * Returns fallback image from global settings
+	 *
+	 * @return Asset|null
+	 */
+	private function _socialImageFallback ()
+	{
+		static $fallback = null;
+
+		if (!$fallback)
+		{
+			$settings = Seo::$i->getSettings();
+			if (!empty($settings['socialImage']))
+				$fallback = \Craft::$app->assets->getAssetById((int) $settings['socialImage'][0]);
+		}
+
+		return $fallback;
 	}
 
 }
