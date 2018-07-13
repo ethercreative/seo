@@ -91,6 +91,8 @@ class RedirectsService extends Component
 				$siteUrlSegments = $this->getSiteUrlSegments();
 				
 				$path = $siteUrlSegments . $path;
+				
+				$redirect['to'] = str_replace($siteUrlSegments, '', $redirect['to']);
 			}
 
 			if (trim($redirect['uri'], '/') == $path)
