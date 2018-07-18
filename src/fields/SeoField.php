@@ -90,6 +90,34 @@ class SeoField extends Field implements PreviewableFieldInterface
 		$settings = $this->getSettings();
 		$settingsGlobal = Seo::$i->getSettings();
 
+		// Backwards compatibility to Craft 2
+		// ---------------------------------------------------------------------
+
+		// Convert keyword -> keywords
+
+		if ($value && array_key_exists('keyword', $value)) {
+			if (!empty($value['keyword'])) {
+				$value['keywords'] = [
+					[
+						'keyword' => $value['keyword'],
+						'rating'  => [
+							'' => 'neutral',
+							'good' => 'good',
+							'ok' => 'average',
+							'bad' => 'poor',
+						][$value['score']],
+					],
+				];
+			} else {
+				$value['keywords'] = [];
+			}
+			unset($value['keyword']);
+			$value['keywords'] = json_encode($value['keywords']);
+			$value['score'] = 'neutral';
+		}
+
+		// ---------------------------------------------------------------------
+
 		// Title
 
 		$titleSuffix = $settings['titleSuffix'] ?: $settingsGlobal['titleSuffix'];
