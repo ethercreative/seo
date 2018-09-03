@@ -16,8 +16,14 @@ class SeoService extends Component
 	 */
 	public function injectRobots ()
 	{
+		try {
+			$resolve = \Craft::$app->request->resolve();
+		} catch (\Exception $e) {
+			$resolve = [null, []];
+		}
+
 		$headers = \Craft::$app->getResponse()->getHeaders();
-		$resolve = \Craft::$app->request->resolve()[1];
+		$resolve = $resolve[1];
 		$variables = array_key_exists('variables', $resolve)
 			? $resolve['variables']
 			: [];

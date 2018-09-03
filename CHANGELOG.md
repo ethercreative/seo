@@ -1,3 +1,12 @@
+## 3.3.1 - 2018-09-03
+### Fixed
+- `craft.seo.custom` social images now fallback to the default social image from global settings. #113
+- Fixed bug where some requests would 404 when injecting 🤖's #130
+
+### Changed
+- SEO robots no longer return empty values #110
+- Text in the keyword input will automatically be turned into a tag on blur #114
+
 ## 3.3.0 - 2018-05-25
 **Heads up:** This update includes changes to the SEO `meta.twig`. If you are using a custom version you can review the changes [here](https://github.com/ethercreative/seo/commits/v3/src/templates/_seo/meta.twig).
 
