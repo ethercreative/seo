@@ -54,7 +54,7 @@ class SeoService extends Component
 				if (get_class($field) === SeoField::class)
 					$robots = array_merge(
 						$robots,
-						$variable->{$field->handle}['advanced']['robots']
+						$variable->{$field->handle}->advanced['robots']
 					);
 			
 			/** @var \DateTime $expiry */

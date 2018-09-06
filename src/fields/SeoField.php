@@ -24,20 +24,6 @@ class SeoField extends Field implements PreviewableFieldInterface
 	// Static
 	// -------------------------------------------------------------------------
 
-	public static $defaultValue = [
-		'title'       => '',
-		'description' => '',
-		'keywords'    => '',
-		'score'       => 'neutral',
-		'social'      => [
-			'twitter'  => ['title' => '', 'image' => null, 'description' => ''],
-			'facebook' => ['title' => '', 'image' => null, 'description' => ''],
-		],
-		'advanced'    => [
-			'robots' => [],
-		],
-	];
-
 	public static $defaultFieldSettings = [
 		'titleSuffix' => null,
 		'suffixAsPrefix' => false,

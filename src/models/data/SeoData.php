@@ -72,7 +72,10 @@ class SeoData extends BaseDataModel
 	{
 		$this->_element = $element;
 		$this->_seoSettings = Seo::$i->getSettings();
-		$this->_fieldSettings = $seo ? $seo->getSettings() : SeoField::$defaultFieldSettings;
+		$this->_fieldSettings =
+			$seo === null
+				? SeoField::$defaultFieldSettings
+				: $seo->getSettings();
 
 		// Backwards compatibility for SEO v1 / Craft v2
 		if (isset($config['keyword']))
