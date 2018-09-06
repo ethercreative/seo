@@ -1,4 +1,9 @@
 ## [Unreleased] 3.3.2
+### Changed
+- The default `robots.txt` now disallows all when the environment is NOT set to `'production'`. 
+This will not have an effect for existing installs (where the SEO settings have been saved).
+To manually update your `robots.txt`, replace the line `{% if craft.app.config.general.devMode %}` with `{% if craft.app.config.env != 'production' %}`. #122
+
 ### Fixed
 - SEO no longer errors if a social image doesn't have a public url. #131
 
