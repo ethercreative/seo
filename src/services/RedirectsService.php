@@ -137,6 +137,9 @@ class RedirectsService extends Component
 	 */
 	public function save ($uri, $to, $type, $siteId = null, $id = null)
 	{
+		if ($siteId === 'null')
+			$siteId = null;
+
 		if ($id)
 		{
 			$record = RedirectRecord::findOne(compact('id'));
