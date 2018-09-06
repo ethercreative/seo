@@ -29,12 +29,17 @@ class RedirectsController extends Controller
 			"new SeoSettings('{$namespace}', 'redirects', ['{$csrfn}', '{$csrf}']);"
 		);
 
+		$sites = ['null' => 'All Sites'];
+		foreach (\Craft::$app->sites->getAllSites() as $site)
+			$sites[$site->id] = $site->name;
+
 		return $this->renderTemplate('seo/redirects', [
 			'namespace' => $namespace,
 			'crumbs' => [
 				['label' => 'SEO', 'url' => 'index'],
 			],
 			'redirects' => Seo::$i->redirects->findAllRedirects(),
+			'sites' => $sites,
 		]);
 	}
 
@@ -47,12 +52,13 @@ class RedirectsController extends Controller
 
 		$request  = \Craft::$app->request;
 
-		$uri  = $request->getRequiredBodyParam('uri');
-		$to   = $request->getRequiredBodyParam('to');
-		$type = $request->getRequiredBodyParam('type');
-		$id   = $request->getBodyParam('id');
+		$uri    = $request->getRequiredBodyParam('uri');
+		$to     = $request->getRequiredBodyParam('to');
+		$type   = $request->getRequiredBodyParam('type');
+		$siteId = $request->getBodyParam('siteId', false);
+		$id     = $request->getBodyParam('id');
 
-		$err = Seo::$i->redirects->save($uri, $to, $type, $id);
+		$err = Seo::$i->redirects->save($uri, $to, $type, $siteId, $id);
 
 		if (is_numeric($err))
 		{
@@ -77,9 +83,10 @@ class RedirectsController extends Controller
 		$redirects = $request->getRequiredBodyParam('redirects');
 		$separator = $request->getRequiredBodyParam('separator');
 		$type      = $request->getRequiredBodyParam('type');
+		$siteId    = $request->getRequiredBodyParam('siteId');
 
 		list($success, $error) =
-			Seo::$i->redirects->bulk($redirects, $separator, $type);
+			Seo::$i->redirects->bulk($redirects, $separator, $type, $siteId);
 
 		if ($error)
 		{

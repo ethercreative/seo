@@ -11,6 +11,7 @@ use craft\db\ActiveRecord;
  * @property string $uri
  * @property string $to
  * @property string $type
+ * @property int|null $siteId
  *
  * @package ether\seo\records
  */

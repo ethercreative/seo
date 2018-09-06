@@ -4,6 +4,7 @@
 
 ### Added
 - Added `getSeoField($handle = 'seo')` Twig function for Site templates.
+- Redirects can now be specified on a per-site basis!
 
 ### Changed
 - SEO field data is now used via an `SeoData` model, rather than an array. **This may cause breaking changes, especially if you have a custom `meta.twig` template!**
@@ -14,7 +15,6 @@ To manually update your `robots.txt`, replace the line `{% if craft.app.config.g
 
 ### Fixed
 - SEO no longer errors if a social image doesn't have a public url. [#131]
-- Redirects now take multi-sites into consideration correctly. [#118] (via [@JorgeAnzola])
 
 ### Improved
 - The SEO meta field will now look for product and category elements when searching for the SEO field. [#128]
@@ -26,8 +26,6 @@ To manually update your `robots.txt`, replace the line `{% if craft.app.config.g
 [#127]: https://github.com/ethercreative/seo/issues/127
 [#119]: https://github.com/ethercreative/seo/issues/119
 [#118]: https://github.com/ethercreative/seo/issues/118
-[#116]: https://github.com/ethercreative/seo/issues/116
-[@JorgeAnzola]: https://github.com/JorgeAnzola
 
 ## 3.3.1 - 2018-09-03
 ### Fixed

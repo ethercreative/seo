@@ -53,6 +53,8 @@ class Seo extends Plugin
 	public $documentationUrl =
 		'https://github.com/ethercreative/seo/blob/v3/README.md';
 
+	public $schemaVersion = '3.0.1';
+
 	// Craft
 	// =========================================================================
 

@@ -23,7 +23,6 @@
     "developer": "Ether Creative",
     "developerUrl": "https://ethercreative.co.uk",
 
-    "class": "ether\\seo\\Seo",
-    "schemaVersion": "3.0.1"
+    "class": "ether\\seo\\Seo"
   }
 }

@@ -45,9 +45,10 @@ class Install extends Migration
 			[
 				'id' => $this->primaryKey(),
 
-				'uri'  => $this->string(255)->notNull(),
-				'to'   => $this->string(255)->notNull(),
-				'type' => $this->enum('type', ['301', '302'])->notNull(),
+				'uri'    => $this->string(255)->notNull(),
+				'to'     => $this->string(255)->notNull(),
+				'type'   => $this->enum('type', ['301', '302'])->notNull(),
+				'siteId' => $this->integer()->null(),
 
 				'dateCreated' => $this->dateTime()->notNull(),
 				'dateUpdated' => $this->dateTime()->notNull(),

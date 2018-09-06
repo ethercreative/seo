@@ -71,6 +71,12 @@
 					options: redirectType,
 					required: true
 				}) }}
+
+				{{ ui.selectField({
+					name: "siteId",
+					options: sites,
+					required: true
+				}) }}
 			</div>
 			<div>
 				<div class="btngroup">
@@ -116,6 +122,18 @@
 						The default redirect type (if one isn't defined)
 					</span>
 				</label>
+
+				<label class="type-select">
+					{{ ui.selectField({
+						name: "siteId",
+						options: sites,
+						required: true
+					}) }}
+
+					<span class="instructions">
+						The site(s) these redirects should work on
+					</span>
+				</label>
 			</div>
 
 			<div>
@@ -129,47 +147,53 @@
 		<br>
 		<br>
 
-		<form class="tableview" id="tableForm">
-			<table class="data fullwidth">
-				<thead>
-				<tr>
-					<th scope="col" data-attribute="uri">URI</th>
-					<th scope="col" data-attribute="to">To</th>
-					<th scope="col" data-attribute="type">Type</th>
-					<td class="thin checkbox-cell"></td>
-				</tr>
-				</thead>
-				<tbody id="redirectTable">
-				{% for redirect in redirects %}
-					<tr tabindex="0" data-id="{{ redirect.id }}">
-						<td class="redirects--title-col">
-							<div class="element small">
-								<div class="label">
-							<span class="title">
-								<a href="#" title="Edit redirect"
-								   data-id="{{ redirect.id }}"
-								   data-uri="{{ redirect.uri }}"
-								   data-to="{{ redirect.to }}"
-								   data-type="{{ redirect.type|default('301') }}">
-									{{ redirect.uri }}
-								</a>
-							</span>
-								</div>
-							</div>
-						</td>
-						<td>
-							{{ redirect.to }}
-						</td>
-						<td>
-							{{ redirectType[redirect.type|default('301')] }}
-						</td>
-						<td class="thin action">
-							<a class="delete icon" title="Delete"></a>
-						</td>
+		{% for siteId, name in sites %}
+			<h3>{{ name }}</h3>
+
+			<form class="tableview" data-redirects="{{ siteId }}">
+				<table class="data fullwidth">
+					<thead>
+					<tr>
+						<th scope="col" data-attribute="uri">URI</th>
+						<th scope="col" data-attribute="to">To</th>
+						<th scope="col" data-attribute="type">Type</th>
+						<td class="thin checkbox-cell"></td>
 					</tr>
-				{% endfor %}
-				</tbody>
-			</table>
-		</form>
+					</thead>
+					<tbody data-redirects="{{ siteId }}">
+					{% for redirect in redirects[siteId] %}
+						<tr tabindex="0" data-id="{{ redirect.id }}">
+							<td class="redirects--title-col">
+								<div class="element small">
+									<div class="label">
+										<span class="title">
+											<a href="#" title="Edit redirect"
+											   data-id="{{ redirect.id }}"
+											   data-uri="{{ redirect.uri }}"
+											   data-to="{{ redirect.to }}"
+											   data-type="{{ redirect.type|default('301') }}">
+												{{ redirect.uri }}
+											</a>
+										</span>
+									</div>
+								</div>
+							</td>
+							<td>
+								{{ redirect.to }}
+							</td>
+							<td>
+								{{ redirectType[redirect.type|default('301')] }}
+							</td>
+							<td class="thin action">
+								<a class="delete icon" title="Delete"></a>
+							</td>
+						</tr>
+					{% endfor %}
+					</tbody>
+				</table>
+			</form>
+
+			<br>
+		{% endfor %}
 	{% endnamespace %}
 {% endblock %}
