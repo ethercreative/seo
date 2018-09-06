@@ -5,6 +5,7 @@ namespace ether\seo\migrations;
 use craft\db\Migration;
 use ether\seo\records\RedirectRecord;
 use ether\seo\records\SitemapRecord;
+use ether\seo\Seo;
 
 class Install extends Migration
 {

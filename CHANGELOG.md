@@ -1,11 +1,25 @@
-## [Unreleased] 3.3.2
+## [Unreleased] 3.4.0
+
+> {warning} This update contains some potentially breaking changes. If you use a custom `meta.twig` template you can review the changes [here](https://github.com/ethercreative/seo/commits/v3/src/templates/_seo/meta.twig).
+
+### Added
+- Added `getSeoField($handle = 'seo')` Twig function for Site templates.
+
 ### Changed
+- SEO field data is now used via an `SeoData` model, rather than an array. **This may cause breaking changes, especially if you have a custom `meta.twig` template!**
 - The default `robots.txt` now disallows all when the environment is NOT set to `'production'`. 
 This will not have an effect for existing installs (where the SEO settings have been saved).
-To manually update your `robots.txt`, replace the line `{% if craft.app.config.general.devMode %}` with `{% if craft.app.config.env != 'production' %}`. #122
+To manually update your `robots.txt`, replace the line `{% if craft.app.config.general.devMode %}` with `{% if craft.app.config.env != 'production' %}`. [#122]
 
 ### Fixed
-- SEO no longer errors if a social image doesn't have a public url. #131
+- SEO no longer errors if a social image doesn't have a public url. [#131]
+
+### Improved
+- The SEO meta field will now look for product and category elements when searching for the SEO field. [#128]
+
+[#131]: https://github.com/ethercreative/seo/issues/131
+[#122]: https://github.com/ethercreative/seo/issues/122
+[#128]: https://github.com/ethercreative/seo/issues/128
 
 ## 3.3.1 - 2018-09-03
 ### Fixed

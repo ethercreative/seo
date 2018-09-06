@@ -147,7 +147,7 @@
 					type="hidden"
 					id="{{ id }}Keywords"
 					name="{{ name }}[keywords]"
-					value="{{ value.keywords }}"
+					value="{{ value.keywords|json_encode }}"
 				>
 				<input
 					type="hidden"

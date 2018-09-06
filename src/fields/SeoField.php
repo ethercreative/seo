@@ -8,6 +8,7 @@ use craft\base\PreviewableFieldInterface;
 use craft\elements\Entry;
 use craft\helpers\Json;
 use craft\models\Section;
+use ether\seo\models\data\SeoData;
 use ether\seo\resources\SeoFieldAssets;
 use ether\seo\resources\SeoFieldSettingsAssets;
 use ether\seo\Seo;
@@ -35,6 +36,14 @@ class SeoField extends Field implements PreviewableFieldInterface
 		'advanced'    => [
 			'robots' => [],
 		],
+	];
+
+	public static $defaultFieldSettings = [
+		'titleSuffix' => null,
+		'suffixAsPrefix' => false,
+		'socialImage' => null,
+		'hideSocial' => false,
+		'robots' => [],
 	];
 
 	// Instance
@@ -81,109 +90,14 @@ class SeoField extends Field implements PreviewableFieldInterface
 
 	public function normalizeValue ($value, ElementInterface $element = null)
 	{
-		if (empty($value))
-			return self::$defaultValue;
+		if (is_string($value))
+			$value = Json::decodeIfJson($value ?? []);
 
-		if (!is_array($value))
-			$value = Json::decode($value);
-
-		$settings = $this->getSettings();
-		$settingsGlobal = Seo::$i->getSettings();
-
-		// Backwards compatibility to Craft 2
-		// ---------------------------------------------------------------------
-
-		// Convert keyword -> keywords
-
-		if ($value && array_key_exists('keyword', $value)) {
-			if (!empty($value['keyword'])) {
-				$value['keywords'] = [
-					[
-						'keyword' => $value['keyword'],
-						'rating'  => [
-							'' => 'neutral',
-							'good' => 'good',
-							'ok' => 'average',
-							'bad' => 'poor',
-						][$value['score']],
-					],
-				];
-			} else {
-				$value['keywords'] = [];
-			}
-			unset($value['keyword']);
-			$value['keywords'] = json_encode($value['keywords']);
-			$value['score'] = 'neutral';
-		}
-
-		// ---------------------------------------------------------------------
-
-		// Title
-
-		$titleSuffix = $settings['titleSuffix'] ?: $settingsGlobal['titleSuffix'];
-		$suffixAsPrefix = $settings['suffixAsPrefix'];
-
-		if (empty($value['title']) || $value['title'] === $titleSuffix)
-		{
-			if ($suffixAsPrefix)
-				$value['title'] = $titleSuffix . ' ' . $element->title;
-			else
-				$value['title'] = $element->title . ' ' . $titleSuffix;
-		}
-
-		// Social
-
-		if (array_key_exists('social', $value))
-		{
-			$social = array_merge(self::$defaultValue['social'], $value['social']);
-			foreach ($social as $k => $s)
-			{
-				if ($s['image'] !== '')
-				{
-					if (
-						is_object($s['image'])
-						&& get_class($s['image']) === 'craft\elements\Asset'
-					) continue;
-
-					if (is_array($s['image']))
-					{
-						$s['image'] = $s['image']['id'];
-					}
-
-					$s['image'] = \Craft::$app->assets->getAssetById(
-						(int)$s['image']
-					);
-				}
-				else
-				{
-					$s['image'] = $this->_socialFallbackImage();
-				}
-
-				$social[$k] = $s;
-			}
-
-			$value['social'] = $social;
-		} else {
-			$value['social'] = self::$defaultValue['social'];
-		}
-
-		// Advanced
-
-		$value['advanced'] = array_merge(
-			self::$defaultValue['advanced'],
-			$value['advanced'] ?? []
-		);
-
-		// Filter out empty robots
-		if (array_key_exists('robots', $value['advanced']))
-			$value['advanced']['robots'] =
-				array_filter($value['advanced']['robots']);
-
-		return $value;
+		return new SeoData($this, $element, $value);
 	}
 
 	/**
-	 * @param mixed                 $value
+	 * @param SeoData               $value
 	 * @param ElementInterface|null $element
 	 *
 	 * @return string
@@ -245,7 +159,7 @@ class SeoField extends Field implements PreviewableFieldInterface
 		$titleSuffix = $settings['titleSuffix'] ?: $settingsGlobal['titleSuffix'];
 		$suffixAsPrefix = $settings['suffixAsPrefix'];
 
-		if ($hasPreview && $isEntry && $value['title'] === null && $isSingle)
+		if ($hasPreview && $isEntry && $value->title === null && $isSingle)
 		{
 			if ($suffixAsPrefix)
 				$titleSuffix = $titleSuffix . ' ' . $element->title;
@@ -335,20 +249,16 @@ class SeoField extends Field implements PreviewableFieldInterface
 	}
 
 	public function getSearchKeywords ($value, ElementInterface $element): string {
-		if (empty($value))
-			$value = self::$defaultValue;
-
-		return $value['title'] . ' ' . $value['description'];
+		/** @var SeoData $value */
+		return $value->title . ' ' . $value->description;
 	}
 
 	public function getTableAttributeHtml (
 		$value,
 		ElementInterface $element
 	): string {
-		if (empty($value))
-			$value = self::$defaultValue;
-
-		switch ($value['score']) {
+		/** @var SeoData $value */
+		switch ($value->score) {
 			case 'poor':
 				return '<span class="status active" style="margin-top:5px;background:#ff4750;" title="Poor"></span>';
 				break;
@@ -361,25 +271,6 @@ class SeoField extends Field implements PreviewableFieldInterface
 			default:
 				return '<span class="status active" style="margin-top:5px;background:#ccc;" title="Unranked"></span>';
 		}
-	}
-
-	// Helpers
-	// =========================================================================
-
-	private function _socialFallbackImage ()
-	{
-		$assets = \Craft::$app->assets;
-
-		$settings = Seo::$i->getSettings();
-		$fieldFallback = $this->getSettings()['socialImage'];
-
-		if (!empty($fieldFallback))
-			return $assets->getAssetById((int) $fieldFallback[0]);
-
-		if (!empty($settings['socialImage']))
-			return $assets->getAssetById((int) $settings['socialImage'][0]);
-
-		return null;
 	}
 
 }

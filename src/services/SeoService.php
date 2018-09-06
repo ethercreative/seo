@@ -5,6 +5,9 @@ namespace ether\seo\services;
 use craft\base\Component;
 use craft\base\Element;
 use craft\base\Field;
+use craft\db\Migration;
+use craft\db\Query;
+use craft\helpers\Json;
 use ether\seo\fields\SeoField;
 use ether\seo\Seo;
 
