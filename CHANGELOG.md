@@ -30,6 +30,7 @@ To manually update your `robots.txt`, replace the line `{% if craft.app.config.g
 [#125]: https://github.com/ethercreative/seo/issues/125
 [#119]: https://github.com/ethercreative/seo/issues/119
 [#118]: https://github.com/ethercreative/seo/issues/118
+[#116]: https://github.com/ethercreative/seo/issues/116
 [@monachilada]: https://github.com/monachilada
 
 ## 3.3.1 - 2018-09-03
