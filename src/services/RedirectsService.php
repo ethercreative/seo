@@ -2,7 +2,6 @@
 
 namespace ether\seo\services;
 
-use Craft;
 use craft\base\Component;
 use craft\events\ExceptionEvent;
 use craft\helpers\UrlHelper;
@@ -11,12 +10,6 @@ use yii\web\HttpException;
 
 class RedirectsService extends Component
 {
-	protected $craft;
-	
-	public function __construct()
-	{
-		$this->craft = Craft::$app;
-	}
 
 	// Public Methods
 	// =========================================================================
@@ -81,17 +74,15 @@ class RedirectsService extends Component
 	{
 		$redirects = $this->findAllRedirects();
 		
-		$multiSite = $this->craft->getIsMultiSite();
+		$multiSite = \Craft::$app->getIsMultiSite();
+		$siteUrlSegments = $this->getSiteUrlSegments();
 
 		foreach ($redirects as $redirect)
 		{
 			$to = false;
 			
 			if ($multiSite) {
-				$siteUrlSegments = $this->getSiteUrlSegments();
-				
 				$path = $siteUrlSegments . $path;
-				
 				$redirect['to'] = str_replace($siteUrlSegments, '', $redirect['to']);
 			}
 
@@ -273,10 +264,14 @@ class RedirectsService extends Component
 
 		return false;
 	}
-	
+
+	/**
+	 * @return mixed|null
+	 * @throws \craft\errors\SiteNotFoundException
+	 */
 	private function getSiteUrlSegments()
 	{
-		$currentSite = $this->craft->getSites()->getCurrentSite();
+		$currentSite = \Craft::$app->sites->getCurrentSite();
 		
 		if ($currentSite && $currentSite->baseUrl) {
 			return str_replace('@web/', '', $currentSite->baseUrl);
