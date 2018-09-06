@@ -85,7 +85,7 @@ class Variable
 			return '';
 
 		if ($transformUrl && strpos($transformUrl, 'http') === false)
-			$transformUrl = UrlHelper::siteUrl($transformUrl);
+			$transformUrl = UrlHelper::urlWithScheme($transformUrl, (\Craft::$app->getRequest()->getIsSecureConnection()? 'https': 'http'));
 
 		return Template::raw($transformUrl);
 	}
