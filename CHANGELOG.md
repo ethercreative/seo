@@ -1,3 +1,7 @@
+## [Unreleased] 3.3.2
+### Fixed
+- SEO no longer errors if a social image doesn't have a public url. #131
+
 ## 3.3.1 - 2018-09-03
 ### Fixed
 - `craft.seo.custom` social images now fallback to the default social image from global settings. #113
