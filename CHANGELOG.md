@@ -15,6 +15,7 @@ To manually update your `robots.txt`, replace the line `{% if craft.app.config.g
 
 ### Fixed
 - SEO no longer errors if a social image doesn't have a public url. [#131]
+- Protocol relative image URLs are now handled correctly. [#125], [#126] (via [@monachilada])
 
 ### Improved
 - The SEO meta field will now look for product and category elements when searching for the SEO field. [#128]
@@ -24,8 +25,11 @@ To manually update your `robots.txt`, replace the line `{% if craft.app.config.g
 [#122]: https://github.com/ethercreative/seo/issues/122
 [#128]: https://github.com/ethercreative/seo/issues/128
 [#127]: https://github.com/ethercreative/seo/issues/127
+[#126]: https://github.com/ethercreative/seo/issues/126
+[#125]: https://github.com/ethercreative/seo/issues/125
 [#119]: https://github.com/ethercreative/seo/issues/119
 [#118]: https://github.com/ethercreative/seo/issues/118
+[@monachilada]: https://github.com/monachilada
 
 ## 3.3.1 - 2018-09-03
 ### Fixed
