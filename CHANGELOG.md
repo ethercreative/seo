@@ -1,3 +1,7 @@
+## 3.4.1 - 2018-09-06
+### Fixed
+- Fixed a bug when adding a redirect to all sites.
+
 ## 3.4.0 - 2018-09-06
 
 > {warning} This update contains some potentially breaking changes. If you use a custom `meta.twig` template you should review the changes [here](https://github.com/ethercreative/seo/commits/v3/src/templates/_seo/meta.twig).
