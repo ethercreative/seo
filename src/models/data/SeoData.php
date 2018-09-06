@@ -149,9 +149,9 @@ class SeoData extends BaseDataModel
 		foreach ($this->social as $key => $value)
 		{
 			if ($value === null)
-				$this->social[$key] = new SocialData($fallback);
+				$this->social[$key] = new SocialData($key, $fallback);
 			elseif (is_array($value))
-				$this->social[$key] = new SocialData($fallback, $value);
+				$this->social[$key] = new SocialData($key, $fallback, $value);
 		}
 
 		// Robots

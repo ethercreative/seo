@@ -58,6 +58,15 @@ Disallow: /cpresources/
 {% endif %}
 xyzzy;
 
+	// Variables: Social
+	// -------------------------------------------------------------------------
+
+	/** @var string */
+	public $facebookAppId;
+
+	/** @var string */
+	public $twitterHandle;
+
 	// Methods
 	// =========================================================================
 

@@ -9,6 +9,8 @@
 namespace ether\seo\models\data;
 
 use craft\elements\Asset;
+use ether\seo\models\Settings;
+use ether\seo\Seo;
 
 function get_public_properties ($class) {
 	return get_object_vars($class);
@@ -47,11 +49,15 @@ class SocialData extends BaseDataModel
 	/** @var array */
 	private $_fallback;
 
+	/** @var string */
+	private $_network;
+
 	// Constructor
 	// =========================================================================
 
-	public function __construct (array $fallback = null, array $config = [])
+	public function __construct (string $network, array $fallback = null, array $config = [])
 	{
+		$this->_network = $network;
 		$this->_fallback = $fallback;
 
 		parent::__construct($config);
@@ -62,6 +68,9 @@ class SocialData extends BaseDataModel
 
 	public function init ()
 	{
+		/** @var Settings $seoSettings */
+		$seoSettings = Seo::$i->getSettings();
+
 		// Fallbacks
 		foreach (get_public_properties($this) as $key => $value)
 			if (empty($value) && array_key_exists($key, $this->_fallback))
@@ -72,6 +81,17 @@ class SocialData extends BaseDataModel
 		if (is_array($image)) $image = $image['id'];
 		if (!($image instanceof Asset))
 			$this->image = \Craft::$app->assets->getAssetById((int) $image);
+
+		// Network Specific
+		switch ($this->_network)
+		{
+			case 'facebook':
+				$this->handle = $seoSettings->facebookAppId;
+				break;
+			case 'twitter':
+				$this->handle = $seoSettings->twitterHandle;
+				break;
+		}
 	}
 
 }

@@ -52,6 +52,11 @@ class SettingsController extends Controller
 				'url'   => "#settings-sitemap",
 				'class' => null,
 			],
+			[
+				'label' => 'Social',
+				'url'   => "#settings-social",
+				'class' => null,
+			],
 		];
 
 		$this->renderTemplate('seo/settings', array_merge(

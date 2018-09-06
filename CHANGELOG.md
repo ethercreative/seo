@@ -1,10 +1,10 @@
-## [Unreleased] 3.4.0
+## 3.4.0 - 2018-09-06
 
-> {warning} This update contains some potentially breaking changes. If you use a custom `meta.twig` template you can review the changes [here](https://github.com/ethercreative/seo/commits/v3/src/templates/_seo/meta.twig).
+> {warning} This update contains some potentially breaking changes. If you use a custom `meta.twig` template you should review the changes [here](https://github.com/ethercreative/seo/commits/v3/src/templates/_seo/meta.twig).
 
 ### Added
 - Added `getSeoField($handle = 'seo')` Twig function for Site templates.
-- Redirects can now be specified on a per-site basis!
+- Added global settings for Facebook App ID and Twitter handle.
 
 ### Changed
 - SEO field data is now used via an `SeoData` model, rather than an array. **This may cause breaking changes, especially if you have a custom `meta.twig` template!**
@@ -20,6 +20,7 @@ To manually update your `robots.txt`, replace the line `{% if craft.app.config.g
 ### Improved
 - The SEO meta field will now look for product and category elements when searching for the SEO field. [#128]
 - Redirects now support full PCRE syntax. [#119], [#127]
+- Redirects can now be specified on a per-site basis!
 
 [#131]: https://github.com/ethercreative/seo/issues/131
 [#122]: https://github.com/ethercreative/seo/issues/122
