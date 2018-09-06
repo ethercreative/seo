@@ -21,31 +21,48 @@ export default class Redirects {
 		this.ns = namespace;
 		this.csrf = csrf;
 		
-		this.table = document.getElementById(namespace + "-redirectTable");
-		this.tableForm = document.getElementById(namespace + "-tableForm");
+		const tables = document.querySelectorAll("tbody[data-redirects]");
+		const tableForms = document.querySelectorAll("form[data-redirects]");
 		this.newForm = document.getElementById(namespace + "-redirectsNew");
 		this.bulkForm = document.getElementById(namespace + "-redirectsBulk");
 		
 		this.cancelCurrentEdit = () => {};
 		this.editRow = null;
-		
-		this.tableForm.addEventListener("submit", this.onUpdate);
+
 		this.newForm.addEventListener("submit", this.onSubmitNew);
 		this.bulkForm.addEventListener("submit", this.onSubmitBulk);
+
+		this.tables = {};
+		for (let i = 0, l = tables.length; i < l; ++i) {
+			const siteId = tables[i].dataset.redirects;
+			this.tables[siteId] = tables[i];
+		}
+
+		this.tableForms = {};
+		for (let i = 0, l = tableForms.length; i < l; ++i) {
+			const siteId = tableForms[i].dataset.redirects;
+			this.tableForms[siteId] = tableForms[i];
+			this.tableForms[siteId].addEventListener(
+				"submit",
+				this.onUpdate.bind(this, siteId)
+			);
+		}
 		
-		this.initTable();
+		this.initTables();
 	}
 	
-	initTable () {
-		[].slice.call(this.table.getElementsByTagName("tr")).forEach(row => {
-			const links = row.getElementsByTagName("a");
-			
-			links[0].addEventListener("click", e => {
-				this.onEditClick(e, row);
-			});
-			
-			links[1].addEventListener("click", e => {
-				this.onDeleteClick(e, row);
+	initTables () {
+		Object.keys(this.tables).forEach(key => {
+			[].slice.call(this.tables[key].getElementsByTagName("tr")).forEach(row => {
+				const links = row.getElementsByTagName("a");
+
+				links[0].addEventListener("click", e => {
+					this.onEditClick(key, e, row);
+				});
+
+				links[1].addEventListener("click", e => {
+					this.onDeleteClick(key, e, row);
+				});
 			});
 		});
 	}
@@ -58,10 +75,11 @@ export default class Redirects {
 		const form = e.target
 			, spinner = form.getElementsByClassName("spinner")[0];
 		
-		const uri  = form.elements[this.namespaceField("uri")]
-			, to   = form.elements[this.namespaceField("to")]
-			, type = form.elements[this.namespaceField("type")];
-		
+		const uri    = form.elements[this.namespaceField("uri")]
+			, to     = form.elements[this.namespaceField("to")]
+			, type   = form.elements[this.namespaceField("type")]
+			, siteId = form.elements[this.namespaceField("siteId")];
+
 		// Validate
 		let valid = true;
 		if (uri.value.trim() === "") {
@@ -83,9 +101,10 @@ export default class Redirects {
 			uri: uri.value,
 			to: to.value,
 			type: type.value,
+			siteId: siteId.value,
 		}, ({ id }) => {
-			this.table.appendChild(this.rowStatic(
-				id, uri.value, to.value, type.value
+			this.tables[siteId.value].appendChild(this.rowStatic(
+				id, uri.value, to.value, type.value, siteId.value
 			));
 			
 			Craft.cp.displayNotice(
@@ -108,7 +127,8 @@ export default class Redirects {
 		
 		const redirects = form.elements[this.namespaceField("redirects")]
 			, separator = form.elements[this.namespaceField("separator")]
-			, type      = form.elements[this.namespaceField("type")];
+			, type      = form.elements[this.namespaceField("type")]
+			, siteId    = form.elements[this.namespaceField("siteId")];
 		
 		// Validate
 		let valid = true;
@@ -131,10 +151,11 @@ export default class Redirects {
 			redirects: redirects.value,
 			separator: separator.value,
 			type: type.value,
+			siteId: siteId.value,
 		}, ({ redirects }) => {
-			redirects.forEach(({ id, uri, to, type }) => {
-				this.table.appendChild(this.rowStatic(
-					id, uri, to, type
+			redirects.forEach(({ id, uri, to, type, siteId }) => {
+				this.tables[siteId.value].appendChild(this.rowStatic(
+					id, uri, to, type, siteId
 				));
 			});
 			
@@ -150,7 +171,7 @@ export default class Redirects {
 	
 	// TODO: Remove save / update boilerplate
 	
-	onUpdate = e => {
+	onUpdate = (siteId, e) => {
 		e.preventDefault();
 		const form = e.target
 			, spinner = form.getElementsByClassName("spinner")[0];
@@ -187,21 +208,21 @@ export default class Redirects {
 			
 			this.cancelCurrentEdit();
 			
-			this.table.insertBefore(
+			this.tables[siteId].insertBefore(
 				this.rowStatic(
-					id.value, uri.value, to.value, type.value
+					id.value, uri.value, to.value, type.value, siteId.value
 				),
 				row
 			);
 			
-			this.table.removeChild(row);
+			this.tables[siteId].removeChild(row);
 		}, error => {
 			Craft.cp.displayError('<strong>SEO:</strong> ' + error);
 			spinner.classList.add("hidden");
 		});
 	};
 	
-	onEditClick = (e, row) => {
+	onEditClick = (siteId, e, row) => {
 		e.preventDefault();
 		const { id, uri, to, type } = e.target.dataset;
 		this.cancelCurrentEdit();
@@ -211,30 +232,30 @@ export default class Redirects {
 		this.editRow = row;
 		
 		this.cancelCurrentEdit = () => {
-			this.table.insertBefore(row, editRows[0]);
-			this.table.removeChild(editRows[0]);
-			this.table.removeChild(editRows[1]);
+			this.tables[siteId].insertBefore(row, editRows[0]);
+			this.tables[siteId].removeChild(editRows[0]);
+			this.tables[siteId].removeChild(editRows[1]);
 			
 			this.cancelCurrentEdit = () => {};
 			this.editRow = null;
 		};
 		
-		this.table.insertBefore(
+		this.tables[siteId].insertBefore(
 			editRows[0],
 			row
 		);
 		
-		this.table.insertBefore(
+		this.tables[siteId].insertBefore(
 			editRows[1],
 			row
 		);
 		
 		editRows[0].getElementsByTagName("input")[1].focus();
 		
-		this.table.removeChild(row);
+		this.tables[siteId].removeChild(row);
 	};
 	
-	onDeleteClick = (e, row) => {
+	onDeleteClick = (siteId, e, row) => {
 		e.preventDefault();
 		
 		if (!confirm("Delete this redirect?"))
@@ -244,7 +265,7 @@ export default class Redirects {
 			id: row.dataset.id
 		}, () => {
 			Craft.cp.displayNotice('<strong>SEO:</strong> Redirect deleted');
-			this.table.removeChild(row);
+			this.tables[siteId].removeChild(row);
 		}, error => {
 			Craft.cp.displayNotice('<strong>SEO:</strong> ' + error);
 		});
@@ -296,7 +317,7 @@ export default class Redirects {
 		});
 	}
 	
-	rowStatic (id = -1, uri = "", to = "", type = 301) {
+	rowStatic (id = -1, uri = "", to = "", type = 301, siteId = null) {
 		const row = c("tr", { "tabindex": 0, "data-id": id }, [
 			// URI
 			c("td", { "class": "redirects--title-col" }, [
@@ -310,7 +331,7 @@ export default class Redirects {
 								"data-uri": uri,
 								"data-to": to,
 								"data-type": type,
-								"click": e => this.onEditClick(e, row)
+								"click": e => this.onEditClick(siteId, e, row)
 							}, uri)
 						])
 					])
@@ -328,7 +349,7 @@ export default class Redirects {
 				c("a", {
 					"class": "delete icon",
 					"title": "Delete",
-					"click": e => this.onDeleteClick(e, row)
+					"click": e => this.onDeleteClick(siteId, e, row)
 				})
 			])
 		]);

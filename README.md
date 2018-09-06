@@ -40,6 +40,8 @@ When moving from your old, awful site to your shiny new Craft one, you’ll want
 
 SEO for Crafts redirect manager lets you easily add 301 & 302 redirects, with full .htaccess style regex support!
 
+Redirects support [PCRE regex syntax](http://php.net/manual/en/reference.pcre.pattern.syntax.php). By default, all `/` and `?` not inside parenthesis are escaped. To prevent any escaping include the opening and closing forward slashes and flags: `/^blog$/i`. All redirects are given the insensitive flag, unless overwritten. 
+
 **Redirect Regex Example**  
 To redirect from `blog/2016/my-post` to `news/my-post` you would add the following redirect:
 

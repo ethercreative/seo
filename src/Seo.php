@@ -21,6 +21,7 @@ use ether\seo\models\Settings;
 use ether\seo\services\RedirectsService;
 use ether\seo\services\SeoService;
 use ether\seo\services\SitemapService;
+use ether\seo\web\twig\Extension;
 use yii\base\Event;
 
 /**
@@ -51,6 +52,8 @@ class Seo extends Plugin
 		'https://github.com/ethercreative/seo/archive/v3.zip';
 	public $documentationUrl =
 		'https://github.com/ethercreative/seo/blob/v3/README.md';
+
+	public $schemaVersion = '3.0.1';
 
 	// Craft
 	// =========================================================================
@@ -124,21 +127,21 @@ class Seo extends Plugin
 			);
 		}
 
-		// Request Headers
 		if ($craft->request->isSiteRequest)
 		{
+			// Request Headers
 			Event::on(
 				Application::class,
 				Application::EVENT_AFTER_REQUEST,
 				[$this, 'onAfterRequest']
 			);
-		}
 
-		// Template Hook
-		\Craft::$app->view->hook(
-			'seo',
-			[$this, 'onRegisterSeoHook']
-		);
+			// Twig Extension
+			$craft->view->registerTwigExtension(new Extension());
+
+			// Template Hook
+			$craft->view->hook('seo', [$this, 'onRegisterSeoHook']);
+		}
 
 		// CraftQL Support
 		/** @noinspection PhpUndefinedNamespaceInspection */

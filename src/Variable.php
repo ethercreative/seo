@@ -6,8 +6,11 @@ use craft\elements\Asset;
 use craft\helpers\Template;
 use craft\helpers\UrlHelper;
 use ether\seo\fields\SeoField;
+use ether\seo\models\data\SeoData;
+use Twig_Template;
 
-class Variable {
+class Variable
+{
 
 	public function custom (
 		$title = '',
@@ -16,65 +19,23 @@ class Variable {
 		$social = []
 	) {
 		$settings = Seo::$i->getSettings();
-		$socialImage = $this->_socialImageFallback();
 
-		$text = [
-			'title' =>
-				$title
-					? $title . (
-					$includeTitleSuffix
-						? ' ' . $settings['titleSuffix']
-						: ''
-					) : '',
-			'description' => $description ?: '',
-		];
+		$title = $title
+			? $title . (
+			$includeTitleSuffix
+				? ' ' . $settings['titleSuffix']
+				: ''
+			) : '';
 
-		$ret = $text;
-		$ret['social'] = SeoField::$defaultValue['social'];
-
-		foreach ($social as $key => $value)
-		{
-			$ret['social'][$key] = array_merge(
-				$ret['social'][$key],
-				$value
-			);
-
-			if (!$ret['social'][$key]['image'] && $socialImage)
-				$ret['social'][$key]['image'] = $socialImage;
-		}
-
-		return $ret;
+		return new SeoData(null, null, [
+			'title' => $title,
+			'description' => $description,
+			'social' => $social,
+		]);
 	}
 
 	// Social
 	// =========================================================================
-
-	/**
-	 * Gets social values with fallbacks
-	 *
-	 * @param $value
-	 *
-	 * @return array
-	 */
-	public function social ($value)
-	{
-		$social = [];
-		$socialImage = $this->_socialImageFallback();
-
-		if (!array_key_exists('social', $value)) {
-			return SeoField::$defaultValue['social'];
-		}
-
-		foreach ($value['social'] as $name => $v) {
-			$social[$name] = [
-				'title' => $v['title'] ?: $value['title'],
-				'image' => $v['image'] ?: $socialImage,
-				'description' => $v['description'] ?: $value['description'],
-			];
-		}
-
-		return $social;
-	}
 
 	// Social: Images
 	// -------------------------------------------------------------------------
@@ -120,29 +81,13 @@ class Variable {
 
 		$transformUrl = $image->getUrl($transform);
 
+		if ($transformUrl === null)
+			return '';
+
 		if ($transformUrl && strpos($transformUrl, 'http') === false)
-			$transformUrl = UrlHelper::siteUrl($transformUrl);
+			$transformUrl = UrlHelper::urlWithScheme($transformUrl, (\Craft::$app->getRequest()->getIsSecureConnection()? 'https': 'http'));
 
 		return Template::raw($transformUrl);
-	}
-
-	/**
-	 * Returns fallback image from global settings
-	 *
-	 * @return Asset|null
-	 */
-	private function _socialImageFallback ()
-	{
-		static $fallback = null;
-
-		if (!$fallback)
-		{
-			$settings = Seo::$i->getSettings();
-			if (!empty($settings['socialImage']))
-				$fallback = \Craft::$app->assets->getAssetById((int) $settings['socialImage'][0]);
-		}
-
-		return $fallback;
 	}
 
 }

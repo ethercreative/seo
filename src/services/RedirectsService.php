@@ -55,11 +55,33 @@ class RedirectsService extends Component
 	/**
 	 * Returns all the redirects
 	 *
-	 * @return array|\yii\db\ActiveRecord[]
+	 * @param bool $currentSiteOnly
+	 *
+	 * @return array
 	 */
-	public function findAllRedirects ()
+	public function findAllRedirects ($currentSiteOnly = false)
 	{
-		return RedirectRecord::find()->all();
+		if ($currentSiteOnly)
+			return RedirectRecord::find()->where(
+				'[[siteId]] IS NULL OR [[siteId]] = ' .
+				\Craft::$app->sites->currentSite->id
+			)->orderBy('siteId asc')->all();
+
+		return array_reduce(
+			RedirectRecord::find()->all(),
+			function ($a, RedirectRecord $record) {
+				$a[$record->siteId ?? 'null'][] = $record;
+				return $a;
+			},
+			array_reduce(
+				\Craft::$app->sites->allSiteIds,
+				function ($a, $id) {
+					$a[$id] = [];
+					return $a;
+				},
+				[]
+			)
+		);
 	}
 
 	/**
@@ -72,21 +94,18 @@ class RedirectsService extends Component
 	 */
 	public function findRedirectByPath ($path)
 	{
-		$redirects = $this->findAllRedirects();
+		$redirects = $this->findAllRedirects(true);
 
 		foreach ($redirects as $redirect)
 		{
 			$to = false;
 
 			if (trim($redirect['uri'], '/') == $path)
-			{
 				$to = $redirect['to'];
-			}
+
 			elseif ($uri = $this->_isRedirectRegex($redirect['uri']))
-			{
 				if (preg_match($uri, $path))
 					$to = preg_replace($uri, $redirect['to'], $path);
-			}
 
 			if ($to)
 			{
@@ -111,11 +130,12 @@ class RedirectsService extends Component
 	 * @param string   $uri
 	 * @param string   $to
 	 * @param string   $type
+	 * @param null     $siteId
 	 * @param int|null $id
 	 *
 	 * @return array|int|string
 	 */
-	public function save ($uri, $to, $type, $id = null)
+	public function save ($uri, $to, $type, $siteId = null, $id = null)
 	{
 		if ($id)
 		{
@@ -126,17 +146,19 @@ class RedirectsService extends Component
 		}
 		else
 		{
-			$doesUriExist = RedirectRecord::findOne(compact('uri'));
+			$existing = RedirectRecord::findOne(compact('uri', 'siteId'));
 
-			if ($doesUriExist)
+			if ($existing)
 				return 'A redirect with that URI already exists!';
 
 			$record = new RedirectRecord();
 		}
 
-		$record->uri   = $uri;
-		$record->to    = $to;
-		$record->type  = $type;
+		$record->uri    = $uri;
+		$record->to     = $to;
+		$record->type   = $type;
+		if ($siteId !== false)
+			$record->siteId = $siteId;
 
 		if (!$record->save())
 			return $record->getErrors();
@@ -147,13 +169,14 @@ class RedirectsService extends Component
 	/**
 	 * Bulk creates redirects
 	 *
-	 * @param $redirects
-	 * @param $separator
-	 * @param $type
+	 * @param      $redirects
+	 * @param      $separator
+	 * @param      $type
+	 * @param      $siteId
 	 *
 	 * @return array
 	 */
-	public function bulk ($redirects, $separator, $type)
+	public function bulk ($redirects, $separator, $type, $siteId)
 	{
 		$rawRedirects = array_map(function ($line) use ($separator) {
 			return str_getcsv($line, $separator);
@@ -164,16 +187,18 @@ class RedirectsService extends Component
 		foreach ($rawRedirects as $redirect)
 		{
 			$record = new RedirectRecord();
-			$record->uri  = $redirect[0];
-			$record->to   = $redirect[1];
+			$record->uri = $redirect[0];
+			$record->to = $redirect[1];
 			$record->type = array_key_exists(2, $redirect) ? $redirect[2] : $type;
+			$record->siteId = $siteId;
 			$record->save();
 
 			$newFormatted[] = [
-				'id'   => $record->id,
-				'uri'  => $record->uri,
-				'to'   => $record->to,
-				'type' => $record->type,
+				'id'     => $record->id,
+				'uri'    => $record->uri,
+				'to'     => $record->to,
+				'type'   => $record->type,
+				'siteId' => $record->siteId,
 			];
 		}
 
@@ -215,29 +240,44 @@ class RedirectsService extends Component
 	 */
 	private function _isRedirectRegex ($uri)
 	{
-		// Escape all non-escaped `?` not inside parentheses
-		$i = preg_match_all(
-			'/(?<!\\\\)\?(?![^(]*\))/',
-			$uri,
-			$matches,
-			PREG_OFFSET_CAPTURE
-		);
-
-		while ($i--)
+		// If the URI doesn't look like a regex...
+		if (preg_match('/\/(.*)\/([g|m|i|x|X|s|u|U|A|J|D]+)/m', $uri) === 0)
 		{
-			$x = $matches[0][$i][1];
-			$uri = substr_replace($uri, '\?', $x, 1);
+			// Escape all non-escaped `?` not inside parentheses
+			$i = preg_match_all(
+				'/(?<!\\\\)\?(?![^(]*\))/',
+				$uri,
+				$matches,
+				PREG_OFFSET_CAPTURE
+			);
+
+			while ($i--)
+			{
+				$x   = $matches[0][$i][1];
+				$uri = substr_replace($uri, '\?', $x, 1);
+			}
+
+			// Escape all non-escaped `/` not inside parentheses
+			$i = preg_match_all(
+				'/(?<!\\\\)\/(?![^(]*\))/',
+				$uri,
+				$matches,
+				PREG_OFFSET_CAPTURE
+			);
+
+			while ($i--)
+			{
+				$x   = $matches[0][$i][1];
+				$uri = substr_replace($uri, '\/', $x, 1);
+			}
 		}
 
-		// Check if contains a regex
-		if (preg_match('/^#(.+)#$/', $uri))
-		{
+		// Check if contains a valid regex
+		if (@preg_match($uri, null) === false)
+			$uri = '/^' . $uri . '$/i';
+
+		if (@preg_match($uri, null) !== false)
 			return $uri;
-		}
-		elseif (strpos($uri, '*'))
-		{
-			return '#^' . str_replace(['*','/'], ['(.*)', '\/'], $uri) . '#';
-		}
 
 		return false;
 	}

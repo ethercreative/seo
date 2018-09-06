@@ -1,0 +1,15 @@
+{% import "_includes/forms" as forms %}
+
+{{ forms.textField({
+	label: "Facebook App ID",
+	name: "facebookAppId",
+	id: "facebookAppId",
+	value: settings.facebookAppId
+}) }}
+
+{{ forms.textField({
+	label: "Twitter Handle",
+	name: "twitterHandle",
+	id: "twitterHandle",
+	value: settings.twitterHandle
+}) }}

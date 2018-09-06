@@ -1,6 +1,41 @@
+## 3.4.0 - 2018-09-06
+
+> {warning} This update contains some potentially breaking changes. If you use a custom `meta.twig` template you should review the changes [here](https://github.com/ethercreative/seo/commits/v3/src/templates/_seo/meta.twig).
+
+### Added
+- Added `getSeoField($handle = 'seo')` Twig function for Site templates.
+- Added global settings for Facebook App ID and Twitter handle.
+
+### Changed
+- SEO field data is now used via an `SeoData` model, rather than an array. **This may cause breaking changes, especially if you have a custom `meta.twig` template!**
+- The default `robots.txt` now disallows all when the environment is NOT set to `'production'`. 
+This will not have an effect for existing installs (where the SEO settings have been saved).
+To manually update your `robots.txt`, replace the line `{% if craft.app.config.general.devMode %}` with `{% if craft.app.config.env != 'production' %}`. [#122]
+- Redirects are no longer case-sensitive [#116]
+
+### Fixed
+- SEO no longer errors if a social image doesn't have a public url. [#131]
+- Protocol relative image URLs are now handled correctly. [#125], [#126] (via [@monachilada])
+
+### Improved
+- The SEO meta field will now look for product and category elements when searching for the SEO field. [#128]
+- Redirects now support full PCRE syntax. [#119], [#127]
+- Redirects can now be specified on a per-site basis!
+
+[#131]: https://github.com/ethercreative/seo/issues/131
+[#122]: https://github.com/ethercreative/seo/issues/122
+[#128]: https://github.com/ethercreative/seo/issues/128
+[#127]: https://github.com/ethercreative/seo/issues/127
+[#126]: https://github.com/ethercreative/seo/issues/126
+[#125]: https://github.com/ethercreative/seo/issues/125
+[#119]: https://github.com/ethercreative/seo/issues/119
+[#118]: https://github.com/ethercreative/seo/issues/118
+[@monachilada]: https://github.com/monachilada
+
 ## 3.3.1 - 2018-09-03
 ### Fixed
 - `craft.seo.custom` social images now fallback to the default social image from global settings. #113
+- Backwards compatibility SEO v1 keywords
 - Fixed bug where some requests would 404 when injecting 🤖's #130
 
 ### Changed

@@ -1,20 +1,18 @@
 {# SEO Start #}
-	{%- if seo is not defined and entry is defined and entry["seo"] is defined and entry.seo is iterable %}
-		{% set seo = entry.seo %}
-	{% endif %}
-	{% if seo is not defined or seo is null or seo.title == "" %}
+	{# Tip: You can pass the handle of your SEO field - getSeoField('mySeoFieldHandle') #}
+	{% set seo = getSeoField() %}
+	{% if seo is null or seo.title == '' %}
 		{% set seo = craft.seo.custom(siteName, '', false) %}
 	{% endif -%}
 
-	{% set social = craft.seo.social(seo) %}
 	{% set locale = craft.app.locale %}
 	{% set locales = craft.app.i18n.siteLocaleIds|without(locale) %}
 
 	<title>{{ seo.title }}</title>
 	<meta name="description" content="{{ seo.description }}" />
 
-	{% set fb = social.facebook -%}
-	<meta property="fb:app_id" content="{# TODO: Facebook App ID #}">
+	{% set fb = seo.social.facebook -%}
+	<meta property="fb:app_id" content="{{ fb.handle }}">
 	<meta property="og:url" content="{{ craft.app.request.absoluteUrl }}" />
 	<meta property="og:type" content="website" />
 	<meta property="og:title" content="{{ fb.title }}" />
@@ -26,9 +24,9 @@
 		<meta property="og:locale:alternate" content="{{ locale }}" />
 	{% endfor %}
 
-	{% set tw = social.twitter -%}
+	{% set tw = seo.social.twitter -%}
 	<meta name="twitter:card" content="summary_large_image" />
-	<meta name="twitter:site" content="{# TODO: Twitter Handle  #}" />
+	<meta name="twitter:site" content="{{ tw.handle }}" />
 	<meta name="twitter:url" content="{{ craft.app.request.absoluteUrl }}" />
 	<meta name="twitter:title" content="{{ tw.title }}" />
 	<meta name="twitter:description" content="{{ tw.description }}" />

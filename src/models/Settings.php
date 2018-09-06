@@ -40,12 +40,12 @@ class Settings extends Model
 	/** @var string */
 	public $robotsTxt = <<<xyzzy
 {# Sitemap URL #}
-Sitemap: {{ url(seo.sitemapName ~ ".xml") }}
+Sitemap: {{ url(seo.sitemapName ~ '.xml') }}
 
 {# Disallows #}
-{% if craft.app.config.general.devMode %}
+{% if craft.app.config.env != 'production' %}
 
-{# Disallow access to everything when in devMode #}
+{# Disallow access to everything when NOT in production #}
 User-agent: *
 Disallow: /
 
@@ -57,6 +57,15 @@ Disallow: /cpresources/
 
 {% endif %}
 xyzzy;
+
+	// Variables: Social
+	// -------------------------------------------------------------------------
+
+	/** @var string */
+	public $facebookAppId;
+
+	/** @var string */
+	public $twitterHandle;
 
 	// Methods
 	// =========================================================================

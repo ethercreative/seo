@@ -5,6 +5,9 @@ namespace ether\seo\services;
 use craft\base\Component;
 use craft\base\Element;
 use craft\base\Field;
+use craft\db\Migration;
+use craft\db\Query;
+use craft\helpers\Json;
 use ether\seo\fields\SeoField;
 use ether\seo\Seo;
 
@@ -51,7 +54,7 @@ class SeoService extends Component
 				if (get_class($field) === SeoField::class)
 					$robots = array_merge(
 						$robots,
-						$variable->{$field->handle}['advanced']['robots']
+						$variable->{$field->handle}->advanced['robots']
 					);
 			
 			/** @var \DateTime $expiry */
