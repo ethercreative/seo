@@ -10,16 +10,21 @@
 - The default `robots.txt` now disallows all when the environment is NOT set to `'production'`. 
 This will not have an effect for existing installs (where the SEO settings have been saved).
 To manually update your `robots.txt`, replace the line `{% if craft.app.config.general.devMode %}` with `{% if craft.app.config.env != 'production' %}`. [#122]
+- Redirects are no longer case-sensitive [#116]
 
 ### Fixed
 - SEO no longer errors if a social image doesn't have a public url. [#131]
 
 ### Improved
 - The SEO meta field will now look for product and category elements when searching for the SEO field. [#128]
+- Redirects now support full PCRE syntax. [#119], [#127]
 
 [#131]: https://github.com/ethercreative/seo/issues/131
 [#122]: https://github.com/ethercreative/seo/issues/122
 [#128]: https://github.com/ethercreative/seo/issues/128
+[#127]: https://github.com/ethercreative/seo/issues/127
+[#119]: https://github.com/ethercreative/seo/issues/119
+[#116]: https://github.com/ethercreative/seo/issues/116
 
 ## 3.3.1 - 2018-09-03
 ### Fixed

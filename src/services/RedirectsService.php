@@ -126,17 +126,17 @@ class RedirectsService extends Component
 		}
 		else
 		{
-			$doesUriExist = RedirectRecord::findOne(compact('uri'));
+			$existing = RedirectRecord::findOne(compact('uri'));
 
-			if ($doesUriExist)
+			if ($existing)
 				return 'A redirect with that URI already exists!';
 
 			$record = new RedirectRecord();
 		}
 
-		$record->uri   = $uri;
-		$record->to    = $to;
-		$record->type  = $type;
+		$record->uri  = $uri;
+		$record->to   = $to;
+		$record->type = $type;
 
 		if (!$record->save())
 			return $record->getErrors();
@@ -215,29 +215,44 @@ class RedirectsService extends Component
 	 */
 	private function _isRedirectRegex ($uri)
 	{
-		// Escape all non-escaped `?` not inside parentheses
-		$i = preg_match_all(
-			'/(?<!\\\\)\?(?![^(]*\))/',
-			$uri,
-			$matches,
-			PREG_OFFSET_CAPTURE
-		);
-
-		while ($i--)
+		// If the URI doesn't look like a regex...
+		if (preg_match('/\/(.*)\/([g|m|i|x|X|s|u|U|A|J|D]+)/m', $uri) === 0)
 		{
-			$x = $matches[0][$i][1];
-			$uri = substr_replace($uri, '\?', $x, 1);
+			// Escape all non-escaped `?` not inside parentheses
+			$i = preg_match_all(
+				'/(?<!\\\\)\?(?![^(]*\))/',
+				$uri,
+				$matches,
+				PREG_OFFSET_CAPTURE
+			);
+
+			while ($i--)
+			{
+				$x   = $matches[0][$i][1];
+				$uri = substr_replace($uri, '\?', $x, 1);
+			}
+
+			// Escape all non-escaped `/` not inside parentheses
+			$i = preg_match_all(
+				'/(?<!\\\\)\/(?![^(]*\))/',
+				$uri,
+				$matches,
+				PREG_OFFSET_CAPTURE
+			);
+
+			while ($i--)
+			{
+				$x   = $matches[0][$i][1];
+				$uri = substr_replace($uri, '\/', $x, 1);
+			}
 		}
 
-		// Check if contains a regex
-		if (preg_match('/^#(.+)#$/', $uri))
-		{
+		// Check if contains a valid regex
+		if (@preg_match($uri, null) === false)
+			$uri = '/^' . $uri . '$/i';
+
+		if (@preg_match($uri, null) !== false)
 			return $uri;
-		}
-		elseif (strpos($uri, '*'))
-		{
-			return '#^' . str_replace(['*','/'], ['(.*)', '\/'], $uri) . '#';
-		}
 
 		return false;
 	}
