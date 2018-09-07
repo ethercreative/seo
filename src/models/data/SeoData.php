@@ -198,23 +198,14 @@ class SeoData extends BaseObject
 
 		\Craft::$app->getLocale();
 
-		try {
-			$this->_element->{$this->_handle} = new self();
-
-			return \Craft::$app->view->renderObjectTemplate(
-				$this->_title,
-				$this->_element
-			);
-		} catch (\Throwable $e) {
-			\Craft::dd($e);
-		}
-
-		// Prevent ∞
-		$this->_element->{$this->_handle} = new self();
+		// Remove this field from the fields passed to the renderer
+		$fields = array_keys($this->_element->fields());
+		if (($key = array_search($this->_handle, $fields)) !== false)
+			unset($fields[$key]);
 
 		return \Craft::$app->view->renderObjectTemplate(
 			$this->_title,
-			$this->_element
+			$this->_element->toArray($fields)
 		);
 	}
 
