@@ -10,17 +10,18 @@
 
 export default class FieldType {
 
-	constructor (namespace) {
-		this.namespace = namespace;
-
-		this.initSeoTitle();
-	}
-
-	// SEO Title
+	// Properties
 	// =========================================================================
 
 	tokenList = null;
 	tokenTemplate = null;
+
+	constructor () {
+		this.initSeoTitle();
+	}
+
+	// Init / Setup
+	// =========================================================================
 
 	initSeoTitle () {
 		this.tokenList = document.getElementById("settings-seoMetaTitle");
@@ -59,8 +60,8 @@ export default class FieldType {
 		);
 	}
 
-	// SEO Title: Events
-	// -------------------------------------------------------------------------
+	// Events
+	// =========================================================================
 
 	onFocusChange = () => {
 		if (this.tokenList.contains(document.activeElement))

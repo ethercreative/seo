@@ -251,7 +251,7 @@ class SeoField extends Field implements PreviewableFieldInterface
 
 	public function getSearchKeywords ($value, ElementInterface $element): string {
 		/** @var SeoData $value */
-		return $value->_title . ' ' . $value->description;
+		return $value->title . ' ' . $value->description;
 	}
 
 	public function getTableAttributeHtml (

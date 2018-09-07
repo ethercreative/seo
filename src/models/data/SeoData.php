@@ -19,6 +19,8 @@ use yii\base\BaseObject;
 /**
  * Class SeoData
  *
+ * @property string|array $title
+ *
  * @author  Ether Creative
  * @package ether\seo\models\data
  */
@@ -31,8 +33,8 @@ class SeoData extends BaseObject
 	// Properties: Public
 	// -------------------------------------------------------------------------
 
-	/** @var array */
-	public $title = [];
+	/** @var string|array */
+	public $_title = [];
 
 	/** @var string */
 	public $description = '';
@@ -57,6 +59,9 @@ class SeoData extends BaseObject
 	// Properties: Private
 	// -------------------------------------------------------------------------
 
+	/** @var string */
+	private $_handle;
+
 	/** @var Element */
 	private $_element;
 
@@ -71,6 +76,7 @@ class SeoData extends BaseObject
 
 	public function __construct (SeoField $seo = null, ElementInterface $element = null, array $config = [])
 	{
+		$this->_handle = $seo !== null ? $seo->handle : null;
 		$this->_element = $element;
 		$this->_seoSettings = Seo::$i->getSettings();
 		$this->_fieldSettings =
@@ -126,7 +132,7 @@ class SeoData extends BaseObject
 		// ---------------------------------------------------------------------
 
 		$twig     = \Craft::$app->view->twig;
-		$title    = $this->title;
+		$title    = $this->_title;
 		$template = $this->_getSetting('title');
 
 		// Backwards compatibility for SEO v3.4.* or below
@@ -135,17 +141,21 @@ class SeoData extends BaseObject
 				if ($tmpl['locked'] === '0')
 					$title = [$template[$index]['key'] => $title];
 
-		$this->title = implode(
-			'',
-			array_map(
-				function ($a) use ($twig, $title) {
-					return array_key_exists($a['key'], $title)
-						? twig_escape_filter($twig, $title[$a['key']])
-						: $a['template'];
-				},
-				$template
-			)
-		);
+		// IF we can't find anywhere to put the old title, just use it instead
+		if (is_string($title)) $this->_title = $title;
+		else {
+			$this->_title = implode(
+				'',
+				array_map(
+					function ($a) use ($twig, $title) {
+						return array_key_exists($a['key'], $title)
+							? twig_escape_filter($twig, $title[$a['key']])
+							: $a['template'];
+					},
+					$template
+				)
+			);
+		}
 
 		// Keywords
 		// ---------------------------------------------------------------------
@@ -171,6 +181,49 @@ class SeoData extends BaseObject
 
 		// Filter out empty robots
 		$this->advanced['robots'] = array_filter($this->advanced['robots']);
+	}
+
+	// Getters / Setters
+	// =========================================================================
+
+	/**
+	 * @return array|string
+	 * @throws \Throwable
+	 * @throws \yii\base\Exception
+	 */
+	public function getTitle ()
+	{
+		if ($this->_element === null || $this->_handle === null)
+			return '';
+
+		\Craft::$app->getLocale();
+
+		try {
+			$this->_element->{$this->_handle} = new self();
+
+			return \Craft::$app->view->renderObjectTemplate(
+				$this->_title,
+				$this->_element
+			);
+		} catch (\Throwable $e) {
+			\Craft::dd($e);
+		}
+
+		// Prevent ∞
+		$this->_element->{$this->_handle} = new self();
+
+		return \Craft::$app->view->renderObjectTemplate(
+			$this->_title,
+			$this->_element
+		);
+	}
+
+	/**
+	 * @param array|string $title
+	 */
+	public function setTitle ($title)
+	{
+		$this->_title = $title;
 	}
 
 	// Helpers

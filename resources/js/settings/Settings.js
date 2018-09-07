@@ -19,7 +19,7 @@ export default class Settings {
 		this.namespace = namespace;
 		this.csrf = csrf;
 
-		new FieldType(namespace);
+		new FieldType();
 		this.initSitemap();
 		this.initRobots();
 	}

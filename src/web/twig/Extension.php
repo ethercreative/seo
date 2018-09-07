@@ -19,17 +19,6 @@ use ether\seo\models\data\SeoData;
 class Extension extends \Twig_Extension
 {
 
-	public function getFilters ()
-	{
-		return [
-			new \Twig_Filter(
-				'seoRender',
-				[$this, 'seoRender'],
-				['needs_context' => true]
-			),
-		];
-	}
-
 	public function getFunctions ()
 	{
 		return [
@@ -39,14 +28,6 @@ class Extension extends \Twig_Extension
 				['needs_context' => true]
 			),
 		];
-	}
-
-	// Filters
-	// =========================================================================
-
-	public function seoRender ($ctx, $template)
-	{
-		return \Craft::$app->view->renderString($template, $ctx);
 	}
 
 	// Functions
