@@ -76,6 +76,9 @@ class SeoField extends Field implements PreviewableFieldInterface
 
 	public function normalizeValue ($value, ElementInterface $element = null)
 	{
+		if ($value instanceof SeoData)
+			return $value;
+
 		if (is_string($value))
 			$value = Json::decodeIfJson($value);
 
