@@ -201,24 +201,6 @@ class Seo extends Plugin
 		);
 	}
 
-	// Components
-	// =========================================================================
-
-	public function getSeo (): SeoService
-	{
-		return $this->seo;
-	}
-
-	public function getRedirects (): RedirectsService
-	{
-		return $this->redirects;
-	}
-
-	public function getSitemap (): SitemapService
-	{
-		return $this->sitemap;
-	}
-
 	// Events
 	// =========================================================================
 
