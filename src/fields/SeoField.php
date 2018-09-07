@@ -27,6 +27,9 @@ class SeoField extends Field implements PreviewableFieldInterface
 	public static $defaultFieldSettings = [
 		'titleSuffix' => null,
 		'suffixAsPrefix' => false,
+
+		'title' => [],
+
 		'socialImage' => null,
 		'hideSocial' => false,
 		'robots' => [],
@@ -35,11 +38,20 @@ class SeoField extends Field implements PreviewableFieldInterface
 	// Instance
 	// -------------------------------------------------------------------------
 
-	/** @var string */
+	/**
+	 * @var string
+	 * @deprecated
+	 */
 	public $titleSuffix;
 
-	/** @var bool */
+	/**
+	 * @var bool
+	 * @deprecated
+	 */
 	public $suffixAsPrefix;
+
+	/** @var array */
+	public $title;
 
 	/** @var mixed */
 	public $socialImage;
@@ -239,7 +251,7 @@ class SeoField extends Field implements PreviewableFieldInterface
 
 	public function getSearchKeywords ($value, ElementInterface $element): string {
 		/** @var SeoData $value */
-		return $value->title . ' ' . $value->description;
+		return $value->_title . ' ' . $value->description;
 	}
 
 	public function getTableAttributeHtml (

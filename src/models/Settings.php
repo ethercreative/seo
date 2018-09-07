@@ -22,8 +22,25 @@ class Settings extends Model
 	// Variables: Field Type
 	// -------------------------------------------------------------------------
 
-	/** @var string */
+	/**
+	 * @var string
+	 * @deprecated
+	 */
 	public $titleSuffix;
+
+	/** @var array */
+	public $title = [
+		[
+			'key'      => '1',
+			'template' => '{title}',
+			'locked'   => false,
+		],
+		[
+			'key'      => '2',
+			'template' => ' - {{ siteName }}',
+			'locked'   => true,
+		]
+	];
 
 	/** @var array */
 	public $socialImage;

@@ -14,6 +14,7 @@ use craft\helpers\Json;
 use ether\seo\fields\SeoField;
 use ether\seo\models\Settings;
 use ether\seo\Seo;
+use yii\base\BaseObject;
 
 /**
  * Class SeoData
@@ -21,7 +22,7 @@ use ether\seo\Seo;
  * @author  Ether Creative
  * @package ether\seo\models\data
  */
-class SeoData extends BaseDataModel
+class SeoData extends BaseObject
 {
 
 	// Properties
@@ -30,8 +31,8 @@ class SeoData extends BaseDataModel
 	// Properties: Public
 	// -------------------------------------------------------------------------
 
-	/** @var string */
-	public $title = '';
+	/** @var array */
+	public $title = [];
 
 	/** @var string */
 	public $description = '';
@@ -124,16 +125,27 @@ class SeoData extends BaseDataModel
 		// Title
 		// ---------------------------------------------------------------------
 
-		$titleSuffix = $this->_fieldSettings['titleSuffix'] ?: $this->_seoSettings['titleSuffix'];
-		$suffixAsPrefix = $this->_fieldSettings['suffixAsPrefix'];
+		$twig     = \Craft::$app->view->twig;
+		$title    = $this->title;
+		$template = $this->_getSetting('title');
 
-		if ((empty($this->title) || $this->title === $titleSuffix) && $this->_element !== null)
-		{
-			if ($suffixAsPrefix)
-				$this->title = $titleSuffix . ' ' . $this->_element->title;
-			else
-				$this->title = $this->_element->title . ' ' . $titleSuffix;
-		}
+		// Backwards compatibility for SEO v3.4.* or below
+		if (is_string($title) && !empty($template))
+			foreach ($template as $index => $tmpl)
+				if ($tmpl['locked'] === '0')
+					$title = [$template[$index]['key'] => $title];
+
+		$this->title = implode(
+			'',
+			array_map(
+				function ($a) use ($twig, $title) {
+					return array_key_exists($a['key'], $title)
+						? twig_escape_filter($twig, $title[$a['key']])
+						: $a['template'];
+				},
+				$template
+			)
+		);
 
 		// Keywords
 		// ---------------------------------------------------------------------
@@ -163,6 +175,13 @@ class SeoData extends BaseDataModel
 
 	// Helpers
 	// =========================================================================
+
+	private function _getSetting ($handle)
+	{
+		return empty($this->_fieldSettings[$handle])
+			? $this->_seoSettings[$handle]
+			: $this->_fieldSettings[$handle];
+	}
 
 	/**
 	 * Gets the social metadata fallback

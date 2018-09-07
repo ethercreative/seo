@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css?family=Source+Code+Pro");
 @import (inline) "../node_modules/codemirror/lib/codemirror.css";
 @import (inline) "../node_modules/codemirror/theme/monokai.css";
 
@@ -23,4 +24,136 @@
 		border-radius: 3px;
 	}
 
+}
+
+.seo--meta {
+	padding: 30px;
+
+	box-shadow: 0 5px 20px 0 rgba(0, 0, 0, 0.18);
+	border-radius: 5px;
+
+	&-title {
+		display: flex;
+		align-items: stretch;
+		flex-wrap: wrap;
+		margin: 0;
+		padding: 4px;
+
+		font-size: 0;
+
+		box-sizing: border-box;
+		border: 1px solid #C6D3DC;
+		border-radius: 3px;
+		list-style: none;
+
+		transition: box-shadow 0.15s ease, border-color 0.15s ease;
+
+		&:hover,
+		&.focus {
+			border-color: #B7B2FF;
+			box-shadow: 0 2px 7px 0 #E9E8F9;
+		}
+
+		li {
+			display: inline-block;
+		}
+
+		li:not([data-static]) {
+			display: inline-flex;
+			align-items: stretch;
+			margin-right: 3px;
+
+			background-color: #E9E8F9;
+			border-radius: 1px;
+
+			svg {
+				vertical-align: middle;
+			}
+
+			button {
+				display: inline-flex;
+				align-items: center;
+				padding: 10px 11px;
+
+				appearance: none;
+				background-color: transparent;
+				border: none;
+				border-radius: 0;
+				cursor: pointer;
+
+				transition: background-color 0.15s ease, border-right-color 0.15s ease;
+
+				&:hover {
+					background-color: fade(#D7D5FF, 50%);
+				}
+
+				&:first-of-type {
+					border-right: 1px dashed #fff;
+					border-radius: 1px 0 0 1px;
+
+					svg:last-child {
+						display: none;
+					}
+				}
+
+				&:last-child {
+					border-radius: 0 1px 1px 0;
+				}
+			}
+
+			&.locked button:first-of-type {
+				border-right-color: transparent;
+				background-color: #D7D5FF;
+
+				svg {
+					&:first-child { display: none }
+					&:last-child { display: block }
+				}
+			}
+
+			input {
+				width: 1ch;
+				min-width: calc(~"7ch + 10px");
+
+				color: #302998;
+				font-size: 14px;
+				font-family: 'Source Code Pro', monospace;
+				text-indent: 10px;
+
+				appearance: none;
+				background: none;
+				border: none;
+				border-radius: 0;
+
+				&::placeholder {
+					color: fade(#302998, 50%);
+				}
+			}
+		}
+
+		li[data-static] {
+			button {
+				display: flex;
+				align-items: center;
+				padding: 7px 30px;
+
+				color: #302998;
+				font-size: 14px;
+				font-family: 'Source Code Pro', monospace;
+				letter-spacing: 0;
+
+				appearance: none;
+				background: none;
+				border: 1px dashed #B7B2FF;
+				border-radius: 1px;
+				cursor: pointer;
+
+				transition: border-color 0.15s ease;
+
+				&:hover {
+					border-color: fade(#302998, 50%);
+				}
+			}
+		}
+	}
 }

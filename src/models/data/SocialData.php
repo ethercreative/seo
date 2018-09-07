@@ -11,6 +11,7 @@ namespace ether\seo\models\data;
 use craft\elements\Asset;
 use ether\seo\models\Settings;
 use ether\seo\Seo;
+use yii\base\BaseObject;
 
 function get_public_properties ($class) {
 	return get_object_vars($class);
@@ -22,7 +23,7 @@ function get_public_properties ($class) {
  * @author  Ether Creative
  * @package ether\seo\models\data
  */
-class SocialData extends BaseDataModel
+class SocialData extends BaseObject
 {
 
 	// Properties

@@ -136,11 +136,14 @@ class Seo extends Plugin
 				[$this, 'onAfterRequest']
 			);
 
-			// Twig Extension
-			$craft->view->registerTwigExtension(new Extension());
-
 			// Template Hook
 			$craft->view->hook('seo', [$this, 'onRegisterSeoHook']);
+		}
+
+		if ($craft->request->isSiteRequest || $craft->request->isCpRequest)
+		{
+			// Twig Extension
+			$craft->view->registerTwigExtension(new Extension());
 		}
 
 		// CraftQL Support

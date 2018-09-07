@@ -11,13 +11,15 @@
 import codemirror from "codemirror";
 import "codemirror/addon/edit/closebrackets";
 import "codemirror/mode/twig/twig";
+import FieldType from "./FieldType";
 
 export default class Settings {
 	
 	constructor (namespace, csrf) {
 		this.namespace = namespace;
 		this.csrf = csrf;
-		
+
+		new FieldType();
 		this.initSitemap();
 		this.initRobots();
 	}
