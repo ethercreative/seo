@@ -1,5 +1,11 @@
 ## [Unreleased] 3.5.0
 
+## 3.4.3 - 2018-09-07
+### Fixed
+- Redirects page no longer throws a twig error if there are no redirects for all sites. [#134]
+
+[#134]: https://github.com/ethercreative/seo/issues/134
+
 ## 3.4.2 - 2018-09-07
 ### Fixed
 - Fixed a bug when saving a new element with an SEO field.
