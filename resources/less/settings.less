@@ -37,7 +37,7 @@
 		align-items: stretch;
 		flex-wrap: wrap;
 		margin: 0;
-		padding: 4px;
+		padding: 4px 4px 1px;
 
 		font-size: 0;
 
@@ -56,11 +56,13 @@
 
 		li {
 			display: inline-block;
+			margin-bottom: 3px;
 		}
 
 		li:not([data-static]) {
 			display: inline-flex;
 			align-items: stretch;
+			max-width: 100%;
 			margin-right: 3px;
 
 			background-color: #E9E8F9;
@@ -68,6 +70,7 @@
 
 			svg {
 				vertical-align: middle;
+				pointer-events: none;
 			}
 
 			button {
