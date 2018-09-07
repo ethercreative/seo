@@ -161,7 +161,7 @@
 					</tr>
 					</thead>
 					<tbody data-redirects="{{ siteId }}">
-					{% for redirect in redirects[siteId] %}
+					{% for redirect in redirects[siteId] ?? [] %}
 						<tr tabindex="0" data-id="{{ redirect.id }}">
 							<td class="redirects--title-col">
 								<div class="element small">
