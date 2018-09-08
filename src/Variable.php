@@ -12,25 +12,24 @@ use Twig_Template;
 class Variable
 {
 
+	/**
+	 * @param string $title
+	 * @param string $description
+	 * @param bool   $_ - Deprecated
+	 * @param array  $social
+	 *
+	 * @return SeoData
+	 */
 	public function custom (
 		$title = '',
 		$description = '',
-		$includeTitleSuffix = true,
+		$_ = null,
 		$social = []
 	) {
-		$settings = Seo::$i->getSettings();
-
-		$title = $title
-			? $title . (
-			$includeTitleSuffix
-				? ' ' . $settings['titleSuffix']
-				: ''
-			) : '';
-
 		return new SeoData(null, null, [
-			'title' => $title,
+			'titleRaw'    => $title,
 			'description' => $description,
-			'social' => $social,
+			'social'      => $social,
 		]);
 	}
 

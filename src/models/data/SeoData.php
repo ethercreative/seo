@@ -34,8 +34,8 @@ class SeoData extends BaseObject
 	// Properties: Public
 	// -------------------------------------------------------------------------
 
-	/** @var string|array */
-	public $_title = [];
+	/** @var array|string */
+	public $titleRaw = [];
 
 	/** @var string */
 	public $description = '';
@@ -73,6 +73,9 @@ class SeoData extends BaseObject
 	private $_seoSettings;
 
 	/** @var string */
+	private $_titleTemplate = '';
+
+	/** @var string */
 	private $_renderedTitle;
 
 	// Constructor
@@ -88,7 +91,23 @@ class SeoData extends BaseObject
 				? SeoField::$defaultFieldSettings
 				: $seo->getSettings();
 
-		// Backwards compatibility for SEO v1 / Craft v2
+		// Backwards compatibility for titles in SEO v3.4.x or lower
+		if (isset($config['title']))
+		{
+			$title    = $config['title'];
+			$template = $this->_getSetting('title');
+
+			// Find the first unlocked token
+			if (is_string($title) && !empty($template))
+				foreach ($template as $index => $tmpl)
+					if ($tmpl['locked'] === '0')
+						$title = [$template[$index]['key'] => $title];
+
+			$config['titleRaw'] = $title;
+			unset($config['title']);
+		}
+
+		// Backwards compatibility for Keywords in SEO v1 / Craft v2
 		if (isset($config['keyword']))
 		{
 			if (!empty($config['keyword'])) {
@@ -132,23 +151,18 @@ class SeoData extends BaseObject
 
 	public function init ()
 	{
+
 		// Title
 		// ---------------------------------------------------------------------
 
 		$twig     = \Craft::$app->view->twig;
-		$title    = $this->_title;
+		$title    = $this->titleRaw;
 		$template = $this->_getSetting('title');
 
-		// Backwards compatibility for SEO v3.4.* or below
-		if (is_string($title) && !empty($template))
-			foreach ($template as $index => $tmpl)
-				if ($tmpl['locked'] === '0')
-					$title = [$template[$index]['key'] => $title];
-
-		// IF we can't find anywhere to put the old title, just use it instead
-		if (is_string($title)) $this->_title = $title;
-		else {
-			$this->_title = implode(
+		if (is_string($title)) $this->_titleTemplate = $title;
+		else
+		{
+			$this->_titleTemplate = implode(
 				'',
 				array_map(
 					function ($a) use ($twig, $title) {
@@ -219,7 +233,7 @@ class SeoData extends BaseObject
 			$craft->view->setTemplateMode(View::TEMPLATE_MODE_SITE);
 
 			$title = \Craft::$app->view->renderObjectTemplate(
-				$this->_title,
+				$this->_titleTemplate,
 				$this->_element->toArray($fields)
 			);
 
@@ -229,20 +243,12 @@ class SeoData extends BaseObject
 		else
 		{
 			$title = \Craft::$app->view->renderObjectTemplate(
-				$this->_title,
+				$this->_titleTemplate,
 				$this->_element->toArray($fields)
 			);
 		}
 
 		return $this->_renderedTitle = $title;
-	}
-
-	/**
-	 * @param array|string $title
-	 */
-	public function setTitle ($title)
-	{
-		$this->_title = $title;
 	}
 
 	// Helpers
