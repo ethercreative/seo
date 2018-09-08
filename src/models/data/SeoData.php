@@ -11,6 +11,7 @@ namespace ether\seo\models\data;
 use craft\base\Element;
 use craft\base\ElementInterface;
 use craft\helpers\Json;
+use craft\web\View;
 use ether\seo\fields\SeoField;
 use ether\seo\models\Settings;
 use ether\seo\Seo;
@@ -196,17 +197,38 @@ class SeoData extends BaseObject
 		if ($this->_element === null || $this->_handle === null)
 			return '';
 
-		\Craft::$app->getLocale();
-
 		// Remove this field from the fields passed to the renderer
 		$fields = array_keys($this->_element->fields());
 		if (($key = array_search($this->_handle, $fields)) !== false)
 			unset($fields[$key]);
 
-		return \Craft::$app->view->renderObjectTemplate(
-			$this->_title,
-			$this->_element->toArray($fields)
-		);
+		$craft = \Craft::$app;
+
+		// If this is a CP request, render the title as if it was the frontend
+		if ($craft->request->isCpRequest)
+		{
+			$site   = $craft->sites->currentSite;
+			$tpMode = $craft->view->templateMode;
+			$craft->sites->setCurrentSite($this->_element->site);
+			$craft->view->setTemplateMode(View::TEMPLATE_MODE_SITE);
+
+			$title = \Craft::$app->view->renderObjectTemplate(
+				$this->_title,
+				$this->_element->toArray($fields)
+			);
+
+			$craft->sites->setCurrentSite($site);
+			$craft->view->setTemplateMode($tpMode);
+		}
+		else
+		{
+			$title = \Craft::$app->view->renderObjectTemplate(
+				$this->_title,
+				$this->_element->toArray($fields)
+			);
+		}
+
+		return $title;
 	}
 
 	/**
