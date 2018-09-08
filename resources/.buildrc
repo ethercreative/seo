@@ -19,11 +19,13 @@
 		"ignore": false,
 		"input": [
 			"js/SeoField.js",
-			"js/SeoSettings.js"
+			"js/SeoSettings.js",
+			"js/SeoFieldSettings.js"
 		],
 		"output": [
 			"../src/resources/js/SeoField.min.js",
-			"../src/resources/js/SeoSettings.min.js"
+			"../src/resources/js/SeoSettings.min.js",
+			"../src/resources/js/SeoFieldSettings.min.js"
 		],
 		"watch": [
 			"js/**/*.js",

@@ -4,7 +4,7 @@ namespace ether\seo\resources;
 
 use craft\web\AssetBundle;
 
-class SeoFieldSettingsAssets extends AssetBundle
+class SeoSettingsAsset extends AssetBundle
 {
 
 	public function init ()
@@ -13,6 +13,7 @@ class SeoFieldSettingsAssets extends AssetBundle
 
 		$this->js = [
 			'js/SeoSettings.min.js',
+			'js/SeoFieldSettings.min.js',
 		];
 
 		$this->css = [

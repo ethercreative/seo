@@ -10,7 +10,7 @@ use craft\helpers\Json;
 use craft\models\Section;
 use ether\seo\models\data\SeoData;
 use ether\seo\resources\SeoFieldAssets;
-use ether\seo\resources\SeoFieldSettingsAssets;
+use ether\seo\resources\SeoFieldSettingsAsset;
 use ether\seo\Seo;
 use yii\base\InvalidConfigException;
 use yii\db\Schema;
@@ -236,10 +236,10 @@ class SeoField extends Field implements PreviewableFieldInterface
 	public function getSettingsHtml ()
 	{
 		$view = \Craft::$app->view;
+		$namespace = $view->namespaceInputId('');
 
-		$view->registerAssetBundle(SeoFieldSettingsAssets::class);
-		// FIXME: Should be loading FieldTypeSettings.js only
-		$view->registerJs('new SeoSettings("' . $view->namespace . '");');
+		$view->registerAssetBundle(SeoFieldSettingsAsset::class);
+		$view->registerJs('new SeoFieldSettings("' . $namespace . '");');
 
 		return $view->renderTemplate(
 			'seo/_seo/settings',

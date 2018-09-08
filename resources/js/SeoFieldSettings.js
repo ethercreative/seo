@@ -8,21 +8,21 @@
  * @since     3.5.0
  */
 
-export default class FieldTypeSettings {
+class SeoFieldSettings {
 
 	// Properties
 	// =========================================================================
 
 	namespace = '';
 
-	tokenRegex = null;
+	tokenRegex = /\[title]\[(\d)].*/g;
 	tokenList = null;
 	tokenTemplate = null;
 
 	constructor (namespace) {
-		this.namespace = namespace.replace(/\[]\\/g, "-");
-		console.log(namespace, this.namespace);
-		this.tokenRegex = new RegExp(`/${namespace}\\[title]\\[(\\d)].*/g`);
+		this.namespace = namespace;
+		if (namespace.substr(-1) !== "-")
+			this.namespace += "-";
 
 		this.initSeoTitle();
 	}
@@ -51,15 +51,15 @@ export default class FieldTypeSettings {
 
 	setupToken (token) {
 		const tmpl = token.querySelector("[data-template]");
-		FieldTypeSettings.onTemplateInput({ target: tmpl });
+		SeoFieldSettings.onTemplateInput({ target: tmpl });
 		tmpl.addEventListener(
 			"input",
-			FieldTypeSettings.onTemplateInput
+			SeoFieldSettings.onTemplateInput
 		);
 
 		token.querySelector("[data-lock]").addEventListener(
 			"click",
-			FieldTypeSettings.onLockClick
+			SeoFieldSettings.onLockClick
 		);
 
 		token.querySelector("[data-delete]").addEventListener(
@@ -141,7 +141,7 @@ export default class FieldTypeSettings {
 		let i = tokens.length - 1;
 		if (i > 0) while (i--) {
 			const token = tokens[i]
-				, rpl = FieldTypeSettings.replaceKey.bind(this, i);
+				, rpl = SeoFieldSettings.replaceKey.bind(this, i);
 			const inputs = token.getElementsByTagName("input");
 			let x = inputs.length;
 			while (x--) {
@@ -158,7 +158,9 @@ export default class FieldTypeSettings {
 	}
 
 	getElementById (id) {
-		return document.getElementById(`${this.namespace}-${id}`);
+		return document.getElementById(this.namespace + id);
 	}
 
 }
+
+window.SeoFieldSettings = SeoFieldSettings;
