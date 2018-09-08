@@ -44,9 +44,11 @@ export default class FieldType {
 	}
 
 	setupToken (token) {
-		token.querySelector("[data-template]").addEventListener(
+		const tmpl = token.querySelector("[data-template]");
+		FieldType.onTemplateInput({ target: tmpl });
+		tmpl.addEventListener(
 			"input",
-			FieldType.onInputInput
+			FieldType.onTemplateInput
 		);
 
 		token.querySelector("[data-lock]").addEventListener(
@@ -98,7 +100,7 @@ export default class FieldType {
 		t.focus();
 	};
 
-	static onInputInput (e) {
+	static onTemplateInput (e) {
 		const value = e.target.value;
 		e.target.style.width = `calc(${value.length}ch + 10px)`;
 	}
