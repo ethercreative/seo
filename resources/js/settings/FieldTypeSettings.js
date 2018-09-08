@@ -8,15 +8,22 @@
  * @since     3.5.0
  */
 
-export default class FieldType {
+export default class FieldTypeSettings {
 
 	// Properties
 	// =========================================================================
 
+	namespace = '';
+
+	tokenRegex = null;
 	tokenList = null;
 	tokenTemplate = null;
 
-	constructor () {
+	constructor (namespace) {
+		this.namespace = namespace.replace(/\[]\\/g, "-");
+		console.log(namespace, this.namespace);
+		this.tokenRegex = new RegExp(`/${namespace}\\[title]\\[(\\d)].*/g`);
+
 		this.initSeoTitle();
 	}
 
@@ -24,9 +31,8 @@ export default class FieldType {
 	// =========================================================================
 
 	initSeoTitle () {
-		this.tokenList = document.getElementById("settings-seoMetaTitle");
-		this.tokenTemplate =
-			document.getElementById("settings-seoMetaToken").content;
+		this.tokenList = this.getElementById("seoMetaTitle");
+		this.tokenTemplate = this.getElementById("seoMetaToken").content;
 
 		const existingTokens =
 			this.tokenList.querySelectorAll("li:not([data-static])");
@@ -37,7 +43,7 @@ export default class FieldType {
 		window.addEventListener("focus", this.onFocusChange, true);
 		window.addEventListener("blur", this.onFocusChange, true);
 
-		document.getElementById("settings-seoMetaAdd").addEventListener(
+		this.getElementById("seoMetaAdd").addEventListener(
 			"click",
 			this.onAddClick
 		);
@@ -45,15 +51,15 @@ export default class FieldType {
 
 	setupToken (token) {
 		const tmpl = token.querySelector("[data-template]");
-		FieldType.onTemplateInput({ target: tmpl });
+		FieldTypeSettings.onTemplateInput({ target: tmpl });
 		tmpl.addEventListener(
 			"input",
-			FieldType.onTemplateInput
+			FieldTypeSettings.onTemplateInput
 		);
 
 		token.querySelector("[data-lock]").addEventListener(
 			"click",
-			FieldType.onLockClick
+			FieldTypeSettings.onLockClick
 		);
 
 		token.querySelector("[data-delete]").addEventListener(
@@ -135,16 +141,13 @@ export default class FieldType {
 		let i = tokens.length - 1;
 		if (i > 0) while (i--) {
 			const token = tokens[i]
-				, rpl = FieldType.replaceKey.bind(this, i);
+				, rpl = FieldTypeSettings.replaceKey.bind(this, i);
 			const inputs = token.getElementsByTagName("input");
 			let x = inputs.length;
 			while (x--) {
 				inputs[x].setAttribute(
 					"name",
-					inputs[x].getAttribute("name").replace(
-						/settings\[title]\[(\d)].*/g,
-						rpl
-					)
+					inputs[x].getAttribute("name").replace(this.tokenRegex, rpl)
 				);
 			}
 		}
@@ -152,6 +155,10 @@ export default class FieldType {
 
 	static replaceKey (i, a, b) {
 		return a.replace(b, i);
+	}
+
+	getElementById (id) {
+		return document.getElementById(`${this.namespace}-${id}`);
 	}
 
 }

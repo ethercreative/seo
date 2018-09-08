@@ -235,9 +235,13 @@ class SeoField extends Field implements PreviewableFieldInterface
 	 */
 	public function getSettingsHtml ()
 	{
-		\Craft::$app->view->registerAssetBundle(SeoFieldSettingsAssets::class);
+		$view = \Craft::$app->view;
 
-		return \Craft::$app->view->renderTemplate(
+		$view->registerAssetBundle(SeoFieldSettingsAssets::class);
+		// FIXME: Should be loading FieldTypeSettings.js only
+		$view->registerJs('new SeoSettings("' . $view->namespace . '");');
+
+		return $view->renderTemplate(
 			'seo/_seo/settings',
 			array_merge(
 				[

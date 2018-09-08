@@ -68,7 +68,7 @@
 			</template>
 
 			<ul class="seo--meta-title" id="seoMetaTitle">
-				{% for tag in settings.title %}
+				{% for tag in settings.title is empty and globalSettings.title is defined ? globalSettings.title : settings.title %}
 				<li class="{{ tag.locked ? 'locked' }}">
 					<input
 						type="hidden"
