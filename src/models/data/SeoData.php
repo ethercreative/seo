@@ -72,6 +72,9 @@ class SeoData extends BaseObject
 	/** @var Settings */
 	private $_seoSettings;
 
+	/** @var string */
+	private $_renderedTitle;
+
 	// Constructor
 	// =========================================================================
 
@@ -194,6 +197,9 @@ class SeoData extends BaseObject
 	 */
 	public function getTitle ()
 	{
+		if ($this->_renderedTitle)
+			return $this->_renderedTitle;
+
 		if ($this->_element === null || $this->_handle === null)
 			return '';
 
@@ -228,7 +234,7 @@ class SeoData extends BaseObject
 			);
 		}
 
-		return $title;
+		return $this->_renderedTitle = $title;
 	}
 
 	/**
