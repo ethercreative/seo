@@ -1,5 +1,9 @@
 ## [Unreleased] 3.5.0
 
+## 3.4.4 - 2018-09-10
+### Fixed
+- Fixed a server error when generating the sitemap sub-maps.
+
 ## 3.4.3 - 2018-09-07
 ### Fixed
 - Redirects page no longer throws a twig error if there are no redirects for all sites. [#134]
