@@ -217,38 +217,35 @@ class SeoData extends BaseObject
 		if ($this->_element === null || $this->_handle === null)
 			return '';
 
-		// Remove this field from the fields passed to the renderer
-		$fields = array_keys($this->_element->fields());
-		if (($key = array_search($this->_handle, $fields)) !== false)
-			unset($fields[$key]);
+		return $this->_renderedTitle = $this->_render(
+			$this->_titleTemplate,
+			$this->_elementToArray()
+		);
+	}
 
-		$craft = \Craft::$app;
+	/**
+	 * @return array
+	 * @throws \Throwable
+	 * @throws \yii\base\Exception
+	 */
+	public function getTitleAsTokens ()
+	{
+		if ($this->_element === null || $this->_handle === null)
+			return [];
 
-		// If this is a CP request, render the title as if it was the frontend
-		if ($craft->request->isCpRequest)
-		{
-			$site   = $craft->sites->currentSite;
-			$tpMode = $craft->view->templateMode;
-			$craft->sites->setCurrentSite($this->_element->site);
-			$craft->view->setTemplateMode(View::TEMPLATE_MODE_SITE);
+		$template = $this->_getSetting('title');
+		$elementArray = $this->_elementToArray();
 
-			$title = \Craft::$app->view->renderObjectTemplate(
-				$this->_titleTemplate,
-				$this->_element->toArray($fields)
-			);
+		$tokens = [];
 
-			$craft->sites->setCurrentSite($site);
-			$craft->view->setTemplateMode($tpMode);
-		}
-		else
-		{
-			$title = \Craft::$app->view->renderObjectTemplate(
-				$this->_titleTemplate,
-				$this->_element->toArray($fields)
-			);
-		}
+		foreach ($template as $token)
+			if ($token['locked'])
+				$tokens[$token['key']] = $this->_render(
+					$token['template'],
+					$elementArray
+				);
 
-		return $this->_renderedTitle = $title;
+		return $tokens;
 	}
 
 	// Helpers
@@ -289,6 +286,61 @@ class SeoData extends BaseObject
 			'description' => $this->description,
 			'image'       => $image,
 		];
+	}
+
+	private function _elementToArray ()
+	{
+		// Remove this field from the fields passed to the renderer
+		$fields = array_keys(
+			array_merge(
+				$this->_element->fields(),
+				$this->_element->extraFields()
+			)
+		);
+		if (($key = array_search($this->_handle, $fields)) !== false)
+			unset($fields[$key]);
+
+		// Convert to array
+		return $this->_element->toArray($fields);
+	}
+
+	/**
+	 * @param $template
+	 * @param $variables
+	 *
+	 * @return string
+	 * @throws \Throwable
+	 * @throws \yii\base\Exception
+	 */
+	private function _render ($template, $variables)
+	{
+		$craft = \Craft::$app;
+
+		// If this is a CP request, render the title as if it was the frontend
+		if ($craft->request->isCpRequest)
+		{
+			$site   = $craft->sites->currentSite;
+			$tpMode = $craft->view->templateMode;
+			$craft->sites->setCurrentSite($this->_element->site);
+			$craft->view->setTemplateMode(View::TEMPLATE_MODE_SITE);
+
+			$ret = \Craft::$app->view->renderObjectTemplate(
+				$template,
+				$variables
+			);
+
+			$craft->sites->setCurrentSite($site);
+			$craft->view->setTemplateMode($tpMode);
+		}
+		else
+		{
+			$ret = \Craft::$app->view->renderObjectTemplate(
+				$template,
+				$variables
+			);
+		}
+
+		return $ret;
 	}
 
 }

@@ -96,14 +96,29 @@
 
 			<div class="seo--panel seo--snippet">
 				<div class="seo--snippet-wrap">
-					<input
+					<div class="seo--snippet-title" id="{{ id }}Title">
+						{% for t in titleTemplate %}
+							{% set v = value.titleRaw[t.key] ?? value.titleAsTokens[t.key] ?? t.template %}
+							{% if t.locked %}
+								<span class="seo--snippet-title-locked">
+									{{- v -}}
+								</span>
+							{% else %}
+								<span class="seo--snippet-title-editable" contenteditable="true">
+									{{- v -}}
+								</span>
+								{#<input name="{{ name }}[titleRaw][{{ t.key }}]" />#}
+							{% endif %}
+						{% endfor %}
+					</div>
+					{#<input
 						type="text"
 						class="seo--snippet-title{{ isNew ? ' clean' }}"
 						value="{{ value.title }}"
 						name="{{ name }}[title]"
 						id="{{ id }}Title"
 						placeholder="SEO Title"
-					>
+					>#}
 
 					<span class="seo--snippet-url">
 						{{ url and url != '/' ? url : siteUrl }}

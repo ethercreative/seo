@@ -149,6 +149,8 @@ class SeoField extends Field implements PreviewableFieldInterface
 		// URL & Title Suffix
 		// ---------------------------------------------------------------------
 
+		$titleTemplate = $settings['title'] ?? $settingsGlobal['title'];
+
 		$url = $element->getUrl();
 
 		if ($hasPreview && $isEntry && !$isHome && !$isSingle)
@@ -156,17 +158,6 @@ class SeoField extends Field implements PreviewableFieldInterface
 
 		if ($element->slug)
 			$url = str_replace($element->slug, '', $url);
-
-		$titleSuffix = $settings['titleSuffix'] ?: $settingsGlobal['titleSuffix'];
-		$suffixAsPrefix = $settings['suffixAsPrefix'];
-
-		if ($hasPreview && $isEntry && $value->title === null && $isSingle)
-		{
-			if ($suffixAsPrefix)
-				$titleSuffix = $titleSuffix . ' ' . $element->title;
-			else
-				$titleSuffix = $element->title . ' ' . $titleSuffix;
-		}
 
 		// Social URL
 		// ---------------------------------------------------------------------
@@ -194,10 +185,17 @@ class SeoField extends Field implements PreviewableFieldInterface
 			? $settings['hideSocial']
 			: false;
 
+		$renderData = [
+			'elementType' => get_class($element),
+			'elementId' => $element->id,
+			'siteId' => $element->siteId,
+			'seoHandle' => $this->handle,
+		];
+
 		$seoOptions = Json::encode(compact(
 			'hasPreview',
 			'isNew',
-			'suffixAsPrefix'
+			'renderData'
 		));
 
 		$craft->view->registerAssetBundle(SeoFieldAssets::class);
@@ -211,7 +209,7 @@ class SeoField extends Field implements PreviewableFieldInterface
 				'id' => $this->id,
 				'name' => $this->handle,
 				'value' => $value,
-				'titleSuffix' => $titleSuffix,
+				'titleTemplate' => $titleTemplate,
 				'hasPreview' => $hasPreview,
 				'url' => $url,
 				'isPro' => true,

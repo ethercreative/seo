@@ -8,6 +8,7 @@
  * @since     2.0.0
  */
 
+import "babel-polyfill";
 import Tabs from "./field/Tabs";
 import FocusKeywords from "./field/FocusKeywords";
 import Snippet from "./field/Snippet";

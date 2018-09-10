@@ -1,4 +1,4 @@
-/* globals Craft */
+/* globals Craft, $ */
 
 /**
  * Snippet
@@ -17,7 +17,9 @@ export default class Snippet {
 	constructor (namespace, SEO) {
 		this.namespace = namespace;
 		this.SEO = SEO;
-		
+
+		this.mainForm = document.getElementById("main-form");
+
 		this.titleField = document.getElementById(`${namespace}Title`);
 		this.slugField  = document.getElementById(`${namespace}Slug`);
 		this.descField  = document.getElementById(`${namespace}Description`);
@@ -41,55 +43,20 @@ export default class Snippet {
 	 * TODO: If the SEO title matches the main title (sans suffix), keep syncing
 	 */
 	title () {
-		const mainTitleField = document.getElementById("title");
-		
-		// Check to see if we should be syncing the title
-		if (
-			(
-				!mainTitleField
-				|| !this.titleField.classList.contains("clean")
-				|| !this.SEO.options.isNew
-			) && this.titleField.value.trim() !== ""
-		) return;
-		
-		// This should be just the suffix (if there is one)
-		const initial = this.titleField.value;
-		
-		// On Craft title field input, sync the title
-		const onMainTitleFieldInput = () => {
-			if (this.SEO.options.suffixAsPrefix) {
-				this.titleField.value = `${initial} ${mainTitleField.value}`;
-			} else {
-				this.titleField.value = `${mainTitleField.value} ${initial}`;
-			}
-		};
-		
-		// On SEO title field input, stop syncing
-		const onTitleInput = () => {
-			this.titleField.classList.remove("clean");
-			
-			mainTitleField.removeEventListener(
-				"input",
-				onMainTitleFieldInput,
-				false
-			);
-			
-			this.titleField.removeEventListener("input", onTitleInput, false);
-		};
-		
-		// Add event listeners
-		mainTitleField.addEventListener(
-			"input",
-			onMainTitleFieldInput,
-			false
-		);
-		
-		this.titleField.addEventListener("input", onTitleInput, false);
-		
-		// Trigger the Craft title field listener to sync, just in case we don't
-		// have an SEO title but the entry has one and the user doesn't change
-		// it (usually if the entry was created before the SEO field was added)
-		onMainTitleFieldInput();
+		const editables = this.titleField.getElementsByClassName("seo--snippet-title-editable");
+
+		this.titleObserver = new MutationObserver(this.onTitleEditableMutation);
+
+		for (let i = 0, l = editables.length; i < l; ++i) {
+			this.titleObserver.observe(editables[i], {
+				childList: true,
+				characterData: true,
+				subtree: true,
+			});
+		}
+
+		this.formObserver = new MutationObserver(debounce(this.onAnyChange, 500));
+		this._observeMainForm();
 	}
 	
 	/**
@@ -169,6 +136,133 @@ export default class Snippet {
 		setTimeout(() => {
 			adjustHeight();
 		}, 15);
+	}
+
+	// Events
+	// =========================================================================
+
+	onTitleEditableMutation = mutations => {
+		mutations.forEach(mutation => {
+			let target = mutation.target;
+
+			if (target.nodeName === "#text")
+				return;
+
+			const sel = Snippet._getSelection(target);
+			target.innerHTML = target.textContent;
+			Snippet._restoreSelection(target, sel);
+			this.titleObserver.takeRecords();
+		});
+	};
+
+	onAnyChange = async () => {
+		this.formObserver.disconnect();
+		this.formObserver.takeRecords();
+
+		const tokens = await this._renderTokens();
+
+		// TODO: populate locked or empty tokens
+		console.log(tokens);
+
+		this._observeMainForm();
+	};
+
+	// Helpers
+	// =========================================================================
+
+	static _getSelection (el) {
+		if (window.getSelection && document.createRange) {
+			let range = window.getSelection().getRangeAt(0);
+			let preSelectionRange = range.cloneRange();
+			preSelectionRange.selectNodeContents(el);
+			preSelectionRange.setEnd(range.startContainer, range.startOffset);
+			let start = preSelectionRange.toString().length;
+
+			return {
+				start: start,
+				end: start + range.toString().length
+			};
+		}
+
+		let selectedTextRange = document.selection.createRange();
+		let preSelectionTextRange = document.body.createTextRange();
+		preSelectionTextRange.moveToElementText(el);
+		preSelectionTextRange.setEndPoint("EndToStart", selectedTextRange);
+		let start = preSelectionTextRange.text.length;
+
+		return {
+			start: start,
+			end: start + selectedTextRange.text.length
+		};
+	}
+
+	static _restoreSelection (el, sel) {
+		if (window.getSelection && document.createRange) {
+			let charIndex = 0, range = document.createRange();
+			range.setStart(el, 0);
+			range.collapse(true);
+			let nodeStack = [el], node, foundStart = false,
+				stop = false;
+
+			while (!stop && (node = nodeStack.pop())) {
+				if (node.nodeType === 3) {
+					let nextCharIndex = charIndex + node.length;
+					if (!foundStart && sel.start >= charIndex && sel.start <= nextCharIndex) {
+						range.setStart(node, sel.start - charIndex);
+						foundStart = true;
+					}
+					if (foundStart && sel.end >= charIndex && sel.end <= nextCharIndex) {
+						range.setEnd(node, sel.end - charIndex);
+						stop = true;
+					}
+					charIndex = nextCharIndex;
+				} else {
+					let i = node.childNodes.length;
+					while (i--) {
+						nodeStack.push(node.childNodes[i]);
+					}
+				}
+			}
+
+			sel = window.getSelection();
+			sel.removeAllRanges();
+			sel.addRange(range);
+
+			return;
+		}
+
+		let textRange = document.body.createTextRange();
+		textRange.moveToElementText(el);
+		textRange.collapse(true);
+		textRange.moveEnd("character", sel.end);
+		textRange.moveStart("character", sel.start);
+		textRange.select();
+	}
+
+	async _renderTokens () {
+		return new Promise(resolve => {
+			const fields = $(this.mainForm).serializeArray().reduce((a, b) => {
+				a[b.name] = b.value;
+				return a;
+			}, {});
+
+			if (fields.hasOwnProperty("action"))
+				delete fields.action;
+
+			Craft.postActionRequest('seo/seo/render-data', {
+				...this.SEO.options.renderData,
+				...fields,
+			}, resolve);
+		});
+	}
+
+	_observeMainForm () {
+		this.formObserver.observe(this.mainForm, {
+			childList: true,
+			attributes: true,
+			characterData: true,
+			subtree: true,
+		});
 	}
 	
 }

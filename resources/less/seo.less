@@ -259,8 +259,21 @@
 			letter-spacing: 0;
 			line-height: normal;
 
-			appearance: none;
-			background: none;
+			user-select: none;
+
+			&-locked {
+				opacity: 0.3;
+			}
+
+			&-editable {
+				padding: 3px 5px;
+
+				background-color: #F5F6F7;
+				border-radius: 3px;
+				outline: none;
+
+				user-select: text;
+			}
 		}
 
 		&-url {
@@ -277,6 +290,7 @@
 			display: block;
 			width: 100%;
 			min-height: 3em;
+			padding: 3px 5px;
 
 			color: #545454;
 			font-family: Arial, sans-serif;
@@ -285,19 +299,13 @@
 			line-height: 18px;
 
 			appearance: none;
-			background: none;
+			background-color: #F5F6F7;
+			border: none;
+			border-radius: 3px;
 
 			&.invalid {
-				border-color: fade(@error, 50%) !important;
 				outline-color: @error;
 			}
-		}
-
-		&-title,
-		&-description {
-			border: 1px solid transparent;
-
-			transition: border-color 0.2s ease;
 		}
 
 		&-edit {
@@ -311,13 +319,6 @@
 			letter-spacing: 0.1em;
 			line-height: normal;
 			text-transform: uppercase;
-		}
-
-		&:hover {
-			.seo--snippet-title,
-			.seo--snippet-description {
-				border-color: #eee;
-			}
 		}
 	}
 

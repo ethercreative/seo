@@ -32,4 +32,45 @@ class SeoController extends Controller
 		]));
 	}
 
+	/**
+	 * @throws \yii\web\BadRequestHttpException
+	 * @throws \yii\base\InvalidConfigException
+	 */
+	public function actionRenderData ()
+	{
+		$this->requirePostRequest();
+		$craft = \Craft::$app;
+
+		$elementType = $craft->request->getBodyParam('elementType');
+		$elementId   = $craft->request->getBodyParam('elementId');
+		$siteId      = $craft->request->getBodyParam('siteId');
+		$seoHandle   = $craft->request->getBodyParam('seoHandle');
+
+		// Get the element
+		if ($elementId) {
+			$element = $craft->elements->getElementById(
+				$elementId,
+				$elementType,
+				$siteId
+			);
+
+			if (!$element)
+				return $this->asJson([]);
+		} else {
+			$element = new $elementType();
+		}
+
+		// Populate the data
+		$body = $craft->request->getBodyParams();
+		foreach ($body as $prop => $value)
+			if (property_exists($element, $prop))
+				$element->$prop = $value;
+
+		$element->setFieldValuesFromRequest(
+			$craft->request->getParam('fieldsLocation', 'fields')
+		);
+
+		return $this->asJson($element->$seoHandle->titleAsTokens);
+	}
+
 }
