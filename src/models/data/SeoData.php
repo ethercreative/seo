@@ -191,7 +191,8 @@ class SeoData extends BaseObject
 			if ($value === null)
 				$this->social[$key] = new SocialData($key, $fallback);
 			elseif (is_array($value))
-				$this->social[$key] = new SocialData($key, $fallback, $value);
+				// FIXME
+				$this->social[$key] = new SocialData($key, $fallback/*, $value*/);
 		}
 
 		// Robots
@@ -207,7 +208,6 @@ class SeoData extends BaseObject
 	/**
 	 * @return array|string
 	 * @throws \Throwable
-	 * @throws \yii\base\Exception
 	 */
 	public function getTitle ()
 	{
@@ -220,18 +220,20 @@ class SeoData extends BaseObject
 		return $this->_renderedTitle = $this->_render(
 			$this->_titleTemplate,
 			$this->_elementToArray()
-		);
+		);;
 	}
 
 	/**
 	 * @return array
 	 * @throws \Throwable
-	 * @throws \yii\base\Exception
 	 */
 	public function getTitleAsTokens ()
 	{
-		if ($this->_element === null || $this->_handle === null)
-			return [];
+		if (
+			$this->_element === null
+			|| $this->_handle === null
+			|| !\Craft::$app->request->isCpRequest
+		) return [];
 
 		$template = $this->_getSetting('title');
 		$elementArray = $this->_elementToArray();
@@ -239,11 +241,13 @@ class SeoData extends BaseObject
 		$tokens = [];
 
 		foreach ($template as $token)
-			if ($token['locked'])
-				$tokens[$token['key']] = $this->_render(
-					$token['template'],
-					$elementArray
-				);
+		{
+			$tokens[$token['key']] = $this->_render(
+				$token['template'],
+				$elementArray
+			);
+		}
+
 
 		return $tokens;
 	}
@@ -290,18 +294,16 @@ class SeoData extends BaseObject
 
 	private function _elementToArray ()
 	{
-		// Remove this field from the fields passed to the renderer
-		$fields = array_keys(
-			array_merge(
-				$this->_element->fields(),
-				$this->_element->extraFields()
-			)
-		);
-		if (($key = array_search($this->_handle, $fields)) !== false)
-			unset($fields[$key]);
+		$variables = [];
 
-		// Convert to array
-		return $this->_element->toArray($fields);
+		foreach ($this->_element->attributes() as $name)
+			if ($name !== $this->_handle)
+				$variables[$name] = $this->_element->$name;
+
+		return array_merge(
+			$variables,
+			$this->_element->toArray($this->_element->extraFields())
+		);
 	}
 
 	/**
@@ -310,34 +312,37 @@ class SeoData extends BaseObject
 	 *
 	 * @return string
 	 * @throws \Throwable
-	 * @throws \yii\base\Exception
 	 */
 	private function _render ($template, $variables)
 	{
 		$craft = \Craft::$app;
 
-		// If this is a CP request, render the title as if it was the frontend
-		if ($craft->request->isCpRequest)
-		{
-			$site   = $craft->sites->currentSite;
-			$tpMode = $craft->view->templateMode;
-			$craft->sites->setCurrentSite($this->_element->site);
-			$craft->view->setTemplateMode(View::TEMPLATE_MODE_SITE);
+		try {
+			// If this is a CP request, render the title as if it was the frontend
+			if ($craft->request->isCpRequest)
+			{
+				$site   = $craft->sites->currentSite;
+				$tpMode = $craft->view->templateMode;
+				$craft->sites->setCurrentSite($this->_element->site);
+				$craft->view->setTemplateMode(View::TEMPLATE_MODE_SITE);
 
-			$ret = \Craft::$app->view->renderObjectTemplate(
-				$template,
-				$variables
-			);
+				$ret = \Craft::$app->view->renderObjectTemplate(
+					$template,
+					$variables
+				);
 
-			$craft->sites->setCurrentSite($site);
-			$craft->view->setTemplateMode($tpMode);
-		}
-		else
-		{
-			$ret = \Craft::$app->view->renderObjectTemplate(
-				$template,
-				$variables
-			);
+				$craft->sites->setCurrentSite($site);
+				$craft->view->setTemplateMode($tpMode);
+			}
+			else
+			{
+				$ret = \Craft::$app->view->renderObjectTemplate(
+					$template,
+					$variables
+				);
+			}
+		} catch (\Exception $e) {
+			$ret = 'ERROR: ' . $e->getMessage();
 		}
 
 		return $ret;

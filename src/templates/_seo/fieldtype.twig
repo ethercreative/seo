@@ -100,14 +100,18 @@
 						{% for t in titleTemplate %}
 							{% set v = value.titleRaw[t.key] ?? value.titleAsTokens[t.key] ?? t.template %}
 							{% if t.locked %}
-								<span class="seo--snippet-title-locked">
+								<span class="seo--snippet-title-locked" data-key="{{ t.key }}">
 									{{- v -}}
 								</span>
 							{% else %}
-								<span class="seo--snippet-title-editable" contenteditable="true">
+								<span class="seo--snippet-title-editable" contenteditable="true" data-key="{{ t.key }}">
 									{{- v -}}
 								</span>
-								{#<input name="{{ name }}[titleRaw][{{ t.key }}]" />#}
+								<input
+									type="hidden"
+									name="{{ name }}[titleRaw][{{ t.key }}]"
+									value="{{ v }}"
+								/>
 							{% endif %}
 						{% endfor %}
 					</div>

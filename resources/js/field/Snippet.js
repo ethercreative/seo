@@ -38,9 +38,6 @@ export default class Snippet {
 	/**
 	 * Sync up the main title input with the SEO one
 	 * (if it's a new entry, or we don't have a title)
-	 *
-	 * TODO: Alert the user if they change the main title, but not the SEO one
-	 * TODO: If the SEO title matches the main title (sans suffix), keep syncing
 	 */
 	title () {
 		const editables = this.titleField.getElementsByClassName("seo--snippet-title-editable");
@@ -145,12 +142,17 @@ export default class Snippet {
 		mutations.forEach(mutation => {
 			let target = mutation.target;
 
-			if (target.nodeName === "#text")
-				return;
+			if (target.nodeName !== "#text") {
+				const sel = Snippet._getSelection(target);
+				target.innerHTML = target.textContent;
+				Snippet._restoreSelection(target, sel);
+			}
 
-			const sel = Snippet._getSelection(target);
-			target.innerHTML = target.textContent;
-			Snippet._restoreSelection(target, sel);
+			while (target.nodeName === "#text")
+				target = target.parentNode;
+
+			target.nextElementSibling.value = target.textContent;
+
 			this.titleObserver.takeRecords();
 		});
 	};
@@ -160,9 +162,17 @@ export default class Snippet {
 		this.formObserver.takeRecords();
 
 		const tokens = await this._renderTokens();
+		const titleTokens = this.titleField.children;
+		for (let i = 0, l = titleTokens.length; i < l; ++i) {
+			const el = titleTokens[i];
+			const key = el.dataset.key;
 
-		// TODO: populate locked or empty tokens
-		console.log(tokens);
+			if (!tokens.hasOwnProperty(key))
+				continue;
+
+			if (~el.className.indexOf("locked") || el.textContent.trim() === "")
+				el.textContent = tokens[key];
+		}
 
 		this._observeMainForm();
 	};
