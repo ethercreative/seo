@@ -300,8 +300,9 @@ class SitemapService extends Component
 				continue;
 
 			if ($seoFieldHandle !== null) {
+				/** @var SeoData $seoField */
 				$seoField = $item->$seoFieldHandle;
-				if ($robots = $seoField['advanced']['robots'])
+				if ($robots = $seoField->advanced['robots'])
 					if (in_array('noindex', $robots))
 						continue;
 			}
