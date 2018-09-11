@@ -1,4 +1,12 @@
 ## [Unreleased] 3.5.0
+### Changed
+- The SEO field now uses a token-based system for the title, allowing for only 
+certain parts of the title to be editable and adding twig support for pre-filling 
+from fields!
+- The SEO field description can now be pre-filled using twig.
+
+### Fixed
+- SEO meta now correctly renders across multi-sites and locales. 
 
 ## 3.4.4 - 2018-09-10
 ### Fixed

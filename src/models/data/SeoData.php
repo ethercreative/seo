@@ -37,8 +37,7 @@ class SeoData extends BaseObject
 	/** @var array|string */
 	public $titleRaw = [];
 
-	/** @var string */
-	public $description = '';
+	public $descriptionRaw = '';
 
 	/** @var array */
 	public $keywords = [];
@@ -78,6 +77,12 @@ class SeoData extends BaseObject
 	/** @var string */
 	private $_renderedTitle;
 
+	/** @var string */
+	private $_descriptionTemplate = '';
+
+	/** @var string */
+	private $_renderedDescription;
+
 	// Constructor
 	// =========================================================================
 
@@ -105,6 +110,13 @@ class SeoData extends BaseObject
 
 			$config['titleRaw'] = $title;
 			unset($config['title']);
+		}
+
+		// Backwards compatibility for descriptions in SEO v3.4.x or lower
+		if (isset($config['description']))
+		{
+			$config['descriptionRaw'] = $config['description'];
+			unset($config['description']);
 		}
 
 		// Backwards compatibility for Keywords in SEO v1 / Craft v2
@@ -175,6 +187,14 @@ class SeoData extends BaseObject
 			);
 		}
 
+		// Description
+		// ---------------------------------------------------------------------
+
+		if (!empty($this->descriptionRaw))
+			$this->_renderedDescription = $this->descriptionRaw;
+
+		$this->_descriptionTemplate = $this->_getSetting('description');
+
 		// Keywords
 		// ---------------------------------------------------------------------
 
@@ -220,7 +240,7 @@ class SeoData extends BaseObject
 		return $this->_renderedTitle = $this->_render(
 			$this->_titleTemplate,
 			$this->_elementToArray()
-		);;
+		);
 	}
 
 	/**
@@ -250,6 +270,24 @@ class SeoData extends BaseObject
 
 
 		return $tokens;
+	}
+
+	/**
+	 * @return string
+	 * @throws \Throwable
+	 */
+	public function getDescription ()
+	{
+		if ($this->_renderedDescription)
+			return $this->_renderedDescription;
+
+		if ($this->_element === null || $this->_handle === null)
+			return '';
+
+		return $this->_renderedDescription = $this->_render(
+			$this->_descriptionTemplate,
+			$this->_elementToArray()
+		);
 	}
 
 	// Helpers

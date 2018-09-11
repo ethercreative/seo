@@ -29,6 +29,7 @@ class SeoField extends Field implements PreviewableFieldInterface
 		'suffixAsPrefix' => false,
 
 		'title' => [],
+		'description' => '',
 
 		'socialImage' => null,
 		'hideSocial' => false,
@@ -52,6 +53,9 @@ class SeoField extends Field implements PreviewableFieldInterface
 
 	/** @var array */
 	public $title;
+
+	/** @var string */
+	public $description;
 
 	/** @var mixed */
 	public $socialImage;

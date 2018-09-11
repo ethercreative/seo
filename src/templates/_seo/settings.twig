@@ -1,17 +1,6 @@
 {% import "_includes/forms" as forms %}
 {% set default = default is defined ? default : false %}
 
-{#{{ forms.textField({
-	label: (default ? 'Default ') ~ 'Title Suffix',
-	instructions: 'A string appended, after a space, to the page title. This can be removed on a per-entry basis.',
-	name: 'titleSuffix',
-	id: 'titleSuffix',
-	value: settings.titleSuffix is defined and settings.titleSuffix != ""
-		? settings.titleSuffix
-		: globalSettings is defined
-			? globalSettings.titleSuffix,
-}) }}#}
-
 {% set seoMeta %}
 	<div class="seo--meta">
 		{% set seoTitle %}
@@ -129,25 +118,22 @@
 		{% endset %}
 		{{ forms.field({
 			label: 'Page Title',
-			instructions: 'Create a token for each part of your title. Clicking the lock will prevent the user from editing the contents of that token. Tokens use the same syntax has [Dynamic Entry Titles](https://docs.craftcms.com/v3/sections-and-entries.html#entry-types).',
+			instructions: 'Create a token for each part of your title. Clicking the lock will prevent the user from editing the contents of that token. Tokens use the same syntax as [Dynamic Entry Titles](https://docs.craftcms.com/v3/sections-and-entries.html#dynamic-entry-titles).',
 		}, seoTitle) }}
+
+		{{ forms.textareaField({
+			label: 'Page Description',
+			instructions: 'This supports the same syntax as [Dynamic Entry Titles](https://docs.craftcms.com/v3/sections-and-entries.html#dynamic-entry-titles).',
+			id: 'description',
+			name: 'description',
+			value: settings.description is empty and globalSettings.description is defined ? globalSettings.description : settings.description
+		}) }}
 	</div>
 {% endset %}
 {{ forms.field({
 	label: 'Page Meta',
 	instructions: 'Decide how the page meta should look for this field',
 }, seoMeta) }}
-
-{# Only show this option on a per-field basis, not globally #}
-{% if globalSettings is defined %}
-	{{ forms.lightswitchField({
-		label: 'Use suffix as prefix',
-		instructions: 'If you\'ve got one of *those* clients who want the site name to come before the page title, switching this on will do that.',
-		name: 'suffixAsPrefix',
-		id: 'suffixAsPrefix',
-		on: settings.suffixAsPrefix,
-	}) }}
-{% endif %}
 
 {% if volumes %}
 	{{ forms.elementSelectField({

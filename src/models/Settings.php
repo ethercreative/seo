@@ -42,6 +42,9 @@ class Settings extends Model
 		]
 	];
 
+	/** @var string */
+	public $description;
+
 	/** @var array */
 	public $socialImage;
 
