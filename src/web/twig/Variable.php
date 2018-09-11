@@ -1,6 +1,6 @@
 <?php
 
-namespace ether\seo;
+namespace ether\seo\web\twig;
 
 use craft\elements\Asset;
 use craft\helpers\Template;

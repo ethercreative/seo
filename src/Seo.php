@@ -22,6 +22,7 @@ use ether\seo\services\RedirectsService;
 use ether\seo\services\SeoService;
 use ether\seo\services\SitemapService;
 use ether\seo\web\twig\Extension;
+use ether\seo\web\twig\Variable;
 use yii\base\Event;
 
 /**
