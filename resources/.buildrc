@@ -7,9 +7,9 @@
 			"less/settings.less"
 		],
 		"output": [
-			"../src/resources/css/seo.css",
-			"../src/resources/css/redirects.css",
-			"../src/resources/css/settings.css"
+			"../src/web/assets/css/seo.css",
+			"../src/web/assets/css/redirects.css",
+			"../src/web/assets/css/settings.css"
 		],
 		"watch": [
 			"less/**/*"
@@ -23,9 +23,9 @@
 			"js/SeoFieldSettings.js"
 		],
 		"output": [
-			"../src/resources/js/SeoField.min.js",
-			"../src/resources/js/SeoSettings.min.js",
-			"../src/resources/js/SeoFieldSettings.min.js"
+			"../src/web/assets/js/SeoField.min.js",
+			"../src/web/assets/js/SeoSettings.min.js",
+			"../src/web/assets/js/SeoFieldSettings.min.js"
 		],
 		"watch": [
 			"js/**/*.js",

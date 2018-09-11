@@ -3,8 +3,8 @@
 namespace ether\seo\controllers;
 
 use craft\web\Controller;
-use ether\seo\resources\RedirectsAssets;
 use ether\seo\Seo;
+use ether\seo\web\assets\RedirectsAsset;
 use yii\web\HttpException;
 
 class RedirectsController extends Controller
@@ -24,7 +24,7 @@ class RedirectsController extends Controller
 		$csrfn = \Craft::$app->config->general->csrfTokenName;
 		$csrf  = \Craft::$app->request->csrfToken;
 
-		$this->view->registerAssetBundle(RedirectsAssets::class);
+		$this->view->registerAssetBundle(RedirectsAsset::class);
 		$this->view->registerJs(
 			"new SeoSettings('{$namespace}', 'redirects', ['{$csrfn}', '{$csrf}']);"
 		);

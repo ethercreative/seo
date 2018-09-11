@@ -3,8 +3,8 @@
 namespace ether\seo\controllers;
 
 use craft\web\Controller;
-use ether\seo\resources\SeoSettingsAsset;
 use ether\seo\Seo;
+use ether\seo\web\assets\SeoSettingsAsset;
 use yii\web\HttpException;
 
 class SitemapController extends Controller

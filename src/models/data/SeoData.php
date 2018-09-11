@@ -21,6 +21,7 @@ use yii\base\BaseObject;
  * Class SeoData
  *
  * @property string|array $title
+ * @property string       $description
  *
  * @author  Ether Creative
  * @package ether\seo\models\data

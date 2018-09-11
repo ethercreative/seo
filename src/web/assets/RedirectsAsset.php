@@ -1,16 +1,16 @@
 <?php
 
-namespace ether\seo\resources;
+namespace ether\seo\web\assets;
 
 use craft\web\AssetBundle;
 use craft\web\assets\cp\CpAsset;
 
-class RedirectsAssets extends AssetBundle
+class RedirectsAsset extends AssetBundle
 {
 
 	public function init ()
 	{
-		$this->sourcePath = '@ether/seo/resources';
+		$this->sourcePath = __DIR__;
 
 		$this->depends = [
 			CpAsset::class,

@@ -9,9 +9,9 @@ use craft\elements\Entry;
 use craft\helpers\Json;
 use craft\models\Section;
 use ether\seo\models\data\SeoData;
-use ether\seo\resources\SeoFieldAssets;
-use ether\seo\resources\SeoFieldSettingsAsset;
 use ether\seo\Seo;
+use ether\seo\web\assets\SeoFieldAsset;
+use ether\seo\web\assets\SeoFieldSettingsAsset;
 use yii\base\InvalidConfigException;
 use yii\db\Schema;
 
@@ -202,7 +202,7 @@ class SeoField extends Field implements PreviewableFieldInterface
 			'renderData'
 		));
 
-		$craft->view->registerAssetBundle(SeoFieldAssets::class);
+		$craft->view->registerAssetBundle(SeoFieldAsset::class);
 		$craft->view->registerJs(
 			"new SeoField('{$namespaceId}', {$seoOptions})"
 		);

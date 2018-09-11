@@ -1,15 +1,15 @@
 <?php
 
-namespace ether\seo\resources;
+namespace ether\seo\web\assets;
 
 use craft\web\AssetBundle;
 
-class SeoFieldAssets extends AssetBundle
+class SeoFieldAsset extends AssetBundle
 {
 
 	public function init ()
 	{
-		$this->sourcePath = '@ether/seo/resources';
+		$this->sourcePath = __DIR__;
 
 		$this->js = [
 			'js/SeoField.min.js',

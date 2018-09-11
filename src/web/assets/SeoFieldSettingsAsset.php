@@ -6,7 +6,7 @@
  * @copyright Copyright (c) 2018 Ether Creative
  */
 
-namespace ether\seo\resources;
+namespace ether\seo\web\assets;
 
 use craft\web\AssetBundle;
 
@@ -22,7 +22,7 @@ class SeoFieldSettingsAsset extends AssetBundle
 
 	public function init ()
 	{
-		$this->sourcePath = '@ether/seo/resources';
+		$this->sourcePath = __DIR__;
 
 		$this->js = [
 			'js/SeoFieldSettings.min.js',

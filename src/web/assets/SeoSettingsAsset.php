@@ -1,6 +1,6 @@
 <?php
 
-namespace ether\seo\resources;
+namespace ether\seo\web\assets;
 
 use craft\web\AssetBundle;
 
@@ -9,7 +9,7 @@ class SeoSettingsAsset extends AssetBundle
 
 	public function init ()
 	{
-		$this->sourcePath = '@ether/seo/resources';
+		$this->sourcePath = __DIR__;
 
 		$this->js = [
 			'js/SeoSettings.min.js',
