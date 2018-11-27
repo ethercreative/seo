@@ -28,6 +28,7 @@ volumes with public URLs [#115]
 ### Fixed
 - Fixed a bug when saving a new element with an SEO field.
 
+
 ## 3.4.1 - 2018-09-06
 ### Fixed
 - Fixed a bug when adding a redirect to all sites.
