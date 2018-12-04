@@ -192,6 +192,7 @@ class SeoField extends Field implements PreviewableFieldInterface
 		$renderData = [
 			'elementType' => get_class($element),
 			'elementId' => $element->id,
+			'typeId' => $element->typeId,
 			'siteId' => $element->siteId,
 			'seoHandle' => $this->handle,
 		];

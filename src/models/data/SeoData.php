@@ -356,6 +356,9 @@ class SeoData extends BaseObject
 	{
 		$craft = \Craft::$app;
 
+		if ($template === null)
+			return '';
+
 		try {
 			// If this is a CP request, render the title as if it was the frontend
 			if ($craft->request->isCpRequest)

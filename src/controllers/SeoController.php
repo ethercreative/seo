@@ -35,6 +35,7 @@ class SeoController extends Controller
 	/**
 	 * @throws \yii\web\BadRequestHttpException
 	 * @throws \yii\base\InvalidConfigException
+	 * @throws \Exception
 	 */
 	public function actionRenderData ()
 	{
@@ -42,7 +43,7 @@ class SeoController extends Controller
 		$craft = \Craft::$app;
 
 		$elementType = $craft->request->getBodyParam('elementType');
-		$elementId   = $craft->request->getBodyParam('elementId');
+		$elementId   = $craft->request->getBodyParam('elementId', null);
 		$siteId      = $craft->request->getBodyParam('siteId');
 		$seoHandle   = $craft->request->getBodyParam('seoHandle');
 
@@ -69,6 +70,9 @@ class SeoController extends Controller
 		$element->setFieldValuesFromRequest(
 			$craft->request->getParam('fieldsLocation', 'fields')
 		);
+
+		$element->postDate = new \DateTime();
+		$element->expiryDate = new \DateTime();
 
 		return $this->asJson($element->$seoHandle->titleAsTokens);
 	}

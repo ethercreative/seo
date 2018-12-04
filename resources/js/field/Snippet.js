@@ -13,7 +13,7 @@
 import { debounce } from "../helpers";
 
 export default class Snippet {
-	
+
 	constructor (namespace, SEO) {
 		this.namespace = namespace;
 		this.SEO = SEO;
@@ -143,9 +143,13 @@ export default class Snippet {
 			let target = mutation.target;
 
 			if (target.nodeName !== "#text") {
-				const sel = Snippet._getSelection(target);
-				target.innerHTML = target.textContent;
-				Snippet._restoreSelection(target, sel);
+				if (document.activeElement === target) {
+					const sel = Snippet._getSelection(target);
+					target.innerHTML = target.textContent;
+					Snippet._restoreSelection(target, sel);
+				} else {
+					target.innerHTML = target.textContent;
+				}
 			}
 
 			while (target.nodeName === "#text")
@@ -170,8 +174,10 @@ export default class Snippet {
 			if (!tokens.hasOwnProperty(key))
 				continue;
 
-			if (~el.className.indexOf("locked") || el.textContent.trim() === "")
-				el.textContent = tokens[key];
+			if (
+				~el.className.indexOf("locked")
+				|| el.textContent.trim() === ""
+			) el.textContent = tokens[key];
 		}
 
 		this._observeMainForm();
