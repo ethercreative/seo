@@ -213,7 +213,7 @@ class SeoData extends BaseObject
 				$this->social[$key] = new SocialData($key, $fallback);
 			elseif (is_array($value))
 				// FIXME
-				$this->social[$key] = new SocialData($key, $fallback/*, $value*/);
+				$this->social[$key] = new SocialData($key, $fallback, $value);
 		}
 
 		// Robots

@@ -152,7 +152,7 @@ export default class Snippet {
 				}
 			}
 
-			while (target.nodeName === "#text")
+			while (target !== null && target.nodeName === "#text")
 				target = target.parentNode;
 
 			target.nextElementSibling.value = target.textContent;
