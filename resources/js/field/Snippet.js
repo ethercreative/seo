@@ -14,6 +14,11 @@ import { debounce } from "../helpers";
 
 export default class Snippet {
 
+	// Properties
+	// =========================================================================
+
+	_dirtyTokens = {};
+
 	constructor (namespace, SEO) {
 		this.namespace = namespace;
 		this.SEO = SEO;
@@ -34,22 +39,31 @@ export default class Snippet {
 		this.slugField && SEO.options.hasPreview && this.slug();
 		this.desc();
 	}
+
+	// Initializers
+	// =========================================================================
 	
 	/**
 	 * Sync up the main title input with the SEO one
 	 * (if it's a new entry, or we don't have a title)
 	 */
-	title () {
-		const editables = this.titleField.getElementsByClassName("seo--snippet-title-editable");
-
+	async title () {
 		this.titleObserver = new MutationObserver(this.onTitleEditableMutation);
+		this._observeTitleEditables();
 
-		for (let i = 0, l = editables.length; i < l; ++i) {
-			this.titleObserver.observe(editables[i], {
-				childList: true,
-				characterData: true,
-				subtree: true,
-			});
+		const tokens = await this._renderTokens();
+		const titleTokens = this.titleField.children;
+		for (let i = 0, l = titleTokens.length; i < l; ++i) {
+			const el = titleTokens[i];
+			const key = el.dataset.key;
+
+			if (!tokens.hasOwnProperty(key))
+				continue;
+
+			this._dirtyTokens[key] = (
+				el.textContent.trim() !== "" &&
+				el.textContent !== tokens[key]
+			);
 		}
 
 		this.formObserver = new MutationObserver(debounce(this.onAnyChange, 500));
@@ -155,13 +169,24 @@ export default class Snippet {
 			while (target !== null && target.nodeName === "#text")
 				target = target.parentNode;
 
-			target.nextElementSibling.value = target.textContent;
-
+			this.titleObserver.disconnect();
 			this.titleObserver.takeRecords();
+
+			if (target !== null) {
+				const key = target.dataset.key;
+				this._dirtyTokens[key] = target.textContent.trim() !== '';
+
+				target.nextElementSibling.value = target.textContent;
+			}
+
+			this._observeTitleEditables();
 		});
 	};
 
 	onAnyChange = async () => {
+		this.titleObserver.disconnect();
+		this.titleObserver.takeRecords();
+
 		this.formObserver.disconnect();
 		this.formObserver.takeRecords();
 
@@ -177,9 +202,11 @@ export default class Snippet {
 			if (
 				~el.className.indexOf("locked")
 				|| el.textContent.trim() === ""
+				|| !this._dirtyTokens[key]
 			) el.textContent = tokens[key];
 		}
 
+		this._observeTitleEditables();
 		this._observeMainForm();
 	};
 
@@ -270,6 +297,18 @@ export default class Snippet {
 				...fields,
 			}, resolve);
 		});
+	}
+
+	_observeTitleEditables () {
+		const editables = this.titleField.getElementsByClassName("seo--snippet-title-editable");
+
+		for (let i = 0, l = editables.length; i < l; ++i) {
+			this.titleObserver.observe(editables[i], {
+				childList: true,
+				characterData: true,
+				subtree: true,
+			});
+		}
 	}
 
 	_observeMainForm () {
