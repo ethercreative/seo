@@ -169,7 +169,7 @@ class SeoData extends BaseObject
 		// ---------------------------------------------------------------------
 
 		$twig     = \Craft::$app->view->twig;
-		$title    = $this->titleRaw;
+		$title    = array_filter($this->titleRaw);
 		$template = $this->_getSetting('title');
 
 		if (is_string($title)) $this->_titleTemplate = $title;
@@ -268,7 +268,6 @@ class SeoData extends BaseObject
 				$elementArray
 			);
 		}
-
 
 		return $tokens;
 	}

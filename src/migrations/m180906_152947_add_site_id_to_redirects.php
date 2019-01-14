@@ -2,7 +2,6 @@
 
 namespace ether\seo\migrations;
 
-use Craft;
 use craft\db\Migration;
 use ether\seo\records\RedirectRecord;
 
