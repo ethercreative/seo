@@ -10,8 +10,8 @@ namespace ether\seo\migrations;
 
 use craft\db\Migration;
 use craft\db\Query;
-use craft\queue\jobs\ResaveElements;
 use ether\seo\fields\SeoField;
+use ether\seo\jobs\UpgradeSeoDataJob;
 
 /**
  * Class m190114_152300_upgrade_to_new_data_format
@@ -32,6 +32,7 @@ class m190114_152300_upgrade_to_new_data_format extends Migration
 		$fields = array_map(function ($field) use ($craft) {
 			return $craft->fields->createField($field);
 		}, $fields);
+		$suffixesByFieldHandle = [];
 
 		$siteName = $craft->sites->primarySite->name;
 
@@ -57,6 +58,8 @@ class m190114_152300_upgrade_to_new_data_format extends Migration
 				]
 			];
 
+			$suffixesByFieldHandle[$field->handle] = ' ' . $field->titleSuffix;
+
 			// '[{title}] [- Current Prefix]' (or flipped if suffixAsPrefix is true)
 			if ($field->suffixAsPrefix)
 			{
@@ -64,6 +67,8 @@ class m190114_152300_upgrade_to_new_data_format extends Migration
 				$field->title[0]['key'] = '1';
 				$field->title[1]['key'] = '2';
 				$field->title[1]['template'] = $suffix . ' ';
+
+				$suffixesByFieldHandle[$field->handle] = $field->titleSuffix . ' ';
 			}
 
 			$craft->fields->saveField($field);
@@ -72,13 +77,15 @@ class m190114_152300_upgrade_to_new_data_format extends Migration
 		// 2. Queue re-save of all elements that have an SEO field
 		$layouts = $this->_getAllElementTypesAndIdsThatHaveSEOFields();
 
-		foreach ($layouts as $type => $ids)
+		foreach ($layouts as $type => $data)
 		{
-			$craft->queue->push(new ResaveElements([
+			$craft->queue->push(new UpgradeSeoDataJob([
 				'elementType' => $type,
 				'criteria' => [
-					'id' => $ids
+					'id' => $data['ids']
 				],
+				'handle' => $data['handle'],
+				'suffix' => $suffixesByFieldHandle[$data['handle']],
 			]));
 		}
 	}
@@ -119,7 +126,7 @@ class m190114_152300_upgrade_to_new_data_format extends Migration
 	private function _getAllElementTypesAndIdsThatHaveSEOFields ()
 	{
 		$results = (new Query())
-			->select(['el.type', 'el.id'])
+			->select(['el.type', 'el.id', 'fields.handle'])
 			->from(['{{%fields}} fields'])
 			->innerJoin(
 				'{{%fieldlayoutfields}} flf',
@@ -138,9 +145,12 @@ class m190114_152300_upgrade_to_new_data_format extends Migration
 
 		return array_reduce($results, function ($a, $b) {
 			if (!array_key_exists($b['type'], $a))
-				$a[$b['type']] = [];
+				$a[$b['type']] = [
+					'ids' => [],
+					'handle' => $b['handle'],
+				];
 
-			$a[$b['type']][] = $b['id'];
+			$a[$b['type']]['ids'][] = $b['id'];
 
 			return $a;
 		}, []);

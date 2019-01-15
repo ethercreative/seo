@@ -108,7 +108,7 @@ class SeoData extends BaseObject
 			{
 				foreach ($template as $index => $tmpl)
 				{
-					if ($tmpl['locked'] !== '0')
+					if ($tmpl['locked'] != false && $tmpl['locked'] !== '0')
 						continue;
 
 					$title = [$template[$index]['key'] => $title];
