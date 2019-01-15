@@ -105,9 +105,16 @@ class SeoData extends BaseObject
 
 			// Find the first unlocked token
 			if (is_string($title) && !empty($template))
+			{
 				foreach ($template as $index => $tmpl)
-					if ($tmpl['locked'] === '0')
-						$title = [$template[$index]['key'] => $title];
+				{
+					if ($tmpl['locked'] !== '0')
+						continue;
+
+					$title = [$template[$index]['key'] => $title];
+					break;
+				}
+			}
 
 			$config['titleRaw'] = $title;
 			unset($config['title']);
