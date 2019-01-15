@@ -1,3 +1,5 @@
+/* global Garnish, $ */
+
 /**
  * SEO Settings
  *
@@ -19,6 +21,8 @@ class SeoFieldSettings {
 	tokenList = null;
 	tokenTemplate = null;
 
+	tokenSort = null;
+
 	constructor (namespace) {
 		this.namespace = namespace;
 		if (namespace.substr(-1) !== "-")
@@ -34,11 +38,15 @@ class SeoFieldSettings {
 		this.tokenList = this.getElementById("seoMetaTitle");
 		this.tokenTemplate = this.getElementById("seoMetaToken").content;
 
+		this.initSorting();
+
 		const existingTokens =
 			this.tokenList.querySelectorAll("li:not([data-static])");
 		let i = existingTokens.length;
 		if (i > 0) while (i--)
 			this.setupToken(existingTokens[i]);
+
+		this.tokenSort.addItems($(existingTokens));
 
 		window.addEventListener("focus", this.onFocusChange, true);
 		window.addEventListener("blur", this.onFocusChange, true);
@@ -47,6 +55,19 @@ class SeoFieldSettings {
 			"click",
 			this.onAddClick
 		);
+	}
+
+	initSorting () {
+		this.tokenSort = new Garnish.DragSort({
+			container: this.tokenList,
+			filter: null,
+			ignoreHandleSelector: 'input[data-template]',
+			axis: null,
+			collapseDraggees: true,
+			magnetStrength: 4,
+			helperLagBase: 1.5,
+			onSortChange: this.onSortChange,
+		});
 	}
 
 	setupToken (token) {
@@ -73,16 +94,16 @@ class SeoFieldSettings {
 
 	onFocusChange = () => {
 		if (this.tokenList.contains(document.activeElement))
-			this.tokenList.classList.add("focus");
+			this.tokenList.parentNode.classList.add("focus");
 		else
-			this.tokenList.classList.remove("focus");
+			this.tokenList.parentNode.classList.remove("focus");
 	};
 
 	onAddClick = e => {
 		e.preventDefault();
 		const li = document.importNode(this.tokenTemplate, true);
 		const indexReplace = li.querySelectorAll("[name*='__LOOP_INDEX__']")
-			, index = this.tokenList.children.length - 1;
+			, index = this.tokenList.children.length;
 
 		let i = indexReplace.length,
 			t = null;
@@ -102,7 +123,8 @@ class SeoFieldSettings {
 		}
 
 		this.setupToken(li);
-		this.tokenList.insertBefore(li, this.tokenList.lastElementChild);
+		this.tokenList.appendChild(li);
+		this.tokenSort.addItems($(li));
 		t.focus();
 	};
 
@@ -133,12 +155,16 @@ class SeoFieldSettings {
 		this.reIndexTokens();
 	};
 
+	onSortChange = () => {
+		this.reIndexTokens();
+	};
+
 	// Helpers
 	// =========================================================================
 
 	reIndexTokens () {
 		const tokens = this.tokenList.children;
-		let i = tokens.length - 1;
+		let i = tokens.length;
 		if (i > 0) while (i--) {
 			const token = tokens[i]
 				, rpl = SeoFieldSettings.replaceKey.bind(this, i);

@@ -54,12 +54,12 @@
 			box-shadow: 0 2px 7px 0 #E9E8F9;
 		}
 
-		li {
+		&-token {
 			display: inline-block;
 			margin-bottom: 3px;
 		}
 
-		li:not([data-static]) {
+		&-token:not([data-static]) {
 			display: inline-flex;
 			align-items: stretch;
 			max-width: 100%;
@@ -134,28 +134,27 @@
 			}
 		}
 
-		li[data-static] {
-			button {
-				display: flex;
-				align-items: center;
-				padding: 7px 30px;
+		> button {
+			display: flex;
+			align-items: center;
+			height: 32px;
+			padding: 6px 30px;
 
-				color: #302998;
-				font-size: 14px;
-				font-family: 'Source Code Pro', monospace;
-				letter-spacing: 0;
+			color: #302998;
+			font-size: 14px;
+			font-family: 'Source Code Pro', monospace;
+			letter-spacing: 0;
 
-				appearance: none;
-				background: none;
-				border: 1px dashed #B7B2FF;
-				border-radius: 2px;
-				cursor: pointer;
+			appearance: none;
+			background: none;
+			border: 1px dashed #B7B2FF;
+			border-radius: 2px;
+			cursor: pointer;
 
-				transition: border-color 0.15s ease;
+			transition: border-color 0.15s ease;
 
-				&:hover {
-					border-color: fade(#302998, 50%);
-				}
+			&:hover {
+				border-color: fade(#302998, 50%);
 			}
 		}
 	}
