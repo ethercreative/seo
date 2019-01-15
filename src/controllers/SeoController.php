@@ -2,6 +2,7 @@
 
 namespace ether\seo\controllers;
 
+use craft\helpers\DateTimeHelper;
 use craft\web\Controller;
 use ether\seo\Seo;
 
@@ -64,15 +65,19 @@ class SeoController extends Controller
 		// Populate the data
 		$body = $craft->request->getBodyParams();
 		foreach ($body as $prop => $value)
-			if (property_exists($element, $prop))
+		{
+			if (!property_exists($element, $prop))
+				continue;
+
+			if (in_array($prop, ['postDate', 'expiryDate']))
+				$element->$prop = DateTimeHelper::toDateTime($value);
+			else
 				$element->$prop = $value;
+		}
 
 		$element->setFieldValuesFromRequest(
 			$craft->request->getParam('fieldsLocation', 'fields')
 		);
-
-		$element->postDate = new \DateTime();
-		$element->expiryDate = new \DateTime();
 
 		return $this->asJson($element->$seoHandle->titleAsTokens);
 	}
