@@ -9,6 +9,7 @@ changes [here](https://github.com/ethercreative/seo/commits/v3/src/templates/_se
 
 ### Added
 - Advanced option for overriding the canonical URL.
+- Added `rel="canonical"` header
 
 ### Changed
 - The SEO field now uses a token-based system for the title, allowing for only 
@@ -27,6 +28,7 @@ cached sites!
 ### Improved
 - The social image "no volume" warning now explicitly states the need for 
 volumes with public URLs [#115]
+- Better handling of robots header.
 
 [#115]: https://github.com/ethercreative/seo/issues/115
 [#143]: https://github.com/ethercreative/seo/issues/143

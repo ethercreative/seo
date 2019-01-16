@@ -295,6 +295,7 @@ class Seo extends Plugin
 	public function onAfterRequest ()
 	{
 		$this->seo->injectRobots();
+		$this->seo->injectCanonical();
 	}
 
 	/**

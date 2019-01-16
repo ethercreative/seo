@@ -313,10 +313,13 @@ class SeoData extends BaseObject
 	 */
 	public function getRobots ()
 	{
+		if (\Craft::$app->config->general->devMode)
+			return 'none, noimageindex';
+
 		if (!empty($this->advanced['robots']))
 			return implode(', ', $this->advanced['robots']);
 
-		return 'none';
+		return null;
 	}
 
 	/**
