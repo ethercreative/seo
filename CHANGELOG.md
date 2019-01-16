@@ -19,6 +19,7 @@ cached sites!
 - SEO meta now correctly renders across multi-sites and locales.
 - Fixed keyword checklist compatibility issue in Craft 3.1.
 - Locale - replace w/ _ [#143]
+- Fixed incorrect og:site_name [#139]
 
 ### Improved
 - The social image "no volume" warning now explicitly states the need for 
@@ -26,6 +27,7 @@ volumes with public URLs [#115]
 
 [#115]: https://github.com/ethercreative/seo/issues/115
 [#143]: https://github.com/ethercreative/seo/issues/143
+[#139]: https://github.com/ethercreative/seo/issues/139
 
 ## 3.4.4 - 2018-09-10
 ### Fixed
