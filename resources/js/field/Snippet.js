@@ -18,6 +18,7 @@ export default class Snippet {
 	// =========================================================================
 
 	_dirtyTokens = {};
+	_observedInputs = [];
 
 	constructor (namespace, SEO) {
 		this.namespace = namespace;
@@ -70,6 +71,7 @@ export default class Snippet {
 
 		this.formObserver = new MutationObserver(debounce(this.onAnyChange, 500));
 		this._observeMainForm();
+		this._observeAllInputs();
 	}
 	
 	/**
@@ -187,23 +189,24 @@ export default class Snippet {
 
 	onAnyChange = async (records) => {
 		// Skip if all changes occurred within an SEO field
-
 		let skip = true;
 
 		recordLoop:
-		for (let i = 0, l = records.length; i < l; ++i) {
-			for (let x = 0; x < this.seoFieldCount; ++x)
-				if (this.seoFields[x].contains(records[i].target))
-					continue recordLoop;
+			for (let i = 0, l = records.length; i < l; ++i) {
+				for (let x = 0; x < this.seoFieldCount; ++x)
+					if (this.seoFields[x].contains(records[i].target))
+						continue recordLoop;
 
-			skip = false;
-			break;
-		}
+				skip = false;
+				break;
+			}
 
 		if (skip)
 			return;
 
 		// Re-render tokens
+
+		this._unObserveAllInputs();
 
 		this.titleObserver.disconnect();
 		this.titleObserver.takeRecords();
@@ -229,6 +232,7 @@ export default class Snippet {
 
 		this._observeTitleEditables();
 		this._observeMainForm();
+		this._observeAllInputs();
 	};
 
 	// Helpers
@@ -340,7 +344,31 @@ export default class Snippet {
 			attributes: true,
 			characterData: true,
 			subtree: true,
+			attributeOldValue: true,
+			characterDataOldValue: true,
 		});
+	}
+
+	_observeAllInputs () {
+		this._observedInputs = this.mainForm.querySelectorAll('input, textarea, select');
+
+		for (let i = 0, l = this._observedInputs.length; i < l; ++i) {
+			const target = this._observedInputs[i];
+			target.addEventListener(
+				'input',
+				debounce(this.onAnyChange.bind(this, [{target}]))
+			);
+		}
+	}
+
+	_unObserveAllInputs () {
+		for (let i = 0, l = this._observedInputs.length; i < l; ++i) {
+			const target = this._observedInputs[i];
+			target.removeEventListener(
+				'input',
+				debounce(this.onAnyChange.bind(this, [{target}]))
+			);
+		}
 	}
 	
 }
