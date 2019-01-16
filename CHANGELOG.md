@@ -10,7 +10,8 @@ from fields! (Existing meta will be automatically upgraded)
 - The SEO field description can now be pre-filled using twig.
 
 ### Fixed
-- SEO meta now correctly renders across multi-sites and locales. 
+- SEO meta now correctly renders across multi-sites and locales.
+- Fixed keyword checklist compatibility issue in Craft 3.1.
 
 ### Improved
 - The social image "no volume" warning now explicitly states the need for 

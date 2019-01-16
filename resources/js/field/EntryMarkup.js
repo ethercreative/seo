@@ -18,6 +18,7 @@ class EntryMarkup {
 	
 	frame = null;
 	postData = null;
+	token = null;
 	
 	// Entry Markup
 	// =========================================================================
@@ -34,8 +35,8 @@ class EntryMarkup {
 	 *
 	 * @return {Promise}
 	 */
-	update () {
-		return new Promise((resolve, reject) => {
+	update (SEO) {
+		return new Promise(async (resolve, reject) => {
 			const nextPostData = Garnish.getPostData(
 				document.getElementById("main-form")
 			);
@@ -47,43 +48,40 @@ class EntryMarkup {
 			}
 			
 			this.postData = nextPostData;
-			
-			// Get the markup from the live preview
-			$.ajax({
-				url: Craft.livePreview.previewUrl,
-				method: "POST",
-				data: $.extend({}, nextPostData, Craft.livePreview.basePostData),
-				xhrFields: { withCredentials: true },
-				crossDomain: true,
-				success: data => {
-					// Remove all <script/> & <style/> tags
-					data = data.replace(
-						/<script([^'"]|"(\\.|[^"\\])*"|'(\\.|[^'\\])*')*?<\/script>/g,
-						""
-					);
-					
-					data = data.replace(
-						/<style([^'"]|"(\\.|[^"\\])*"|'(\\.|[^'\\])*')*?<\/style>/g,
-						""
-					);
-					
-					// Write the markup to our iFrame
-					this.frame.contentWindow.document.open();
-					this.frame.contentWindow.document.write(data);
-					this.frame.contentWindow.document.close();
-					
-					if (this.frame.contentWindow.document.body) {
-						resolve(this.frame.contentWindow.document.body);
-					} else {
-						fail("Failed to parse entry preview");
-						reject();
-					}
-				},
-				error: () => {
-					fail("Failed to retrieve entry preview");
-					reject();
+
+			try {
+				// Ensure we have a preview token
+				await this._getToken(SEO);
+
+				// Get the markup from the live preview
+				let data = await this._preview(nextPostData);
+
+				// Remove all <script/> & <style/> tags
+				data = data.replace(
+					/<script([^'"]|"(\\.|[^"\\])*"|'(\\.|[^'\\])*')*?<\/script>/g,
+					""
+				);
+
+				data = data.replace(
+					/<style([^'"]|"(\\.|[^"\\])*"|'(\\.|[^'\\])*')*?<\/style>/g,
+					""
+				);
+
+				// Write the markup to our iFrame
+				this.frame.contentWindow.document.open();
+				this.frame.contentWindow.document.write(data);
+				this.frame.contentWindow.document.close();
+
+				if (this.frame.contentWindow.document.body) {
+					resolve(this.frame.contentWindow.document.body);
+				} else {
+					// noinspection ExceptionCaughtLocallyJS
+					throw null;
 				}
-			});
+			} catch (_) {
+				fail('Failed to retrieve entry preview');
+				reject();
+			}
 		});
 	}
 	
@@ -103,6 +101,42 @@ class EntryMarkup {
 		});
 		
 		document.body.appendChild(this.frame);
+	}
+
+	// Helpers
+	// =========================================================================
+
+	_preview (nextPostData) {
+		return new Promise(((resolve, reject) => {
+			$.ajax({
+				url: Craft.livePreview.previewUrl,
+				data: $.extend({}, nextPostData, Craft.livePreview.basePostData),
+				method: 'POST',
+				headers: { 'X-Craft-Token': this.token },
+				xhrFields: { withCredentials: true },
+				crossDomain: true,
+				success: resolve,
+				error: reject,
+			});
+		}));
+	}
+
+	_getToken (SEO) {
+		return new Promise((resolve, reject) => {
+			if (this.token !== null)
+				return resolve();
+
+			Craft.postActionRequest('live-preview/create-token', {
+				previewAction: SEO.options.previewAction
+			}, (response, textStatus) => {
+				if (textStatus === 'success') {
+					this.token = response.token;
+					resolve();
+				} else {
+					reject();
+				}
+			});
+		});
 	}
 	
 }

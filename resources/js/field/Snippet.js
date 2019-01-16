@@ -10,7 +10,7 @@
  * @since     2.0.0
  */
 
-import { debounce } from "../helpers";
+import { debounce } from '../helpers';
 
 export default class Snippet {
 
@@ -23,7 +23,9 @@ export default class Snippet {
 		this.namespace = namespace;
 		this.SEO = SEO;
 
-		this.mainForm = document.getElementById("main-form");
+		this.mainForm = document.getElementById('main-form');
+		this.seoFields = document.querySelectorAll('div[data-type*="SeoField"]');
+		this.seoFieldCount = this.seoFields.length;
 
 		this.titleField = document.getElementById(`${namespace}Title`);
 		this.slugField  = document.getElementById(`${namespace}Slug`);
@@ -74,7 +76,7 @@ export default class Snippet {
 	 * Sync up the SEO slug with crafts
 	 */
 	slug () {
-		const mainSlugField = document.getElementById("slug");
+		const mainSlugField = document.getElementById('slug');
 		
 		// Skip if we don't have a slug field (i.e. the homepage)
 		if (!mainSlugField) return;
@@ -83,12 +85,12 @@ export default class Snippet {
 			this.slugField.textContent = mainSlugField.value;
 		};
 		
-		mainSlugField.addEventListener("input", onSlugChange);
+		mainSlugField.addEventListener('input', onSlugChange);
 		
 		// Slug generation has a debounce that we need to account for to keep
 		// the slugs in sync
-		const title = document.getElementById("title");
-		title && title.addEventListener("input", debounce(onSlugChange, 500));
+		const title = document.getElementById('title');
+		title && title.addEventListener('input', debounce(onSlugChange, 500));
 		
 		// Sync straight away (see above in title() as to why)
 		onSlugChange();
@@ -101,25 +103,25 @@ export default class Snippet {
 	desc () {
 		const adjustHeight = () => {
 			setTimeout(() => {
-				this.descField.style.height = "";
-				this.descField.style.height = this.descField.scrollHeight + "px";
+				this.descField.style.height = '';
+				this.descField.style.height = this.descField.scrollHeight + 'px';
 			}, 1);
 		};
 		
 		// Prevent line breaks
-		this.descField.addEventListener("keydown", e => {
+		this.descField.addEventListener('keydown', e => {
 			if (e.keyCode === 13) e.preventDefault();
 		});
 		
 		// Cleanse line breaks & check length
-		this.descField.addEventListener("input", () => {
+		this.descField.addEventListener('input', () => {
 			this.descField.value =
-				this.descField.value.replace(/(\r\n|\r|\n)/gm, " ");
+				this.descField.value.replace(/(\r\n|\r|\n)/gm, ' ');
 			
 			if (this.descField.value.length > 313)
-				this.descField.classList.add("invalid");
+				this.descField.classList.add('invalid');
 			else
-				this.descField.classList.remove("invalid");
+				this.descField.classList.remove('invalid');
 			
 			adjustHeight();
 		});
@@ -127,21 +129,21 @@ export default class Snippet {
 		// Adjust height TextArea size changes
 		
 		// On tab change
-		if (document.getElementById("tabs")) {
-			const tabs = document.querySelectorAll("#tabs a.tab");
+		if (document.getElementById('tabs')) {
+			const tabs = document.querySelectorAll('#tabs a.tab');
 			for (let i = 0; i < tabs.length; i++) {
-				tabs[i].addEventListener("click", adjustHeight);
+				tabs[i].addEventListener('click', adjustHeight);
 			}
 		}
 		
 		// On open / close live preview
 		if (Craft.livePreview) {
-			Craft.livePreview.on("enter", adjustHeight);
-			Craft.livePreview.on("exit", adjustHeight);
+			Craft.livePreview.on('enter', adjustHeight);
+			Craft.livePreview.on('exit', adjustHeight);
 		}
 		
 		// On window resize
-		window.addEventListener("resize", adjustHeight);
+		window.addEventListener('resize', adjustHeight);
 		
 		// Set initial height (extra delay to fix FF bug)
 		setTimeout(() => {
@@ -156,7 +158,7 @@ export default class Snippet {
 		mutations.forEach(mutation => {
 			let target = mutation.target;
 
-			if (target.nodeName !== "#text") {
+			if (target.nodeName !== '#text') {
 				if (document.activeElement === target) {
 					const sel = Snippet._getSelection(target);
 					target.innerHTML = target.textContent;
@@ -166,7 +168,7 @@ export default class Snippet {
 				}
 			}
 
-			while (target !== null && target.nodeName === "#text")
+			while (target !== null && target.nodeName === '#text')
 				target = target.parentNode;
 
 			this.titleObserver.disconnect();
@@ -183,7 +185,26 @@ export default class Snippet {
 		});
 	};
 
-	onAnyChange = async () => {
+	onAnyChange = async (records) => {
+		// Skip if all changes occurred within an SEO field
+
+		let skip = true;
+
+		recordLoop:
+		for (let i = 0, l = records.length; i < l; ++i) {
+			for (let x = 0; x < this.seoFieldCount; ++x)
+				if (this.seoFields[x].contains(records[i].target))
+					continue recordLoop;
+
+			skip = false;
+			break;
+		}
+
+		if (skip)
+			return;
+
+		// Re-render tokens
+
 		this.titleObserver.disconnect();
 		this.titleObserver.takeRecords();
 
@@ -200,8 +221,8 @@ export default class Snippet {
 				continue;
 
 			if (
-				~el.className.indexOf("locked")
-				|| el.textContent.trim() === ""
+				~el.className.indexOf('locked')
+				|| el.textContent.trim() === ''
 				|| !this._dirtyTokens[key]
 			) el.textContent = tokens[key];
 		}
@@ -230,7 +251,7 @@ export default class Snippet {
 		let selectedTextRange = document.selection.createRange();
 		let preSelectionTextRange = document.body.createTextRange();
 		preSelectionTextRange.moveToElementText(el);
-		preSelectionTextRange.setEndPoint("EndToStart", selectedTextRange);
+		preSelectionTextRange.setEndPoint('EndToStart', selectedTextRange);
 		let start = preSelectionTextRange.text.length;
 
 		return {
@@ -277,8 +298,8 @@ export default class Snippet {
 		let textRange = document.body.createTextRange();
 		textRange.moveToElementText(el);
 		textRange.collapse(true);
-		textRange.moveEnd("character", sel.end);
-		textRange.moveStart("character", sel.start);
+		textRange.moveEnd('character', sel.end);
+		textRange.moveStart('character', sel.start);
 		textRange.select();
 	}
 
@@ -289,7 +310,7 @@ export default class Snippet {
 				return a;
 			}, {});
 
-			if (fields.hasOwnProperty("action"))
+			if (fields.hasOwnProperty('action'))
 				delete fields.action;
 
 			Craft.postActionRequest('seo/seo/render-data', {
@@ -300,7 +321,9 @@ export default class Snippet {
 	}
 
 	_observeTitleEditables () {
-		const editables = this.titleField.getElementsByClassName("seo--snippet-title-editable");
+		const editables = this.titleField.getElementsByClassName(
+			'seo--snippet-title-editable'
+		);
 
 		for (let i = 0, l = editables.length; i < l; ++i) {
 			this.titleObserver.observe(editables[i], {

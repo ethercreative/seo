@@ -29,6 +29,7 @@ class SeoField {
 	// Overwritten, but useful for auto-complete
 	options = {
 		hasPreview: false,
+		previewAction: null,
 		isNew: false,
 	};
 	

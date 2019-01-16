@@ -128,6 +128,7 @@ class SeoField extends Field implements PreviewableFieldInterface
 		$isHome = false;
 		$isNew = $element->getId() === null;
 		$isSingle = false;
+		$previewAction = null;
 
 		switch (get_class($element)) {
 			case 'craft\\elements\\Entry':
@@ -136,6 +137,19 @@ class SeoField extends Field implements PreviewableFieldInterface
 					$isEntry = true;
 					$section = $element->getSection();
 				} catch (InvalidConfigException $e) {}
+				$previewAction = $craft->getSecurity()->hashData(
+					'entries/preview-entry'
+				);
+				break;
+			case 'craft\\elements\\Category':
+				$previewAction = $craft->getSecurity()->hashData(
+					'categories/preview-category'
+				);
+				break;
+			case 'craft\\commerce\\elements\\Product':
+				$previewAction = $craft->getSecurity()->hashData(
+					'commerce/products-preview/preview-product'
+				);
 				break;
 			default:
 				/** @var ElementInterface $element */
@@ -145,7 +159,7 @@ class SeoField extends Field implements PreviewableFieldInterface
 			$hasPreview = $craft->sections->isSectionTemplateValid(
 				$section,
 				$element->siteId
-			);
+			) && $previewAction !== null;
 
 			$isSingle = $section->type === Section::TYPE_SINGLE;
 		}
@@ -199,6 +213,7 @@ class SeoField extends Field implements PreviewableFieldInterface
 
 		$seoOptions = Json::encode(compact(
 			'hasPreview',
+			'previewAction',
 			'isNew',
 			'renderData'
 		));
