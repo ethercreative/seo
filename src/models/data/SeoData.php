@@ -238,6 +238,10 @@ class SeoData extends BaseObject
 		// Robots
 		// ---------------------------------------------------------------------
 
+		// Fallback if robots empty
+		if (empty($this->advanced['robots']))
+			$this->advanced['robots'] = Seo::$i->getSettings()->robots ?? [];
+
 		// Filter out empty robots
 		$this->advanced['robots'] = array_filter($this->advanced['robots']);
 	}
@@ -301,6 +305,28 @@ class SeoData extends BaseObject
 			$this->_descriptionTemplate,
 			$this->_getVariables()
 		);
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getRobots ()
+	{
+		if (!empty($this->advanced['robots']))
+			return implode(', ', $this->advanced['robots']);
+
+		return 'none';
+	}
+
+	/**
+	 * @return string|null
+	 */
+	public function getExpiry ()
+	{
+		if (!$this->_element || !isset($this->_element->expiryDate))
+			return null;
+
+		return $this->_element->expiryDate->format(DATE_RFC850);
 	}
 
 	// Helpers

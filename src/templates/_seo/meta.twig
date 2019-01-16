@@ -32,6 +32,11 @@
 	<meta name="twitter:description" content="{{ tw.description }}" />
 	<meta name="twitter:image" content="{{ craft.seo.twitterImage(tw.image) }}" />
 
+	<meta name="robots" content="{{ seo.robots }}" />
+	{% if seo.expiry -%}
+		<meta name="robots" content="unavailable_after: {{ seo.expiry }}" />
+	{% endif %}
+
 	<link rel="home" href="{{ siteUrl }}" />
 	<link rel="canonical" href="{{ craft.app.request.absoluteUrl }}">
 {# SEO End #}

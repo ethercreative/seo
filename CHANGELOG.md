@@ -3,11 +3,17 @@
 > {warning} This update changes how SEO meta is stored. We **STRONGLY** 
 recommend backing up your site before installing this update.
 
+> {warning} This update contains some potentially breaking changes. If you use a 
+custom `meta.twig` template you should review the 
+changes [here](https://github.com/ethercreative/seo/commits/v3/src/templates/_seo/meta.twig).
+
 ### Changed
 - The SEO field now uses a token-based system for the title, allowing for only 
 certain parts of the title to be editable and adding twig support for pre-filling 
 from fields! (Existing meta will be automatically upgraded)
 - The SEO field description can now be pre-filled using twig.
+- Robots meta tags are now rendered in the SEO meta. Useful for statically 
+cached sites!
 
 ### Fixed
 - SEO meta now correctly renders across multi-sites and locales.
