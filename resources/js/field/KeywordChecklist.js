@@ -85,7 +85,11 @@ export default class KeywordChecklist {
 
 			// Sort the results by rating, keeping track of the number of times
 			// each rating occurs
-			this.ratingOccurrence = {};
+			this.ratingOccurrence = {
+				poor: 0,
+				average: 0,
+				good: 0,
+			};
 			
 			this.ratings.sort((a, b) => {
 				return (
@@ -100,13 +104,28 @@ export default class KeywordChecklist {
 			});
 			
 			// Find the most prevalent rating
-			const overallRating =
-				Object.keys(this.ratingOccurrence)
-				      .reduce(
-				      	(a, b) =>
-					        this.ratingOccurrence[a] > this.ratingOccurrence[b]
-						        ? a : b
-				      );
+			const ratingSum =
+				Object.values(this.ratingOccurrence).reduce((a, b) => a + b, 0);
+
+			let overallRating = 'poor';
+
+			if (this.ratingOccurrence.poor === this.ratingOccurrence.average === this.ratingOccurrence.good)
+				overallRating = 'average';
+
+			else if (this.ratingOccurrence.good > ratingSum / 2)
+				overallRating = 'good';
+
+			else if (this.ratingOccurrence.average > ratingSum / 2)
+				overallRating = 'average';
+
+			else if (this.ratingOccurrence.poor > ratingSum / 2)
+				overallRating = 'poor';
+
+			else if (
+				this.ratingOccurrence.average > ratingSum * 0.2 &&
+				this.ratingOccurrence.average + this.ratingOccurrence.poor > ratingSum / 2
+			)
+				overallRating = 'average';
 			
 			// Re-render the checklist
 			this.renderChecklist();
