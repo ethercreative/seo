@@ -12,6 +12,7 @@ changes [here](https://github.com/ethercreative/seo/commits/v3/src/templates/_se
 - Added `rel="canonical"` header
 
 ### Changed
+- Craft 3.1.0 is now required.
 - The SEO field now uses a token-based system for the title, allowing for only 
 certain parts of the title to be editable and adding twig support for pre-filling 
 from fields! (Existing meta will be automatically upgraded)
