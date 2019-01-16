@@ -264,23 +264,35 @@
 			{# Ahh! Robots! #}
 			<div class="seo--label">
 				<div>
-					<em>{{ "Robots"|t }}</em>
+					<em>Robots</em>
 					Control how this page is indexed by crawlers (some of these
 					are Google specific). If this element as an expiry date the
 					<code>unavailable_after</code> directive will be set
 					automatically.
 				</div>
-				{#<div id="{{ id }}Suggested">
-					<small>{{ "Suggested keywords"|t }}</small>
-					<a href="#">TODO</a>
-					<a href="#">Digital Agency Kent</a>
-				</div>#}
 			</div>
 
 			{% include 'seo/_seo/robots' with {
 				robots: isNew ? defaultRobots : value.advanced.robots,
 				name: name ~ "[advanced][robots]"
 			} %}
+
+			{# Canonical #}
+			<div class="seo--label">
+				<div>
+					<em>Canonical</em>
+					If this is not the canonical version of this page, add the
+					canonical URL here. The current URL of the page will be used
+					if this is left blank.
+				</div>
+			</div>
+
+			{{ _forms.text({
+				name: name ~ '[advanced][canonical]',
+				value: value.advanced.canonical,
+				type: 'url',
+				placeholder: 'This must be a valid, absolute URL. i.e. https://mysite.com'
+			}) }}
 
 		</div>
 	</div>

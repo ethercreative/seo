@@ -7,6 +7,9 @@ recommend backing up your site before installing this update.
 custom `meta.twig` template you should review the 
 changes [here](https://github.com/ethercreative/seo/commits/v3/src/templates/_seo/meta.twig).
 
+### Added
+- Advanced option for overriding the canonical URL.
+
 ### Changed
 - The SEO field now uses a token-based system for the title, allowing for only 
 certain parts of the title to be editable and adding twig support for pre-filling 

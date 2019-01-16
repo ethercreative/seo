@@ -55,6 +55,7 @@ class SeoData extends BaseObject
 	/** @var array */
 	public $advanced = [
 		'robots' => [],
+		'canonical' => null,
 	];
 
 	// Properties: Private
@@ -327,6 +328,19 @@ class SeoData extends BaseObject
 			return null;
 
 		return $this->_element->expiryDate->format(DATE_RFC850);
+	}
+
+	/**
+	 * Returns the canonical URL (falling back to the current URL if not set)
+	 *
+	 * @return string
+	 */
+	public function getCanonical ()
+	{
+		if (empty($this->advanced['canonical']))
+			return \Craft::$app->request->absoluteUrl;
+
+		return $this->advanced['canonical'];
 	}
 
 	// Helpers
