@@ -19,9 +19,9 @@
 	<meta property="og:image" content="{{ craft.seo.facebookImage(fb.image) }}" />
 	<meta property="og:description" content="{{ fb.description }}" />
 	<meta property="og:site_name" content="{{ siteName }}" />
-	<meta property="og:locale" content="{{ locale }}" />
+	<meta property="og:locale" content="{{ locale|replace('-', '_') }}" />
 	{% for locale in locales -%}
-		<meta property="og:locale:alternate" content="{{ locale }}" />
+		<meta property="og:locale:alternate" content="{{ locale|replace('-', '_') }}" />
 	{% endfor %}
 
 	{% set tw = seo.social.twitter -%}
