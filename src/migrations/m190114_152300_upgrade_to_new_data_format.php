@@ -50,18 +50,26 @@ class m190114_152300_upgrade_to_new_data_format extends Migration
 					'key'      => '1',
 					'template' => '{title}',
 					'locked'   => false,
-				],
-				[
-					'key'      => '2',
-					'template' => ' ' . $suffix,
-					'locked'   => true,
 				]
 			];
 
-			$suffixesByFieldHandle[$field->handle] = ' ' . $field->titleSuffix;
+			if ($suffix !== '')
+			{
+				$field->title[] = [
+					'key'      => '2',
+					'template' => ' ' . $suffix,
+					'locked'   => true,
+				];
+
+				$suffixesByFieldHandle[$field->handle] = ' ' . $field->titleSuffix;
+			}
+			else
+			{
+				$suffixesByFieldHandle[$field->handle] = '';
+			}
 
 			// '[{title}] [- Current Prefix]' (or flipped if suffixAsPrefix is true)
-			if ($field->suffixAsPrefix)
+			if ($field->suffixAsPrefix && $suffix !== '')
 			{
 				$field->title = array_reverse($field->title, false);
 				$field->title[0]['key'] = '1';
