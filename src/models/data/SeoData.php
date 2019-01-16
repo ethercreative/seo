@@ -67,6 +67,9 @@ class SeoData extends BaseObject
 	private $_element;
 
 	/** @var array */
+	private $_overrideObject = [];
+
+	/** @var array */
 	private $_fieldSettings;
 
 	/** @var Settings */
@@ -98,10 +101,12 @@ class SeoData extends BaseObject
 				: $seo->getSettings();
 
 		// Backwards compatibility for titles in SEO v3.4.x or lower
-		if (isset($config['title']))
-		{
-			$title    = $config['title'];
+		if (
+			($hasTitle = isset($config['title'])) ||
+			!is_array($config['titleRaw'])
+		) {
 			$template = $this->_getSetting('title');
+			$title    = $hasTitle ? $config['title'] : $config['titleRaw'];
 
 			// Find the first unlocked token
 			if (is_string($title) && !empty($template))
@@ -161,6 +166,13 @@ class SeoData extends BaseObject
 		{
 			$this->advanced = array_merge($this->advanced, $config['advanced']);
 			unset($config['advanced']);
+		}
+
+		// Override Object
+		if (isset($config['overrideObject']))
+		{
+			$this->_overrideObject = $config['overrideObject'];
+			unset($config['overrideObject']);
 		}
 
 		parent::__construct($config);
@@ -242,12 +254,9 @@ class SeoData extends BaseObject
 		if ($this->_renderedTitle)
 			return $this->_renderedTitle;
 
-		if ($this->_element === null || $this->_handle === null)
-			return '';
-
 		return $this->_renderedTitle = $this->_render(
 			$this->_titleTemplate,
-			$this->_elementToArray()
+			$this->_getVariables()
 		);
 	}
 
@@ -264,7 +273,7 @@ class SeoData extends BaseObject
 		) return [];
 
 		$template = $this->_getSetting('title');
-		$elementArray = $this->_elementToArray();
+		$elementArray = $this->_getVariables();
 
 		$tokens = [];
 
@@ -288,12 +297,9 @@ class SeoData extends BaseObject
 		if ($this->_renderedDescription)
 			return $this->_renderedDescription;
 
-		if ($this->_element === null || $this->_handle === null)
-			return '';
-
 		return $this->_renderedDescription = $this->_render(
 			$this->_descriptionTemplate,
-			$this->_elementToArray()
+			$this->_getVariables()
 		);
 	}
 
@@ -337,18 +343,28 @@ class SeoData extends BaseObject
 		];
 	}
 
-	private function _elementToArray ()
+	/**
+	 * Returns an array for variables for rendering
+	 *
+	 * @return array
+	 */
+	private function _getVariables ()
 	{
-		$variables = [];
+		$variables = $this->_overrideObject;
 
-		foreach ($this->_element->attributes() as $name)
-			if ($name !== $this->_handle)
-				$variables[$name] = $this->_element->$name;
+		if ($this->_element !== null)
+		{
+			foreach ($this->_element->attributes() as $name)
+				if ($name !== $this->_handle)
+					$variables[$name] = $this->_element->$name;
 
-		return array_merge(
-			$variables,
-			$this->_element->toArray($this->_element->extraFields())
-		);
+			$variables = array_merge(
+				$variables,
+				$this->_element->toArray($this->_element->extraFields())
+			);
+		}
+
+		return $variables;
 	}
 
 	/**

@@ -13,7 +13,7 @@ class Variable
 {
 
 	/**
-	 * @param string $title
+	 * @param string|array $title
 	 * @param string $description
 	 * @param bool   $_ - Deprecated
 	 * @param array  $social
@@ -26,11 +26,18 @@ class Variable
 		$_ = null,
 		$social = []
 	) {
-		return new SeoData(null, null, [
-			'titleRaw'    => $title,
+		$config = [
+			'titleRaw'    => '',
 			'description' => $description,
 			'social'      => $social,
-		]);
+		];
+
+		if (is_array($title))
+			$config['overrideObject'] = $title;
+		else
+			$config['titleRaw'] = $title;
+
+		return new SeoData(null, null, $config);
 	}
 
 	// Social

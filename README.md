@@ -79,17 +79,26 @@ In some cases, you will not have access to an SEO field, but will want to set th
 ```twig
 craft.seo.custom(
     'The Page Title', 
-    'The page description', 
-    
-    // Whether or not to include the title suffix after your title
-    includeDefaultTitleSuffix = true,
+    'The page description',
     
     // Social media - Any missing fields (excluding images) will be populated by the values above
     {
         twitter: { image: myImageField.first() },
         facebook: { title: '', description: '', image: myImageField.first() },
     }
-);
+)
+```
+
+alternatively pass an object as the first parameter. This will be used in place of an element.
+
+```twig
+craft.seo.custom(
+    {
+        title: 'The Page Title',
+        someField: 'Hello world!',
+    },
+    'The page description'
+)
 ```
 
 All parameters are optional.
