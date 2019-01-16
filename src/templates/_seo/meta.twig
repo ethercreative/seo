@@ -35,7 +35,7 @@
 	{% if seo.robots -%}
 		<meta name="robots" content="{{ seo.robots }}" />
 	{% endif %}
-	{% if seo.expiry -%}
+	{%- if seo.expiry -%}
 		<meta name="robots" content="unavailable_after: {{ seo.expiry }}" />
 	{% endif %}
 

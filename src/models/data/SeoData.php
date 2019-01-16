@@ -93,6 +93,8 @@ class SeoData extends BaseObject
 
 	public function __construct (SeoField $seo = null, ElementInterface $element = null, array $config = [])
 	{
+		// TODO: There is a LOT going on here, needs to be improved
+
 		$this->_handle = $seo !== null ? $seo->handle : null;
 		$this->_element = $element;
 		$this->_seoSettings = Seo::$i->getSettings();
