@@ -279,15 +279,16 @@
 
 			{# Canonical #}
 			<div class="seo--label">
-				<div>
+				<label for="{{ id }}Canonical">
 					<em>Canonical</em>
 					If this is not the canonical version of this page, add the
 					canonical URL here. The current URL of the page will be used
 					if this is left blank.
-				</div>
+				</label>
 			</div>
 
 			{{ _forms.text({
+				id: id ~ 'Canonical',
 				name: name ~ '[advanced][canonical]',
 				value: value.advanced.canonical,
 				type: 'url',
