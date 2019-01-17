@@ -11,7 +11,7 @@
 	<div class="seo--label">
 		<div>
 			<em>{{ label }}</em>
-			{{ ("This is how the page will look when shared on " ~ label ~ ". Click the text to edit")|t }}
+			{{ ("This is how the page will look when shared on " ~ label)|t }}
 		</div>
 	</div>
 
@@ -51,15 +51,15 @@
 					placeholder="This is the title of the page. You can edit it though"
 					name="{{ name }}[social][{{ handle }}][title]"
 					value="{{ this.title }}"
-				>
+					readonly
+				/>
 				<textarea
 					placeholder="Integer posuere erat a ante venenatis dapibus posuere velit aliquet. Aenean lacinia bibendum nulla sed consectetur. Donec sed odio dui."
 					name="{{ name }}[social][{{ handle }}][description]"
 					data-seo-social-desc="{{ id|namespaceInputId }}"
+					readonly
 				>{{ this.description }}</textarea>
-				<span>
-					{{ url }}
-				</span>
+				<span>{{ url }}</span>
 			</div>
 		</div>
 	</div>

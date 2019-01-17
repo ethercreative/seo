@@ -11,17 +11,43 @@
  */
 
 export default class Social {
-	
+
+	// Properties
+	// =========================================================================
+
+	socialPreviews = null;
+	snippetObserver = null;
+
 	constructor (namespace, SEO) {
 		this.namespace = namespace;
 		this.SEO = SEO;
-		
+
+		this.socialPreviews = document.querySelectorAll('.seo--social-preview-content');
+
+		this.initObservers();
 		this.initImages();
 		this.initDesc();
 	}
 	
 	// Initializers
 	// =========================================================================
+
+	initObservers () {
+		// TODO: This feels a bit overkill
+		// Use custom events instead (triggered by the snippet)?
+
+		this.snippetObserver = new MutationObserver(
+			this.onSnippetChange
+		);
+
+		Object.values(this.SEO.snippetFields).forEach(el => {
+			this.snippetObserver.observe(el, {
+				childList: true,
+				characterData: true,
+				subtree: true,
+			});
+		});
+	}
 	
 	initImages () {
 		const imageInputs = document.querySelectorAll(
@@ -95,6 +121,18 @@ export default class Social {
 		self.classList.remove("has-image");
 		self.style.backgroundImage = "";
 		self.firstElementChild.value = "";
+	};
+
+	onSnippetChange = () => {
+		const title = this.SEO.snippetFields.title.textContent.trim()
+			, desc  = this.SEO.snippetFields.desc.textContent.trim()
+			, url   = this.SEO.snippetFields.slug.parentNode.textContent.trim();
+
+		for (let i = 0, l = this.socialPreviews.length; i < l; ++i) {
+			this.socialPreviews[i].getElementsByTagName('input')[0].value = title;
+			this.socialPreviews[i].getElementsByTagName('textarea')[0].value = desc;
+			this.socialPreviews[i].getElementsByTagName('span')[0].textContent = url;
+		}
 	};
 	
 }

@@ -19,6 +19,8 @@ from fields! (Existing meta will be automatically upgraded)
 - The SEO field description can now be pre-filled using twig.
 - Robots meta tags are now rendered in the SEO meta. Useful for statically 
 cached sites!
+- Social titles and descriptions are no longer editable. Images are still 
+editable. Improved social meta management is planned for a future update.
 
 ### Fixed
 - SEO meta now correctly renders across multi-sites and locales.
