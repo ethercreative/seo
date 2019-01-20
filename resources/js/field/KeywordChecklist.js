@@ -199,7 +199,7 @@ export default class KeywordChecklist {
 	 * Judge the length of the title
 	 */
 	judgeTitleLength () {
-		const l = this.SEO.snippetFields.title.textContent.length;
+		const l = this.SEO.snippetFields.title.textContent.trim().length;
 		
 		this.addRating(
 			l < 40 || l > 60 ? SEO_RATING.POOR : SEO_RATING.GOOD,
@@ -215,7 +215,7 @@ export default class KeywordChecklist {
 	 * Judge the positioning of the keyword in the title
 	 */
 	judgeTitleKeyword () {
-		const title = this.SEO.snippetFields.title.textContent;
+		const title = this.SEO.snippetFields.title.textContent.trim();
 		const index = title.toLowerCase().indexOf(this.keywordLower);
 		
 		if (index > -1) {
