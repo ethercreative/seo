@@ -162,7 +162,7 @@ class SeoField extends Field implements PreviewableFieldInterface
 		if ($craft->sites->currentSite->baseUrl) {
 			preg_match(
 				"((http?s?:\/\/)?(www.)?(.*)\/)",
-				$craft->sites->currentSite->baseUrl,
+				\Craft::parseEnv($craft->sites->currentSite->baseUrl),
 				$socialPreviewUrl
 			);
 			$socialPreviewUrl = $socialPreviewUrl[3];
