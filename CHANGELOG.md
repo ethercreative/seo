@@ -1,4 +1,4 @@
-## [Unreleased] 3.5.0
+## 3.5.0 - 2019-01-21
 
 > {warning} This update changes how SEO meta is stored. We **STRONGLY** 
 recommend backing up your site before installing this update.
@@ -32,10 +32,12 @@ editable. Improved social meta management is planned for a future update.
 - The social image "no volume" warning now explicitly states the need for 
 volumes with public URLs [#115]
 - Better handling of robots header.
+- Whitespace now trimmed from title when checking SEO score (via [@Rias500])
 
 [#115]: https://github.com/ethercreative/seo/issues/115
 [#143]: https://github.com/ethercreative/seo/issues/143
 [#139]: https://github.com/ethercreative/seo/issues/139
+[@Rias500]: https://github.com/Rias500
 
 ## 3.4.4 - 2018-09-10
 ### Fixed
