@@ -1,3 +1,13 @@
+## 3.5.1 - 2019-01-21
+
+### Added
+- Added console command to manually trigger the upgrade to the new data format
+`./craft seo/upgrade/to-new-data-format`.
+
+### Fixed
+- Fixed issue when updating an SEO field without a suffix.
+- Fixed readonly property error when running the upgrade task.
+
 ## 3.5.0 - 2019-01-21
 
 > {warning} This update changes how SEO meta is stored. We **STRONGLY** 

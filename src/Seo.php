@@ -21,6 +21,7 @@ use ether\seo\models\Settings;
 use ether\seo\services\RedirectsService;
 use ether\seo\services\SeoService;
 use ether\seo\services\SitemapService;
+use ether\seo\services\UpgradeService;
 use ether\seo\web\twig\Extension;
 use ether\seo\web\twig\Variable;
 use yii\base\Event;
@@ -33,6 +34,7 @@ use yii\base\Event;
  * @property SeoService         $seo
  * @property SitemapService     $sitemap
  * @property RedirectsService   $redirects
+ * @property UpgradeService     $upgrade
  */
 class Seo extends Plugin
 {
@@ -43,7 +45,6 @@ class Seo extends Plugin
 	/** @var Seo */
 	public static $i;
 
-	public $controllerNamespace = 'ether\\seo\\controllers';
 	public $hasCpSection        = true;
 	public $hasCpSettings       = true;
 
@@ -73,6 +74,7 @@ class Seo extends Plugin
 			'seo' => SeoService::class,
 			'sitemap' => SitemapService::class,
 			'redirects' => RedirectsService::class,
+			'upgrade' => UpgradeService::class,
 		]);
 
 		// Events
