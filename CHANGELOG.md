@@ -1,3 +1,8 @@
+## [Unreleased] 3.5.2
+
+### Fixed
+- Fixed special characters being unnecessarily encoded when being out put in meta.
+
 ## 3.5.1 - 2019-01-21
 
 ### Added

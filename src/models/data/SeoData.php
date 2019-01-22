@@ -270,13 +270,14 @@ class SeoData extends BaseObject
 	 */
 	public function getTitle ()
 	{
-		if ($this->_renderedTitle)
-			return $this->_renderedTitle;
+		if (!$this->_renderedTitle) {
+			$this->_renderedTitle = $this->_render(
+				$this->_titleTemplate,
+				$this->_getVariables()
+			);
+		}
 
-		return $this->_renderedTitle = $this->_render(
-			$this->_titleTemplate,
-			$this->_getVariables()
-		);
+		return new \Twig_Markup($this->_renderedTitle, 'utf8');
 	}
 
 	/**
@@ -298,9 +299,12 @@ class SeoData extends BaseObject
 
 		foreach ($template as $token)
 		{
-			$tokens[$token['key']] = $this->_render(
-				$token['template'],
-				$elementArray
+			$tokens[$token['key']] = new \Twig_Markup(
+				$this->_render(
+					$token['template'],
+					$elementArray
+				),
+				'utf8'
 			);
 		}
 
@@ -313,13 +317,14 @@ class SeoData extends BaseObject
 	 */
 	public function getDescription ()
 	{
-		if ($this->_renderedDescription)
-			return $this->_renderedDescription;
+		if (!$this->_renderedDescription) {
+			$this->_renderedDescription = $this->_render(
+				$this->_descriptionTemplate,
+				$this->_getVariables()
+			);
+		}
 
-		return $this->_renderedDescription = $this->_render(
-			$this->_descriptionTemplate,
-			$this->_getVariables()
-		);
+		return new \Twig_Markup($this->_renderedDescription, 'utf8');
 	}
 
 	/**
