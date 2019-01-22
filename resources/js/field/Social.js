@@ -41,6 +41,9 @@ export default class Social {
 		);
 
 		Object.values(this.SEO.snippetFields).forEach(el => {
+			if (el === null)
+				return;
+
 			this.snippetObserver.observe(el, {
 				childList: true,
 				characterData: true,
@@ -124,9 +127,11 @@ export default class Social {
 	};
 
 	onSnippetChange = () => {
+		const hasSlug = this.SEO.snippetFields.slug !== null;
+
 		const title = this.SEO.snippetFields.title.textContent.trim()
 			, desc  = this.SEO.snippetFields.desc.textContent.trim()
-			, url   = this.SEO.snippetFields.slug.parentNode.textContent.trim();
+			, url   = hasSlug ? this.SEO.snippetFields.slug.parentNode.textContent.trim() : '';
 
 		for (let i = 0, l = this.socialPreviews.length; i < l; ++i) {
 			this.socialPreviews[i].getElementsByTagName('input')[0].value = title;

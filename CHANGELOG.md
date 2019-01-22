@@ -2,6 +2,7 @@
 
 ### Fixed
 - Fixed special characters being unnecessarily encoded when being out put in meta.
+- Fixed JS error in SEO snippet when the entry doesn't have a slug.
 
 ## 3.5.1 - 2019-01-21
 
