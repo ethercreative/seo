@@ -129,7 +129,7 @@ export default class Social {
 	onSnippetChange = () => {
 		const hasSlug = this.SEO.snippetFields.slug !== null;
 
-		const title = this.SEO.snippetFields.title.textContent.trim()
+		const title = this.SEO.snippetFields.title.textContent.trim().replace(/\t/g, '')
 			, desc  = this.SEO.snippetFields.desc.textContent.trim()
 			, url   = hasSlug ? this.SEO.snippetFields.slug.parentNode.textContent.trim() : '';
 

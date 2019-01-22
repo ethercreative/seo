@@ -227,7 +227,7 @@ export default class Snippet {
 				~el.className.indexOf('locked')
 				|| el.textContent.trim() === ''
 				|| !this._dirtyTokens[key]
-			) el.textContent = tokens[key];
+			) el.innerHTML = tokens[key];
 		}
 
 		this._observeTitleEditables();
@@ -356,7 +356,7 @@ export default class Snippet {
 			const target = this._observedInputs[i];
 			target.addEventListener(
 				'input',
-				debounce(this.onAnyChange.bind(this, [{target}]))
+				debounce(this.onAnyChange.bind(this, [{target}]), 750)
 			);
 		}
 	}
@@ -366,7 +366,7 @@ export default class Snippet {
 			const target = this._observedInputs[i];
 			target.removeEventListener(
 				'input',
-				debounce(this.onAnyChange.bind(this, [{target}]))
+				debounce(this.onAnyChange.bind(this, [{target}]), 750)
 			);
 		}
 	}

@@ -1,8 +1,15 @@
 ## [Unreleased] 3.5.2
 
+### Changed
+- Increased debounce timeout when watching for input changes in fields. [#175]
+
 ### Fixed
-- Fixed special characters being unnecessarily encoded when being out put in meta.
+- Fixed special characters being unnecessarily encoded when being out put in meta. [#173]
 - Fixed JS error in SEO snippet when the entry doesn't have a slug.
+- Excess whitespace removed from social title when dynamically updated.
+
+[#173]: https://github.com/ethercreative/seo/issues/173
+[#175]: https://github.com/ethercreative/seo/issues/175
 
 ## 3.5.1 - 2019-01-21
 
