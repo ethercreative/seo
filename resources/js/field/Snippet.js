@@ -187,7 +187,7 @@ export default class Snippet {
 		});
 	};
 
-	onAnyChange = async (records) => {
+	onAnyChange = debounce(async (records) => {
 		// Skip if all changes occurred within an SEO field
 		let skip = true;
 
@@ -233,7 +233,7 @@ export default class Snippet {
 		this._observeTitleEditables();
 		this._observeMainForm();
 		this._observeAllInputs();
-	};
+	});
 
 	// Helpers
 	// =========================================================================
@@ -350,13 +350,18 @@ export default class Snippet {
 	}
 
 	_observeAllInputs () {
+		// NOTE: Value changes shouldn't (I think) be detected by
+		// MutationObserver, but are in FF and Safari so this is causing a
+		// double render of the tokens. I'm leaving it in in-case those
+		// browsers change down the line.
+
 		this._observedInputs = this.mainForm.querySelectorAll('input, textarea, select');
 
 		for (let i = 0, l = this._observedInputs.length; i < l; ++i) {
 			const target = this._observedInputs[i];
 			target.addEventListener(
 				'input',
-				debounce(this.onAnyChange.bind(this, [{target}]), 750)
+				this.onAnyChange.bind(this, [{target}])
 			);
 		}
 	}
@@ -366,7 +371,7 @@ export default class Snippet {
 			const target = this._observedInputs[i];
 			target.removeEventListener(
 				'input',
-				debounce(this.onAnyChange.bind(this, [{target}]), 750)
+				this.onAnyChange.bind(this, [{target}])
 			);
 		}
 	}
