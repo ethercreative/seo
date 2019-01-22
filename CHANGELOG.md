@@ -1,4 +1,4 @@
-## [Unreleased] 3.5.2
+## 3.5.2 - 2019-01-22
 
 ### Changed
 - Increased debounce timeout when watching for input changes in fields.
