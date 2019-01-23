@@ -2,6 +2,7 @@
 
 ### Fixed
 - Fixed undefined index error when creating a new element containing an SEO field. [#176]
+- Fixed error when using the SEO field in a category.
 
 [#176]: https://github.com/ethercreative/seo/issues/176
 

@@ -5,6 +5,7 @@ namespace ether\seo\fields;
 use craft\base\ElementInterface;
 use craft\base\Field;
 use craft\base\PreviewableFieldInterface;
+use craft\elements\Category;
 use craft\elements\Entry;
 use craft\helpers\Json;
 use craft\models\Section;
@@ -206,10 +207,14 @@ class SeoField extends Field implements PreviewableFieldInterface
 		$renderData = [
 			'elementType' => get_class($element),
 			'elementId' => $element->id,
-			'typeId' => $element->typeId,
 			'siteId' => $element->siteId,
 			'seoHandle' => $this->handle,
 		];
+
+		if ($element instanceof Category)
+			$renderData['groupId'] = $element->groupId;
+		else
+			$renderData['typeId'] = $element->typeId;
 
 		$seoOptions = Json::encode(compact(
 			'hasPreview',
