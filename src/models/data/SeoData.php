@@ -137,10 +137,13 @@ class SeoData extends BaseObject
 			unset($config['title']);
 		}
 
-		if (array_key_exists('titleRaw', $config) && is_string($config['titleRaw']))
-			$config['titleRaw'] = [$config['titleRaw']];
-
-		$config['titleRaw'] = array_filter($config['titleRaw']);
+		if (array_key_exists('titleRaw', $config))
+		{
+			if (is_string($config['titleRaw']))
+				$config['titleRaw'] = [$config['titleRaw']];
+			else
+				$config['titleRaw'] = array_filter($config['titleRaw']);
+		}
 
 		// Backwards compatibility for descriptions in SEO v3.4.x or lower
 		if (isset($config['description']))
