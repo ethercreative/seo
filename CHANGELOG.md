@@ -1,4 +1,4 @@
-## [Unreleased] 3.5.3
+## 3.5.3 - 2019-01-23
 
 ### Fixed
 - Fixed undefined index error when creating a new element containing an SEO field. [#176]
