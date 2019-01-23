@@ -2,9 +2,12 @@
 
 ### Fixed
 - Fixed undefined index error when creating a new element containing an SEO field. [#176]
-- Fixed error when using the SEO field in a category.
+- Fixed error when using the SEO field in a category. [#177]
+- Fixed sitemap undefined index error. [#178]
 
 [#176]: https://github.com/ethercreative/seo/issues/176
+[#177]: https://github.com/ethercreative/seo/issues/177
+[#178]: https://github.com/ethercreative/seo/issues/178
 
 ## 3.5.2 - 2019-01-22
 
