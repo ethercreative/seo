@@ -106,6 +106,14 @@ class SeoData extends BaseObject
 		// Backwards compatibility for titles in SEO v3.4.x or lower
 		if (
 			isset($config['titleRaw']) &&
+			is_array($config['titleRaw']) &&
+			isset($config['titleRaw'][0])
+		) {
+			$config['titleRaw'] = $config['titleRaw'][0];
+		}
+
+		if (
+			isset($config['titleRaw']) &&
 			(
 				($hasTitle = isset($config['title'])) ||
 				!is_array($config['titleRaw'])

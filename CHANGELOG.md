@@ -1,9 +1,13 @@
-## [Unreleased] 3.5.4
+## 3.5.4 - 2019-01-28
 
 ### Added
-- Added support for Solspace Calendar [#184]
+- Added support for Solspace Calendar. [#184]
+
+### Fixed
+- Fixed upgrade not correctly carrying over custom titles. [#183]
 
 [#184]: https://github.com/ethercreative/seo/issues/184
+[#183]: https://github.com/ethercreative/seo/issues/183
 
 ## 3.5.3 - 2019-01-23
 
