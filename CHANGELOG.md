@@ -1,3 +1,10 @@
+## [Unreleased] 3.5.4
+
+### Added
+- Added support for Solspace Calendar [#184]
+
+[#184]: https://github.com/ethercreative/seo/issues/184
+
 ## 3.5.3 - 2019-01-23
 
 ### Fixed

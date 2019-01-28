@@ -126,6 +126,7 @@ class SeoField extends Field implements PreviewableFieldInterface
 		$hasPreview = false;
 		$section = null;
 		$isEntry = false;
+		$isCalendar = false;
 		$isHome = false;
 		$isNew = $element->getId() === null;
 		$isSingle = false;
@@ -150,6 +151,17 @@ class SeoField extends Field implements PreviewableFieldInterface
 			case 'craft\\commerce\\elements\\Product':
 				$previewAction = $craft->getSecurity()->hashData(
 					'commerce/products-preview/preview-product'
+				);
+				break;
+			case 'Solspace\\Calendar\\Elements\\Event':
+				/** @var $element \Solspace\Calendar\Elements\Event */
+				$isCalendar = true;
+				$previewAction = $craft->getSecurity()->hashData(
+					'calendar/events/preview'
+				);
+				$hasPreview = \Solspace\Calendar\Calendar::getInstance()->calendars->isEventTemplateValid(
+					$element->getCalendar(),
+					$element->siteId
 				);
 				break;
 			default:
@@ -180,6 +192,8 @@ class SeoField extends Field implements PreviewableFieldInterface
 
 		// Social URL
 		// ---------------------------------------------------------------------
+
+		$socialPreviewUrl = null;
 
 		if ($craft->sites->currentSite->baseUrl) {
 			preg_match(
@@ -213,6 +227,8 @@ class SeoField extends Field implements PreviewableFieldInterface
 
 		if ($element instanceof Category)
 			$renderData['groupId'] = $element->groupId;
+		elseif ($isCalendar)
+			$renderData['calendarId'] = $element->calendarId;
 		else
 			$renderData['typeId'] = $element->typeId;
 
