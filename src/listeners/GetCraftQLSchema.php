@@ -17,7 +17,7 @@ class GetCraftQLSchema
 		$socialObject->addStringField('title');
 		$socialObject->addField('image')->type(VolumeInterface::class);
 		$socialObject->addStringField('description')->resolve(function ($root, $args) {
-			return (string)$root->description->__toString();
+			return (string)$root->description;
 		});
 
 		$socialFieldObject =
