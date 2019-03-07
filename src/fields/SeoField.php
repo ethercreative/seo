@@ -184,11 +184,10 @@ class SeoField extends Field implements PreviewableFieldInterface
 
 		$url = $element->getUrl();
 
-		if ($hasPreview && $isEntry && !$isHome && !$isSingle)
-			$url = substr($url, 0, strrpos( $url, '/')) . '/';
+		if ($hasPreview && $isEntry && ! $isHome && ! $isSingle && $element->slug) {
+			$url = substr($url, 0, strrpos($url, $element->slug));
+		}
 
-		if ($element->slug)
-			$url = str_replace($element->slug, '', $url);
 
 		// Social URL
 		// ---------------------------------------------------------------------
