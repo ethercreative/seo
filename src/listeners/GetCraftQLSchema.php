@@ -16,7 +16,9 @@ class GetCraftQLSchema
 			$event->schema->createObjectType('SeoDataSocial');
 		$socialObject->addStringField('title');
 		$socialObject->addField('image')->type(VolumeInterface::class);
-		$socialObject->addStringField('description');
+		$socialObject->addStringField('description')->resolve(function ($root, $args) {
+			return (string)$root->description;
+		});
 
 		$socialFieldObject =
 			$event->schema->createObjectType('SeoDataSocialField');
@@ -25,8 +27,12 @@ class GetCraftQLSchema
 
 		$fieldObject =
 			$event->schema->createObjectType('SeoData');
-		$fieldObject->addStringField('title');
-		$fieldObject->addStringField('description');
+		$fieldObject->addStringField('title')->resolve(function ($root, $args) {
+			return (string)$root->getTitle()->__toString();
+		});
+		$fieldObject->addStringField('description')->resolve(function ($root, $args) {
+			return (string)$root->getDescription()->__toString();
+		});
 		$fieldObject->addStringField('keywords');
 		$fieldObject->addField('social')->type($socialFieldObject);
 
