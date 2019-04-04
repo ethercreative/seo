@@ -378,6 +378,19 @@ class SeoData extends BaseObject
 		return $this->advanced['canonical'];
 	}
 
+	/**
+	 * @return array|string
+	 * @throws \Throwable
+	 */
+	public function getKeywordsAsString ()
+	{
+		$onlyKeywords = [];
+		foreach($this->keywords as $keyword) {
+			$onlyKeywords[] = $keyword['keyword'];
+		}
+		return implode(', ', $onlyKeywords);
+	}
+
 	// Helpers
 	// =========================================================================
 

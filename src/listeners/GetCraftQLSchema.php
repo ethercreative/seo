@@ -33,7 +33,11 @@ class GetCraftQLSchema
 		$fieldObject->addStringField('description')->resolve(function ($root, $args) {
 			return (string)$root->getDescription()->__toString();
 		});
-		$fieldObject->addStringField('keywords');
+		$fieldObject->addStringField('keywords')->resolve(function ($root, $args) {
+			return $root->getKeywordsAsString();
+		});
+		//print_r($fieldObject->addStringField('keywords')); exit;
+		//$fieldObject->addStringField('keywords');
 		$fieldObject->addField('social')->type($socialFieldObject);
 
 		$event->schema->addField($event->sender)->type($fieldObject);
