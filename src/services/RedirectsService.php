@@ -31,8 +31,18 @@ class RedirectsService extends Component
 		$exception = $event->exception;
 		$craft = \Craft::$app;
 
-		if (!($exception instanceof HttpException) || $exception->statusCode !== 404)
-			return;
+
+		// Check for standard Craft 404s and Twig {% exit 404 %}-type exceptions
+		if (!($exception instanceof HttpException) || $exception->statusCode !== 404) {
+			$previous = $exception->getPrevious();
+
+			if (! ($exception instanceof \Twig\Error\RuntimeError)
+				|| ! ($previous instanceof HttpException)
+				|| $previous->statusCode !== 404) {
+
+				return;
+			}
+		}
 
 		$path = $craft->request->getFullPath();
 		$query = $craft->request->getQueryStringWithoutPath();
