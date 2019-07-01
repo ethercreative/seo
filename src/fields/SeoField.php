@@ -201,7 +201,7 @@ class SeoField extends Field implements PreviewableFieldInterface
 				\Craft::parseEnv($craft->sites->currentSite->baseUrl),
 				$socialPreviewUrl
 			);
-			$socialPreviewUrl = $socialPreviewUrl[3];
+			$socialPreviewUrl = $socialPreviewUrl[3] ?? '';
 		}
 
 		// Advanced
