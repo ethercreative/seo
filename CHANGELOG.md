@@ -4,6 +4,7 @@
 
 ### Changed
 - Update minimum Craft CMS requirement to 3.2.x
+- Social titles and descriptions can now be edited independently of the main snippet (Fixed #185)
 
 ### Fixed
 - Fix entry preview error on keyword checklist (Fixes #224)

@@ -18,6 +18,12 @@ export default class Social {
 	socialPreviews = null;
 	snippetObserver = null;
 
+	previous = {
+		title: '',
+		desc: '',
+		url: '',
+	};
+
 	constructor (namespace, SEO) {
 		this.namespace = namespace;
 		this.SEO = SEO;
@@ -39,6 +45,9 @@ export default class Social {
 		this.snippetObserver = new MutationObserver(
 			this.onSnippetChange
 		);
+
+		// Trigger once to fill this.previous
+		this.onSnippetChange();
 
 		Object.values(this.SEO.snippetFields).forEach(el => {
 			if (el === null)
@@ -134,10 +143,22 @@ export default class Social {
 			, url   = hasSlug ? this.SEO.snippetFields.slug.parentNode.textContent.trim() : '';
 
 		for (let i = 0, l = this.socialPreviews.length; i < l; ++i) {
-			this.socialPreviews[i].getElementsByTagName('input')[0].value = title;
-			this.socialPreviews[i].getElementsByTagName('textarea')[0].value = desc;
-			this.socialPreviews[i].getElementsByTagName('span')[0].textContent = url;
+			const titleInput = this.socialPreviews[i].getElementsByTagName('input')[0]
+				, descInput = this.socialPreviews[i].getElementsByTagName('textarea')[0]
+				, urlInput = this.socialPreviews[i].getElementsByTagName('span')[0];
+
+			if (titleInput.value.trim() === '' || titleInput.value === this.previous.title)
+				titleInput.value = title;
+
+			if (descInput.value.trim() === '' || descInput.value === this.previous.desc)
+				descInput.value = desc;
+
+			urlInput.textContent = url;
 		}
+
+		this.previous.title = title.replace(/[\r\n]/g, '');
+		this.previous.desc = desc.replace(/[\r\n]/g, '');
+		this.previous.url = url;
 	};
 	
 }
