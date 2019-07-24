@@ -303,7 +303,7 @@ class SitemapService extends Component
 			if ($seoFieldHandle !== null) {
 				/** @var SeoData $seoField */
 				$seoField = $item->$seoFieldHandle;
-				if ($robots = $seoField->advanced['robots'])
+				if (property_exists($seoField, 'advanced') && $robots = $seoField->advanced['robots'])
 					if (in_array('noindex', $robots))
 						continue;
 			}

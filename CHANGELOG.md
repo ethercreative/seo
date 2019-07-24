@@ -8,7 +8,8 @@
 ### Fixed
 - Fix entry preview error on keyword checklist (Fixes #224)
 - Fix SEO field error when changing entry types (Fixes #215)
-- Fix entire image meta data being saved with SEO field (Fixes #142) 
+- Fix entire image meta data being saved with SEO field (Fixes #142)
+- Fix sitemap error when SEO field doesn't have any advanced data (Fixes #96)
 
 ## 3.5.4 - 2019-01-28
 
