@@ -33,10 +33,12 @@ export default class Snippet {
 		this.descField  = document.getElementById(`${namespace}Description`);
 
 		function getSafeValue () {
-			return this.textContent
-				.trim()
-				.replace(/[\r\n\t]/g, ' ')
-				.replace(/\s{2,}/g, ' ');
+			return decodeURI(
+				this.textContent
+					.trim()
+					.replace(/[\r\n\t]/g, ' ')
+					.replace(/\s{2,}/g, ' ')
+			);
 		}
 
 		this.titleField.getSafeValue = getSafeValue.bind(this.titleField);
