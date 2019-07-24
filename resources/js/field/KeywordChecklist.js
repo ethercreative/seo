@@ -50,7 +50,7 @@ export default class KeywordChecklist {
 	 * @param {Function} onNewRating
 	 */
 	calculate (keyword, onNewRating) {
-		EntryMarkup.update(this.SEO).then(content => {
+		EntryMarkup.update().then(content => {
 			this.ratings = [];
 			this.keyword = keyword;
 			this.keywordLower = keyword.toLowerCase();

@@ -2,6 +2,12 @@
 ### Added
 - Add OG image width & height meta tags (Fixes #220)
 
+### Changed
+- Update minimum Craft CMS requirement to 3.2.x
+
+### Fixed
+- Fix entry preview error on keyword checklist (Fixes #224)
+
 ## 3.5.4 - 2019-01-28
 
 ### Added

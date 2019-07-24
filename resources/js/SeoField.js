@@ -50,9 +50,9 @@ class SeoField {
 		new Snippet(namespace, this);
 		new Social(namespace, this);
 		
-		if (!this.options.hasPreview) return;
-		// TODO: Disable all preview related functionality
-		
+		if (!window.draftEditor)
+			return;
+
 		new FocusKeywords(namespace, this);
 	}
 	

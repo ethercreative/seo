@@ -35,7 +35,7 @@ class EntryMarkup {
 	 *
 	 * @return {Promise}
 	 */
-	update (SEO) {
+	update () {
 		return new Promise(async (resolve, reject) => {
 			const nextPostData = Garnish.getPostData(
 				document.getElementById("main-form")
@@ -50,11 +50,8 @@ class EntryMarkup {
 			this.postData = nextPostData;
 
 			try {
-				// Ensure we have a preview token
-				await this._getToken(SEO);
-
 				// Get the markup from the live preview
-				let data = await this._preview(nextPostData);
+				let data = await this._preview();
 
 				// Remove all <script/> & <style/> tags
 				data = data.replace(
@@ -106,37 +103,24 @@ class EntryMarkup {
 	// Helpers
 	// =========================================================================
 
-	_preview (nextPostData) {
-		return new Promise(((resolve, reject) => {
+	_preview () {
+		return new Promise((async (resolve, reject) => {
+			const de = window.draftEditor;
+
+			if (de.settings.previewTargets.length === 0)
+				reject();
+
 			$.ajax({
-				url: Craft.livePreview.previewUrl,
-				data: $.extend({}, nextPostData, Craft.livePreview.basePostData),
-				method: 'POST',
-				headers: { 'X-Craft-Token': this.token },
+				url: await de.getTokenizedPreviewUrl(de.settings.previewTargets[0].url),
+				// data: $.extend({}, nextPostData, Craft.livePreview.basePostData),
+				method: 'GET',
+				// headers: { 'X-Craft-Token': this.token },
 				xhrFields: { withCredentials: true },
 				crossDomain: true,
 				success: resolve,
 				error: reject,
 			});
 		}));
-	}
-
-	_getToken (SEO) {
-		return new Promise((resolve, reject) => {
-			if (this.token !== null)
-				return resolve();
-
-			Craft.postActionRequest('live-preview/create-token', {
-				previewAction: SEO.options.previewAction
-			}, (response, textStatus) => {
-				if (textStatus === 'success') {
-					this.token = response.token;
-					resolve();
-				} else {
-					reject();
-				}
-			});
-		});
 	}
 	
 }
