@@ -11,6 +11,7 @@
 - Fix SEO field error when changing entry types (Fixes #215)
 - Fix entire image meta data being saved with SEO field (Fixes #142)
 - Fix sitemap error when SEO field doesn't have any advanced data (Fixes #96)
+- Fix keyword checklist reading title length incorrectly (Fixes #199)
 
 ## 3.5.4 - 2019-01-28
 

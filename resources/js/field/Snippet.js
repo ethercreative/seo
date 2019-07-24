@@ -31,7 +31,17 @@ export default class Snippet {
 		this.titleField = document.getElementById(`${namespace}Title`);
 		this.slugField  = document.getElementById(`${namespace}Slug`);
 		this.descField  = document.getElementById(`${namespace}Description`);
-		
+
+		function getSafeValue () {
+			return this.textContent
+				.trim()
+				.replace(/[\r\n\t]/g, ' ')
+				.replace(/\s{2,}/g, ' ');
+		}
+
+		this.titleField.getSafeValue = getSafeValue.bind(this.titleField);
+		this.descField.getSafeValue = getSafeValue.bind(this.descField);
+
 		this.SEO.snippetFields = {
 			title: this.titleField,
 			slug:  this.slugField,

@@ -199,7 +199,7 @@ export default class KeywordChecklist {
 	 * Judge the length of the title
 	 */
 	judgeTitleLength () {
-		const l = this.SEO.snippetFields.title.textContent.trim().length;
+		const l = this.SEO.snippetFields.title.getSafeValue().length;
 		
 		this.addRating(
 			l < 40 || l > 60 ? SEO_RATING.POOR : SEO_RATING.GOOD,
@@ -215,7 +215,7 @@ export default class KeywordChecklist {
 	 * Judge the positioning of the keyword in the title
 	 */
 	judgeTitleKeyword () {
-		const title = this.SEO.snippetFields.title.textContent.trim();
+		const title = this.SEO.snippetFields.title.getSafeValue();
 		const index = title.toLowerCase().indexOf(this.keywordLower);
 		
 		if (index > -1) {
@@ -270,7 +270,7 @@ export default class KeywordChecklist {
 	 * TODO: Check if keyword appears in first half / appearance count
 	 */
 	judgeDesc () {
-		const desc = this.SEO.snippetFields.desc.value.toLowerCase();
+		const desc = this.SEO.snippetFields.desc.getSafeValue().toLowerCase();
 		
 		if (desc.indexOf(this.keywordLower) > -1) {
 			this.addRating(
