@@ -2,6 +2,7 @@
 
 namespace ether\seo\web\twig;
 
+use Craft;
 use craft\elements\Asset;
 use craft\helpers\Template;
 use craft\helpers\UrlHelper;
@@ -47,7 +48,7 @@ class Variable
 	// -------------------------------------------------------------------------
 
 	/**
-	 * @param Asset|null $image
+	 * @param Asset|int|string|null $image
 	 *
 	 * @return \Twig_Markup|string
 	 * @throws \yii\base\Exception
@@ -61,7 +62,7 @@ class Variable
 	}
 
 	/**
-	 * @param Asset|null $image
+	 * @param Asset|int|string|null $image
 	 *
 	 * @return \Twig_Markup|string
 	 * @throws \yii\base\Exception
@@ -75,7 +76,7 @@ class Variable
 	}
 
 	/**
-	 * @param Asset|null $image
+	 * @param Asset|int|string|null $image
 	 * @param array      $transform
 	 *
 	 * @return \Twig_Markup|string
@@ -83,7 +84,17 @@ class Variable
 	 */
 	private function _socialImage ($image, array $transform)
 	{
-		if (!$image) return '';
+		if (!$image)
+			return '';
+
+		if (is_array($image))
+			$image = $image['id'];
+
+		if (!($image instanceof Asset))
+			$image = Craft::$app->assets->getAssetById((int) $image);
+
+		if (!$image)
+			return '';
 
 		$transformUrl = $image->getUrl($transform);
 

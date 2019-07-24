@@ -8,6 +8,7 @@
 
 namespace ether\seo\models\data;
 
+use Craft;
 use craft\elements\Asset;
 use ether\seo\models\Settings;
 use ether\seo\Seo;
@@ -38,8 +39,8 @@ class SocialData extends BaseObject
 	/** @var string */
 	public $title = '';
 
-	/** @var Asset|array|null */
-	public $image = null;
+	/** @var string|int */
+	public $imageId = null;
 
 	/** @var string */
 	public $description = '';
@@ -61,6 +62,12 @@ class SocialData extends BaseObject
 		$this->_network = $network;
 		$this->_fallback = $fallback;
 
+		if (array_key_exists('image', $config))
+		{
+			$config['imageId'] = $config['image'];
+			unset($config['image']);
+		}
+
 		parent::__construct($config);
 	}
 
@@ -77,12 +84,6 @@ class SocialData extends BaseObject
 			if (empty($value) && array_key_exists($key, $this->_fallback))
 				$this->$key = $this->_fallback[$key];
 
-		// Convert JSON decoded array to an Asset
-		$image = $this->image;
-		if (is_array($image)) $image = $image['id'];
-		if (!($image instanceof Asset))
-			$this->image = \Craft::$app->assets->getAssetById((int) $image);
-
 		// Network Specific
 		switch ($this->_network)
 		{
@@ -93,6 +94,25 @@ class SocialData extends BaseObject
 				$this->handle = $seoSettings->twitterHandle;
 				break;
 		}
+	}
+
+	// Getters
+	// =========================================================================
+
+	/**
+	 * @return array|Asset|null
+	 */
+	public function getImage ()
+	{
+		$image = $this->imageId;
+
+		if (is_array($image))
+			$image = $image['id'];
+
+		if (!($image instanceof Asset))
+			$image = Craft::$app->assets->getAssetById((int) $image);
+
+		return $image;
 	}
 
 }
