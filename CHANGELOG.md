@@ -1,3 +1,7 @@
+## [Unreleased] 3.6.0
+### Added
+- Add OG image width & height meta tags (Fixes #220)
+
 ## 3.5.4 - 2019-01-28
 
 ### Added
