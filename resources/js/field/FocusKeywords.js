@@ -102,14 +102,18 @@ export default class FocusKeywords {
 	 * Start watching the form
 	 */
 	startObserving () {
-		if (!this.mo) return;
+		if (!this.mo)
+			return;
 		
 		let target = this.keywordsField.form;
 		
 		// If target is null that means we're in livePreview mode
-		if (target === null)
+		if (target === null && Craft.livePreview)
 			target = Craft.livePreview.$editor[0];
-		
+
+		if (target === null)
+			return;
+
 		// TODO: Only want to watch form elements that will be posted
 		this.mo.observe(target, {
 			childList: true,
