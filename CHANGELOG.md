@@ -13,6 +13,7 @@
 - Fix sitemap error when SEO field doesn't have any advanced data (Fixes #96)
 - Fix keyword checklist reading title length incorrectly (Fixes #199)
 - Fix social meta outputting encoded characters (Fixes #198)
+- Fix social description not updating correctly (Fixes #213)
 
 ### Improved
 - Improve alt text judgment in keyword checklist

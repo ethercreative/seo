@@ -53,6 +53,11 @@ export default class Social {
 			if (el === null)
 				return;
 
+			if (~['TEXTAREA', 'INPUT'].indexOf(el.tagName.toUpperCase())) {
+				el.addEventListener('change', this.onSnippetChange);
+				return;
+			}
+
 			this.snippetObserver.observe(el, {
 				childList: true,
 				characterData: true,
@@ -138,9 +143,9 @@ export default class Social {
 	onSnippetChange = () => {
 		const hasSlug = this.SEO.snippetFields.slug !== null;
 
-		const title = this.SEO.snippetFields.title.textContent.trim().replace(/\t/g, '')
-			, desc  = this.SEO.snippetFields.desc.textContent.trim()
-			, url   = hasSlug ? this.SEO.snippetFields.slug.parentNode.textContent.trim() : '';
+		const title = this.SEO.snippetFields.title.getSafeValue()
+			, desc  = this.SEO.snippetFields.desc.getSafeValue()
+			, url   = hasSlug ? this.SEO.snippetFields.slug.getSafeValue() : '';
 
 		for (let i = 0, l = this.socialPreviews.length; i < l; ++i) {
 			const titleInput = this.socialPreviews[i].getElementsByTagName('input')[0]

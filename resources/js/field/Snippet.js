@@ -32,9 +32,9 @@ export default class Snippet {
 		this.slugField  = document.getElementById(`${namespace}Slug`);
 		this.descField  = document.getElementById(`${namespace}Description`);
 
-		function getSafeValue () {
+		function getSafeValue (attr = 'textContent') {
 			return decodeURI(
-				this.textContent
+				this[attr]
 					.trim()
 					.replace(/[\r\n\t]/g, ' ')
 					.replace(/\s{2,}/g, ' ')
@@ -42,7 +42,8 @@ export default class Snippet {
 		}
 
 		this.titleField.getSafeValue = getSafeValue.bind(this.titleField);
-		this.descField.getSafeValue = getSafeValue.bind(this.descField);
+		this.slugField.getSafeValue = getSafeValue.bind(this.slugField.parentNode);
+		this.descField.getSafeValue = getSafeValue.bind(this.descField, 'value');
 
 		this.SEO.snippetFields = {
 			title: this.titleField,
