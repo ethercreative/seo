@@ -161,7 +161,13 @@
 					</tr>
 					</thead>
 					<tbody data-redirects="{{ siteId }}">
-					{% for redirect in redirects[siteId] ?? [] %}
+					{% set siteRedirects = redirects[siteId] ?? [] %}
+
+					{% if siteId == 'null' %}
+						{% set siteRedirects = siteRedirects|merge(redirects[0] ?? []) %}
+					{% endif %}
+
+					{% for redirect in siteRedirects %}
 						<tr tabindex="0" data-id="{{ redirect.id }}">
 							<td class="redirects--title-col">
 								<div class="element small">
