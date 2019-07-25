@@ -310,9 +310,13 @@ export default class KeywordChecklist {
 	 * Judge keyword in first paragraph
 	 */
 	judgeFirstParagraph () {
-		const p = this.content.querySelector('p');
-		
-		if (p && p.textContent.toLowerCase().indexOf(this.keywordLower) > -1) {
+		const p = this.content.querySelector('p')
+			, pInMain = this.content.querySelector('main p')
+			, pInArticle = this.content.querySelector('article p');
+
+		const c = p => p && p.textContent.toLowerCase().indexOf(this.keywordLower) > -1;
+
+		if (c(p) || c(pInMain) || c(pInArticle)) {
 			this.addRating(
 				SEO_RATING.GOOD,
 				SEO_REASONS.firstParagraphSuccess
