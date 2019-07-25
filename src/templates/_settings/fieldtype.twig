@@ -1,6 +1,9 @@
 {% import "_includes/forms" as forms %}
 
-{% include 'seo/_seo/settings' with { default: true } %}
+{% include 'seo/_seo/settings' with {
+	default: true,
+	metaInstructions: 'Decide how the page meta should look for pages that have an associated SEO field (i.e. static templates, anywhere `craft.seo.custom()` is used)',
+} %}
 
 {{ forms.textField({
 	label: "SEO Meta Template",

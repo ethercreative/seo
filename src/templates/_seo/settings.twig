@@ -132,7 +132,7 @@
 {% endset %}
 {{ forms.field({
 	label: 'Page Meta',
-	instructions: 'Decide how the page meta should look for this field',
+	instructions: metaInstructions is defined ? metaInstructions : 'Decide how the page meta should look for this field',
 }, seoMeta) }}
 
 {% if volumes %}
