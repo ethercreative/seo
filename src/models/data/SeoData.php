@@ -438,6 +438,12 @@ class SeoData extends BaseObject
 				if ($name !== $this->_handle)
 					$variables[$name] = $this->_element->$name;
 
+			if (!array_key_exists('type', $variables) && $this->_element->hasMethod('getType'))
+				$variables['type'] = $this->_element->getType();
+
+			if (!array_key_exists('section', $variables) && $this->_element->hasMethod('getSection'))
+				$variables['section'] = $this->_element->getSection();
+
 			$variables = array_merge(
 				$variables,
 				$this->_element->toArray($this->_element->extraFields())

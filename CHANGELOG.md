@@ -17,6 +17,7 @@
 - Fix multi-word keyword not checking slug correctly (Fixes #152)
 - Fix CraftQL integration (Fixes #187)
 - Fix SEO field erring in globals (Fixes #226)
+- Fix section and type not being available in tokens (Fixes #221)
 
 ### Improved
 - Improve alt text judgment in keyword checklist
