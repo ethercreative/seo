@@ -14,6 +14,7 @@
 - Fix keyword checklist reading title length incorrectly (Fixes #199)
 - Fix social meta outputting encoded characters (Fixes #198)
 - Fix social description not updating correctly (Fixes #213)
+- Fix multi-word keyword not checking slug correctly (Fixes #152)
 
 ### Improved
 - Improve alt text judgment in keyword checklist

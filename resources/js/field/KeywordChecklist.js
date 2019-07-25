@@ -248,8 +248,8 @@ export default class KeywordChecklist {
 			return;
 		
 		const slug = this.SEO.snippetFields.slug.textContent.toLowerCase();
-		const keyword = this.keywordLower.replace(/[^a-zA-Z0-9-_]/g, '');
-		
+		const keyword = encodeURI(this.keywordLower.replace(/[\t\s]+/g, '-'));
+
 		if (slug.indexOf(keyword) > -1) {
 			this.addRating(
 				SEO_RATING.GOOD,
