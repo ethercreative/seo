@@ -6,9 +6,9 @@ use Craft;
 use craft\elements\Asset;
 use craft\helpers\Template;
 use craft\helpers\UrlHelper;
-use ether\seo\fields\SeoField;
 use ether\seo\models\data\SeoData;
-use Twig_Template;
+use Twig\Markup;
+use yii\base\Exception;
 
 class Variable
 {
@@ -50,8 +50,8 @@ class Variable
 	/**
 	 * @param Asset|int|string|null $image
 	 *
-	 * @return \Twig_Markup|string
-	 * @throws \yii\base\Exception
+	 * @return Markup|string
+	 * @throws Exception
 	 */
 	public function twitterImage ($image)
 	{
@@ -64,8 +64,8 @@ class Variable
 	/**
 	 * @param Asset|int|string|null $image
 	 *
-	 * @return \Twig_Markup|string
-	 * @throws \yii\base\Exception
+	 * @return Markup|string
+	 * @throws Exception
 	 */
 	public function facebookImage ($image)
 	{
@@ -79,8 +79,8 @@ class Variable
 	 * @param Asset|int|string|null $image
 	 * @param array      $transform
 	 *
-	 * @return \Twig_Markup|string
-	 * @throws \yii\base\Exception
+	 * @return Markup|string
+	 * @throws Exception
 	 */
 	private function _socialImage ($image, array $transform)
 	{
@@ -102,9 +102,9 @@ class Variable
 			return '';
 
 		if ($transformUrl && strpos($transformUrl, 'http') === false)
-			$transformUrl = UrlHelper::urlWithScheme($transformUrl, (\Craft::$app->getRequest()->getIsSecureConnection()? 'https': 'http'));
+			$transformUrl = UrlHelper::urlWithScheme($transformUrl, (Craft::$app->getRequest()->getIsSecureConnection()? 'https': 'http'));
 
-		return Template::raw(\Craft::parseEnv($transformUrl));
+		return Template::raw(Craft::parseEnv($transformUrl));
 	}
 
 }
