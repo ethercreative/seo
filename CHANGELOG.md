@@ -20,6 +20,7 @@
 - Improve alt text judgment in keyword checklist
 - Check for keyword in first paragraph of body, main, and article tags
 - Improve page meta field instructions in SEO settings
+- Ensure canonical is always an absolute URL (Fixes #202)
 
 ## 3.5.4 - 2019-01-28
 

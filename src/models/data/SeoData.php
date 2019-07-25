@@ -8,14 +8,17 @@
 
 namespace ether\seo\models\data;
 
+use Craft;
 use craft\base\Element;
 use craft\base\ElementInterface;
 use craft\helpers\Json;
+use craft\helpers\UrlHelper;
 use craft\web\View;
 use ether\seo\fields\SeoField;
 use ether\seo\models\Settings;
 use ether\seo\Seo;
 use yii\base\BaseObject;
+use yii\base\Exception;
 
 /**
  * Class SeoData
@@ -215,7 +218,7 @@ class SeoData extends BaseObject
 		// Title
 		// ---------------------------------------------------------------------
 
-		$twig     = \Craft::$app->view->twig;
+		$twig     = Craft::$app->view->twig;
 		$title    = array_filter($this->titleRaw);
 		$template = $this->_getSetting('title');
 
@@ -302,7 +305,7 @@ class SeoData extends BaseObject
 		if (
 			$this->_element === null
 			|| $this->_handle === null
-			|| !\Craft::$app->request->isCpRequest
+			|| !Craft::$app->request->isCpRequest
 		) return [];
 
 		$template = $this->_getSetting('title');
@@ -345,7 +348,7 @@ class SeoData extends BaseObject
 	 */
 	public function getRobots ()
 	{
-		if (\Craft::$app->config->general->devMode)
+		if (Craft::$app->config->general->devMode)
 			return 'none, noimageindex';
 
 		if (!empty($this->advanced['robots']))
@@ -369,13 +372,14 @@ class SeoData extends BaseObject
 	 * Returns the canonical URL (falling back to the current URL if not set)
 	 *
 	 * @return string
+	 * @throws Exception
 	 */
 	public function getCanonical ()
 	{
 		if (empty($this->advanced['canonical']))
-			return \Craft::$app->request->absoluteUrl;
+			return Craft::$app->request->absoluteUrl;
 
-		return $this->advanced['canonical'];
+		return UrlHelper::siteUrl($this->advanced['canonical']);
 	}
 
 	// Helpers
@@ -397,7 +401,7 @@ class SeoData extends BaseObject
 	{
 		$image = null;
 
-		$assets = \Craft::$app->assets;
+		$assets = Craft::$app->assets;
 
 		$fieldFallback = $this->_fieldSettings['socialImage'];
 
@@ -451,7 +455,7 @@ class SeoData extends BaseObject
 	 */
 	private function _render ($template, $variables)
 	{
-		$craft = \Craft::$app;
+		$craft = Craft::$app;
 
 		if ($template === null)
 			return '';
@@ -465,7 +469,7 @@ class SeoData extends BaseObject
 				$craft->sites->setCurrentSite($this->_element->site);
 				$craft->view->setTemplateMode(View::TEMPLATE_MODE_SITE);
 
-				$ret = \Craft::$app->view->renderObjectTemplate(
+				$ret = Craft::$app->view->renderObjectTemplate(
 					$template,
 					$variables
 				);
@@ -475,7 +479,7 @@ class SeoData extends BaseObject
 			}
 			else
 			{
-				$ret = \Craft::$app->view->renderObjectTemplate(
+				$ret = Craft::$app->view->renderObjectTemplate(
 					$template,
 					$variables
 				);

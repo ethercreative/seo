@@ -2,15 +2,12 @@
 
 namespace ether\seo\services;
 
+use Craft;
 use craft\base\Component;
 use craft\base\Element;
 use craft\base\Field;
-use craft\db\Migration;
-use craft\db\Query;
-use craft\helpers\Json;
 use ether\seo\fields\SeoField;
 use ether\seo\models\data\SeoData;
-use ether\seo\Seo;
 
 class SeoService extends Component
 {
@@ -23,10 +20,10 @@ class SeoService extends Component
 	 */
 	public function injectRobots ()
 	{
-		$headers = \Craft::$app->getResponse()->getHeaders();
+		$headers = Craft::$app->getResponse()->getHeaders();
 
 		// If devMode always noindex
-		if (\Craft::$app->config->general->devMode)
+		if (Craft::$app->config->general->devMode)
 		{
 			$headers->set('x-robots-tag', 'none, noimageindex');
 			return;
@@ -56,7 +53,7 @@ class SeoService extends Component
 	{
 		list($field) = $this->_getElementAndSeoFields();
 
-		\Craft::$app->getResponse()->getHeaders()->add(
+		Craft::$app->getResponse()->getHeaders()->add(
 			'Link',
 			'<' . $field->canonical . '>; rel="canonical"'
 		);
@@ -74,7 +71,7 @@ class SeoService extends Component
 			return [$field, $element];
 
 		try {
-			$resolve = \Craft::$app->request->resolve();
+			$resolve = Craft::$app->request->resolve();
 		} catch (\Exception $e) {
 			$resolve = [null, []];
 		}
