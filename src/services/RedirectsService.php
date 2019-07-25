@@ -2,10 +2,15 @@
 
 namespace ether\seo\services;
 
+use Craft;
 use craft\base\Component;
 use craft\events\ExceptionEvent;
 use craft\helpers\UrlHelper;
 use ether\seo\records\RedirectRecord;
+use Exception;
+use Throwable;
+use yii\base\ExitException;
+use yii\db\StaleObjectException;
 use yii\web\HttpException;
 
 class RedirectsService extends Component
@@ -24,12 +29,12 @@ class RedirectsService extends Component
 	 *
 	 * @return void
 	 * @throws \yii\base\Exception
-	 * @throws \yii\base\ExitException
+	 * @throws ExitException
 	 */
 	public function onException (ExceptionEvent $event)
 	{
 		$exception = $event->exception;
-		$craft = \Craft::$app;
+		$craft = Craft::$app;
 
 		if (!($exception instanceof HttpException) || $exception->statusCode !== 404)
 			return;
@@ -64,17 +69,17 @@ class RedirectsService extends Component
 		if ($currentSiteOnly)
 			return RedirectRecord::find()->where(
 				'[[siteId]] IS NULL OR [[siteId]] = ' .
-				\Craft::$app->sites->currentSite->id
-			)->orderBy('siteId asc')->all();
+				Craft::$app->sites->currentSite->id
+			)->orderBy('dateCreated asc, siteId asc')->all();
 
 		return array_reduce(
-			RedirectRecord::find()->all(),
+			RedirectRecord::find()->orderBy('dateCreated ASC')->all(),
 			function ($a, RedirectRecord $record) {
 				$a[$record->siteId ?? 'null'][] = $record;
 				return $a;
 			},
 			array_reduce(
-				\Craft::$app->sites->allSiteIds,
+				Craft::$app->sites->allSiteIds,
 				function ($a, $id) {
 					$a[$id] = [];
 					return $a;
@@ -214,9 +219,9 @@ class RedirectsService extends Component
 	 * @param int $id
 	 *
 	 * @return bool|string
-	 * @throws \Exception
-	 * @throws \Throwable
-	 * @throws \yii\db\StaleObjectException
+	 * @throws Exception
+	 * @throws Throwable
+	 * @throws StaleObjectException
 	 */
 	public function delete ($id)
 	{

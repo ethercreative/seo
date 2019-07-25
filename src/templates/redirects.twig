@@ -157,6 +157,7 @@
 						<th scope="col" data-attribute="uri">URI</th>
 						<th scope="col" data-attribute="to">To</th>
 						<th scope="col" data-attribute="type">Type</th>
+						<th scope="col" data-attribute="added">Added</th>
 						<td class="thin checkbox-cell"></td>
 					</tr>
 					</thead>
@@ -177,6 +178,7 @@
 											   data-id="{{ redirect.id }}"
 											   data-uri="{{ redirect.uri }}"
 											   data-to="{{ redirect.to }}"
+											   data-added="{{ redirect.dateCreated|datetime('short') }}"
 											   data-type="{{ redirect.type|default('301') }}">
 												{{ redirect.uri }}
 											</a>
@@ -189,6 +191,9 @@
 							</td>
 							<td>
 								{{ redirectType[redirect.type|default('301')] }}
+							</td>
+							<td>
+								{{ redirect.dateCreated|datetime('short') }}
 							</td>
 							<td class="thin action">
 								<a class="delete icon" title="Delete"></a>

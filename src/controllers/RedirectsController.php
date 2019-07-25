@@ -2,9 +2,15 @@
 
 namespace ether\seo\controllers;
 
+use Craft;
 use craft\web\Controller;
 use ether\seo\Seo;
 use ether\seo\web\assets\RedirectsAsset;
+use Exception;
+use Throwable;
+use yii\base\InvalidConfigException;
+use yii\db\StaleObjectException;
+use yii\web\BadRequestHttpException;
 use yii\web\HttpException;
 
 class RedirectsController extends Controller
@@ -12,17 +18,17 @@ class RedirectsController extends Controller
 
 	/**
 	 * @throws HttpException
-	 * @throws \yii\base\InvalidConfigException
+	 * @throws InvalidConfigException
 	 */
 	public function actionIndex ()
 	{
-		$currentUser = \Craft::$app->user;
+		$currentUser = Craft::$app->user;
 		if (!$currentUser->checkPermission('manageRedirects') && !$currentUser->getIsAdmin())
 			throw new HttpException(403);
 
 		$namespace = 'data';
-		$csrfn = \Craft::$app->config->general->csrfTokenName;
-		$csrf  = \Craft::$app->request->csrfToken;
+		$csrfn = Craft::$app->config->general->csrfTokenName;
+		$csrf  = Craft::$app->request->csrfToken;
 
 		$this->view->registerAssetBundle(RedirectsAsset::class);
 		$this->view->registerJs(
@@ -30,7 +36,7 @@ class RedirectsController extends Controller
 		);
 
 		$sites = ['null' => 'All Sites'];
-		foreach (\Craft::$app->sites->getAllSites() as $site)
+		foreach (Craft::$app->sites->getAllSites() as $site)
 			$sites[$site->id] = $site->name;
 
 		return $this->renderTemplate('seo/redirects', [
@@ -44,13 +50,13 @@ class RedirectsController extends Controller
 	}
 
 	/**
-	 * @throws \yii\web\BadRequestHttpException
+	 * @throws BadRequestHttpException
 	 */
 	public function actionSave ()
 	{
 		$this->requirePostRequest();
 
-		$request  = \Craft::$app->request;
+		$request  = Craft::$app->request;
 
 		$uri    = $request->getRequiredBodyParam('uri');
 		$to     = $request->getRequiredBodyParam('to');
@@ -74,11 +80,11 @@ class RedirectsController extends Controller
 	}
 
 	/**
-	 * @throws \yii\web\BadRequestHttpException
+	 * @throws BadRequestHttpException
 	 */
 	public function actionBulk ()
 	{
-		$request  = \Craft::$app->request;
+		$request  = Craft::$app->request;
 
 		$redirects = $request->getRequiredBodyParam('redirects');
 		$separator = $request->getRequiredBodyParam('separator');
@@ -102,14 +108,14 @@ class RedirectsController extends Controller
 	}
 
 	/**
-	 * @throws \Exception
-	 * @throws \Throwable
-	 * @throws \yii\db\StaleObjectException
-	 * @throws \yii\web\BadRequestHttpException
+	 * @throws Exception
+	 * @throws Throwable
+	 * @throws StaleObjectException
+	 * @throws BadRequestHttpException
 	 */
 	public function actionDelete ()
 	{
-		$id = \Craft::$app->request->getRequiredBodyParam('id');
+		$id = Craft::$app->request->getRequiredBodyParam('id');
 
 		if ($err = Seo::$i->redirects->delete($id))
 			return $this->asErrorJson($err);

@@ -81,21 +81,8 @@ export default class Redirects {
 			, siteId = form.elements[this.namespaceField("siteId")];
 
 		// Validate
-		let valid = true;
-		if (uri.value.trim() === "") {
-			uri.classList.add("error");
-			valid = false;
-		} else uri.classList.remove("error");
-		
-		if (to.value.trim() === "") {
-			to.classList.add("error");
-			valid = false;
-		} else to.classList.remove("error");
-		
-		if (!valid) return;
-		
-		// Submit
-		spinner.classList.remove("hidden");
+		if (!Redirects._validate(uri, to, spinner))
+			return;
 		
 		this.post("POST", {
 			uri: uri.value,
@@ -182,21 +169,8 @@ export default class Redirects {
 			, type = form.elements[this.namespaceField("type")];
 		
 		// Validate
-		let valid = true;
-		if (uri.value.trim() === "") {
-			uri.classList.add("error");
-			valid = false;
-		} else uri.classList.remove("error");
-		
-		if (to.value.trim() === "") {
-			to.classList.add("error");
-			valid = false;
-		} else to.classList.remove("error");
-		
-		if (!valid) return;
-		
-		// Submit
-		spinner.classList.remove("hidden");
+		if (!Redirects._validate(uri, to, spinner))
+			return;
 		
 		this.post("POST", {
 			id: id.value,
@@ -205,12 +179,13 @@ export default class Redirects {
 			type: type.value,
 		}, () => {
 			const row = this.editRow;
-			
+
 			this.cancelCurrentEdit();
 			
 			this.tables[siteId].insertBefore(
 				this.rowStatic(
-					id.value, uri.value, to.value, type.value, siteId.value
+					id.value, uri.value, to.value, type.value, siteId.value,
+					row.dataset.added
 				),
 				row
 			);
@@ -224,13 +199,14 @@ export default class Redirects {
 	
 	onEditClick = (siteId, e, row) => {
 		e.preventDefault();
-		const { id, uri, to, type } = e.target.dataset;
+		const { id, uri, to, type, added } = e.target.dataset;
 		this.cancelCurrentEdit();
 		
 		const editRows = this.rowEdit(id, uri, to, type);
-		
+
 		this.editRow = row;
-		
+		this.editRow.setAttribute('data-added', added);
+
 		this.cancelCurrentEdit = () => {
 			this.tables[siteId].insertBefore(row, editRows[0]);
 			this.tables[siteId].removeChild(editRows[0]);
@@ -317,7 +293,9 @@ export default class Redirects {
 		});
 	}
 	
-	rowStatic (id = -1, uri = "", to = "", type = 301, siteId = null) {
+	rowStatic (id = -1, uri = "", to = "", type = 301, siteId = null, dateCreated = null) {
+		const added = dateCreated || 'Now';
+
 		const row = c("tr", { "tabindex": 0, "data-id": id }, [
 			// URI
 			c("td", { "class": "redirects--title-col" }, [
@@ -331,18 +309,22 @@ export default class Redirects {
 								"data-uri": uri,
 								"data-to": to,
 								"data-type": type,
+								"data-added": dateCreated,
 								"click": e => this.onEditClick(siteId, e, row)
 							}, uri)
 						])
 					])
 				])
 			]),
-			
+
 			// To
 			c("td", {}, to),
 			
 			// Type
 			c("td", {}, REDIRECT_TYPES[type]),
+
+			// Added
+			c("td", {}, added),
 			
 			// Delete
 			c("td", { "class": "thin action" }, [
@@ -386,7 +368,7 @@ export default class Redirects {
 				]),
 				
 				// Type
-				c("td", {}, [
+				c("td", { "colspan": 2 }, [
 					c("div", { "class": "select" }, [
 						c("select", {
 							"name": this.namespaceField("type")
@@ -410,7 +392,7 @@ export default class Redirects {
 			]),
 			
 			c("tr", { "class": "redirects--edit-controls" }, [
-				c("td", { "colspan": 4 }, [
+				c("td", { "colspan": 5 }, [
 					c("input", {
 						"class": "btn submit",
 						"type": "submit",
@@ -425,6 +407,27 @@ export default class Redirects {
 				])
 			])
 		];
+	}
+
+	static _validate (uri, to, spinner) {
+		let valid = true;
+		if (uri.value.trim() === "") {
+			uri.classList.add("error");
+			valid = false;
+		} else uri.classList.remove("error");
+
+		if (to.value.trim() === "") {
+			to.classList.add("error");
+			valid = false;
+		} else to.classList.remove("error");
+
+		if (!valid)
+			return false;
+
+		// Submit
+		spinner.classList.remove("hidden");
+
+		return true;
 	}
 	
 }

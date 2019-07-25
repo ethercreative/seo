@@ -1,4 +1,7 @@
 ## [Unreleased] 3.6.1
+### Added
+- Added date added column to redirects (Closes #160)
+
 ### Fixed
 - Fix bulk importing of redirects (Fixes #154)
 
