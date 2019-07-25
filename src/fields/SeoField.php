@@ -7,6 +7,7 @@ use craft\base\Field;
 use craft\base\PreviewableFieldInterface;
 use craft\elements\Category;
 use craft\elements\Entry;
+use craft\elements\GlobalSet;
 use craft\helpers\Json;
 use craft\models\Section;
 use ether\seo\models\data\SeoData;
@@ -227,6 +228,8 @@ class SeoField extends Field implements PreviewableFieldInterface
 
 		if ($element instanceof Category)
 			$renderData['groupId'] = $element->groupId;
+		elseif ($element instanceof GlobalSet)
+			$renderData['typeId'] = null;
 		elseif ($isCalendar)
 			$renderData['calendarId'] = $element->calendarId;
 		else
