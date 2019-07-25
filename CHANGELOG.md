@@ -14,6 +14,9 @@
 - Fix keyword checklist reading title length incorrectly (Fixes #199)
 - Fix social meta outputting encoded characters (Fixes #198)
 
+### Improved
+- Improve alt text judgment in keyword checklist
+
 ## 3.5.4 - 2019-01-28
 
 ### Added

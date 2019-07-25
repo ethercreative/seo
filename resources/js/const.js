@@ -37,9 +37,10 @@ export const SEO_REASONS = {
 	firstParagraphFail: 'The keyword does not appear in the first paragraph of your text. Try adding it.',
 	firstParagraphSuccess: 'The keyword appears in the first paragraph of your text.',
 	
-	imagesFail: 'Less than half of the images have alt tags containing the keyword, try adding it to more images.',
-	imagesOk: 'Half or more of the images have alt tags containing the keyword. To improve this, try adding keywords to all the images alt tags.',
-	imagesSuccess: 'All of the images have alt tags containing the keyword.',
+	imagesFail: 'Less than a third of the images have alt tags containing the keyword, try adding it to more images.',
+	imagesFailMax: 'Most of the images have alt tags containing the keyword. This may be too many and can lead to a poor experience for visually impaired users.',
+	imagesOk: 'More than half of the images have alt tags containing the keyword. Ensure the alt tags are contextual to the content, and not stuffed with keywords.',
+	imagesSuccess: 'An acceptable number of images have alt tags containing the keyword.',
 	
 	linksFail: 'The page does not contain any outgoing links. Try adding some.',
 	linksSuccess: 'The page contains outgoing links.',

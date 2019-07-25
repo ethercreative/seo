@@ -344,8 +344,10 @@ export default class KeywordChecklist {
 			if (alt && alt.toLowerCase().indexOf(this.keywordLower) > -1)
 				withKeywordAlt++;
 		}
+
+		const l = p => Math.round(imgs.length * p);
 		
-		if (withKeywordAlt >= imgs.length * 0.8) {
+		if (withKeywordAlt >= l(0.3) && withKeywordAlt <= l(0.5)) {
 			this.addRating(
 				SEO_RATING.GOOD,
 				SEO_REASONS.imagesSuccess
@@ -353,10 +355,18 @@ export default class KeywordChecklist {
 			return;
 		}
 		
-		if (withKeywordAlt >= imgs.length * 0.5) {
+		if (withKeywordAlt > l(0.5) && withKeywordAlt < l(0.85)) {
 			this.addRating(
 				SEO_RATING.AVERAGE,
 				SEO_REASONS.imagesOk
+			);
+			return;
+		}
+
+		if (withKeywordAlt >= l(0.85)) {
+			this.addRating(
+				SEO_RATING.POOR,
+				SEO_REASONS.imagesFailMax
 			);
 			return;
 		}
