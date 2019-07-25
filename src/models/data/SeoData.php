@@ -17,6 +17,7 @@ use craft\web\View;
 use ether\seo\fields\SeoField;
 use ether\seo\models\Settings;
 use ether\seo\Seo;
+use Twig\Markup;
 use yii\base\BaseObject;
 use yii\base\Exception;
 
@@ -293,7 +294,7 @@ class SeoData extends BaseObject
 			);
 		}
 
-		return new \Twig_Markup($this->_renderedTitle, 'utf8');
+		return new Markup($this->_renderedTitle, 'utf8');
 	}
 
 	/**
@@ -315,7 +316,7 @@ class SeoData extends BaseObject
 
 		foreach ($template as $token)
 		{
-			$tokens[$token['key']] = new \Twig_Markup(
+			$tokens[$token['key']] = new Markup(
 				$this->_render(
 					$token['template'],
 					$elementArray
@@ -340,7 +341,7 @@ class SeoData extends BaseObject
 			);
 		}
 
-		return new \Twig_Markup($this->_renderedDescription, 'utf8');
+		return new Markup($this->_renderedDescription, 'utf8');
 	}
 
 	/**

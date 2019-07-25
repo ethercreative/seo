@@ -15,6 +15,7 @@
 - Fix social meta outputting encoded characters (Fixes #198)
 - Fix social description not updating correctly (Fixes #213)
 - Fix multi-word keyword not checking slug correctly (Fixes #152)
+- Fix CraftQL integration (Fixes #187)
 
 ### Improved
 - Improve alt text judgment in keyword checklist
