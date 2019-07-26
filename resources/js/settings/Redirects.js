@@ -140,8 +140,8 @@ export default class Redirects {
 			separator: separator.value,
 			type: type.value,
 			siteId: siteId.value,
-		}, ({ redirects }) => {
-			redirects.forEach(({ id, uri, to, type, siteId }) => {
+		}, ({ redirects: newRedirects }) => {
+			newRedirects.forEach(({ id, uri, to, type, siteId }) => {
 				this.tables[siteId || 'null'].appendChild(this.rowStatic(
 					id, uri, to, type, siteId
 				));

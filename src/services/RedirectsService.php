@@ -201,6 +201,9 @@ class RedirectsService extends Component
 	 */
 	public function bulk ($redirects, $separator, $type, $siteId)
 	{
+		if ($siteId === 'null')
+			$siteId = null;
+
 		$rawRedirects = array_map(function ($line) use ($separator) {
 			return str_getcsv($line, $separator);
 		}, explode(PHP_EOL, $redirects));
