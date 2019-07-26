@@ -5,6 +5,9 @@
 ### Changed
 - Redirects will also be triggered by `{% exit 404 %}` in templates (Fix #206 via @domstubbs)
 
+### Improved
+- Redirect add forms will no longer be reset after adding a redirect. Only but the URI fields will be cleared. 
+
 ### Fixed
 - Fix bulk importing of redirects (Fixes #154)
 - Fix social title not syncing for new entries

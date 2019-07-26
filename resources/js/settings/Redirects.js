@@ -99,7 +99,8 @@ export default class Redirects {
 			);
 			spinner.classList.add("hidden");
 			
-			form.reset();
+			uri.value = '';
+			to.value = '';
 			uri.focus();
 		}, error => {
 			Craft.cp.displayError("<strong>SEO:</strong> " + error);
@@ -149,7 +150,7 @@ export default class Redirects {
 			Craft.cp.displayNotice('<strong>SEO:</strong> Redirects added successfully!');
 			spinner.classList.add("hidden");
 			
-			form.reset();
+			redirects.value = '';
 		}, error => {
 			Craft.cp.displayError('<strong>SEO:</strong> ' + error);
 			spinner.classList.add("hidden");
