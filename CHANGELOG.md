@@ -1,4 +1,4 @@
-## [Unreleased] 3.6.1
+## 3.6.1 - 2019-07-26
 ### Added
 - Added date added column to redirects (Closes #160)
 
