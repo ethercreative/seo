@@ -9,6 +9,7 @@ use craft\helpers\UrlHelper;
 use ether\seo\records\RedirectRecord;
 use Exception;
 use Throwable;
+use Twig\Error\RuntimeError;
 use yii\base\ExitException;
 use yii\db\StaleObjectException;
 use yii\web\HttpException;
@@ -37,7 +38,16 @@ class RedirectsService extends Component
 		$craft = Craft::$app;
 
 		if (!($exception instanceof HttpException) || $exception->statusCode !== 404)
-			return;
+		{
+			// Account for `{% exit 404 %}` in twig templates
+			$prev = $exception->getPrevious();
+
+			if (
+				!($exception instanceof RuntimeError)
+				|| !($prev instanceof HttpException)
+				|| $prev->statusCode !== 404
+			) return;
+		}
 
 		$path = $craft->request->getFullPath();
 		$query = $craft->request->getQueryStringWithoutPath();

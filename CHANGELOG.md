@@ -2,6 +2,9 @@
 ### Added
 - Added date added column to redirects (Closes #160)
 
+### Changed
+- Redirects will also be triggered by `{% exit 404 %}` in templates (Fix #206 via @domstubbs)
+
 ### Fixed
 - Fix bulk importing of redirects (Fixes #154)
 - Fix social title not syncing for new entries
