@@ -164,7 +164,12 @@ class RedirectsService extends Component
 		}
 		else
 		{
-			$existing = RedirectRecord::findOne(compact('uri', 'siteId'));
+			// Find case in-sensitive
+			$b = Craft::$app->getDb()->getIsMysql() ? 'BINARY ' : '';
+			$existing = RedirectRecord::find()
+				->where($b . '[[uri]]=:uri', ['uri' => $uri])
+				->andWhere(['siteId' => $siteId])
+				->one();
 
 			if ($existing)
 				return 'A redirect with that URI already exists!';
