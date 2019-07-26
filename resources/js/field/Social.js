@@ -152,10 +152,10 @@ export default class Social {
 				, descInput = this.socialPreviews[i].getElementsByTagName('textarea')[0]
 				, urlInput = this.socialPreviews[i].getElementsByTagName('span')[0];
 
-			if (titleInput.value.trim() === '' || titleInput.value === this.previous.title)
+			if (titleInput.value.trim() === '' || titleInput.value.trim() === this.previous.title.trim())
 				titleInput.value = title;
 
-			if (descInput.value.trim() === '' || descInput.value === this.previous.desc)
+			if (descInput.value.trim() === '' || descInput.value.trim() === this.previous.desc.trim())
 				descInput.value = desc;
 
 			urlInput.textContent = url;

@@ -4,6 +4,7 @@
 
 ### Fixed
 - Fix bulk importing of redirects (Fixes #154)
+- Fix social title not syncing for new entries
 
 ## 3.6.0 - 2019-07-25
 ### Added
