@@ -107,9 +107,7 @@
 
 					<span class="seo--snippet-url">
 						{{ url and url != '/' ? url : siteUrl }}
-						{%- if not isHome and not isSingle -%}
-							<span id="{{ id }}Slug">...</span>
-						{% endif %}
+						<span id="{{ id }}Slug">...</span>
 					</span>
 
 					<textarea
