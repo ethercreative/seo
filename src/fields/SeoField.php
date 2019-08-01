@@ -100,6 +100,9 @@ class SeoField extends Field implements PreviewableFieldInterface
 		if (is_string($value))
 			$value = Json::decodeIfJson($value);
 
+		if (is_string($value))
+			$value = ['title' => $value];
+
 		return new SeoData($this, $element, $value ?? []);
 	}
 

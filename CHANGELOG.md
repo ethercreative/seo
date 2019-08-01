@@ -1,3 +1,7 @@
+## [Unreleased]
+### Fixed
+- Fix an issue when legacy SEO data is just the title string
+
 ## 3.6.1.1 - 2019-07-26
 ### Fixed
 - Fix bulk redirect issue when add to all sites (Fixes #154)
