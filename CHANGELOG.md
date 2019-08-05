@@ -1,4 +1,4 @@
-## [Unreleased]
+## 3.6.2 - 2019-08-05
 ### Improved
 - Improve support for diacritics
 
