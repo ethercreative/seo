@@ -1,7 +1,11 @@
 ## [Unreleased]
+### Improved
+- Improve support for diacritics
+
 ### Fixed
 - Fix an issue when legacy SEO data is just the title string
 - Fix issues with slug on single entries (Fixes #233, #228)
+- Fis issue with umlauts in optimisation checklist (Fixes #232)
 
 ## 3.6.1.1 - 2019-07-26
 ### Fixed

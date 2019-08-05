@@ -14,6 +14,7 @@ import {
 	countInArray, createRating, isExternalUrl, c,
 	TextStatistics
 } from '../helpers';
+import normalizeDiacritics from '../_helpers/normalizeDiacritics';
 
 export default class KeywordChecklist {
 	
@@ -248,9 +249,10 @@ export default class KeywordChecklist {
 			return;
 		
 		const slug = this.SEO.snippetFields.slug.textContent.toLowerCase();
-		const keyword = encodeURI(this.keywordLower.replace(/[\t\s]+/g, '-'));
+		const keyword = this.keywordLower.replace(/[\t\s]+/g, '-');
+		const keywoerd = normalizeDiacritics(keyword);
 
-		if (slug.indexOf(keyword) > -1) {
+		if (slug.indexOf(keyword) > -1 || slug.indexOf(keywoerd) > -1) {
 			this.addRating(
 				SEO_RATING.GOOD,
 				SEO_REASONS.slugSuccess
