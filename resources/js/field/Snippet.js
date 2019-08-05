@@ -42,7 +42,7 @@ export default class Snippet {
 		}
 
 		this.titleField.getSafeValue = getSafeValue.bind(this.titleField);
-		this.slugField.getSafeValue = getSafeValue.bind(this.slugField.parentNode);
+		this.slugField && (this.slugField.getSafeValue = getSafeValue.bind(this.slugField.parentNode));
 		this.descField.getSafeValue = getSafeValue.bind(this.descField, 'value');
 
 		this.SEO.snippetFields = {
