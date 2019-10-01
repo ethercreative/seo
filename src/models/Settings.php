@@ -19,6 +19,9 @@ class Settings extends Model
 	/** @var int */
 	public $sitemapLimit = 1000;
 
+	/** @var boolean */
+	public $removeAlternateUrls = false;
+
 	// Variables: Field Type
 	// -------------------------------------------------------------------------
 
@@ -112,6 +115,10 @@ xyzzy;
 				['socialImage'],
 				'each', 'rule' => ['integer']
 			],
+            [
+                ['removeAlternateUrls'],
+                'boolean'
+            ],
 		];
 	}
 

@@ -16,3 +16,12 @@
 	id: "sitemapLimit",
 	value: settings.sitemapLimit
 }) }}
+
+{{ forms.lightswitchField({
+	label: "Remove alternate URLs from sitemap",
+	instructions: "If you check this checkbox, the alternate URLs will be removed from the sitemap",
+	id: "removeAlternateUrls",
+	name: "removeAlternateUrls",
+	on: settings.removeAlternateUrls,
+	errors: settings.getErrors("removeAlternateUrls"),
+}) }}
