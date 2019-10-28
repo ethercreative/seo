@@ -92,6 +92,11 @@ class SeoField extends Field implements PreviewableFieldInterface
 		return Schema::TYPE_TEXT;
 	}
 
+	public function getContentGqlType (): \GraphQL\Type\Definition\Type
+    {
+        return new \ether\seo\gql\SeoData;
+    }
+
 	public function normalizeValue ($value, ElementInterface $element = null)
 	{
 		if ($value instanceof SeoData)
