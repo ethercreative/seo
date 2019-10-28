@@ -8,6 +8,7 @@ use craft\base\PreviewableFieldInterface;
 use craft\elements\Category;
 use craft\elements\Entry;
 use craft\elements\GlobalSet;
+use craft\gql\TypeLoader;
 use craft\helpers\Json;
 use craft\models\Section;
 use ether\seo\models\data\SeoData;
@@ -94,7 +95,10 @@ class SeoField extends Field implements PreviewableFieldInterface
 
 	public function getContentGqlType (): \GraphQL\Type\Definition\Type
     {
-        return new \ether\seo\gql\SeoData;
+        // @TODO perhaps maybe definititely move this.
+        TypeLoader::registerType('SeoData', function() { return new \ether\seo\gql\SeoData; });
+
+        return TypeLoader::loadType('SeoData');
     }
 
 	public function normalizeValue ($value, ElementInterface $element = null)

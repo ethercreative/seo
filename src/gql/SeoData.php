@@ -12,7 +12,7 @@ class SeoData extends ObjectType
     public function __construct()
     {
         $socialFieldObject = new ObjectType([
-            'name' => 'Seo Social Data',
+            'name' => 'SEO Social Data',
             'description' => 'Social data for an individual Social network',
             'fields' => [
                 'title' => [
@@ -42,10 +42,11 @@ class SeoData extends ObjectType
                     'resolve' => static function($value) { return html_entity_decode($value); }
                 ],
                 'keywords' => Type::listOf(new ObjectType([
-                    'name' => 'SEO Keyword definition',
+                    'name' => 'SEO Keyword',
                     'fields' => ['keyword' => Type::string(), 'rating' => Type::string()]
                 ])),
                 'social' => new ObjectType([
+                    'name' => 'SEO social',
                     'twitter' => $socialFieldObject,
                     'facebook' => $socialFieldObject
                 ]),
