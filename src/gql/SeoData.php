@@ -8,12 +8,10 @@ use craft\gql\types\elements\Asset;
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\Type;
 
-class SeoDataType extends InterfaceType {
-
+class SeoData extends \craft\gql\base\ObjectType
+{
     /**
-     * Returns the schema object name
-     *
-     * @return string
+     * @inheritdoc
      */
     public static function getName(): string
     {
@@ -21,19 +19,9 @@ class SeoDataType extends InterfaceType {
     }
 
     /**
-     * Returns the associated type generator class.
-     *
-     * @return string
+     * @inheritdoc
      */
-    public static function getTypeGenerator(): string
-    {
-        return SeoData::class;
-    }
-}
-
-class SeoData extends ObjectType
-{
-    public function __construct()
+    public function getType(): ObjectType
     {
         $socialFieldObject = new ObjectType([
             'name' => 'SEO Social Data',
@@ -53,7 +41,7 @@ class SeoData extends ObjectType
             ]
         ]);
 
-        $config = [
+        return new ObjectType([
             // Note: 'name' is not needed in this form:
             // it will be inferred from class name by omitting namespace and dropping "Type" suffix
             'fields' => [
@@ -74,10 +62,7 @@ class SeoData extends ObjectType
                     'twitter' => $socialFieldObject,
                     'facebook' => $socialFieldObject
                 ]),
-
-
             ]
-        ];
-        parent::__construct($config);
+        ]);
     }
 }
