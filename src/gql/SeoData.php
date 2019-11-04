@@ -7,19 +7,17 @@ use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\Type;
 use craft\helpers\Gql;
 
+/**
+ * Class SeoData
+ * @package ether\seo\gql
+ */
 class SeoData extends \craft\gql\base\ObjectType
 {
-    /**
-     * @inheritdoc
-     */
     public static function getName(): string
     {
         return self::class;
     }
 
-    /**
-     * @inheritdoc
-     */
     public static function getType(): Type
     {
         if ($type = GqlEntityRegistry::getEntity(self::class)) {
@@ -39,16 +37,19 @@ class SeoData extends \craft\gql\base\ObjectType
                     'name' => 'SEO Keyword',
                     'fields' => ['keyword' => Type::string(), 'rating' => Type::string()]
                 ])),
-                'social' => SeoSocialNetworks::getType()
+                'social' => SeoSocialNetworks::getType(),
+                'advanced' => SeoAdvanced::getType(),
             ]
         ]));
     }
 }
 
-class SeoSocialNetworks extends \craft\gql\base\ObjectType {
-    /**
-     * @inheritdoc
-     */
+/**
+ * Class SeoSocialNetworks
+ * @package ether\seo\gql
+ */
+class SeoSocialNetworks extends \craft\gql\base\ObjectType
+{
     public static function getName(): string
     {
         return self::class;
@@ -70,16 +71,21 @@ class SeoSocialNetworks extends \craft\gql\base\ObjectType {
 
 }
 
-
-class SeoSocialData extends \craft\gql\base\ObjectType {
-    /**
-     * @inheritdoc
-     */
+/**
+ * Class SeoSocialData
+ * @package ether\seo\gql
+ */
+class SeoSocialData extends \craft\gql\base\ObjectType
+{
     public static function getName(): string
     {
         return self::class;
     }
 
+    /**
+     * @return ObjectType
+     * @throws \craft\errors\GqlException
+     */
     public static function getType(): ObjectType {
         if ($type = GqlEntityRegistry::getEntity(self::class)) {
             return $type;
@@ -101,6 +107,7 @@ class SeoSocialData extends \craft\gql\base\ObjectType {
 
     /**
      * Get fields which may only be used depending on the craft Gql config
+     * @throws \craft\errors\GqlException
      */
     protected static function getConditionalFields(): array
     {
@@ -113,9 +120,9 @@ class SeoSocialData extends \craft\gql\base\ObjectType {
                 if (!Gql::isSchemaAwareOf('volumes.' . $volume->uid)) {
                     $awareOfAllPublicVolumes = false;
                     break;
-                } else {
-                    $awareOfAllPublicVolumes = true;
                 }
+
+                $awareOfAllPublicVolumes = true;
             }
         }
 
@@ -127,7 +134,30 @@ class SeoSocialData extends \craft\gql\base\ObjectType {
                 ]
             ];
         }
-
         return [];
+    }
+}
+
+class SeoAdvanced extends \craft\gql\base\ObjectType
+{
+    public static function getName(): string
+    {
+        return self::class;
+    }
+
+    public static function getType(): ObjectType
+    {
+        if ($type = GqlEntityRegistry::getEntity(self::class)) {
+            return $type;
+        }
+
+        return GqlEntityRegistry::createEntity(self::class, new \GraphQL\Type\Definition\ObjectType([
+            'name' => static::getName(),
+            'description' => 'Robots and canonical data',
+            'fields' => [
+                'robots' => Type::listOf(Type::string()),
+                'canonical' => Type::string()
+            ]
+        ]));
     }
 }
