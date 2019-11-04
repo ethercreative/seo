@@ -5,6 +5,7 @@ use craft\base\VolumeInterface;
 use craft\gql\base\InterfaceType;
 use craft\gql\interfaces\elements\Asset as AssetInterface;
 use craft\gql\types\elements\Asset;
+use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\Type;
 
 class SeoData extends \craft\gql\base\ObjectType
@@ -22,7 +23,7 @@ class SeoData extends \craft\gql\base\ObjectType
      */
     public static function getType(): self
     {
-        $socialFieldObject = new self([
+        $socialFieldObject = new ObjectType([
             'name' => 'SEO Social Data',
             'description' => 'Social data for an individual Social network',
             'fields' => [
@@ -51,11 +52,11 @@ class SeoData extends \craft\gql\base\ObjectType
                     'type' => Type::string(),
                     'resolve' => static function($value) { return html_entity_decode($value); }
                 ],
-                'keywords' => Type::listOf(new self([
+                'keywords' => Type::listOf(new ObjectType([
                     'name' => 'SEO Keyword',
                     'fields' => ['keyword' => Type::string(), 'rating' => Type::string()]
                 ])),
-                'social' => new self([
+                'social' => new ObjectType([
                     'name' => 'SEO social',
                     'twitter' => $socialFieldObject,
                     'facebook' => $socialFieldObject
