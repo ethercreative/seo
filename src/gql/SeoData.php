@@ -21,7 +21,7 @@ class SeoData extends \craft\gql\base\ObjectType
     /**
      * @inheritdoc
      */
-    public function getType(): ObjectType
+    public static function getType(): ObjectType
     {
         $socialFieldObject = new ObjectType([
             'name' => 'SEO Social Data',
