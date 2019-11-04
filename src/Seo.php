@@ -18,7 +18,7 @@ use craft\web\twig\variables\CraftVariable;
 use craft\web\UrlManager;
 use craft\web\View;
 use ether\seo\fields\SeoField;
-use ether\seo\gql\SeoData;
+use ether\seo\gql\SeoDataType;
 use ether\seo\integrations\craftql\GetCraftQLSchema;
 use ether\seo\models\Settings;
 use ether\seo\services\RedirectsService;
@@ -116,7 +116,7 @@ class Seo extends Plugin
 		// GraphQL type
         Event::on(Gql::class, Gql::EVENT_REGISTER_GQL_TYPES, function(RegisterGqlTypesEvent $event) {
             // Add my GraphQL types
-            $event->types[] = SeoData::class;
+            $event->types[] = SeoDataType::class;
         });
 
 		// Variable

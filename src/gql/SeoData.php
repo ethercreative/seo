@@ -2,10 +2,34 @@
 namespace ether\seo\gql;
 
 use craft\base\VolumeInterface;
+use craft\gql\base\InterfaceType;
 use craft\gql\interfaces\elements\Asset as AssetInterface;
 use craft\gql\types\elements\Asset;
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\Type;
+
+class SeoDataType extends InterfaceType {
+
+    /**
+     * Returns the schema object name
+     *
+     * @return string
+     */
+    public static function getName(): string
+    {
+        return 'SeoData';
+    }
+
+    /**
+     * Returns the associated type generator class.
+     *
+     * @return string
+     */
+    public static function getTypeGenerator(): string
+    {
+        return SeoData::class;
+    }
+}
 
 class SeoData extends ObjectType
 {
