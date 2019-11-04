@@ -42,8 +42,7 @@ class SeoData extends \craft\gql\base\ObjectType
         ]);
 
         return new ObjectType([
-            // Note: 'name' is not needed in this form:
-            // it will be inferred from class name by omitting namespace and dropping "Type" suffix
+            'name' => static::getName(),
             'fields' => [
                 'title' => [
                     'type' => Type::string(),
