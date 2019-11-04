@@ -95,12 +95,14 @@ class SeoField extends Field implements PreviewableFieldInterface
 	}
 
     /**
-     * @return \GraphQL\Type\Definition\Type
-     * @throws GqlException
+     * @return array
      */
-	public function getContentGqlType (): \GraphQL\Type\Definition\Type
+	public function getContentGqlType (): array
     {
-        return TypeLoader::loadType('SeoData');
+        return [
+            'name' => $this->handle,
+            'type' => \ether\seo\gql\SeoData::getType(),
+        ];
     }
 
 	public function normalizeValue ($value, ElementInterface $element = null)

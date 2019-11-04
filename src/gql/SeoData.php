@@ -3,6 +3,7 @@ namespace ether\seo\gql;
 
 use craft\base\VolumeInterface;
 use craft\gql\base\InterfaceType;
+use craft\gql\GqlEntityRegistry;
 use craft\gql\interfaces\elements\Asset as AssetInterface;
 use craft\gql\types\elements\Asset;
 use GraphQL\Type\Definition\ObjectType;
@@ -15,7 +16,7 @@ class SeoData extends \craft\gql\base\ObjectType
      */
     public static function getName(): string
     {
-        return 'SeoData';
+        return 'SeoData2';
     }
 
     /**
@@ -23,34 +24,34 @@ class SeoData extends \craft\gql\base\ObjectType
      */
     public static function getType(): self
     {
+        if ($type = GqlEntityRegistry::getEntity(self::class)) {
+            return $type;
+        }
+
         $socialFieldObject = new ObjectType([
             'name' => 'SEO Social Data',
             'description' => 'Social data for an individual Social network',
             'fields' => [
                 'title' => [
                     'type' => Type::string(),
-                    'resolve' => static function($value) { return html_entity_decode($value); }
                 ],
                 'image' => [
                     'type' => AssetInterface::getType(),
                 ],
                 'description' => [
                     'type' => Type::string(),
-                    'resolve' => static function($value) { return html_entity_decode($value); }
                 ]
             ]
         ]);
 
-        return new self([
+        return GqlEntityRegistry::createEntity(self::class, new \GraphQL\Type\Definition\ObjectType([
             'name' => static::getName(),
             'fields' => [
                 'title' => [
                     'type' => Type::string(),
-                    'resolve' => static function($value) { return html_entity_decode($value); }
                 ],
                 'description' => [
                     'type' => Type::string(),
-                    'resolve' => static function($value) { return html_entity_decode($value); }
                 ],
                 'keywords' => Type::listOf(new ObjectType([
                     'name' => 'SEO Keyword',
@@ -62,6 +63,6 @@ class SeoData extends \craft\gql\base\ObjectType
                     'facebook' => $socialFieldObject
                 ]),
             ]
-        ]);
+        ]));
     }
 }
