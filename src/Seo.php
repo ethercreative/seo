@@ -7,8 +7,10 @@ use craft\events\ExceptionEvent;
 use craft\events\RegisterComponentTypesEvent;
 use craft\events\RegisterUrlRulesEvent;
 use craft\events\RegisterUserPermissionsEvent;
+use craft\events\RegisterGqlTypesEvent;
 use craft\helpers\UrlHelper;
 use craft\services\Fields;
+use craft\services\Gql;
 use craft\services\UserPermissions;
 use craft\web\Application;
 use craft\web\ErrorHandler;
@@ -16,6 +18,7 @@ use craft\web\twig\variables\CraftVariable;
 use craft\web\UrlManager;
 use craft\web\View;
 use ether\seo\fields\SeoField;
+use ether\seo\gql\SeoData;
 use ether\seo\integrations\craftql\GetCraftQLSchema;
 use ether\seo\models\Settings;
 use ether\seo\services\RedirectsService;
@@ -109,6 +112,12 @@ class Seo extends Plugin
 			Fields::EVENT_REGISTER_FIELD_TYPES,
 			[$this, 'onRegisterFieldTypes']
 		);
+
+		// GraphQL type
+        Event::on(Gql::class, Gql::EVENT_REGISTER_GQL_TYPES, function(RegisterGqlTypesEvent $event) {
+            // Add my GraphQL types
+            $event->types[] = SeoData::class;
+        });
 
 		// Variable
 		Event::on(
