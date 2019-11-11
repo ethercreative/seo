@@ -353,30 +353,31 @@ class SitemapService extends Component
 				[]
 			);
 
-			foreach ($item->supportedSites as $siteId)
-			{
-				$id = is_numeric($siteId) ? $siteId : $siteId['siteId'];
-				$site = $id ? $craft->sites->getSiteById($id) : \Craft::$app->sites->currentSite;
-				$lang = $site->language;
+            if (! $settings->removeAlternateUrls) {
+                foreach ($item->supportedSites as $siteId) {
+                    $id = is_numeric($siteId) ? $siteId : $siteId['siteId'];
+                    $site = $id ? $craft->sites->getSiteById($id) : \Craft::$app->sites->currentSite;
+                    $lang = $site->language;
 
-				if (!in_array($lang, $availableLocales))
-					continue;
+                    if (!in_array($lang, $availableLocales))
+                        continue;
 
-				if (!array_key_exists($id, $enabledLookup))
-					continue;
+                    if (!array_key_exists($id, $enabledLookup))
+                        continue;
 
-				$link = UrlHelper::siteUrl($enabledLookup[$id], null, null, $id);
+                    $link = UrlHelper::siteUrl($enabledLookup[$id], null, null, $id);
 
-				$alt = $this->_document->createElement('xhtml:link');
-				$alt->setAttribute('rel', 'alternate');
-				$alt->setAttribute(
-					'hreflang',
-					str_replace('_', '-', $lang)
-				);
-				$alt->setAttribute('href', $link);
+                    $alt = $this->_document->createElement('xhtml:link');
+                    $alt->setAttribute('rel', 'alternate');
+                    $alt->setAttribute(
+                        'hreflang',
+                        str_replace('_', '-', $lang)
+                    );
+                    $alt->setAttribute('href', $link);
 
-				$url->appendChild($alt);
-			}
+                    $url->appendChild($alt);
+                }
+            }
 		}
 
 		out:
