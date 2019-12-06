@@ -3,6 +3,7 @@
 - Fix social images not falling back to default (Fixes #188, #247)
 - Fix slug showing incorrect site URL (Fixes #237)
 - Fix SEO snippet showing homepage slug (Fixes #270)
+- Fix snippet issue when using protocol relative site URLs (Fixes #249, #239)
 
 ## 3.6.2 - 2019-08-05
 ### Improved

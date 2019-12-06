@@ -9,6 +9,7 @@ use craft\elements\Category;
 use craft\elements\Entry;
 use craft\elements\GlobalSet;
 use craft\helpers\Json;
+use craft\helpers\UrlHelper;
 use craft\models\Section;
 use ether\seo\models\data\SeoData;
 use ether\seo\Seo;
@@ -266,6 +267,7 @@ class SeoField extends Field implements PreviewableFieldInterface
 				'isHome' => $isHome,
 				'isSingle' => $isSingle,
 
+				'siteUrl' => UrlHelper::siteUrl(),
 				'socialPreviewUrl' => $socialPreviewUrl,
 				'hideSocial' => $hideSocial,
 
