@@ -1,6 +1,6 @@
 ## [Unreleased] 3.6.3
 ### Fixed
-- Fix social images not falling back to default (Fixes #188)
+- Fix social images not falling back to default (Fixes #188, #247)
 - Fix slug showing incorrect site URL (Fixes #237)
 - Fix SEO snippet showing homepage slug (Fixes #270)
 
