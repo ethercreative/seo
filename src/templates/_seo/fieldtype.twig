@@ -117,7 +117,9 @@
 					<span class="seo--snippet-url">
 						{{ siteUrl }}
 						{%- if not isHome -%}
-							<span id="{{ id }}Slug">{{ url ? url|replace(siteUrl, '') : '...' }}</span>
+							{%- set url = url|replace(siteUrl, '')|replace(slug, '')|trim('/') -%}
+							{{- url ? url ~ '/' -}}
+							<span id="{{ id }}Slug">{{ slug }}</span>
 						{% endif %}
 					</span>
 

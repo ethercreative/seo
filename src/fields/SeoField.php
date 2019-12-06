@@ -131,7 +131,7 @@ class SeoField extends Field implements PreviewableFieldInterface
 		$section = null;
 		$isEntry = false;
 		$isCalendar = false;
-		$isHome = false;
+		$isHome = $element->getIsHomepage();
 		$isNew = $element->getId() === null;
 		$isSingle = false;
 		$previewAction = null;
@@ -187,6 +187,7 @@ class SeoField extends Field implements PreviewableFieldInterface
 		$titleTemplate = $settings['title'] ?? $settingsGlobal['title'];
 
 		$url = $element->getUrl();
+		$slug = $element->slug;
 
 		if ($hasPreview && $isEntry && ! $isHome && ! $isSingle && $element->slug) {
 			$url = substr($url, 0, strrpos($url, $element->slug));
@@ -258,6 +259,7 @@ class SeoField extends Field implements PreviewableFieldInterface
 				'titleTemplate' => $titleTemplate,
 				'hasPreview' => $hasPreview,
 				'url' => $url,
+				'slug' => $slug,
 				'isPro' => true,
 
 				'isNew' => $isNew,
