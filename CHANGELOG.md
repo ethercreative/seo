@@ -1,3 +1,7 @@
+## [Unreleased] 3.6.3
+### Fixed
+- Fix social images not falling back to default (Fixes #188)
+
 ## 3.6.2 - 2019-08-05
 ### Improved
 - Improve support for diacritics

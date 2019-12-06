@@ -109,8 +109,11 @@ class SocialData extends BaseObject
 		if (is_array($image))
 			$image = $image['id'];
 
+		if (empty($image))
+			$image = $this->_fallback['image'];
+
 		if (!($image instanceof Asset))
-			$image = Craft::$app->assets->getAssetById((int) $image);
+			$image = Craft::$app->getAssets()->getAssetById((int) $image);
 
 		return $image;
 	}

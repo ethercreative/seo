@@ -402,18 +402,22 @@ class SeoData extends BaseObject
 	{
 		$image = null;
 
-		$assets = Craft::$app->assets;
+		if (Craft::$app->getRequest()->getIsSiteRequest())
+		{
+			$assets        = Craft::$app->assets;
+			$fieldFallback = $this->_fieldSettings['socialImage'];
 
-		$fieldFallback = $this->_fieldSettings['socialImage'];
+			if (!empty($fieldFallback))
+			{
+				$image = $assets->getAssetById((int) $fieldFallback[0]);
+			}
+			else
+			{
+				$seoFallback = $this->_seoSettings['socialImage'];
 
-		if (!empty($fieldFallback))
-			$image = $assets->getAssetById((int)$fieldFallback[0]);
-
-		else {
-			$seoFallback = $this->_seoSettings['socialImage'];
-
-			if (!empty($seoFallback))
-				$image = $assets->getAssetById((int)$seoFallback[0]);
+				if (!empty($seoFallback))
+					$image = $assets->getAssetById((int) $seoFallback[0]);
+			}
 		}
 
 		return [
