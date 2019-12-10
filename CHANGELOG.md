@@ -5,6 +5,7 @@
 - Fix SEO snippet showing homepage slug (Fixes #270)
 - Fix snippet issue when using protocol relative site URLs (Fixes #249, #239)
 - Fix incorrect canonical URL when site is behind a CDN (Closes #268)
+- Fix sitemap not filtering elements by type correctly (Fixes #275)
 
 ## 3.6.2 - 2019-08-05
 ### Improved

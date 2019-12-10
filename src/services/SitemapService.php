@@ -2,6 +2,7 @@
 
 namespace ether\seo\services;
 
+use Craft;
 use craft\base\Component;
 use craft\base\Element;
 use craft\db\Query;
@@ -12,15 +13,15 @@ use craft\elements\Entry;
 use craft\helpers\DateTimeHelper;
 use craft\helpers\UrlHelper;
 use craft\models\CategoryGroup;
-use craft\models\CraftIdToken;
 use craft\models\Section;
+use DateTime;
+use DOMDocument;
+use DOMElement;
 use ether\seo\fields\SeoField;
 use ether\seo\models\data\SeoData;
-use ether\seo\models\Settings;
 use ether\seo\records\SitemapRecord;
 use ether\seo\Seo;
 use yii\db\Exception;
-use yii\log\Logger;
 
 class SitemapService extends Component
 {
@@ -93,12 +94,12 @@ class SitemapService extends Component
 		if (!empty($idsToDelete))
 		{
 			try {
-				\Craft::$app->db->createCommand()->delete(
+				Craft::$app->db->createCommand()->delete(
 					SitemapRecord::$tableName,
 					['in', 'id', $idsToDelete]
 				)->execute();
 			} catch (Exception $e) {
-				\Craft::$app->log->logger->log(
+				Craft::$app->log->logger->log(
 					$e->getMessage(),
 					LOG_ERR,
 					'seo'
@@ -149,7 +150,7 @@ class SitemapService extends Component
 	public function getValidSections ()
 	{
 		return array_filter(
-			\Craft::$app->sections->getAllSections(),
+			Craft::$app->sections->getAllSections(),
 			[$this, '_filterOutNoUrls']
 		);
 	}
@@ -157,7 +158,7 @@ class SitemapService extends Component
 	public function getValidCategories ()
 	{
 		return array_filter(
-			\Craft::$app->categories->getAllGroups(),
+			Craft::$app->categories->getAllGroups(),
 			[$this, '_filterOutNoUrls']
 		);
 	}
@@ -165,16 +166,16 @@ class SitemapService extends Component
 	// Sitemap XML
 	// =========================================================================
 
-	/** @var \DOMDocument */
+	/** @var DOMDocument */
 	private $_document;
 
-	/** @var \DOMElement */
+	/** @var DOMElement */
 	private $_urlSet;
 
 	// Index
 	// -------------------------------------------------------------------------
 
-	/** @var \DOMElement */
+	/** @var DOMElement */
 	private $_index;
 
 	/**
@@ -233,7 +234,7 @@ class SitemapService extends Component
 	{
 		$this->_createDocument();
 		$sitemapData = $this->getSitemap();
-		$craft = \Craft::$app;
+		$craft = Craft::$app;
 
 		if (!array_key_exists($variables['section'], $sitemapData))
 			goto out;
@@ -270,9 +271,9 @@ class SitemapService extends Component
 
 		$settings = Seo::$i->getSettings();
 
-		$elements = $type::find();
+		$elements = $type::find()->status(Element::STATUS_ENABLED);
 		$elements->{$idHandle} = $variables['id'];
-		$elements->siteId = \Craft::$app->sites->currentSite->id;
+		$elements->siteId = Craft::$app->sites->currentSite->id;
 		$elements->limit = $settings->sitemapLimit;
 		$elements->offset = $settings->sitemapLimit * $variables['page'];
 
@@ -356,7 +357,7 @@ class SitemapService extends Component
 			foreach ($item->supportedSites as $siteId)
 			{
 				$id = is_numeric($siteId) ? $siteId : $siteId['siteId'];
-				$site = $id ? $craft->sites->getSiteById($id) : \Craft::$app->sites->currentSite;
+				$site = $id ? $craft->sites->getSiteById($id) : Craft::$app->sites->currentSite;
 				$lang = $site->language;
 
 				if (!in_array($lang, $availableLocales))
@@ -448,10 +449,10 @@ class SitemapService extends Component
 	private function _createDocument ($withUrlSet = true)
 	{
 		// Create the XML Document
-		$document = new \DOMDocument('1.0', 'utf-8');
+		$document = new DOMDocument('1.0', 'utf-8');
 
 		// Pretty print for debugging
-		if (\Craft::$app->config->general->devMode)
+		if (Craft::$app->config->general->devMode)
 			$document->formatOutput = true;
 
 		if ($withUrlSet)
@@ -479,7 +480,7 @@ class SitemapService extends Component
 	 * @param Element $type - The Element Type
 	 * @param int     $id - The section or group ID
 	 *
-	 * @return \DateTime|string
+	 * @return DateTime|string
 	 */
 	private function _getUpdated (Element $type, $id)
 	{
@@ -505,10 +506,10 @@ class SitemapService extends Component
 	private function _getPageCount (Element $type, $id)
 	{
 		/** @var EntryQuery|CategoryQuery $criteria */
-		$criteria = $type::find();
+		$criteria = $type::find()->status(Element::STATUS_ENABLED);
 		$this->_setCriteriaIdByType($criteria, $type, $id);
 
-		$sitemapLimit = Seo::$i->getSettings()->sitemapLimit;
+		$sitemapLimit = (int) Seo::$i->getSettings()->sitemapLimit;
 
 		return ceil($criteria->count() / $sitemapLimit);
 	}
@@ -523,11 +524,11 @@ class SitemapService extends Component
 	 */
 	private function _setCriteriaIdByType ($criteria, Element $type, $id)
 	{
-		switch ($type::className()) {
-			case 'Entry':
+		switch (get_class($type)) {
+			case 'craft\\elements\\Entry':
 				$criteria->sectionId = $id;
 				break;
-			case 'Category':
+			case 'craft\\elements\\Category':
 				$criteria->groupId = $id;
 				break;
 		}
