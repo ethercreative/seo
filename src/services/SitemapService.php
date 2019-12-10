@@ -271,7 +271,7 @@ class SitemapService extends Component
 
 		$settings = Seo::$i->getSettings();
 
-		$elements = $type::find()->status(Element::STATUS_ENABLED);
+		$elements = $type::find();
 		$elements->{$idHandle} = $variables['id'];
 		$elements->siteId = Craft::$app->sites->currentSite->id;
 		$elements->limit = $settings->sitemapLimit;
@@ -354,29 +354,34 @@ class SitemapService extends Component
 				[]
 			);
 
-			foreach ($item->supportedSites as $siteId)
+			if (!$settings->removeAlternateUrls)
 			{
-				$id = is_numeric($siteId) ? $siteId : $siteId['siteId'];
-				$site = $id ? $craft->sites->getSiteById($id) : Craft::$app->sites->currentSite;
-				$lang = $site->language;
+				foreach ($item->supportedSites as $siteId)
+				{
+					$id = is_numeric($siteId) ? $siteId : $siteId['siteId'];
+					$site = $id ? $craft->sites->getSiteById($id) : Craft::$app->sites->currentSite;
+					$lang = $site->language;
 
-				if (!in_array($lang, $availableLocales))
-					continue;
+					if (!in_array($lang, $availableLocales))
+						continue;
 
-				if (!array_key_exists($id, $enabledLookup))
-					continue;
+					if (!array_key_exists($id, $enabledLookup))
+						continue;
 
-				$link = UrlHelper::siteUrl($enabledLookup[$id], null, null, $id);
+					$link = UrlHelper::siteUrl(
+						$enabledLookup[$id], null, null, $id
+					);
 
-				$alt = $this->_document->createElement('xhtml:link');
-				$alt->setAttribute('rel', 'alternate');
-				$alt->setAttribute(
-					'hreflang',
-					str_replace('_', '-', $lang)
-				);
-				$alt->setAttribute('href', $link);
+					$alt = $this->_document->createElement('xhtml:link');
+					$alt->setAttribute('rel', 'alternate');
+					$alt->setAttribute(
+						'hreflang',
+						str_replace('_', '-', $lang)
+					);
+					$alt->setAttribute('href', $link);
 
-				$url->appendChild($alt);
+					$url->appendChild($alt);
+				}
 			}
 		}
 
@@ -506,10 +511,10 @@ class SitemapService extends Component
 	private function _getPageCount (Element $type, $id)
 	{
 		/** @var EntryQuery|CategoryQuery $criteria */
-		$criteria = $type::find()->status(Element::STATUS_ENABLED);
+		$criteria = $type::find();
 		$this->_setCriteriaIdByType($criteria, $type, $id);
 
-		$sitemapLimit = (int) Seo::$i->getSettings()->sitemapLimit;
+		$sitemapLimit = Seo::$i->getSettings()->sitemapLimit;
 
 		return ceil($criteria->count() / $sitemapLimit);
 	}
@@ -524,11 +529,11 @@ class SitemapService extends Component
 	 */
 	private function _setCriteriaIdByType ($criteria, Element $type, $id)
 	{
-		switch (get_class($type)) {
-			case 'craft\\elements\\Entry':
+		switch ($type::className()) {
+			case 'Entry':
 				$criteria->sectionId = $id;
 				break;
-			case 'craft\\elements\\Category':
+			case 'Category':
 				$criteria->groupId = $id;
 				break;
 		}
