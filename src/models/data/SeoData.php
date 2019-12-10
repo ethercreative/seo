@@ -378,7 +378,7 @@ class SeoData extends BaseObject
 	public function getCanonical ()
 	{
 		if (empty($this->advanced['canonical']))
-			return Craft::$app->request->absoluteUrl;
+			return UrlHelper::siteUrl(Craft::$app->request->getPathInfo());
 
 		return UrlHelper::siteUrl($this->advanced['canonical']);
 	}
