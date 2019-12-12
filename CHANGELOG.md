@@ -1,4 +1,7 @@
 ## [Unreleased] 3.6.3
+### Improved
+- Replace SVG's while keeping text intact (Fixes #197)
+
 ### Fixed
 - Fix social images not falling back to default (Fixes #188, #247)
 - Fix slug showing incorrect site URL (Fixes #237)

@@ -53,15 +53,21 @@ class EntryMarkup {
 				// Get the markup from the live preview
 				let data = await this._preview();
 
-				// Remove all <script/> & <style/> tags
+				// Remove all <svg/>, <script/> & <style/> tags
+				data.match(/<svg([^'"]|"(\\.|[^"\\])*"|'(\\.|[^'\\])*')*?<\/svg>/g).forEach(s => {
+					if (typeof s !== 'string') return;
+					const t = s.match(/<text([^'"]|"(\\.|[^"\\])*"|'(\\.|[^'\\])*')*?<\/text>/g) || [];
+					data = data.replace(s, '<svg>' + t.join() + '</svg>');
+				});
+
 				data = data.replace(
 					/<script([^'"]|"(\\.|[^"\\])*"|'(\\.|[^'\\])*')*?<\/script>/g,
-					""
+					''
 				);
 
 				data = data.replace(
 					/<style([^'"]|"(\\.|[^"\\])*"|'(\\.|[^'\\])*')*?<\/style>/g,
-					""
+					''
 				);
 
 				// Write the markup to our iFrame
@@ -75,7 +81,7 @@ class EntryMarkup {
 					// noinspection ExceptionCaughtLocallyJS
 					throw null;
 				}
-			} catch (_) {
+			} catch (e) {
 				fail('Failed to retrieve entry preview');
 				reject();
 			}
