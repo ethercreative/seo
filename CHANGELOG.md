@@ -1,4 +1,4 @@
-## [Unreleased] 3.6.3
+## 3.6.3 - 2019-12-18
 ### Improved
 - Replace SVG's while keeping text intact (Fixes #197)
 
