@@ -22,8 +22,8 @@ class SeoService extends Component
 	{
 		$headers = Craft::$app->getResponse()->getHeaders();
 
-		// If devMode always noindex
-		if (Craft::$app->config->general->devMode)
+		// Always noindex except on production environment
+		if (CRAFT_ENVIRONMENT !== 'production')
 		{
 			$headers->set('x-robots-tag', 'none, noimageindex');
 			return;
