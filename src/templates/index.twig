@@ -7,14 +7,14 @@
 		{% if currentUser.admin or currentUser.can('manageSitemap') %}
 			<li>
 				<a href="{{ url('seo/sitemap') }}" data-icon="globe">
-					Sitemap
+					{{ 'Sitemap' | t }}
 				</a>
 			</li>
 		{% endif %}
 		{% if currentUser.admin or currentUser.can('manageRedirects') %}
 			<li>
 				<a href="{{ url('seo/redirects') }}" data-icon="routes">
-					Redirects
+					{{ 'Redirects' | t }}
 				</a>
 			</li>
 		{% endif %}
@@ -28,7 +28,7 @@
 				<a href="{{ url('seo/settings') }}"
 				   data-icon="settings"
 				>
-					Settings
+					{{ 'Settings' | t }}
 				</a>
 			</li>
 		{% endif %}

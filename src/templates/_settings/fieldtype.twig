@@ -2,12 +2,12 @@
 
 {% include 'seo/_seo/settings' with {
 	default: true,
-	metaInstructions: 'Decide how the page meta should look for pages that have an associated SEO field (i.e. static templates, anywhere `craft.seo.custom()` is used)',
+	metaInstructions: 'Decide how the page meta should look for pages that have an associated SEO field (i.e. static templates, anywhere `craft.seo.custom()` is used)' | t,
 } %}
 
 {{ forms.textField({
-	label: "SEO Meta Template",
-	instructions: "The template you want to use when rendering the SEO Meta. Leave blank to use the default template (<a href='https://github.com/ethercreative/seo/blob/v3/src/templates/_seo/meta.twig?ts=4' target='_blank'>which you can see here</a>). This will replace the <code>{% hook 'seo' %}</code> in your head tag.",
+	label: "SEO Meta Template" | t,
+	instructions: "The template you want to use when rendering the SEO Meta. Leave blank to use the default template (<a href='https://github.com/ethercreative/seo/blob/v3/src/templates/_seo/meta.twig?ts=4' target='_blank'>which you can see here</a>). This will replace the <code>{% hook 'seo' %}</code> in your head tag." | t | raw,
 	name: "metaTemplate",
 	id: "metaTemplate",
 	value: settings.metaTemplate

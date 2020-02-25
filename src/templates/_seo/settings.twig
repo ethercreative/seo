@@ -117,13 +117,13 @@
 			</div>
 		{% endset %}
 		{{ forms.field({
-			label: 'Page Title',
-			instructions: 'Create a token for each part of your title. Clicking the lock will prevent the user from editing the contents of that token. Tokens use the same syntax as [Dynamic Entry Titles](https://docs.craftcms.com/v3/sections-and-entries.html#dynamic-entry-titles). They can be dragged to re-order.',
+			label: 'Page Title' | t,
+			instructions: 'Create a token for each part of your title. Clicking the lock will prevent the user from editing the contents of that token. Tokens use the same syntax as [Dynamic Entry Titles](https://docs.craftcms.com/v3/sections-and-entries.html#dynamic-entry-titles). They can be dragged to re-order.' | t,
 		}, seoTitle) }}
 
 		{{ forms.textareaField({
-			label: 'Page Description',
-			instructions: 'This supports the same syntax as [Dynamic Entry Titles](https://docs.craftcms.com/v3/sections-and-entries.html#dynamic-entry-titles).',
+			label: 'Page Description' | t,
+			instructions: 'This supports the same syntax as [Dynamic Entry Titles](https://docs.craftcms.com/v3/sections-and-entries.html#dynamic-entry-titles).' | t,
 			id: 'description',
 			name: 'description',
 			value: settings.description is empty and globalSettings.description is defined ? globalSettings.description : settings.description
@@ -131,14 +131,14 @@
 	</div>
 {% endset %}
 {{ forms.field({
-	label: 'Page Meta',
-	instructions: metaInstructions is defined ? metaInstructions : 'Decide how the page meta should look for this field',
+	label: 'Page Meta' | t,
+	instructions: metaInstructions is defined ? metaInstructions : 'Decide how the page meta should look for this field' | t,
 }, seoMeta) }}
 
 {% if volumes %}
 	{{ forms.elementSelectField({
-		label: (default ? 'Default ') ~ 'Social Image',
-		instructions: 'The image that will be used when the page is shared via social networks. This can be modified on a per-entry basis.',
+		label: (default ? 'Default ') ~ 'Social Image' | t
+		instructions: 'The image that will be used when the page is shared via social networks. This can be modified on a per-entry basis.' | t,
 		name: 'socialImage',
 		id: 'socialImage',
 		elements: settings.socialImage|length ? craft.assets.id(settings.socialImage).all() : null,
@@ -148,9 +148,9 @@
 {% else %}
 	{{ forms.field(
 		{
-			label: (default ? 'Default ') ~ 'Social Image',
+			label: (default ? 'Default ') ~ 'Social Image' | t,
 		},
-		'<p class="error">You\'ll need a volume with public URLs before you can select a social image!</p>'
+		'<p class="error">You\'ll need a volume with public URLs before you can select a social image!</p>' | t | raw
 	) }}
 {% endif %}
 
@@ -158,7 +158,7 @@
 {% if globalSettings is defined %}
 	{{ forms.lightswitchField({
 		label: 'Hide Social Meta Tab',
-		instructions: 'Will hide the social meta tab when switched on. This is useful if you have pre-existing social media fields.',
+		instructions: 'Will hide the social meta tab when switched on. This is useful if you have pre-existing social media fields.' | t,
 		name: 'hideSocial',
 		id: 'hideSocial',
 		on: "hideSocial" in settings|keys and settings.hideSocial is defined ? settings.hideSocial : false,
@@ -175,8 +175,8 @@
 	{% endset %}
 	{{ forms.field(
 		{
-			label: 'Robots'|t,
-			instructions: 'Set the default global robots directives. This can be changed on a per-entry basis'|t,
+			label: 'Robots' | t,
+			instructions: 'Set the default global robots directives. This can be changed on a per-entry basis' | t,
 		},
 		robots
 	) }}

@@ -38,19 +38,18 @@
 							</g>
 						</g>
 					</svg>
-					<h4>Select an Image</h4>
-					<p>If you don't select an image, the default (specified in
-					   the SEO settings) will be used if available.</p>
+					<h4>{{ "Select an Image" | t }}</h4>
+					<p>{{ 'If you don\'t select an image, the default (specified in the SEO settings) will be used if available.' | t }}</p>
 				</div>
 
-				<span class="remove">Remove Image</span>
+				<span class="remove">{{ 'Remove Image' | t }}</span>
 			</a>
 			<div class="seo--social-preview-content">
 				<input
-					type="text"
-					placeholder="This is the title of the page. You can edit it though"
-					name="{{ name }}[social][{{ handle }}][title]"
-					value="{{ this.title }}"
+						type="text"
+						placeholder="{{ 'This is the title of the page. You can edit it though' | t }}"
+						name="{{ name }}[social][{{ handle }}][title]"
+						value="{{ this.title }}"
 				/>
 				<textarea
 					placeholder="Integer posuere erat a ante venenatis dapibus posuere velit aliquet. Aenean lacinia bibendum nulla sed consectetur. Donec sed odio dui."
@@ -124,16 +123,16 @@
 					</span>
 
 					<textarea
-						class="seo--snippet-description"
-						name="{{ name }}[description]"
-						rows="2"
-						id="{{ id }}Description"
-						placeholder="Click to add a description!"
+							class="seo--snippet-description"
+							name="{{ name }}[description]"
+							rows="2"
+							id="{{ id }}Description"
+							placeholder="{{ 'Click to add a description!' | t }}"
 					>{{ value.description }}</textarea>
 				</div>
 
 				<label class="seo--snippet-edit" for="{{ id }}Title">
-					Click to edit
+					{{ 'Click to edit' | t }}
 				</label>
 			</div>
 
@@ -212,7 +211,7 @@
 					<ul class="seo--keywords-details-checklist"
 					    id="{{ id }}KeywordChecklist">
 						<li style="text-align:center">
-							No keyword selected
+							{{ 'No keyword selected' | t }}
 						</li>
 					</ul>
 				</div>
@@ -256,11 +255,11 @@
 			{# Ahh! Robots! #}
 			<div class="seo--label">
 				<div>
-					<em>Robots</em>
-					Control how this page is indexed by crawlers (some of these
+					<em>{{ 'Robots' | t }}</em>
+					{{ 'Control how this page is indexed by crawlers (some of these
 					are Google specific). If this element as an expiry date the
 					<code>unavailable_after</code> directive will be set
-					automatically.
+					automatically.' | t | raw }}
 				</div>
 			</div>
 
@@ -272,10 +271,10 @@
 			{# Canonical #}
 			<div class="seo--label">
 				<label for="{{ id }}Canonical">
-					<em>Canonical</em>
-					If this is not the canonical version of this page, add the
+					<em>{{ 'Canonical' | t }}</em>
+					{{ 'If this is not the canonical version of this page, add the
 					canonical URL here. The current URL of the page will be used
-					if this is left blank.
+					if this is left blank.' | t | raw }}
 				</label>
 			</div>
 
@@ -284,7 +283,7 @@
 				name: name ~ '[advanced][canonical]',
 				value: value.advanced.canonical,
 				type: 'url',
-				placeholder: 'This must be a valid, absolute URL. i.e. https://mysite.com'
+				placeholder: 'This must be a valid, absolute URL. i.e. https://mysite.com' | t
 			}) }}
 
 		</div>

@@ -5,8 +5,8 @@
 {% import "_includes/forms" as forms %}
 
 {% set redirectType = {
-	'301': '301 (Permanent)',
-	'302': '302 (Temporary)',
+	'301': '301 (Permanent)' | t,
+	'302': '302 (Temporary)' | t,
 } %}
 
 {% macro selectField(config) %}
@@ -80,7 +80,7 @@
 			</div>
 			<div>
 				<div class="btngroup">
-					<input type="submit" class="btn submit" value="Add Redirect">
+					<input type="submit" class="btn submit" value="{{ 'Add Redirect' | t }}">
 					<div class="spinner hidden"></div>
 				</div>
 			</div>
@@ -95,7 +95,7 @@
 			<div class="fields down">
 				{{ forms.textarea({
 					name: "redirects",
-					placeholder: "URI To [Type]\r\nblog/([0-9]{4})/(.*) news/$2\r\nproducts/(.*) shop/$1 302",
+					placeholder: "URI To [Type]\r\nblog/([0-9]{4})/(.*) news/$2\r\nproducts/(.*) shop/$1 302" | t,
 					rows: 3,
 					required: true
 				}) }}
@@ -103,11 +103,11 @@
 				<label class="type-select">
 					{{ forms.text({
 						name: "separator",
-						placeholder: "Separator",
+						placeholder: "Separator" | t,
 						required: true
 					}) }}
 					<span class="instructions">
-						The character used to separate each column. In a CSV, for example, this would be a comma (,).
+						{{ 'The character used to separate each column. In a CSV, for example, this would be a comma (,).' | t }}
 					</span>
 				</label>
 
@@ -119,7 +119,7 @@
 					}) }}
 
 					<span class="instructions">
-						The default redirect type (if one isn't defined)
+						{{ "The default redirect type (if one isn't defined)" | t }}
 					</span>
 				</label>
 
@@ -131,14 +131,14 @@
 					}) }}
 
 					<span class="instructions">
-						The site(s) these redirects should work on
+						{{ 'The site(s) these redirects should work on' | t }}
 					</span>
 				</label>
 			</div>
 
 			<div>
 				<div class="btngroup">
-					<input type="submit" class="btn submit" value="Add Redirects">
+					<input type="submit" class="btn submit" value="{{ 'Add Redirects' | t }}">
 				</div>
 				<div class="spinner hidden"></div>
 			</div>
@@ -154,10 +154,10 @@
 				<table class="data fullwidth">
 					<thead>
 					<tr>
-						<th scope="col" data-attribute="uri">URI</th>
-						<th scope="col" data-attribute="to">To</th>
-						<th scope="col" data-attribute="type">Type</th>
-						<th scope="col" data-attribute="added">Added</th>
+						<th scope="col" data-attribute="uri">{{ 'URI' | t }}</th>
+						<th scope="col" data-attribute="to">{{ 'To' | t }}</th>
+						<th scope="col" data-attribute="type">{{ 'Type' | t }}</th>
+						<th scope="col" data-attribute="added">{{ 'Added' | t }}</th>
 						<td class="thin checkbox-cell"></td>
 					</tr>
 					</thead>
@@ -174,7 +174,7 @@
 								<div class="element small">
 									<div class="label">
 										<span class="title">
-											<a href="#" title="Edit redirect"
+											<a href="#" title="{{ 'Edit redirect' | t }}"
 											   data-id="{{ redirect.id }}"
 											   data-uri="{{ redirect.uri }}"
 											   data-to="{{ redirect.to }}"
@@ -196,7 +196,7 @@
 								{{ redirect.dateCreated|datetime('short') }}
 							</td>
 							<td class="thin action">
-								<a class="delete icon" title="Delete"></a>
+								<a class="delete icon" title="{{ 'Delete' | t }}"></a>
 							</td>
 						</tr>
 					{% endfor %}

@@ -20,17 +20,17 @@
 } %}
 
 {% set priorityOpts = {
-	'1.0': '1.0 (High)',
+	'1.0': '1.0 (High)' | t,
 	'0.9': '0.9',
 	'0.8': '0.8',
 	'0.7': '0.7',
 	'0.6': '0.6',
-	'0.5': '0.5 (Default)',
+	'0.5': '0.5 (Default)' | t,
 	'0.4': '0.4',
 	'0.3': '0.3',
 	'0.2': '0.2',
 	'0.1': '0.1',
-	'0.0': '0.0 (Low)',
+	'0.0': '0.0 (Low)' | t,
 } %}
 
 {% block content %}
@@ -40,7 +40,7 @@
 		<div class="field">
 			<div class="heading">
 				<label>Sections</label>
-				<div class="instructions">How should we handle each section?</div>
+				<div class="instructions">{{ 'How should we handle each section?' | t }}</div>
 			</div>
 		</div>
 
@@ -50,9 +50,9 @@
 			<thead>
 			<tr>
 				<th>Section</th>
-				<th style="white-space:nowrap">Change Frequency</th>
-				<th>Priority</th>
-				<th>Enabled?</th>
+				<th style="white-space:nowrap">{{ 'Change Frequency' | t }}</th>
+				<th>{{ 'Priority' | t }}</th>
+				<th>{{ 'Enabled?' | t }}</th>
 			</tr>
 			</thead>
 			<tbody>
@@ -112,8 +112,8 @@
 		{# Start: Categories #}
 		<div class="field">
 			<div class="heading">
-				<label>Categories</label>
-				<div class="instructions">How should we handle each category?</div>
+				<label>{{ 'Categories' | t }}</label>
+				<div class="instructions">{{ 'How should we handle each category?' | t }}</div>
 			</div>
 		</div>
 
@@ -122,10 +122,10 @@
 		<table class="data fullwidth">
 			<thead>
 			<tr>
-				<th>Category</th>
-				<th style="white-space:nowrap">Change Frequency</th>
-				<th>Priority</th>
-				<th>Enabled?</th>
+				<th>{{ 'Category' | t }}</th>
+				<th style="white-space:nowrap">{{ 'Change Frequency' | t }}</th>
+				<th>{{ 'Priority' | t }}</th>
+				<th>{{ 'Enabled'  | t}}?</th>
 			</tr>
 			</thead>
 			<tbody>
@@ -181,8 +181,8 @@
 		{# Start: Custom #}
 		<div class="field">
 			<div class="heading">
-				<label>Custom URLs</label>
-				<div class="instructions">Add additional URLs that may not appear in Craft (i.e. public templates). <strong>Do not include {{ siteUrl }}</strong></div>
+				<label>{{ 'Custom URLs' | t }}</label>
+				<div class="instructions">{{ 'Add additional URLs that may not appear in Craft (i.e. public templates). <strong>Do not include {siteUrl}</strong>' | t('siteUrl': siteUrl) | raw }}</div>
 			</div>
 		</div>
 
@@ -203,10 +203,10 @@
 		<table class="data fullwidth" id="customUrls">
 			<thead>
 			<tr>
-				<th>URL</th>
-				<th style="white-space:nowrap">Change Frequency</th>
-				<th>Priority</th>
-				<th>Enabled?</th>
+				<th>{{ 'URL' | t }}</th>
+				<th style="white-space:nowrap">{{ 'Change Frequency' | t }}</th>
+				<th>{{ 'Priority'  | t}}</th>
+				<th>{{ 'Enabled'  | t}}?</th>
 				<th></th>
 			</tr>
 			</thead>
@@ -270,7 +270,7 @@
 							/>
 							<input
 								class="seo--custom-url-input"
-								placeholder="URL"
+								placeholder="{{ 'URL' | t }}"
 								type="text"
 								name="customUrls[{{ loop.index }}][url]"
 								value="{{ custom.url }}"
@@ -298,7 +298,7 @@
 							}) }}
 						</td>
 						<td class="thin action">
-							<a class="delete icon" title="Delete"></a>
+							<a class="delete icon" title="{{ 'Delete' | t }}"></a>
 						</td>
 					</tr>
 				{% endfor %}
@@ -309,7 +309,7 @@
 		<br>
 
 		<div class="btngroup">
-			<input type="button" class="btn submit" value="Add a URL" id="addCustomUrl" />
+			<input type="button" class="btn submit" value="{{ 'Add a URL' | t }}" id="addCustomUrl" />
 		</div>
 		{# End: Custom #}
 	{% endnamespace %}
