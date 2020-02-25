@@ -35,7 +35,7 @@ class RedirectsController extends Controller
 			"new SeoSettings('{$namespace}', 'redirects', ['{$csrfn}', '{$csrf}']);"
 		);
 
-		$sites = ['null' => 'All Sites'];
+		$sites = ['null' => Craft::t('seo', 'All Sites')];
 		foreach (Craft::$app->sites->getAllSites() as $site)
 			$sites[$site->id] = $site->name;
 

@@ -10,13 +10,13 @@
 {% endblock %}
 
 {% set changeFrequencyOpts = {
-	'always': 'Always',
-	'hourly': 'Hourly',
-	'daily': 'Daily',
-	'weekly': 'Weekly',
-	'monthly': 'Monthly',
-	'yearly': 'Yearly',
-	'never': 'Never',
+	'always': 'Always' | t,
+	'hourly': 'Hourly' | t,
+	'daily': 'Daily' | t,
+	'weekly': 'Weekly' | t,
+	'monthly': 'Monthly' | t,
+	'yearly': 'Yearly' | t,
+	'never': 'Never' | t,
 } %}
 
 {% set priorityOpts = {
@@ -182,7 +182,7 @@
 		<div class="field">
 			<div class="heading">
 				<label>{{ 'Custom URLs' | t }}</label>
-				<div class="instructions">{{ 'Add additional URLs that may not appear in Craft (i.e. public templates). <strong>Do not include {siteUrl}</strong>' | t('siteUrl': siteUrl) | raw }}</div>
+				<div class="instructions">{{ 'Add additional URLs that may not appear in Craft (i.e. public templates). <strong>Do not include {siteUrl}</strong>' | t(siteUrl) | raw }}</div>
 			</div>
 		</div>
 

@@ -166,16 +166,16 @@ class Seo extends Plugin
 		$currentUser = \Craft::$app->user;
 
 		$subNav = [
-			'dashboard' => ['label' => 'Dashboard', 'url' => 'seo'],
+			'dashboard' => ['label' => Craft::t('seo', 'Dashboard'), 'url' => 'seo'],
 		];
 
 		if ($currentUser->getIsAdmin() || $currentUser->checkPermission('manageSitemap'))
 			$subNav['sitemap'] =
-				['label' => 'Sitemap', 'url' => 'seo/sitemap'];
+				['label' => Craft::t('seo', 'Sitemap'), 'url' => 'seo/sitemap'];
 
 		if ($currentUser->getIsAdmin() || $currentUser->checkPermission('manageRedirects'))
 			$subNav['redirects'] =
-				['label' => 'Redirects', 'url' => 'seo/redirects'];
+				['label' => Craft::t('seo', 'Redirects'), 'url' => 'seo/redirects'];
 
 		/*if ($currentUser->getIsAdmin() || $currentUser->checkPermission('manageSchema'))
 			$subNav['schema'] =

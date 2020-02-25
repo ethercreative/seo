@@ -11,7 +11,7 @@
 	<div class="seo--label">
 		<div>
 			<em>{{ label }}</em>
-			{{ ("This is how the page will look when shared on " ~ label)|t }}
+			{{ ("This is how the page will look when shared on {label}") | t(label) }}
 		</div>
 	</div>
 
@@ -189,7 +189,7 @@
 						<div class="seo--keywords-details-rating"
 						     id="{{ id }}Rating">
 							{{ _.rating("neutral") }}
-							{{ 'Not yet rated' }}
+							{{ 'Not yet rated' | t }}
 						</div>
 					</header>
 
