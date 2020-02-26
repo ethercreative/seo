@@ -1,8 +1,8 @@
 {
-  "name": "jorgeanzola/seo-translated",
+  "name": "ether/seo",
   "license": "MIT",
   "description": "SEO utilities including a unique field type, sitemap, & redirect manager",
-  "version": "3.6.5",
+  "version": "3.6.3",
   "type": "craft-plugin",
   "minimum-stability": "dev",
   "require": {
