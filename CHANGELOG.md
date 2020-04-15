@@ -1,3 +1,7 @@
+## 3.6.4 - 2020-04-15
+### Fixed
+- Fix JS error when `%` appeared in SEO snippet text
+
 ## 3.6.3 - 2019-12-18
 ### Improved
 - Replace SVG's while keeping text intact (Fixes #197)

@@ -1,4 +1,5 @@
 /* globals $, Craft, Garnish */
+/* eslint-disable no-async-promise-executor */
 /**
  * Entry Markup
  *

@@ -5,6 +5,10 @@ module.exports = {
 	// generate.
 	manifest: null,
 
+	sass: {
+		run: false,
+	},
+
 	less: {
 		// If set to false, Less compilation will not run
 		run: true,
