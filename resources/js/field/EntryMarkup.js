@@ -55,11 +55,14 @@ class EntryMarkup {
 				let data = await this._preview();
 
 				// Remove all <svg/>, <script/> & <style/> tags
-				data.match(/<svg([^'"]|"(\\.|[^"\\])*"|'(\\.|[^'\\])*')*?<\/svg>/g).forEach(s => {
-					if (typeof s !== 'string') return;
-					const t = s.match(/<text([^'"]|"(\\.|[^"\\])*"|'(\\.|[^'\\])*')*?<\/text>/g) || [];
-					data = data.replace(s, '<svg>' + t.join() + '</svg>');
-				});
+				const svgTags = data.match(/<svg([^'"]|"(\\.|[^"\\])*"|'(\\.|[^'\\])*')*?<\/svg>/g);
+				if (svgTags) {
+					svgTags.forEach(s => {
+						if (typeof s !== 'string') return;
+						const t = s.match(/<text([^'"]|"(\\.|[^"\\])*"|'(\\.|[^'\\])*')*?<\/text>/g) || [];
+						data = data.replace(s, '<svg>' + t.join() + '</svg>');
+					});
+				}
 
 				data = data.replace(
 					/<script([^'"]|"(\\.|[^"\\])*"|'(\\.|[^'\\])*')*?<\/script>/g,
