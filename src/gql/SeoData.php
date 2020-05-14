@@ -15,7 +15,7 @@ class SeoData extends \craft\gql\base\ObjectType
 {
     public static function getName(): string
     {
-        return self::class;
+        return "Ether_" . (new \ReflectionClass(static::class))->getShortName();
     }
 
     public static function getType(): Type
@@ -52,7 +52,7 @@ class SeoSocialNetworks extends \craft\gql\base\ObjectType
 {
     public static function getName(): string
     {
-        return self::class;
+        return "Ether_" . (new \ReflectionClass(static::class))->getShortName();
     }
 
     public static function getType(): ObjectType {
@@ -79,7 +79,7 @@ class SeoSocialData extends \craft\gql\base\ObjectType
 {
     public static function getName(): string
     {
-        return self::class;
+        return "Ether_" . (new \ReflectionClass(static::class))->getShortName();
     }
 
     /**
@@ -142,7 +142,7 @@ class SeoAdvanced extends \craft\gql\base\ObjectType
 {
     public static function getName(): string
     {
-        return self::class;
+        return "Ether_" . (new \ReflectionClass(static::class))->getShortName();
     }
 
     public static function getType(): ObjectType
