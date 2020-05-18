@@ -8,6 +8,7 @@ use craft\db\ActiveRecord;
  * Class RedirectRecord
  *
  * @property int $id
+ * @property int $order
  * @property string $uri
  * @property string $to
  * @property string $type

@@ -53,6 +53,13 @@ export default class Redirects {
 	
 	initTables () {
 		Object.keys(this.tables).forEach(key => {
+			if (this.tables[key].__sorter)
+				this.tables[key].__sorter.destroy();
+
+			this.tables[key].__sorter = new Craft.DataTableSorter(this.tables[key].parentNode, {
+				onSortChange: () => this.onSort(this.tables[key]),
+			});
+
 			[].slice.call(this.tables[key].getElementsByTagName("tr")).forEach(row => {
 				const links = row.getElementsByTagName("a");
 
@@ -60,7 +67,7 @@ export default class Redirects {
 					this.onEditClick(key, e, row);
 				});
 
-				links[1].addEventListener("click", e => {
+				links[2].addEventListener("click", e => {
 					this.onDeleteClick(key, e, row);
 				});
 			});
@@ -80,18 +87,22 @@ export default class Redirects {
 			, type   = form.elements[this.namespaceField("type")]
 			, siteId = form.elements[this.namespaceField("siteId")];
 
+		const order = this.tables[siteId.value].children.length;
+
 		// Validate
 		if (!Redirects._validate(uri, to, spinner))
 			return;
 		
 		this.post("POST", {
+			action: 'seo/redirects/save',
+			order,
 			uri: uri.value,
 			to: to.value,
 			type: type.value,
 			siteId: siteId.value,
 		}, ({ id }) => {
 			this.tables[siteId.value].appendChild(this.rowStatic(
-				id, uri.value, to.value, type.value, siteId.value
+				id, order, uri.value, to.value, type.value, siteId.value
 			));
 			
 			Craft.cp.displayNotice(
@@ -102,6 +113,7 @@ export default class Redirects {
 			uri.value = '';
 			to.value = '';
 			uri.focus();
+			this.initTables();
 		}, error => {
 			Craft.cp.displayError("<strong>SEO:</strong> " + error);
 			spinner.classList.add("hidden");
@@ -141,9 +153,9 @@ export default class Redirects {
 			type: type.value,
 			siteId: siteId.value,
 		}, ({ redirects: newRedirects }) => {
-			newRedirects.forEach(({ id, uri, to, type, siteId }) => {
+			newRedirects.forEach(({ id, order, uri, to, type, siteId }) => {
 				this.tables[siteId || 'null'].appendChild(this.rowStatic(
-					id, uri, to, type, siteId
+					id, order, uri, to, type, siteId
 				));
 			});
 			
@@ -151,6 +163,7 @@ export default class Redirects {
 			spinner.classList.add("hidden");
 			
 			redirects.value = '';
+			this.initTables();
 		}, error => {
 			Craft.cp.displayError('<strong>SEO:</strong> ' + error);
 			spinner.classList.add("hidden");
@@ -164,17 +177,20 @@ export default class Redirects {
 		const form = e.target
 			, spinner = form.getElementsByClassName("spinner")[0];
 		
-		const id  = form.elements[this.namespaceField("id")]
-			, uri  = form.elements[this.namespaceField("uri")]
-			, to   = form.elements[this.namespaceField("to")]
-			, type = form.elements[this.namespaceField("type")];
+		const id    = form.elements[this.namespaceField("id")]
+			, order = form.elements[this.namespaceField("order")]
+			, uri   = form.elements[this.namespaceField("uri")]
+			, to    = form.elements[this.namespaceField("to")]
+			, type  = form.elements[this.namespaceField("type")];
 		
 		// Validate
 		if (!Redirects._validate(uri, to, spinner))
 			return;
 		
 		this.post("POST", {
+			action: 'seo/redirects/save',
 			id: id.value,
+			order: order.value,
 			uri: uri.value,
 			to: to.value,
 			type: type.value,
@@ -185,7 +201,7 @@ export default class Redirects {
 			
 			this.tables[siteId].insertBefore(
 				this.rowStatic(
-					id.value, uri.value, to.value, type.value, siteId.value,
+					id.value, order.value, uri.value, to.value, type.value, siteId.value,
 					row.dataset.added
 				),
 				row
@@ -200,10 +216,10 @@ export default class Redirects {
 	
 	onEditClick = (siteId, e, row) => {
 		e.preventDefault();
-		const { id, uri, to, type, added } = e.target.dataset;
+		const { id, order, uri, to, type, added } = e.target.dataset;
 		this.cancelCurrentEdit();
 		
-		const editRows = this.rowEdit(id, uri, to, type);
+		const editRows = this.rowEdit(id, order, uri, to, type);
 
 		this.editRow = row;
 		this.editRow.setAttribute('data-added', added);
@@ -247,6 +263,27 @@ export default class Redirects {
 			Craft.cp.displayNotice('<strong>SEO:</strong> ' + error);
 		});
 	};
+
+	onSort = table => {
+		const rows = table.querySelectorAll('tr');
+		const post = [];
+
+		for (let i = 0, l = rows.length; i < l; i++) {
+			const row = rows[i];
+			row.dataset.order = i;
+			row.querySelector('a').dataset.order = i;
+			post.push({ id: row.dataset.id, order: row.dataset.order });
+		}
+
+		this.post('POST', {
+			action: 'seo/redirects/sort',
+			order: post,
+		}, () => {
+			Craft.cp.displayNotice('<strong>SEO:</strong> Redirect order saved');
+		}, error => {
+			Craft.cp.displayNotice('<strong>SEO:</strong> ' + error);
+		});
+	};
 	
 	// Helpers
 	// =========================================================================
@@ -259,7 +296,7 @@ export default class Redirects {
 		method,
 		fields = {},
 		onSuccess = () => {},
-		onError = () => {}
+		onError = () => {},
 	) {
 		const jsonData = {};
 
@@ -294,7 +331,7 @@ export default class Redirects {
 		});
 	}
 	
-	rowStatic (id = -1, uri = "", to = "", type = 301, siteId = null, dateCreated = null) {
+	rowStatic (id = -1, order = -1, uri = "", to = "", type = 301, siteId = null, dateCreated = null) {
 		const added = dateCreated || 'Now';
 
 		const row = c("tr", { "tabindex": 0, "data-id": id }, [
@@ -307,11 +344,12 @@ export default class Redirects {
 								"href": "#",
 								"title": "Edit Redirect",
 								"data-id": id,
+								"data-order": order,
 								"data-uri": uri,
 								"data-to": to,
 								"data-type": type,
 								"data-added": dateCreated,
-								"click": e => this.onEditClick(siteId, e, row)
+								"click": e => this.onEditClick(siteId, e, row),
 							}, uri)
 						])
 					])
@@ -327,14 +365,22 @@ export default class Redirects {
 			// Added
 			c("td", {}, added),
 			
+			// Reorder
+			c("td", { "class": "thin action" }, [
+				c("a", {
+					"class": "move icon",
+					"title": "Reorder",
+				}),
+			]),
+
 			// Delete
 			c("td", { "class": "thin action" }, [
 				c("a", {
 					"class": "delete icon",
 					"title": "Delete",
-					"click": e => this.onDeleteClick(siteId, e, row)
-				})
-			])
+					"click": e => this.onDeleteClick(siteId, e, row),
+				}),
+			]),
 		]);
 		
 		return row;

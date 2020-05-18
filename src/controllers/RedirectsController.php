@@ -58,13 +58,14 @@ class RedirectsController extends Controller
 
 		$request  = Craft::$app->request;
 
+		$order  = $request->getRequiredBodyParam('order');
 		$uri    = $request->getRequiredBodyParam('uri');
 		$to     = $request->getRequiredBodyParam('to');
 		$type   = $request->getRequiredBodyParam('type');
 		$siteId = $request->getBodyParam('siteId', false);
 		$id     = $request->getBodyParam('id');
 
-		$err = Seo::$i->redirects->save($uri, $to, $type, $siteId, $id);
+		$err = Seo::$i->redirects->save($order, $uri, $to, $type, $siteId, $id);
 
 		if (is_numeric($err))
 		{
@@ -103,6 +104,20 @@ class RedirectsController extends Controller
 			return $this->asJson([
 				'success' => true,
 				'redirects' => $success,
+			]);
+		}
+	}
+
+	public function actionSort ()
+	{
+		$order = Craft::$app->getRequest()->getBodyParam('order');
+
+		$error = Seo::$i->redirects->sort($order);
+
+		if ($error) return $this->asErrorJson($error);
+		else {
+			return $this->asJson([
+				'success' => true,
 			]);
 		}
 	}

@@ -1,3 +1,7 @@
+## 3.6.5 - 2020-05-18
+### Added
+- Add redirect ordering (Closes #274)
+
 ## 3.6.4 - 2020-04-15
 ### Fixed
 - Fix JS error when `%` appeared in SEO snippet text

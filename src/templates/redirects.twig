@@ -158,7 +158,7 @@
 						<th scope="col" data-attribute="to">To</th>
 						<th scope="col" data-attribute="type">Type</th>
 						<th scope="col" data-attribute="added">Added</th>
-						<td class="thin checkbox-cell"></td>
+						<th colspan="2"></th>
 					</tr>
 					</thead>
 					<tbody data-redirects="{{ siteId }}">
@@ -169,13 +169,14 @@
 					{% endif %}
 
 					{% for redirect in siteRedirects %}
-						<tr tabindex="0" data-id="{{ redirect.id }}">
+						<tr tabindex="0" data-id="{{ redirect.id }}" data-order="{{ redirect.order }}">
 							<td class="redirects--title-col">
 								<div class="element small">
 									<div class="label">
 										<span class="title">
 											<a href="#" title="Edit redirect"
 											   data-id="{{ redirect.id }}"
+											   data-order="{{ redirect.order }}"
 											   data-uri="{{ redirect.uri }}"
 											   data-to="{{ redirect.to }}"
 											   data-added="{{ redirect.dateCreated|datetime('short') }}"
@@ -194,6 +195,9 @@
 							</td>
 							<td>
 								{{ redirect.dateCreated|datetime('short') }}
+							</td>
+							<td class="thin action">
+								<a class="move icon" title="Reorder"></a>
 							</td>
 							<td class="thin action">
 								<a class="delete icon" title="Delete"></a>

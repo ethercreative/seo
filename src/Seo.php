@@ -55,7 +55,7 @@ class Seo extends Plugin
 	public $documentationUrl =
 		'https://github.com/ethercreative/seo/blob/v3/README.md';
 
-	public $schemaVersion = '3.1.0';
+	public $schemaVersion = '3.1.1';
 
 	// Craft
 	// =========================================================================
@@ -236,7 +236,7 @@ class Seo extends Plugin
 		// Redirects
 		// ---------------------------------------------------------------------
 		$event->rules['DELETE seo/redirects'] = 'seo/redirects/delete';
-		$event->rules['POST seo/redirects'] = 'seo/redirects/save';
+		//$event->rules['POST seo/redirects'] = 'seo/redirects/save';
 		$event->rules['PUT seo/redirects'] = 'seo/redirects/bulk';
 		$event->rules['seo/redirects'] = 'seo/redirects/index';
 

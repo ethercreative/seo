@@ -5,6 +5,7 @@ namespace ether\seo\services;
 use Craft;
 use craft\base\Component;
 use craft\events\ExceptionEvent;
+use craft\helpers\ArrayHelper;
 use craft\helpers\UrlHelper;
 use ether\seo\records\RedirectRecord;
 use Exception;
@@ -80,10 +81,10 @@ class RedirectsService extends Component
 			return RedirectRecord::find()->where(
 				'[[siteId]] IS NULL OR [[siteId]] = ' .
 				Craft::$app->sites->currentSite->id
-			)->orderBy('dateCreated asc, siteId asc')->all();
+			)->orderBy('order asc')->all();
 
 		return array_reduce(
-			RedirectRecord::find()->orderBy('dateCreated ASC')->all(),
+			RedirectRecord::find()->orderBy('order asc')->all(),
 			function ($a, RedirectRecord $record) {
 				$a[$record->siteId ?? 'null'][] = $record;
 				return $a;
@@ -142,6 +143,7 @@ class RedirectsService extends Component
 	/**
 	 * Saves the redirect
 	 *
+	 * @param int      $order
 	 * @param string   $uri
 	 * @param string   $to
 	 * @param string   $type
@@ -150,7 +152,7 @@ class RedirectsService extends Component
 	 *
 	 * @return array|int|string
 	 */
-	public function save ($uri, $to, $type, $siteId = null, $id = null)
+	public function save ($order, $uri, $to, $type, $siteId = null, $id = null)
 	{
 		if ($siteId === 'null')
 			$siteId = null;
@@ -177,6 +179,7 @@ class RedirectsService extends Component
 			$record = new RedirectRecord();
 		}
 
+		$record->order  = $order;
 		$record->uri    = $uri;
 		$record->to     = $to;
 		$record->type   = $type;
@@ -210,9 +213,12 @@ class RedirectsService extends Component
 
 		$newFormatted = [];
 
+		$order = RedirectRecord::find()->where(['siteId' => $siteId])->count();
+
 		foreach ($rawRedirects as $redirect)
 		{
 			$record = new RedirectRecord();
+			$record->order = $order++;
 			$record->uri = $redirect[0];
 			$record->to = $redirect[1];
 			$record->type = array_key_exists(2, $redirect) ? $redirect[2] : $type;
@@ -221,6 +227,7 @@ class RedirectsService extends Component
 
 			$newFormatted[] = [
 				'id'     => $record->id,
+				'order'  => $record->order,
 				'uri'    => $record->uri,
 				'to'     => $record->to,
 				'type'   => $record->type,
@@ -229,6 +236,29 @@ class RedirectsService extends Component
 		}
 
 		return [$newFormatted, false];
+	}
+
+	public function sort ($order)
+	{
+		$table = RedirectRecord::$tableName;
+
+		$db = Craft::$app->getDb();
+		$transaction = $db->beginTransaction();
+
+		try {
+			foreach ($order as $row) {
+				$db->createCommand()
+				   ->update($table, ['order' => $row['order']], ['id' => $row['id']])
+				   ->execute();
+			}
+
+			$transaction->commit();
+		} catch (Exception $e) {
+			$transaction->rollBack();
+			return $e->getMessage();
+		}
+
+		return false;
 	}
 
 	/**

@@ -13,6 +13,9 @@ class Redirect extends Model
 	// Props: Public Instance
 	// -------------------------------------------------------------------------
 
+	/** @var int */
+	public $order;
+
 	/** @var string */
 	public $uri;
 
@@ -36,6 +39,12 @@ class Redirect extends Model
 	public function rules (): array
 	{
 		$rules = parent::rules();
+
+		$rules[] = [
+			['order'],
+			'integer',
+			'required',
+		];
 
 		$rules[] = [
 			['url', 'to', 'type'],
