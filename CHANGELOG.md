@@ -1,3 +1,7 @@
+## 3.6.5.1 - 2020-05-22
+### Fixed
+- Fix missing order column install issue (Fixes #303)
+
 ## 3.6.5 - 2020-05-18
 ### Added
 - Add redirect ordering (Closes #274)

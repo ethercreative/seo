@@ -49,6 +49,7 @@ class Install extends Migration
 				'to'     => $this->string(255)->notNull(),
 				'type'   => $this->enum('type', ['301', '302'])->notNull(),
 				'siteId' => $this->integer()->null(),
+				'order'  => $this->integer()->null(),
 
 				'dateCreated' => $this->dateTime()->notNull(),
 				'dateUpdated' => $this->dateTime()->notNull(),
