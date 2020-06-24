@@ -386,7 +386,7 @@ export default class Redirects {
 		return row;
 	}
 	
-	rowEdit (id, uri, to, type) {
+	rowEdit (id, order, uri, to, type) {
 		return [
 			c("tr", { "class": "redirects--edit-row" }, [
 				// URI
@@ -395,6 +395,11 @@ export default class Redirects {
 						"value": id,
 						"type": "hidden",
 						"name": this.namespaceField("id")
+					}),
+					c("input", {
+						"value": order,
+						"type": "hidden",
+						"name": this.namespaceField("order")
 					}),
 					c("input", {
 						"value": uri,

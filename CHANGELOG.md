@@ -1,3 +1,7 @@
+## 3.6.5.2 - 2020-6-24
+### Fixed
+- Fix incorrect content in fields on redirect edit (Fixes #309, #314)
+
 ## 3.6.5.1 - 2020-05-22
 ### Fixed
 - Fix missing order column install issue (Fixes #303)
