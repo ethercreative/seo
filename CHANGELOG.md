@@ -1,3 +1,7 @@
+## 3.6.6 - 2020-06-30
+### Added
+- Add gql field-type definition for Craft 3.3 GraphQL implementation (via @FreekVR)
+
 ## 3.6.5.2 - 2020-6-24
 ### Fixed
 - Fix incorrect content in fields on redirect edit (Fixes #309, #314)
