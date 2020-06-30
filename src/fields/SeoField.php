@@ -8,6 +8,8 @@ use craft\base\PreviewableFieldInterface;
 use craft\elements\Category;
 use craft\elements\Entry;
 use craft\elements\GlobalSet;
+use craft\errors\GqlException;
+use craft\gql\TypeLoader;
 use craft\helpers\Json;
 use craft\helpers\UrlHelper;
 use craft\models\Section;
@@ -92,6 +94,17 @@ class SeoField extends Field implements PreviewableFieldInterface
 	{
 		return Schema::TYPE_TEXT;
 	}
+
+    /**
+     * @return array
+     */
+	public function getContentGqlType (): array
+    {
+        return [
+            'name' => $this->handle,
+            'type' => \ether\seo\gql\SeoData::getType(),
+        ];
+    }
 
 	public function normalizeValue ($value, ElementInterface $element = null)
 	{
