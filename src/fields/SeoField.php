@@ -12,6 +12,7 @@ use craft\errors\GqlException;
 use craft\gql\TypeLoader;
 use craft\helpers\Json;
 use craft\helpers\UrlHelper;
+use craft\helpers\Html;
 use craft\models\Section;
 use ether\seo\models\data\SeoData;
 use ether\seo\Seo;
@@ -297,10 +298,11 @@ class SeoField extends Field implements PreviewableFieldInterface
 	public function getSettingsHtml ()
 	{
 		$view = \Craft::$app->view;
-		$namespace = $view->namespaceInputId('');
+		$namespace = $view->getNamespace();
+		$namespaceId = Html::namespaceId('', $namespace);
 
 		$view->registerAssetBundle(SeoFieldSettingsAsset::class);
-		$view->registerJs('new SeoFieldSettings("' . $namespace . '");');
+		$view->registerJs('new SeoFieldSettings("' . $namespaceId . '");');
 
 		return $view->renderTemplate(
 			'seo/_seo/settings',
