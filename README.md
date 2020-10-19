@@ -16,7 +16,7 @@ The SEO field type helps give users an idea of how their page will look in Googl
 
 The field type allows users to manage the meta of their page in one simple and easy to use input that has the added bonus of giving them an idea of how their page will show up in a Google search.
 
-The field also contains a *Focus Keyword* input and *Page Score*. This is used to workout how relevant a key word or phrase is to your entry and how well the page is likely to do in a search for that keyword.
+The field also contains a *Focus Keyword* input and *Page Score*. This is used to workout how relevant a keyword or phrase is to your entry and how well the page is likely to do in a search for that keyword.
 
 The Page Score also contains a breakdown of your entries score, and tips on where it can be improved.
 
@@ -104,8 +104,6 @@ craft.seo.custom(
 All parameters are optional.
 
 ## Upcoming Features
-
-Checkout our [Trello Board](https://trello.com/b/XvBY9m5l/seo-plugin) to see what new features we're working on.
 
 If you have a feature suggestion, [leave an issue](https://github.com/ethercreative/seo/issues) with the prefix `[FR]`.  
 
