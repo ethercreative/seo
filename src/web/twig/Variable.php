@@ -57,7 +57,7 @@ class Variable
 	{
 		return $this->_socialImage($image, [
 			'width'  => 1200,
-			'height' => 675,
+			'height' => 600,
 		]);
 	}
 
