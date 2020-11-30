@@ -195,7 +195,7 @@ class Seo extends Plugin
 			$subNav['schema'] =
 				['label' => 'Schema', 'url' => 'seo/schema'];*/
 
-		if ($currentUser->getIsAdmin())
+		if (\Craft::$app->getConfig()->general->allowAdminChanges && $currentUser->getIsAdmin())
 			$subNav['settings'] =
 				['label' => 'Settings', 'url' => 'seo/settings'];
 

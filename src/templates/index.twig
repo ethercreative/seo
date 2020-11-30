@@ -23,7 +23,7 @@
 				Schema
 			</a>
 		</li>#}
-		{% if currentUser.admin %}
+		{% if craft.app.config.general.allowAdminChanges and currentUser.admin %}
 			<li>
 				<a href="{{ url('seo/settings') }}"
 				   data-icon="settings"
