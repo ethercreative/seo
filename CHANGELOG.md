@@ -1,3 +1,13 @@
+## 3.6.7 - 2020-11-30
+### Changed
+- Set Twitter image transform to a 2:1 ratio (via @icreatestuff)
+- Hide the "Settings" links when admin changes are disallowed (via @nstCactus)
+
+### Fixed
+- Fix getSettingsHtml function to be compatible with Craft 3.5 (via @bendesilva)
+- Fix error in retrieving preview if no SVG tags are present on the page (via @tschoffelen)
+- Fix ErrorException error on sections XML (via @jesuismaxime)
+
 ## 3.6.6 - 2020-06-30
 ### Added
 - Add gql field-type definition for Craft 3.3 GraphQL implementation (via @FreekVR)

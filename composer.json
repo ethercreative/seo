@@ -2,7 +2,7 @@
   "name": "ether/seo",
   "license": "MIT",
   "description": "SEO utilities including a unique field type, sitemap, & redirect manager",
-  "version": "3.6.6",
+  "version": "3.6.7",
   "type": "craft-plugin",
   "minimum-stability": "dev",
   "require": {
