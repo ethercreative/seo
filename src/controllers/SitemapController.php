@@ -36,6 +36,7 @@ class SitemapController extends Controller
 			'sitemap' => Seo::$i->sitemap->getSitemap(),
 			'sections' => Seo::$i->sitemap->getValidSections(),
 			'categories' => Seo::$i->sitemap->getValidCategories(),
+			'productTypes' => Seo::$i->sitemap->getValidProductTypes(),
 		]);
 	}
 
