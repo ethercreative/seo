@@ -21,7 +21,7 @@ class Install extends Migration
 				'id' => $this->primaryKey(),
 
 				'group' => $this->enum('group', [
-					'sections', 'categories', 'customUrls',
+					'sections', 'categories', 'productTypes', 'customUrls',
 				])->notNull(),
 				'url' => $this->string(255)->notNull(),
 				'frequency' => $this->enum('frequency', [
