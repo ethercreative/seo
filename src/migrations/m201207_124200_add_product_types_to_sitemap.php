@@ -16,11 +16,10 @@ class m201207_124200_add_product_types_to_sitemap extends Migration
 	 */
 	public function safeUp()
 	{
-		$this->alterColumn(SitemapRecord::$tableName, 'group', [
-			'values' => ['sections', 'categories', 'productTypes', 'customUrls'],
-			'column' => 'enum',
-			'required' => true,
-		]);
+		$this->dropCheck();
+		$this->alterColumn(SitemapRecord::$tableName, 'group', $this->enum('group', [
+			'sections', 'categories', 'productTypes', 'customUrls',
+		])->notNull());
 	}
 
 	/**
@@ -28,10 +27,17 @@ class m201207_124200_add_product_types_to_sitemap extends Migration
 	 */
 	public function safeDown()
 	{
-		$this->alterColumn(SitemapRecord::$tableName, 'group', [
-			'values' => ['sections', 'categories', 'customUrls'],
-			'column' => 'enum',
-			'required' => true,
-		]);
+		$this->dropCheck();
+		$this->alterColumn(SitemapRecord::$tableName, $this->enum('group', [
+			'sections', 'categories', 'customUrls',
+		])->notNull());
+	}
+
+	/**
+	 * Drop group check.
+	 */
+	protected function dropCheck()
+	{
+		$this->db->createCommand()->dropCheck('seo_sitemap_group_check', SitemapRecord::$tableName)->execute();
 	}
 }
