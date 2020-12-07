@@ -281,6 +281,11 @@ class SitemapService extends Component
 				$type = Category::instance();
 				$idHandle = 'groupId';
 				break;
+		
+			case 'productTypes':
+				$type = \craft\commerce\elements\Product::instance();
+				$idHandle = 'typeId';
+				break;
 
 			default:
 				goto out;
@@ -304,7 +309,7 @@ class SitemapService extends Component
 		if ($first = $elements->one())
 		{
 			$fieldLayout =
-				$variables['section'] === 'categories'
+				$variables['section'] === 'categories' || $variables['section'] === 'productTypes'
 					? $first->fieldLayout
 					: $first->type->fieldLayout;
 
@@ -447,7 +452,7 @@ class SitemapService extends Component
 	// =========================================================================
 
 	/**
-	 * @param Section|CategoryGroup $thing
+	 * @param Section|CategoryGroup|ProductType $thing
 	 *
 	 * @return bool
 	 */
@@ -506,7 +511,7 @@ class SitemapService extends Component
 	 */
 	private function _getUpdated (Element $type, $id)
 	{
-		/** @var EntryQuery|CategoryQuery $criteria */
+		/** @var EntryQuery|CategoryQuery|ProductQuery $criteria */
 		$criteria = $type::find();
 
 		$this->_setCriteriaIdByType($criteria, $type, $id);
@@ -527,7 +532,7 @@ class SitemapService extends Component
 	 */
 	private function _getPageCount (Element $type, $id)
 	{
-		/** @var EntryQuery|CategoryQuery $criteria */
+		/** @var EntryQuery|CategoryQuery|ProductQuery $criteria */
 		$criteria = $type::find();
 		$this->_setCriteriaIdByType($criteria, $type, $id);
 
@@ -540,7 +545,7 @@ class SitemapService extends Component
 	 * Sets the section or group ID on the criteria according to the
 	 * given element type
 	 *
-	 * @param EntryQuery|CategoryQuery $criteria - The criteria
+	 * @param EntryQuery|CategoryQuery|ProductQuery $criteria - The criteria
 	 * @param Element                  $type - The element type
 	 * @param int                      $id - The section or group ID
 	 */
@@ -552,6 +557,9 @@ class SitemapService extends Component
 				break;
 			case 'Category':
 				$criteria->groupId = $id;
+				break;
+			case 'Product':
+				$criteria->typeId = $id;
 				break;
 		}
 	}
@@ -602,6 +610,11 @@ class SitemapService extends Component
 				$last = $this->_getUpdated(Category::instance(), $id);
 				$pages = $this->_getPageCount(Category::instance(), $id);
 				break;
+
+			case 'productTypes':
+				$last = $this->_getUpdated(\craft\commerce\elements\Product::instance(), $id);
+				$pages = $this->_getPageCount(\craft\commerce\elements\Product::instance(), $id);
+				break;				
 
 			default:
 				$last = DateTimeHelper::currentUTCDateTime()->format('c');
