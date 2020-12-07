@@ -51,6 +51,8 @@ class Seo extends Plugin
 	/** @var Seo */
 	public static $i;
 
+	public static $commerceInstalled = false;
+
 	public $hasCpSection        = true;
 	public $hasCpSettings       = true;
 
@@ -130,6 +132,9 @@ class Seo extends Plugin
 			CraftVariable::EVENT_INIT,
 			[$this, 'onRegisterVariable']
 		);
+
+		// Check if commerce is installed
+		self::$commerceInstalled = $craft->plugins->getPlugin('commerce') != null;
 
 		// 404 Exceptions
 		if (

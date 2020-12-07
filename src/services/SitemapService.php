@@ -163,6 +163,16 @@ class SitemapService extends Component
 		);
 	}
 
+	public function getValidProductTypes ()
+	{
+		if (!Seo::$commerceInstalled) return [];
+
+		return array_filter(
+			\craft\commerce\Plugin::getInstance()->productTypes->getAllProductTypes(),
+			[$this, '_filterOutNoUrls']
+		);
+	}
+
 	// Sitemap XML
 	// =========================================================================
 
@@ -211,6 +221,13 @@ class SitemapService extends Component
 		$this->_generateLoop(
 			'categories',
 			$this->getValidCategories(),
+			$sitemapData
+		);
+
+		// Generate Loop: Product Types
+		$this->_generateLoop(
+			'productTypes',
+			$this->getValidProductTypes(),
 			$sitemapData
 		);
 
