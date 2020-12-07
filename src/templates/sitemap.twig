@@ -221,21 +221,21 @@
 						</td>
 						<td class="thin" style="text-align:left;">
 							{{ forms.selectField({
-								name: "productTypes["~category.id~"][frequency]",
+								name: "productTypes["~productType.id~"][frequency]",
 								options: changeFrequencyOpts,
 								value: sitemap.productTypes[productType.id].frequency|default('weekly')
 							}) }}
 						</td>
 						<td class="thin">
 							{{ forms.selectField({
-								name: "productTypes["~category.id~"][priority]",
+								name: "productTypes["~productType.id~"][priority]",
 								options: priorityOpts,
 								value: sitemap.productTypes[productType.id].priority|default('0.5')
 							}) }}
 						</td>
 						<td class="thin" style="text-align:center">
 							{{ forms.checkbox({
-								name: "productTypes["~category.id~"][enabled]",
+								name: "productTypes["~productType.id~"][enabled]",
 								value: true,
 								checked: (sitemap.productTypes is defined and sitemap.productTypes[productType.id] is defined ? sitemap.productTypes[productType.id].enabled : false)
 							}) }}
