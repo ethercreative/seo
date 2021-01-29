@@ -38,10 +38,7 @@ class Extension extends \Twig_Extension
 		try {
 			$seo = null;
 
-			if (isset($ctx[$handle]))
-				$seo = $ctx[$handle];
-
-			elseif (isset($ctx['entry']) && isset($ctx['entry'][$handle]))
+			if (isset($ctx['entry']) && isset($ctx['entry'][$handle]))
 				$seo = $ctx['entry'][$handle];
 
 			elseif (isset($ctx['product']) && isset($ctx['product'][$handle]))
@@ -49,6 +46,9 @@ class Extension extends \Twig_Extension
 
 			elseif (isset($ctx['category']) && isset($ctx['category'][$handle]))
 				$seo = $ctx['category'][$handle];
+			
+			elseif (isset($ctx[$handle]))
+				$seo = $ctx[$handle];
 
 			if ($seo instanceof SeoData)
 				return $seo;
