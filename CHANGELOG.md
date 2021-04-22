@@ -1,3 +1,7 @@
+## 3.7.0 - Unreleased
+### Added
+- Added support for product types in sitemap
+
 ## 3.6.7 - 2020-11-30
 ### Changed
 - Set Twitter image transform to a 2:1 ratio (via @icreatestuff)

@@ -178,6 +178,77 @@
 
 		<br>
 
+		{# Start: Product Types #}
+		{% if productTypes|length %}
+			<div class="field">
+				<div class="heading">
+					<label>Product Types</label>
+					<div class="instructions">How should we handle each product type?</div>
+				</div>
+			</div>
+
+			<input type="hidden" name="categories" value="">
+
+			<table class="data fullwidth">
+				<thead>
+				<tr>
+					<th>Product Type</th>
+					<th style="white-space:nowrap">Change Frequency</th>
+					<th>Priority</th>
+					<th>Enabled?</th>
+				</tr>
+				</thead>
+				<tbody>
+				{% for productType in productTypes %}
+					<tr>
+						<td style="text-align:left;">
+							<input
+								type="hidden"
+								name="productTypes[{{ productType.id }}]"
+								value=""
+							/>
+							<input
+								type="hidden"
+								name="productTypes[{{ productType.id }}][id]"
+								value="{{ sitemap.productTypes is defined and sitemap.productTypes[productType.id] is defined ? sitemap.productTypes[productType.id].id : -1 }}"
+							/>
+							<input
+								type="hidden"
+								name="productTypes[{{ productType.id }}][url]"
+								value="{{ productType.id }}"
+							/>
+							<strong>{{ productType.name }}</strong>
+						</td>
+						<td class="thin" style="text-align:left;">
+							{{ forms.selectField({
+								name: "productTypes["~productType.id~"][frequency]",
+								options: changeFrequencyOpts,
+								value: sitemap.productTypes[productType.id].frequency|default('weekly')
+							}) }}
+						</td>
+						<td class="thin">
+							{{ forms.selectField({
+								name: "productTypes["~productType.id~"][priority]",
+								options: priorityOpts,
+								value: sitemap.productTypes[productType.id].priority|default('0.5')
+							}) }}
+						</td>
+						<td class="thin" style="text-align:center">
+							{{ forms.checkbox({
+								name: "productTypes["~productType.id~"][enabled]",
+								value: true,
+								checked: (sitemap.productTypes is defined and sitemap.productTypes[productType.id] is defined ? sitemap.productTypes[productType.id].enabled : false)
+							}) }}
+						</td>
+					</tr>
+				{% endfor %}
+				</tbody>
+			</table>
+
+			<br>
+		{% endif %}
+		{# End: Product Types #}
+
 		{# Start: Custom #}
 		<div class="field">
 			<div class="heading">
