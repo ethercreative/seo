@@ -38,6 +38,9 @@ class m201207_124200_add_product_types_to_sitemap extends Migration
 	 */
 	protected function dropCheck()
 	{
+		if ($this->db->getIsMysql())
+			return;
+
 		$this->db->createCommand()->dropCheck('seo_sitemap_group_check', SitemapRecord::$tableName)->execute();
 	}
 }

@@ -1,3 +1,7 @@
+## 3.7.1 - 2021-04-22
+### Fixed
+- Fix migration issue when upgrading to 3.7 on MySQL
+
 ## 3.7.0 - 2021-04-22
 ### Added
 - Added support for product types in sitemap (via @boboldehampsink)
