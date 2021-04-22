@@ -1,6 +1,6 @@
-## 3.7.0 - Unreleased
+## 3.7.0 - 2021-04-22
 ### Added
-- Added support for product types in sitemap
+- Added support for product types in sitemap (via @boboldehampsink)
 
 ## 3.6.7 - 2020-11-30
 ### Changed
