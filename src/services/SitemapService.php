@@ -382,6 +382,10 @@ class SitemapService extends Component
 				{
 					$id = is_numeric($siteId) ? $siteId : $siteId['siteId'];
 					$site = $id ? $craft->sites->getSiteById($id) : Craft::$app->sites->currentSite;
+
+					if (empty($site))
+						continue;
+
 					$lang = $site->language;
 
 					if (!in_array($lang, $availableLocales))

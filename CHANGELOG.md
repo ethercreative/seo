@@ -1,3 +1,7 @@
+## 3.7.2 - 2021-05-25
+### Fixed
+- Fix sitemap error if some sites are disabled
+
 ## 3.7.1 - 2021-04-22
 ### Fixed
 - Fix migration issue when upgrading to 3.7 on MySQL
