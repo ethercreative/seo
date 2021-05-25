@@ -1,6 +1,12 @@
 ## 3.7.2 - 2021-05-25
+
+### Changed
+- SEO will now add `noindex` to all environments except production, regardless of `devMode` (via @nstCactus)
+
 ### Fixed
 - Fix sitemap error if some sites are disabled
+- Fix an exception when an entry type has multiple SEO fields (via @nstCactus)
+- Fix custom SEO objects always using fallback image (via @jmauzyk)
 
 ## 3.7.1 - 2021-04-22
 ### Fixed
