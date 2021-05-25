@@ -1,6 +1,6 @@
 {
   "dependencies": {
     "babel-polyfill": "^6.26.0",
-    "codemirror": "^5.35.0"
+    "codemirror": "^5.58.2"
   }
 }
