@@ -44,7 +44,7 @@ class SeoSettings {
 		
 		switch (run) {
 			case "sitemap":
-				new SeoSettings.EditableTable(
+				SeoSettings.EditableTable(
 					`${this.namespace}-customUrls`,
 					`${this.namespace}-addCustomUrl`
 				);

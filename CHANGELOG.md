@@ -1,3 +1,11 @@
+## 3.7.3 - 2021-05-28
+
+### Changes
+- Up Craft CMS requirement to `^3.5` (Fixes #341)
+
+### Fixed
+- Fix JS error on sitemap admin (Fixes #325)
+
 ## 3.7.2 - 2021-05-25
 
 ### Changed
