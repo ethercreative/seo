@@ -66,6 +66,12 @@ Clone this repo into `craft/plugins/seo`.
 
 Before using the SEO field type, you’ll need to ensure all the settings are correct. You can find the settings under the SEO plugin menu in the sidebar, or via the plugin menu.
 
+### Environment Setup
+
+Ensure that your Production environment’s name is `production` (going with Craft’s convention). All other environments will get `X-Robots-Tag: none, noimageindex` headers added to every web response, to prevent search engines from indexing duplicate content.
+
+Environment names are typically defined by an `ENVIRONMENT` environment variable.
+
 ### Fieldtype Usage
 
 Replace your `title` tag, and any other SEO related meta tags with `{% hook "seo" %}`. That's it!
