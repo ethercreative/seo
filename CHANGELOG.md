@@ -1,5 +1,8 @@
-## 3.7.3 - 2021-05-28
+## 3.7.4 - 2021-06-14
+### Fixed
+- Fix error when trying to fetch social image (Fixes #358, via @MDXDave)
 
+## 3.7.3 - 2021-05-28
 ### Changes
 - Up Craft CMS requirement to `^3.5` (Fixes #341)
 
@@ -7,7 +10,6 @@
 - Fix JS error on sitemap admin (Fixes #325)
 
 ## 3.7.2 - 2021-05-25
-
 ### Changed
 - SEO will now add `noindex` to all environments except production, regardless of `devMode` (via @nstCactus)
 
