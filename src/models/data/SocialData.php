@@ -106,7 +106,7 @@ class SocialData extends BaseObject
 	{
 		$image = $this->imageId;
 
-		if (is_array($image))
+		if (is_array($image) && isset($image[0]))
 			$image = $image[0]['id'];
 
 		if (empty($image))
