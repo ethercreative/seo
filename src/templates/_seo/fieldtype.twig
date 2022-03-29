@@ -23,14 +23,14 @@
 				href="#"
 				class="seo--social-preview-image{{ this.image ? ' has-image' }}"
 				data-seo-social-image="{{ id|namespaceInputId }}"
-				style="background-image:url({{ this.image ? this.image.url }})"
+				style="position: relative; background-image:url({{ this.image ? this.image.url }}); width: 100%; height: 0; background-size: contain; padding-top: {{ this.image ? (this.image.width / this.image.height * 100) : 50 }}%;"
 			>
 				<input
 					type="hidden"
 					name="{{ name }}[social][{{ handle }}][image]"
 					value="{{ this.image ? this.image.id }}"
 				>
-				<div class="upload-prompt">
+				<div class="upload-prompt" style="position: absolute; top: 50%; transform: translateY(-50%);">
 					<svg width="59px" height="38px" viewBox="0 0 59 38" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 						<g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
 							<g transform="translate(-604.000000, -385.000000)" fill="#BBC2C8" fill-rule="nonzero">
