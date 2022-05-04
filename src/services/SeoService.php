@@ -92,7 +92,7 @@ class SeoService extends Component
 			$element = $variable;
 
 			/** @var Field $field */
-			foreach ($variable->fieldLayout->getFields() as $field)
+			foreach ($variable->fieldLayout->getCustomFields() as $field)
 			{
 				if (get_class($field) !== SeoField::class)
 					continue;

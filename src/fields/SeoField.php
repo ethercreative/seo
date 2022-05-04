@@ -91,7 +91,7 @@ class SeoField extends Field implements PreviewableFieldInterface
 	// Instance
 	// -------------------------------------------------------------------------
 
-	public function getContentColumnType (): string
+	public function getContentColumnType (): array|string
 	{
 		return Schema::TYPE_TEXT;
 	}
@@ -99,7 +99,7 @@ class SeoField extends Field implements PreviewableFieldInterface
     /**
      * @return array
      */
-	public function getContentGqlType (): array
+	public function getContentGqlType (): \GraphQL\Type\Definition\Type|array
     {
         return [
             'name' => $this->handle,
@@ -107,7 +107,7 @@ class SeoField extends Field implements PreviewableFieldInterface
         ];
     }
 
-	public function normalizeValue ($value, ElementInterface $element = null)
+	public function normalizeValue (mixed $value, ?\craft\base\ElementInterface $element = null): mixed
 	{
 		if ($value instanceof SeoData)
 			return $value;
@@ -127,10 +127,10 @@ class SeoField extends Field implements PreviewableFieldInterface
 	 *
 	 * @return string
 	 * @throws InvalidConfigException
-	 * @throws \Twig_Error_Loader
+	 * @throws \Twig\Error\LoaderError
 	 * @throws \yii\base\Exception
 	 */
-	public function getInputHtml ($value, ElementInterface $element = null): string
+	public function getInputHtml (mixed $value, ?\craft\base\ElementInterface $element = null): string
 	{
 		if (!$element) return '';
 
@@ -188,10 +188,7 @@ class SeoField extends Field implements PreviewableFieldInterface
 		}
 
 		if ($section) {
-			$hasPreview = $craft->sections->isSectionTemplateValid(
-				$section,
-				$element->siteId
-			) && $previewAction !== null;
+            $hasPreview = !empty($section->previewTargets) && $previewAction !== null;
 
 			$isSingle = $section->type === Section::TYPE_SINGLE;
 		}
@@ -292,10 +289,10 @@ class SeoField extends Field implements PreviewableFieldInterface
 
 	/**
 	 * @return null|string
-	 * @throws \Twig_Error_Loader
+	 * @throws \Twig\Error\LoaderError
 	 * @throws \yii\base\Exception
 	 */
-	public function getSettingsHtml ()
+	public function getSettingsHtml (): ?string
 	{
 		$view = \Craft::$app->view;
 		$namespace = $view->getNamespace();
@@ -316,13 +313,13 @@ class SeoField extends Field implements PreviewableFieldInterface
 		);
 	}
 
-	public function getSearchKeywords ($value, ElementInterface $element): string {
+	public function getSearchKeywords (mixed $value, ElementInterface $element): string {
 		/** @var SeoData $value */
 		return $value->title . ' ' . $value->description;
 	}
 
 	public function getTableAttributeHtml (
-		$value,
+		mixed $value,
 		ElementInterface $element
 	): string {
 		/** @var SeoData $value */

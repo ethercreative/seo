@@ -49,21 +49,21 @@ class Seo extends Plugin
 	// =========================================================================
 
 	/** @var Seo */
-	public static $i;
+	public static self $i;
 
-	public static $commerceInstalled = false;
+	public static bool $commerceInstalled = false;
 
-	public $hasCpSection        = true;
-	public $hasCpSettings       = true;
+	public bool $hasCpSection        = true;
+	public bool $hasCpSettings       = true;
 
-	public $changelogUrl =
+	public ?string $changelogUrl =
 		'https://raw.githubusercontent.com/ethercreative/seo/v3/CHANGELOG.md';
-	public $downloadUrl  =
+	public ?string $downloadUrl  =
 		'https://github.com/ethercreative/seo/archive/v3.zip';
-	public $documentationUrl =
+	public ?string $documentationUrl =
 		'https://github.com/ethercreative/seo/blob/v3/README.md';
 
-	public $schemaVersion = '3.2.0';
+	public string $schemaVersion = '3.2.0';
 
 	// Craft
 	// =========================================================================
@@ -179,7 +179,7 @@ class Seo extends Plugin
 		}
 	}
 
-	public function getCpNavItem ()
+	public function getCpNavItem (): ?array
 	{
 		$item = parent::getCpNavItem();
 		$currentUser = \Craft::$app->user;
@@ -212,12 +212,12 @@ class Seo extends Plugin
 	// Craft: Settings
 	// -------------------------------------------------------------------------
 
-	protected function createSettingsModel (): Settings
+	protected function createSettingsModel (): ?\craft\base\Model
 	{
 		return new Settings();
 	}
 
-	public function getSettingsResponse ()
+	public function getSettingsResponse(): mixed
 	{
 		// Redirect to our settings page
 		\Craft::$app->controller->redirect(
@@ -228,7 +228,7 @@ class Seo extends Plugin
 	// Events
 	// =========================================================================
 
-	public function onRegisterPermissions (RegisterUserPermissionsEvent $event)
+	public function onRegisterPermissions (RegisterUserPermissionsEvent $event): void
 	{
 		$event->permissions['SEO'] = [
 			'manageSitemap' => [
@@ -243,7 +243,7 @@ class Seo extends Plugin
 		];
 	}
 
-	public function onRegisterCPUrlRules (RegisterUrlRulesEvent $event)
+	public function onRegisterCPUrlRules (RegisterUrlRulesEvent $event): void
 	{
 		$event->rules['seo'] = 'seo/seo/index';
 
@@ -269,7 +269,7 @@ class Seo extends Plugin
 		$event->rules['seo/settings'] = 'seo/settings/index';
 	}
 
-	public function onRegisterSiteUrlRules (RegisterUrlRulesEvent $event)
+	public function onRegisterSiteUrlRules (RegisterUrlRulesEvent $event): void
 	{
 		$sitemapName = $this->getSettings()->sitemapName;
 
@@ -280,7 +280,7 @@ class Seo extends Plugin
 		$event->rules['robots.txt'] = 'seo/seo/robots';
 	}
 
-	public function onRegisterFieldTypes (RegisterComponentTypesEvent $event)
+	public function onRegisterFieldTypes (RegisterComponentTypesEvent $event): void
 	{
 		$event->types[] = SeoField::class;
 	}
@@ -290,7 +290,7 @@ class Seo extends Plugin
 	 *
 	 * @throws \yii\base\InvalidConfigException
 	 */
-	public function onRegisterVariable (Event $event)
+	public function onRegisterVariable (Event $event): void
 	{
 		/** @var CraftVariable $variable */
 		$variable = $event->sender;
@@ -303,7 +303,7 @@ class Seo extends Plugin
 	 * @throws \yii\base\Exception
 	 * @throws \yii\base\ExitException
 	 */
-	public function onBeforeHandleException (ExceptionEvent $event)
+	public function onBeforeHandleException (ExceptionEvent $event): void
 	{
 		$this->redirects->onException($event);
 	}
@@ -312,7 +312,7 @@ class Seo extends Plugin
 	 * Fired after an application request is handled
 	 * (but before the response is send)
 	 */
-	public function onAfterRequest ()
+	public function onAfterRequest (): void
 	{
 		$this->seo->injectRobots();
 		$this->seo->injectCanonical();
@@ -322,7 +322,7 @@ class Seo extends Plugin
 	 * @param $context
 	 *
 	 * @return string
-	 * @throws \Twig_Error_Loader
+	 * @throws \Twig\Error\LoaderError
 	 * @throws \yii\base\Exception
 	 */
 	public function onRegisterSeoHook (&$context)

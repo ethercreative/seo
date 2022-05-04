@@ -52,7 +52,7 @@ class UpgradeSeoDataJob extends BaseJob
 	/**
 	 * @inheritdoc
 	 */
-	public function execute ($queue)
+	public function execute ($queue): void
 	{
 		$class = $this->elementType;
 
@@ -108,7 +108,7 @@ class UpgradeSeoDataJob extends BaseJob
 	/**
 	 * @inheritdoc
 	 */
-	protected function defaultDescription (): string
+	protected function defaultDescription (): ?string
 	{
 		return \Craft::t(
 			'seo',

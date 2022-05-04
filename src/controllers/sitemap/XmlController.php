@@ -9,7 +9,7 @@ use yii\web\Response;
 class XmlController extends Controller
 {
 
-	protected $allowAnonymous = true;
+	protected array|int|bool $allowAnonymous = true;
 
 	/**
 	 * @throws \yii\base\Exception

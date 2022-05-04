@@ -9,7 +9,7 @@ use ether\seo\Seo;
 class SeoController extends Controller
 {
 
-	protected $allowAnonymous = ['robots'];
+	protected array|int|bool $allowAnonymous = ['robots'];
 
 	public function actionIndex ()
 	{
