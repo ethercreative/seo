@@ -69,10 +69,14 @@ class SeoController extends Controller
 			if (!property_exists($element, $prop))
 				continue;
 
-			if (in_array($prop, ['postDate', 'expiryDate']))
-				$element->$prop = DateTimeHelper::toDateTime($value);
-			else
-				$element->$prop = $value;
+			if (in_array($prop, ['postDate', 'expiryDate'])) {
+                $dateTime = DateTimeHelper::toDateTime($value);
+                if ($dateTime !== false) {
+                    $element->$prop = DateTimeHelper::toDateTime($value);
+                }
+            } else {
+                $element->$prop = $value;
+            }
 		}
 
 		$element->setFieldValuesFromRequest(
