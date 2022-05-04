@@ -1,3 +1,7 @@
+## 4.0.0 - 2022-05-04
+### Fixed
+- Support Craft v4 (via @niektenhoopen)
+
 ## 3.7.4 - 2021-06-14
 ### Fixed
 - Fix error when trying to fetch social image (Fixes #358, via @MDXDave)
