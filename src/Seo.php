@@ -2,6 +2,8 @@
 
 namespace ether\seo;
 
+use Craft;
+use craft\base\Model;
 use craft\base\Plugin;
 use craft\events\ExceptionEvent;
 use craft\events\RegisterComponentTypesEvent;
@@ -73,7 +75,7 @@ class Seo extends Plugin
 		parent::init();
 		self::$i = self::getInstance();
 
-		$craft = \Craft::$app;
+		$craft = Craft::$app;
 
 		// Components
 		// ---------------------------------------------------------------------
@@ -89,7 +91,7 @@ class Seo extends Plugin
 		// ---------------------------------------------------------------------
 
 		// User Permissions
-		if ($craft->getEdition() !== \Craft::Solo) {
+		if ($craft->getEdition() !== Craft::Solo) {
 			Event::on(
 				UserPermissions::class,
 				UserPermissions::EVENT_REGISTER_PERMISSIONS,
@@ -182,7 +184,7 @@ class Seo extends Plugin
 	public function getCpNavItem (): ?array
 	{
 		$item = parent::getCpNavItem();
-		$currentUser = \Craft::$app->user;
+		$currentUser = Craft::$app->user;
 
 		$subNav = [
 			'dashboard' => ['label' => 'Dashboard', 'url' => 'seo'],
@@ -200,7 +202,7 @@ class Seo extends Plugin
 			$subNav['schema'] =
 				['label' => 'Schema', 'url' => 'seo/schema'];*/
 
-		if (\Craft::$app->getConfig()->general->allowAdminChanges && $currentUser->getIsAdmin())
+		if (Craft::$app->getConfig()->general->allowAdminChanges && $currentUser->getIsAdmin())
 			$subNav['settings'] =
 				['label' => 'Settings', 'url' => 'seo/settings'];
 
@@ -212,7 +214,7 @@ class Seo extends Plugin
 	// Craft: Settings
 	// -------------------------------------------------------------------------
 
-	protected function createSettingsModel (): ?\craft\base\Model
+	protected function createSettingsModel (): ?Model
 	{
 		return new Settings();
 	}
@@ -220,9 +222,11 @@ class Seo extends Plugin
 	public function getSettingsResponse(): mixed
 	{
 		// Redirect to our settings page
-		\Craft::$app->controller->redirect(
+		Craft::$app->controller->redirect(
 			UrlHelper::cpUrl('seo/settings')
 		);
+
+		return null;
 	}
 
 	// Events
@@ -232,10 +236,10 @@ class Seo extends Plugin
 	{
 		$event->permissions['SEO'] = [
 			'manageSitemap' => [
-				'label' => \Craft::t('seo', 'Manage Sitemap'),
+				'label' => Craft::t('seo', 'Manage Sitemap'),
 			],
 			'manageRedirects' => [
-				'label' => \Craft::t('seo', 'Manage Redirects'),
+				'label' => Craft::t('seo', 'Manage Redirects'),
 			],
 //			'manageSchema' => [
 //				'label' => \Craft::t('seo', 'Manage Schema'),
@@ -327,7 +331,7 @@ class Seo extends Plugin
 	 */
 	public function onRegisterSeoHook (&$context)
 	{
-		$craft = \Craft::$app;
+		$craft = Craft::$app;
 		$metaTemplateName = $this->getSettings()['metaTemplate'];
 
 		if ($metaTemplateName)
@@ -351,7 +355,7 @@ class Seo extends Plugin
 
 	public static function getFieldTypeSettingsVariables ()
 	{
-		$volumes = \Craft::$app->volumes->getPublicVolumes();
+		$volumes = Craft::$app->volumes->getViewableVolumes();
 
 		return compact(
 			'volumes'
