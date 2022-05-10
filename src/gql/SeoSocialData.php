@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ether\seo\gql;
 
+use Craft;
 use craft\gql\GqlEntityRegistry;
 use craft\gql\interfaces\elements\Asset as AssetInterface;
 use craft\helpers\Gql;
@@ -52,12 +53,11 @@ class SeoSocialData extends \craft\gql\base\ObjectType
     /**
      * Get fields which may only be used depending on the craft Gql config
      *
-     * @throws \craft\errors\GqlException
      */
     protected static function getConditionalFields(): array
     {
         // Images may be in any public volume, so verify them all.
-        $volumes = \Craft::$app->volumes->getPublicVolumes();
+        $volumes = Craft::$app->volumes->getViewableVolumes();
         $awareOfAllPublicVolumes = false;
 
         if (!empty($volumes)) {

@@ -1,3 +1,7 @@
+## 4.0.1 - 2022-05-10
+### Fixed
+- Fix GraphQL support
+
 ## 4.0.0 - 2022-05-04
 ### Fixed
 - Support Craft v4 (via @niektenhoopen)
