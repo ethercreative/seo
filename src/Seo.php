@@ -198,10 +198,6 @@ class Seo extends Plugin
 			$subNav['redirects'] =
 				['label' => 'Redirects', 'url' => 'seo/redirects'];
 
-		/*if ($currentUser->getIsAdmin() || $currentUser->checkPermission('manageSchema'))
-			$subNav['schema'] =
-				['label' => 'Schema', 'url' => 'seo/schema'];*/
-
 		if (Craft::$app->getConfig()->general->allowAdminChanges && $currentUser->getIsAdmin())
 			$subNav['settings'] =
 				['label' => 'Settings', 'url' => 'seo/settings'];
@@ -232,20 +228,20 @@ class Seo extends Plugin
 	// Events
 	// =========================================================================
 
-	public function onRegisterPermissions (RegisterUserPermissionsEvent $event): void
-	{
-		$event->permissions['SEO'] = [
-			'manageSitemap' => [
-				'label' => Craft::t('seo', 'Manage Sitemap'),
-			],
-			'manageRedirects' => [
-				'label' => Craft::t('seo', 'Manage Redirects'),
-			],
-//			'manageSchema' => [
-//				'label' => \Craft::t('seo', 'Manage Schema'),
-//			],
-		];
-	}
+    public function onRegisterPermissions (RegisterUserPermissionsEvent $event): void
+    {
+        $event->permissions[] = [
+            'heading' => 'SEO',
+            'permissions' => [
+                'manageSitemap' => [
+                    'label' => Craft::t('seo', 'Manage Sitemap'),
+                ],
+                'manageRedirects' => [
+                    'label' => Craft::t('seo', 'Manage Redirects'),
+                ],
+            ]
+        ];
+    }
 
 	public function onRegisterCPUrlRules (RegisterUrlRulesEvent $event): void
 	{
