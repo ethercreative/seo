@@ -8,6 +8,7 @@ use Craft;
 use craft\gql\GqlEntityRegistry;
 use craft\gql\interfaces\elements\Asset as AssetInterface;
 use craft\helpers\Gql;
+use craft\models\Volume;
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\Type;
 
@@ -53,11 +54,12 @@ class SeoSocialData extends \craft\gql\base\ObjectType
     /**
      * Get fields which may only be used depending on the craft Gql config
      *
+     * @throws \yii\base\InvalidConfigException
      */
     protected static function getConditionalFields(): array
     {
         // Images may be in any public volume, so verify them all.
-        $volumes = Craft::$app->volumes->getViewableVolumes();
+        $volumes = array_filter(Craft::$app->volumes->getAllVolumes(), static fn (Volume $volume) => $volume->getFs()->hasUrls);
         $awareOfAllPublicVolumes = false;
 
         if (!empty($volumes)) {
