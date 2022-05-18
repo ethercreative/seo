@@ -1,3 +1,7 @@
+## 4.0.2 - 2022-05-18
+### Fixed
+- Fix permission settings (Fixes #399, #401, via @niektenhoopen)
+
 ## 4.0.1 - 2022-05-10
 ### Fixed
 - Fix GraphQL support
