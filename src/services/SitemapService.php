@@ -313,7 +313,7 @@ class SitemapService extends Component
 					? $first->fieldLayout
 					: $first->type->fieldLayout;
 
-			foreach ($fieldLayout->getFields() as $field)
+			foreach ($fieldLayout->getCustomFields() as $field)
 				if (get_class($field) === SeoField::class)
 					$seoFieldHandle = $field->handle;
 		}
