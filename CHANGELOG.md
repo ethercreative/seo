@@ -1,3 +1,7 @@
+## 4.0.3 - 2022-06-08
+### Fixed
+- Fix sitemap render issue (Fixes #409, via @niektenhoopen)
+
 ## 4.0.2 - 2022-05-18
 ### Fixed
 - Fix permission settings (Fixes #399, #401, via @niektenhoopen)
