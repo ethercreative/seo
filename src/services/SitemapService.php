@@ -295,7 +295,7 @@ class SitemapService extends Component
 
 		$elements = $type::find();
 		$elements->{$idHandle} = $variables['id'];
-		$elements->siteId = Craft::$app->sites->currentSite->id;
+		$elements->siteId = '*';
 		$elements->limit = $settings->sitemapLimit;
 		$elements->offset = $settings->sitemapLimit * $variables['page'];
 
