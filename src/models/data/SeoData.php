@@ -438,7 +438,7 @@ class SeoData extends BaseObject
 
 		if ($this->_element !== null)
 		{
-			foreach ($this->_element->attributes() as $name)
+			foreach (array_keys($this->_element->fields()) as $name)
 				if ($name !== $this->_handle)
 					$variables[$name] = $this->_element->$name ?? null;
 
