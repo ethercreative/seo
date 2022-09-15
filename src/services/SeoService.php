@@ -22,7 +22,7 @@ class SeoService extends Component
 	{
 		$headers = Craft::$app->getResponse()->getHeaders();
 
-		$env = getenv('ENVIRONMENT') ?? getenv('CRAFT_ENVIRONMENT');
+		$env = getenv('ENVIRONMENT') ?: getenv('CRAFT_ENVIRONMENT');
 
 		// Always noindex except on production environment
 		if ($env !== 'production')
