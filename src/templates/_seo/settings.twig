@@ -70,7 +70,7 @@
 							name="title[{{ loop.index0 }}][locked]"
 							value="{{ tag.locked ? 1 : 0 }}"
 						/>
-						<button title="{{ tag.locked ? 'Unlock'|t('seo') : 'Lock'|t('seo') }} Token" type="button" data-lock>
+						<button title="{{ tag.locked ? 'Unlock Token'|t('seo') : 'Lock Token'|t('seo') }}" type="button" data-lock>
 							<svg width="10px" height="12px" viewBox="0 0 10 12" version="1.1" xmlns="http://www.w3.org/2000/svg">
 								<g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
 									<g transform="translate(-293.000000, -674.000000)" fill="#988FFF" fill-rule="nonzero">
@@ -113,7 +113,7 @@
 					{% endfor %}
 				</ul>
 				<button title="{{ 'Add a Token'|t('seo') }}" type="button" id="seoMetaAdd">
-					+ {{ "Token"|t('seo') }}
+					+ {{ 'Token'|t('seo') }}
 				</button>
 			</div>
 		{% endset %}
@@ -151,7 +151,7 @@
 		{
 			label: '{default} Social Image'|t('seo', params = { default: (default ? 'Default'|t('seo')) }),
 		},
-		'<p class="error">' ~ "socialimage_settings_error"|t('seo') ~ '</p>'
+		'<p class="error">' ~ 'socialimage_settings_error'|t('seo') ~ '</p>'
 	) }}
 {% endif %}
 
