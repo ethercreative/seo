@@ -2,7 +2,7 @@
 
 {{ forms.textField({
 	label: "Sitemap Name"|t('seo'),
-	instructions: "sitemap_instructions"|t('seo', params = { siteUrl: siteUrl, sitemapName: (settings.sitemapName ?? '') })
+	instructions: "sitemap_instructions"|t('seo', params = { siteUrl: siteUrl, sitemapName: (settings.sitemapName ?? '') }),
 	name: "sitemapName",
 	id: "sitemapName",
 	value: settings.sitemapName is defined ? settings.sitemapName : ''

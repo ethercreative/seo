@@ -1,3 +1,4 @@
+/* globals SEO_RATING, SEO_REASONS */
 /**
  * Keyword Checklist
  *
@@ -9,7 +10,6 @@
  */
 
 import EntryMarkup from './EntryMarkup';
-import { SEO_RATING, SEO_REASONS } from '../const';
 import {
 	countInArray, createRating, isExternalUrl, c,
 	TextStatistics

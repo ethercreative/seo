@@ -3,6 +3,7 @@
 {% set selectedSubnavItem = 'dashboard' %}
 
 {% block content %}
+	{% include 'seo/_includes/i18n.twig' %}
 	<ul class="icons">
 		{% if currentUser.admin or currentUser.can('manageSitemap') %}
 			<li>
