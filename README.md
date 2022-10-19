@@ -110,6 +110,10 @@ craft.seo.custom(
 
 All parameters are optional.
 
+## Localization
+
+This plugin is fully localizable via Craft [static message translation](https://craftcms.com/docs/3.x/sites.html#static-message-translations) feature. The plugin handle is `seo`.
+
 ## Upcoming Features
 
 If you have a feature suggestion, [leave an issue](https://github.com/ethercreative/seo/issues) with the prefix `[FR]`.  
