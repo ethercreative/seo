@@ -11,15 +11,15 @@
 {% endset %}
 {{ forms.field(
 	{
-		label: 'Robots'|t,
-		instructions: 'Set the default global robots directives. This can be changed on a per-entry basis'|t,
+		label: 'Robots'|t('seo'),
+		instructions: 'Set the default global robots directives. This can be changed on a per-entry basis'|t('seo'),
 	},
 	robots
 ) }}
 
 {{ forms.textareaField({
 	label: "robots.txt",
-	instructions: "Control how crawlers access your site. [Find out more](http://www.robotstxt.org/robotstxt.html). You have access to all Craft twig variables, globals, and `seo` which contains all the SEO settings.",
+	instructions: "robots_instructions"|t('seo'),
 	name: "robotsTxt",
 	id: "robotsTxt",
 	rows: 28,

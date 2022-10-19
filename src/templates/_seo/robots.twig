@@ -9,8 +9,7 @@
 
 	<div>
 		<strong><code>noindex</code></strong>
-		<span> - Do not show this page in search results and do not
-					       show a "Cached" link in search results.</span>
+		<span> - {{ "noindex_help_text"|t('seo') }}</span>
 	</div>
 </div>
 
@@ -23,7 +22,7 @@
 
 	<div>
 		<strong><code>nofollow</code></strong>
-		<span> - Do not follow the links on this page.</span>
+		<span> - {{ "Do not follow the links on this page."|t('seo')}}</span>
 	</div>
 </div>
 
@@ -36,7 +35,7 @@
 
 	<div>
 		<strong><code>noarchive</code></strong>
-		<span> - Do not show a "Cached" link in search results.</span>
+		<span> - {{ "noarchive_help_text"|t('seo') }}</span>
 	</div>
 </div>
 
@@ -49,9 +48,7 @@
 
 	<div>
 		<strong><code>nosnippet</code></strong>
-		<span> - Do not show a text snippet or video preview in the
-					       search results for this page. A static thumbnail
-					       (if available) will still be visible.</span>
+		<span> - {{ "nosnippet_help_text"|t('seo') }}</span>
 	</div>
 </div>
 
@@ -64,8 +61,7 @@
 
 	<div>
 		<strong><code>notranslate</code></strong>
-		<span> - Do not offer translation of this page in search
-					       results.</span>
+		<span> - {{ "Do not offer translation of this page in search results."|t('seo') }}</span>
 	</div>
 </div>
 
@@ -78,6 +74,6 @@
 
 	<div>
 		<strong><code>noimageindex</code></strong>
-		<span> - Do not index images on this page.</span>
+		<span> - {{ "Do not index images on this page."|t('seo') }}</span>
 	</div>
 </div>

@@ -1,5 +1,5 @@
 {% macro rating(level, tag = "div") %}
-	{% set name = level|capitalize ~ " Rating" %}
+	{% set name = "{rating} Rating"|t('seo', params = { rating: level|capitalize }) %}
 	<{{ tag }} class="seo--light {{ level }}" title="{{ name }}">
 		{{ name }}
 	</{{ tag }}>
@@ -11,7 +11,7 @@
 	<div class="seo--label">
 		<div>
 			<em>{{ label }}</em>
-			{{ ("This is how the page will look when shared on " ~ label)|t }}
+			{{ ("This is how the page will look when shared on {social}")|t('seo', params = { social: label }) }}
 		</div>
 	</div>
 
@@ -38,22 +38,21 @@
 							</g>
 						</g>
 					</svg>
-					<h4>Select an Image</h4>
-					<p>If you don't select an image, the default (specified in
-					   the SEO settings) will be used if available.</p>
+					<h4>{{ "Select an Image"|t('seo') }}</h4>
+					<p>{{ "If you don't select an image, the default (specified in the SEO settings) will be used if available"|t('seo') }}</p>
 				</div>
 
-				<span class="remove">Remove Image</span>
+				<span class="remove">{{ "Remove Image"|t('seo') }}</span>
 			</a>
 			<div class="seo--social-preview-content">
 				<input
 					type="text"
-					placeholder="This is the title of the page. You can edit it though"
+					placeholder="{{ 'This is the title of the page. You can edit it though'|t('seo') }}"
 					name="{{ name }}[social][{{ handle }}][title]"
 					value="{{ this.title }}"
 				/>
 				<textarea
-					placeholder="Integer posuere erat a ante venenatis dapibus posuere velit aliquet. Aenean lacinia bibendum nulla sed consectetur. Donec sed odio dui."
+					placeholder="{{ 'lorem_ipsum'|t('seo') }}"
 					name="{{ name }}[social][{{ handle }}][description]"
 					data-seo-social-desc="{{ id|namespaceInputId }}"
 				>{{ this.description }}</textarea>
@@ -69,15 +68,15 @@
 <div class="seo--wrap" id="{{ id }}Field">
 	<nav class="seo--tabs" id="{{ id }}Tabs">
 		<a href="#" data-seo-tab="optimisation" class="active">
-			{{ "Optimisation"|t }}
+			{{ "Optimisation"|t('seo') }}
 		</a>
 		{% if not hideSocial %}
 		<a href="#" data-seo-tab="social">
-			{{ "Social"|t }}
+			{{ "Social"|t('seo') }}
 		</a>
 		{% endif %}
 		<a href="#" data-seo-tab="advanced">
-			{{ "Advanced"|t }}
+			{{ "Advanced"|t('seo') }}
 		</a>
 	</nav>
 
@@ -87,8 +86,8 @@
 			{# Snippet #}
 			<div class="seo--label">
 				<div>
-					<em>{{ "Snippet"|t }}</em>
-					{{ "This is how the page might look in Google. Click the text to edit"|t }}
+					<em>{{ "Snippet"|t('seo') }}</em>
+					{{ "This is how the page might look in Google. Click the text to edit"|t('seo') }}
 				</div>
 			</div>
 
@@ -128,20 +127,20 @@
 						name="{{ name }}[description]"
 						rows="2"
 						id="{{ id }}Description"
-						placeholder="Click to add a description!"
+						placeholder="{{ 'Click to add a description!'|t('seo') }}"
 					>{{ value.description }}</textarea>
 				</div>
 
 				<label class="seo--snippet-edit" for="{{ id }}Title">
-					Click to edit
+					{{ "Click to edit"|t('seo') }}
 				</label>
 			</div>
 
 			{# Focus Keywords #}
 			<div class="seo--label">
 				<div>
-					<em>{{ "Focus Keywords"|t }}</em>
-					{{ "Add relevant key words and phrases to review the SEO page score"|t }}
+					<em>{{ "Focus Keywords"|t('seo') }}</em>
+					{{ "Add relevant key words and phrases to review the SEO page score"|t('seo') }}
 				</div>
 				{#<div id="{{ id }}Suggested">
 					<small>{{ "Suggested keywords"|t }}</small>
@@ -170,10 +169,10 @@
 					{# Keywords populated by magic #}
 
 					{% if isPro %}
-						<input placeholder="Type a keyword then hit enter to add...">
+						<input placeholder="{{ 'Type a keyword then hit enter to add...'|t('seo') }}">
 					{% else %}
 						{# Only show if we've already got a keyword #}
-						<input placeholder="Go pro to add more keywords!" disabled>
+						<input placeholder="{{ 'Go pro to add more keywords!'|t('seo') }}" disabled>
 					{% endif %}
 				</div>
 
@@ -184,21 +183,21 @@
 					<header class="seo--keywords-details-header">
 						<h2 class="seo--keywords-details-keyword"
 						    id="{{ id }}Keyword">
-							<em>No Keyword Selected</em>
+							<em>{{ "No Keyword Selected"|t('seo') }}</em>
 						</h2>
 
 						<div class="seo--keywords-details-rating"
 						     id="{{ id }}Rating">
-							{{ _.rating("neutral") }}
-							Not yet rated
+							{{ _.rating("neutral"|t('seo')) }}
+							{{ "Not yet rated"|t('seo') }}
 						</div>
 					</header>
 
 					{# Keyword Details: Checklist #}
 					<div class="seo--label">
 						<div>
-							<em>{{ "Optimisation Checklist"|t }}</em>
-							{{ "Use this handy chart to optimise your page for the desired keywords"|t }}
+							<em>{{ "Optimisation Checklist"|t('seo') }}</em>
+							{{ "Use this handy chart to optimise your page for the desired keywords"|t('seo') }}
 						</div>
 					</div>
 
@@ -212,7 +211,7 @@
 					<ul class="seo--keywords-details-checklist"
 					    id="{{ id }}KeywordChecklist">
 						<li style="text-align:center">
-							No keyword selected
+							{{ "No keyword selected"|t('seo') }}
 						</li>
 					</ul>
 				</div>
@@ -233,7 +232,7 @@
 					</g>
 				</svg>
 			{% endset %}
-			{{ _.social(id, name, value, "Twitter", "twitter", socialPreviewUrl, twitterIcon) }}
+			{{ _.social(id, name, value, "Twitter"|t('seo'), "twitter", socialPreviewUrl, twitterIcon) }}
 
 			{# Facebook #}
 			{% set facebookIcon %}
@@ -248,7 +247,7 @@
 					</g>
 				</svg>
 			{% endset %}
-			{{ _.social(id, name, value, "Facebook", "facebook", socialPreviewUrl, facebookIcon) }}
+			{{ _.social(id, name, value, "Facebook"|t('seo'), "facebook", socialPreviewUrl, facebookIcon) }}
 		</div>
 
 		<div class="seo--tab" data-seo-tab="advanced">
@@ -256,11 +255,8 @@
 			{# Ahh! Robots! #}
 			<div class="seo--label">
 				<div>
-					<em>Robots</em>
-					Control how this page is indexed by crawlers (some of these
-					are Google specific). If this element as an expiry date the
-					<code>unavailable_after</code> directive will be set
-					automatically.
+					<em>{{ "Robots"|t('seo') }}</em>
+					{{ "robots_text_hint"|t('seo')|raw }}
 				</div>
 			</div>
 
@@ -272,10 +268,8 @@
 			{# Canonical #}
 			<div class="seo--label">
 				<label for="{{ id }}Canonical">
-					<em>Canonical</em>
-					If this is not the canonical version of this page, add the
-					canonical URL here. The current URL of the page will be used
-					if this is left blank.
+					<em>{{ "Canonical"|t('seo') }}</em>
+					{{ "canonical_text_hint"|t('seo') }}
 				</label>
 			</div>
 
@@ -284,7 +278,7 @@
 				name: name ~ '[advanced][canonical]',
 				value: value.advanced.canonical,
 				type: 'url',
-				placeholder: 'This must be a valid, absolute URL. i.e. https://mysite.com'
+				placeholder: 'This must be a valid, absolute URL. i.e. https://mysite.com'|t('seo')
 			}) }}
 
 		</div>
