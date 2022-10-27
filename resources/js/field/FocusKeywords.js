@@ -1,4 +1,4 @@
-/* globals Craft */
+/* globals Craft, SEO_RATING_LABEL */
 /**
  * Focus Keywords
  *
@@ -12,7 +12,6 @@
 import { c, createRating, debounce } from '../helpers';
 
 import KeywordChecklist from './KeywordChecklist';
-import { SEO_RATING_LABEL } from '../const';
 
 export default class FocusKeywords {
 	

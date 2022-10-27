@@ -2,7 +2,6 @@
   "name": "ether/seo",
   "license": "MIT",
   "description": "SEO utilities including a unique field type, sitemap, & redirect manager",
-  "version": "3.7.4",
   "type": "craft-plugin",
   "minimum-stability": "dev",
   "require": {
@@ -22,7 +21,12 @@
     "name": "SEO",
     "developer": "Ether Creative",
     "developerUrl": "https://ethercreative.co.uk",
-
     "class": "ether\\seo\\Seo"
+  },
+  "config": {
+    "allow-plugins": {
+      "yiisoft/yii2-composer": true,
+      "craftcms/plugin-installer": true
+    }
   }
 }

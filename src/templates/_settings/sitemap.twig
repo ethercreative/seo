@@ -1,25 +1,25 @@
 {% import "_includes/forms" as forms %}
 
 {{ forms.textField({
-	label: 'Sitemap Name',
-	instructions: 'The name of your sitemap file. It will be found at <strong>' ~ siteUrl ~ '<code id="sitemapNameExample">' ~ (settings.sitemapName is defined ? settings.sitemapName : '') ~ '.xml</code></strong>',
-	name: 'sitemapName',
-	id: 'sitemapName',
+	label: "Sitemap Name"|t('seo'),
+	instructions: "sitemap_instructions"|t('seo', params = { siteUrl: siteUrl, sitemapName: (settings.sitemapName ?? '') }),
+	name: "sitemapName",
+	id: "sitemapName",
 	value: settings.sitemapName is defined ? settings.sitemapName : ''
 }) }}
 
 {{ forms.textField({
 	type: "number",
-	label: "Pagination Limit",
-	instructions: "The max number of elements to limit each page to. Lower resource servers should reduce this number if sitemap pages are failing to generate.",
+	label: "Pagination Limit"|t('seo'),
+	instructions: "pagination_limit_instructions"|t('seo'),
 	name: "sitemapLimit",
 	id: "sitemapLimit",
 	value: settings.sitemapLimit
 }) }}
 
 {{ forms.lightswitchField({
-	label: "Remove alternate URLs from sitemap",
-	instructions: "If you check this checkbox, the alternate URLs will be removed from the sitemap",
+	label: "Remove alternate URLs from sitemap"|t('seo'),
+	instructions: "If you check this checkbox, the alternate URLs will be removed from the sitemap"|t('seo'),
 	id: "removeAlternateUrls",
 	name: "removeAlternateUrls",
 	on: settings.removeAlternateUrls,

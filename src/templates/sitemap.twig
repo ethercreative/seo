@@ -6,74 +6,62 @@
 {% import "_includes/forms" as forms %}
 
 {% block saveButton %}
-	<input type="submit" class="btn submit" value="{{ 'Save'|t }}">
+	<input type="submit" class="btn submit" value="{{ 'Save'|t('seo') }}">
 {% endblock %}
 
 {% set changeFrequencyOpts = {
-	'always': 'Always',
-	'hourly': 'Hourly',
-	'daily': 'Daily',
-	'weekly': 'Weekly',
-	'monthly': 'Monthly',
-	'yearly': 'Yearly',
-	'never': 'Never',
+	'always': 'Always'|t('seo'),
+	'hourly': 'Hourly'|t('seo'),
+	'daily': 'Daily'|t('seo'),
+	'weekly': 'Weekly'|t('seo'),
+	'monthly': 'Monthly'|t('seo'),
+	'yearly': 'Yearly'|t('seo'),
+	'never': 'Never'|t('seo'),
 } %}
 
 {% set priorityOpts = {
-	'1.0': '1.0 (High)',
+	'1.0': '1.0 ({level})'|t('seo', params = { level: 'High'|t('seo') }),
 	'0.9': '0.9',
 	'0.8': '0.8',
 	'0.7': '0.7',
 	'0.6': '0.6',
-	'0.5': '0.5 (Default)',
+	'0.5': '0.5 ({level})'|t('seo', params = { level: 'Default'|t('seo') }),
 	'0.4': '0.4',
 	'0.3': '0.3',
 	'0.2': '0.2',
 	'0.1': '0.1',
-	'0.0': '0.0 (Low)',
+	'0.0': '0.0 ({level})'|t('seo', params = { level: 'Low'|t('seo') }),
 } %}
 
 {% block content %}
 	{% namespace namespace %}
 
-		{# Start: Sections #}
-		<div class="field">
-			<div class="heading">
-				<label>Sections</label>
-				<div class="instructions">How should we handle each section?</div>
-			</div>
+	{# Start: Sections #}
+	<div class="field">
+		<div class="heading">
+			<label>{{ "Sections"|t('seo') }}</label>
+			<div class="instructions">{{ "How should we handle each section?"|t('seo') }}</div>
 		</div>
+	</div>
 
-		<input type="hidden" name="sections" value="">
+	<input type="hidden" name="sections" value="">
 
-		<table class="data fullwidth">
-			<thead>
+	<table class="data fullwidth">
+		<thead>
 			<tr>
-				<th>Section</th>
-				<th style="white-space:nowrap">Change Frequency</th>
-				<th>Priority</th>
-				<th>Enabled?</th>
+				<th>{{ "Section" }}</th>
+				<th style="white-space:nowrap">{{ "Change Frequency" }}</th>
+				<th>{{ "Priority" }}</th>
+				<th>{{ "Enabled" }}?</th>
 			</tr>
-			</thead>
-			<tbody>
+		</thead>
+		<tbody>
 			{% for section in sections %}
 				<tr>
 					<td style="text-align:left;">
-						<input
-							type="hidden"
-							name="sections[{{ section.id }}]"
-							value=""
-						/>
-						<input
-							type="hidden"
-							name="sections[{{ section.id }}][id]"
-							value="{{ sitemap.sections is defined and sitemap.sections[section.id] is defined ? sitemap.sections[section.id].id : -1 }}"
-						/>
-						<input
-							type="hidden"
-							name="sections[{{ section.id }}][url]"
-							value="{{ section.id }}"
-						/>
+						<input type="hidden" name="sections[{{ section.id }}]" value=""/>
+						<input type="hidden" name="sections[{{ section.id }}][id]" value="{{ sitemap.sections is defined and sitemap.sections[section.id] is defined ? sitemap.sections[section.id].id : -1 }}"/>
+						<input type="hidden" name="sections[{{ section.id }}][url]" value="{{ section.id }}"/>
 						<strong>{{ section.name }}</strong>
 
 						{% for siteSettings in section.getSiteSettings() %}
@@ -103,50 +91,38 @@
 					</td>
 				</tr>
 			{% endfor %}
-			</tbody>
-		</table>
-		{# End: Sections #}
+		</tbody>
+	</table>
+	{# End: Sections #}
 
-		<br>
+	<br>
 
-		{# Start: Categories #}
-		<div class="field">
-			<div class="heading">
-				<label>Categories</label>
-				<div class="instructions">How should we handle each category?</div>
-			</div>
+	{# Start: Categories #}
+	<div class="field">
+		<div class="heading">
+			<label>{{ "Categories"|t('seo') }}</label>
+			<div class="instructions">{{ "How should we handle each category?"|t('seo') }}</div>
 		</div>
+	</div>
 
-		<input type="hidden" name="categories" value="">
+	<input type="hidden" name="categories" value="">
 
-		<table class="data fullwidth">
-			<thead>
+	<table class="data fullwidth">
+		<thead>
 			<tr>
-				<th>Category</th>
-				<th style="white-space:nowrap">Change Frequency</th>
-				<th>Priority</th>
-				<th>Enabled?</th>
+				<th>{{ "Category"|t('seo') }}</th>
+				<th style="white-space:nowrap">{{ "Change Frequency"|t('seo') }}</th>
+				<th>{{ "Priority"|t('seo') }}</th>
+				<th>{{ "Enabled?"|t('seo') }}</th>
 			</tr>
-			</thead>
-			<tbody>
+		</thead>
+		<tbody>
 			{% for category in categories %}
 				<tr>
 					<td style="text-align:left;">
-						<input
-							type="hidden"
-							name="categories[{{ category.id }}]"
-							value=""
-						/>
-						<input
-							type="hidden"
-							name="categories[{{ category.id }}][id]"
-							value="{{ sitemap.categories is defined and sitemap.categories[category.id] is defined ? sitemap.categories[category.id].id : -1 }}"
-						/>
-						<input
-							type="hidden"
-							name="categories[{{ category.id }}][url]"
-							value="{{ category.id }}"
-						/>
+						<input type="hidden" name="categories[{{ category.id }}]" value=""/>
+						<input type="hidden" name="categories[{{ category.id }}][id]" value="{{ sitemap.categories is defined and sitemap.categories[category.id] is defined ? sitemap.categories[category.id].id : -1 }}"/>
+						<input type="hidden" name="categories[{{ category.id }}][url]" value="{{ category.id }}"/>
 						<strong>{{ category.name }}</strong>
 					</td>
 					<td class="thin" style="text-align:left;">
@@ -172,51 +148,39 @@
 					</td>
 				</tr>
 			{% endfor %}
-			</tbody>
-		</table>
-		{# End: Categories #}
+		</tbody>
+	</table>
+	{# End: Categories #}
 
-		<br>
+	<br>
 
-		{# Start: Product Types #}
-		{% if productTypes|length %}
-			<div class="field">
-				<div class="heading">
-					<label>Product Types</label>
-					<div class="instructions">How should we handle each product type?</div>
-				</div>
+	{# Start: Product Types #}
+	{% if productTypes|length %}
+		<div class="field">
+			<div class="heading">
+				<label>{{ "Product Types" }}</label>
+				<div class="instructions">{{ "How should we handle each product type?"|t('seo') }}</div>
 			</div>
+		</div>
 
-			<input type="hidden" name="categories" value="">
+		<input type="hidden" name="categories" value="">
 
-			<table class="data fullwidth">
-				<thead>
+		<table class="data fullwidth">
+			<thead>
 				<tr>
-					<th>Product Type</th>
-					<th style="white-space:nowrap">Change Frequency</th>
-					<th>Priority</th>
-					<th>Enabled?</th>
+					<th>{{ "Product Type"|t('seo') }}</th>
+					<th style="white-space:nowrap">{{ "Change Frequency"|t('seo') }}</th>
+					<th>{{ "Priority"|t('seo') }}</th>
+					<th>{{ "Enabled?"|t('seo') }}</th>
 				</tr>
-				</thead>
-				<tbody>
+			</thead>
+			<tbody>
 				{% for productType in productTypes %}
 					<tr>
 						<td style="text-align:left;">
-							<input
-								type="hidden"
-								name="productTypes[{{ productType.id }}]"
-								value=""
-							/>
-							<input
-								type="hidden"
-								name="productTypes[{{ productType.id }}][id]"
-								value="{{ sitemap.productTypes is defined and sitemap.productTypes[productType.id] is defined ? sitemap.productTypes[productType.id].id : -1 }}"
-							/>
-							<input
-								type="hidden"
-								name="productTypes[{{ productType.id }}][url]"
-								value="{{ productType.id }}"
-							/>
+							<input type="hidden" name="productTypes[{{ productType.id }}]" value=""/>
+							<input type="hidden" name="productTypes[{{ productType.id }}][id]" value="{{ sitemap.productTypes is defined and sitemap.productTypes[productType.id] is defined ? sitemap.productTypes[productType.id].id : -1 }}"/>
+							<input type="hidden" name="productTypes[{{ productType.id }}][url]" value="{{ productType.id }}"/>
 							<strong>{{ productType.name }}</strong>
 						</td>
 						<td class="thin" style="text-align:left;">
@@ -242,63 +206,57 @@
 						</td>
 					</tr>
 				{% endfor %}
-				</tbody>
-			</table>
+			</tbody>
+		</table>
 
-			<br>
-		{% endif %}
-		{# End: Product Types #}
+		<br>
+	{% endif %}
+	{# End: Product Types #}
 
-		{# Start: Custom #}
-		<div class="field">
-			<div class="heading">
-				<label>Custom URLs</label>
-				<div class="instructions">Add additional URLs that may not appear in Craft (i.e. public templates). <strong>Do not include {{ siteUrl }}</strong></div>
+	{# Start: Custom #}
+	<div class="field">
+		<div class="heading">
+			<label>{{ "Custom URLs"|t('seo') }}</label>
+			<div class="instructions">
+				{{ "Add additional URLs that may not appear in Craft (i.e. public templates)."|t('seo') }}
+				<strong>{{ "Do not include {siteUrl}"|t(params = { siteUrl: siteUrl }) }}</strong>
 			</div>
 		</div>
+	</div>
 
-		<input type="hidden" name="customUrls" value="">
+	<input type="hidden" name="customUrls" value="">
 
-		<style>
-			.seo--custom-url-td {
-				padding: 0 !important;
-			}
-			.seo--custom-url-input {
-				width: 100%;
-				padding: 12px 0;
-			}
-			.seo--custom-url-input:not(:focus) {
-				border: 2px solid #fff;
-			}
-		</style>
-		<table class="data fullwidth" id="customUrls">
-			<thead>
+	<style>
+		.seo--custom-url-td {
+			padding: 0 !important;
+		}
+		.seo--custom-url-input {
+			width: 100%;
+			padding: 12px 0;
+		}
+		.seo--custom-url-input:not(:focus) {
+			border: 2px solid #fff;
+		}
+	</style>
+	<table class="data fullwidth" id="customUrls">
+		<thead>
 			<tr>
-				<th>URL</th>
-				<th style="white-space:nowrap">Change Frequency</th>
-				<th>Priority</th>
-				<th>Enabled?</th>
+				<th>{{ "URL"|t('seo') }}</th>
+				<th style="white-space:nowrap">{{ "Change Frequency"|t('seo') }}</th>
+				<th>{{ "Priority"|t('seo') }}</th>
+				<th>{{ "Enabled?"|t('seo') }}</th>
 				<th></th>
 			</tr>
-			</thead>
-			<tbody>
+		</thead>
+		<tbody>
 			<tr class="hidden">
 				<td class="seo--custom-url-td">
-					<input
-						type="hidden"
-						name="customUrls[{i}]"
-						value=""
-					/>
-					<input
-						type="hidden"
-						name="customUrls[{i}][id]"
-						value="-1"
-					/>
+					<input type="hidden" name="customUrls[{i}]" value=""/>
+					<input type="hidden" name="customUrls[{i}][id]" value="-1"/>
 					<input
 						class="seo--custom-url-input"
 						placeholder="URL"
-						name="customUrls[{i}][url]"
-					/>
+						name="customUrls[{i}][url]"/>
 				</td>
 				<td class="thin" style="text-align:left;">
 					{{ forms.selectField({
@@ -322,7 +280,7 @@
 					}) }}
 				</td>
 				<td class="thin action">
-					<a class="delete icon" title="Delete"></a>
+					<a class="delete icon" title="{{ 'Delete'|t('seo') }}"></a>
 				</td>
 			</tr>
 
@@ -330,22 +288,9 @@
 				{% for custom in sitemap.customUrls %}
 					<tr data-id="{{ loop.index }}">
 						<td class="seo--custom-url-td">
-							<input
-								type="hidden"
-								name="customUrls[{{ loop.index }}]"
-							/>
-							<input
-								type="hidden"
-								name="customUrls[{{ loop.index }}][id]"
-								value="{{ custom.id }}"
-							/>
-							<input
-								class="seo--custom-url-input"
-								placeholder="URL"
-								type="text"
-								name="customUrls[{{ loop.index }}][url]"
-								value="{{ custom.url }}"
-							/>
+							<input type="hidden" name="customUrls[{{ loop.index }}]"/>
+							<input type="hidden" name="customUrls[{{ loop.index }}][id]" value="{{ custom.id }}"/>
+							<input class="seo--custom-url-input" placeholder="URL" type="text" name="customUrls[{{ loop.index }}][url]" value="{{ custom.url }}"/>
 						</td>
 						<td class="thin" style="text-align:left;">
 							{{ forms.selectField({
@@ -369,19 +314,19 @@
 							}) }}
 						</td>
 						<td class="thin action">
-							<a class="delete icon" title="Delete"></a>
+							<a class="delete icon" title="{{ 'Delete'|t('seo') }}"></a>
 						</td>
 					</tr>
 				{% endfor %}
 			{% endif %}
-			</tbody>
-		</table>
+		</tbody>
+	</table>
 
-		<br>
+	<br>
 
-		<div class="btngroup">
-			<input type="button" class="btn submit" value="Add a URL" id="addCustomUrl" />
-		</div>
-		{# End: Custom #}
+	<div class="btngroup">
+		<input type="button" class="btn submit" value="{{ 'Add a URL'|t('seo') }}" id="addCustomUrl"/>
+	</div>
+	{# End: Custom #}
 	{% endnamespace %}
 {% endblock %}

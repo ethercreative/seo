@@ -1,5 +1,6 @@
 {% import "_includes/forms" as forms %}
 {% set default = default is defined ? default : false %}
+{% include 'seo/_includes/i18n.twig' %}
 
 {% set seoMeta %}
 	<div class="seo--meta">
@@ -15,7 +16,7 @@
 						name="title[__LOOP_INDEX__][locked]"
 						value="0"
 					/>
-					<button title="Lock Token" type="button" data-lock>
+					<button title="{{ 'Lock Token'|t('seo') }}" type="button" data-lock>
 						<svg width="10px" height="12px" viewBox="0 0 10 12" version="1.1" xmlns="http://www.w3.org/2000/svg">
 							<g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
 								<g transform="translate(-293.000000, -674.000000)" fill="#988FFF" fill-rule="nonzero">
@@ -41,7 +42,7 @@
 						name="title[__LOOP_INDEX__][template]"
 						placeholder="{{ '{title}' }}"
 					/>
-					<button title="Delete Token" type="button" data-delete>
+					<button title="{{ 'Delete Token'|t('seo') }}" type="button" data-delete>
 						<svg width="8px" height="8px" viewBox="0 0 8 8" version="1.1" xmlns="http://www.w3.org/2000/svg">
 							<g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
 								<g transform="translate(-674.000000, -676.000000)" fill="#988FFF">
@@ -69,7 +70,7 @@
 							name="title[{{ loop.index0 }}][locked]"
 							value="{{ tag.locked ? 1 : 0 }}"
 						/>
-						<button title="{{ tag.locked ? 'Unlock' : 'Lock' }} Token" type="button" data-lock>
+						<button title="{{ tag.locked ? 'Unlock Token'|t('seo') : 'Lock Token'|t('seo') }}" type="button" data-lock>
 							<svg width="10px" height="12px" viewBox="0 0 10 12" version="1.1" xmlns="http://www.w3.org/2000/svg">
 								<g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
 									<g transform="translate(-293.000000, -674.000000)" fill="#988FFF" fill-rule="nonzero">
@@ -97,7 +98,7 @@
 							value="{{ tag.template }}"
 							style="width:calc({{ tag.template|length }}ch + 10px)"
 						/>
-						<button title="Delete Token" type="button" data-delete>
+						<button title="{{ 'Delete Token'|t('seo') }}" type="button" data-delete>
 							<svg width="8px" height="8px" viewBox="0 0 8 8" version="1.1" xmlns="http://www.w3.org/2000/svg">
 								<g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
 									<g transform="translate(-674.000000, -676.000000)" fill="#988FFF">
@@ -111,19 +112,19 @@
 					</li>
 					{% endfor %}
 				</ul>
-				<button title="Add a Token" type="button" id="seoMetaAdd">
-					+ Token
+				<button title="{{ 'Add a Token'|t('seo') }}" type="button" id="seoMetaAdd">
+					+ {{ 'Token'|t('seo') }}
 				</button>
 			</div>
 		{% endset %}
 		{{ forms.field({
-			label: 'Page Title',
-			instructions: 'Create a token for each part of your title. Clicking the lock will prevent the user from editing the contents of that token. Tokens use the same syntax as [Dynamic Entry Titles](https://docs.craftcms.com/v3/sections-and-entries.html#dynamic-entry-titles). They can be dragged to re-order.',
+			label: 'Page Title'|t('seo'),
+			instructions: 'pagetitle_settings_text'|t('seo'),
 		}, seoTitle) }}
 
 		{{ forms.textareaField({
 			label: 'Page Description',
-			instructions: 'This supports the same syntax as [Dynamic Entry Titles](https://docs.craftcms.com/v3/sections-and-entries.html#dynamic-entry-titles).',
+			instructions: 'pagedescription_settings_text'|t('seo'),
 			id: 'description',
 			name: 'description',
 			value: settings.description is empty and globalSettings.description is defined ? globalSettings.description : settings.description
@@ -131,14 +132,14 @@
 	</div>
 {% endset %}
 {{ forms.field({
-	label: 'Page Meta',
-	instructions: metaInstructions is defined ? metaInstructions : 'Decide how the page meta should look for this field',
+	label: 'Page Meta'|t('seo'),
+	instructions: metaInstructions is defined ? metaInstructions : 'Decide how the page meta should look for this field'|t('seo'),
 }, seoMeta) }}
 
 {% if volumes %}
 	{{ forms.elementSelectField({
-		label: (default ? 'Default ') ~ 'Social Image',
-		instructions: 'The image that will be used when the page is shared via social networks. This can be modified on a per-entry basis.',
+		label: '{default} Social Image'|t('seo', params = { default: (default ? 'Default'|t('seo')) }),
+		instructions: 'socialimage_settings_text'|t('seo'),
 		name: 'socialImage',
 		id: 'socialImage',
 		elements: settings.socialImage|length ? craft.assets.id(settings.socialImage).all() : null,
@@ -148,17 +149,17 @@
 {% else %}
 	{{ forms.field(
 		{
-			label: (default ? 'Default ') ~ 'Social Image',
+			label: '{default} Social Image'|t('seo', params = { default: (default ? 'Default'|t('seo')) }),
 		},
-		'<p class="error">You\'ll need a volume with public URLs before you can select a social image!</p>'
+		'<p class="error">' ~ 'socialimage_settings_error'|t('seo') ~ '</p>'
 	) }}
 {% endif %}
 
 {# Only show this option on a per-field basis, not globally #}
 {% if globalSettings is defined %}
 	{{ forms.lightswitchField({
-		label: 'Hide Social Meta Tab',
-		instructions: 'Will hide the social meta tab when switched on. This is useful if you have pre-existing social media fields.',
+		label: 'Hide Social Meta Tab'|t('seo'),
+		instructions: 'hidesocial_settings_text'|t('seo'),
 		name: 'hideSocial',
 		id: 'hideSocial',
 		on: "hideSocial" in settings|keys and settings.hideSocial is defined ? settings.hideSocial : false,
@@ -175,8 +176,8 @@
 	{% endset %}
 	{{ forms.field(
 		{
-			label: 'Robots'|t,
-			instructions: 'Set the default global robots directives. This can be changed on a per-entry basis'|t,
+			label: 'Robots'|t('seo'),
+			instructions: 'Set the default global robots directives. This can be changed on a per-entry basis'|t('seo'),
 		},
 		robots
 	) }}

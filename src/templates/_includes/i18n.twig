@@ -1,0 +1,60 @@
+<script>
+const SEO_RATING = {
+	NONE: "{{ 'neutral'|t('seo') }}",
+	GOOD: "{{ 'good'|t('seo') }}",
+	AVERAGE: "{{ 'average'|t('seo') }}",
+	POOR: "{{ 'poor'|t('seo') }}",
+};
+
+const SEO_RATING_LABEL = {
+	neutral: "{{ 'Not yet rated'|t('seo') }}",
+	good: "{{ 'Looks good'|t('seo') }}",
+	average: "{{ 'Room for improvement'|t('seo') }}",
+	poor: "{{ 'Needs work'|t('seo') }}",
+};
+
+const SEO_REASONS = {
+	noContent: "{{ 'You don\'t have any content, adding some would be a good start!'|t('seo') }}",
+
+	titleLengthFailMin: "{{ 'The title contains {l} characters which is less than the recommended minimum of 40 characters.'|t('seo') }}",
+	titleLengthFailMax: "{{ 'The title contains {l} characters which is greater than the recommended maximum of 60 characters.'|t('seo') }}",
+	titleLengthSuccess: "{{ 'The title is between the recommended minimum and maximum length.'|t('seo') }}",
+
+	titleKeywordFail: "{{ 'The title does not contain the keyword. Try adding it near the beginning of the title.'|t('seo') }}",
+	titleKeywordSuccess: "{{ 'The title contains the keyword near the beginning.'|t('seo') }}",
+	titleKeywordPosFail: "{{ 'The title contains the keyword, but not near the beginning. Try to move it closer to the start of the title.'|t('seo') }}",
+
+	slugFail: "{{ 'The URL does not contain the keyword. Try adding it to the slug.'|t('seo') }}",
+	slugSuccess: "{{ 'The URL contains the keyword.'|t('seo') }}",
+
+	descFail: "{{ 'The description does not contain the keyword. Try adding it near the beginning of the description.'|t('seo') }}",
+	descSuccess: "{{ 'The description contains the keyword.'|t('seo') }}",
+
+	wordCountFail: "{{ 'Your text contains {l} words, this is less than the recommended 300 word minimum.'|t('seo') }}",
+	wordCountSuccess: "{{ 'Your text contains {l} words, this is more than the recommended 300 word minimum.'|t('seo') }}",
+
+	firstParagraphFail: "{{ 'The keyword does not appear in the first paragraph of your text. Try adding it.'|t('seo') }}",
+	firstParagraphSuccess: "{{ 'The keyword appears in the first paragraph of your text.'|t('seo') }}",
+
+	imagesFail: "{{ 'Less than a third of the images have alt tags containing the keyword, try adding it to more images.'|t('seo') }}",
+	imagesFailMax: "{{ 'Most of the images have alt tags containing the keyword. This may be too many and can lead to a poor experience for visually impaired users.'|t('seo') }}",
+	imagesOk: "{{ 'More than half of the images have alt tags containing the keyword. Ensure the alt tags are contextual to the content, and not stuffed with keywords.'|t('seo') }}",
+	imagesSuccess: "{{ 'An acceptable number of images have alt tags containing the keyword.'|t('seo') }}",
+
+	linksFail: "{{ 'The page does not contain any outgoing links. Try adding some.'|t('seo') }}",
+	linksSuccess: "{{ 'The page contains outgoing links.'|t('seo') }}",
+
+	headingsFail: "{{ 'The page does not contain any headings that contain the keyword. Try adding some with the keyword.'|t('seo') }}",
+	headingsOk: 'The page contains some lower importance headings that contain the keyword. Try adding the keyword to some h2\'s.',
+	headingsSuccess: "{{ 'The page contains higher importance headings with the keyword.'|t('seo') }}",
+
+	densityFail: "{{ 'The keyword does not appear in the text. It is important to include it in your content.'|t('seo') }}",
+	densityFailUnder: "{{ 'The keyword density is {d}%, which is well under the advised 2.5%. Try increasing the number of times the keyword is used.'|t('seo') }}",
+	densityOk: "{{ 'The keyword density is {d}%, which is over the advised 2.5%. The keyword appears {c} times.'|t('seo') }}",
+	densitySuccess: "{{ 'The keyword density is {d}%, which is near the advised 2.5%.'|t('seo') }}",
+
+	fleschFail: "{{ 'The Flesch Reading ease score is {l} which is considered best for university graduates. Try reducing your sentence length to improve readability.'|t('seo') }}",
+	fleschOk: "{{ 'The Flesch Reading ease score is {l} which is average, and considered easily readable by most users.'|t('seo') }}",
+	fleschSuccess: "{{ 'The Flesch Reading ease score is {l} meaning your content is readable by all ages.'|t('seo') }}",
+};
+</script>

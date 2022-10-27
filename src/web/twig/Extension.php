@@ -9,6 +9,8 @@
 namespace ether\seo\web\twig;
 
 use ether\seo\models\data\SeoData;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
 
 /**
  * Class Extension
@@ -16,13 +18,13 @@ use ether\seo\models\data\SeoData;
  * @author  Ether Creative
  * @package ether\seo\web\twig
  */
-class Extension extends \Twig_Extension
+class Extension extends AbstractExtension
 {
 
 	public function getFunctions ()
 	{
 		return [
-			new \Twig_Function(
+			new TwigFunction(
 				'getSeoField',
 				[$this, 'getSeoField'],
 				['needs_context' => true]

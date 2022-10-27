@@ -43,16 +43,18 @@
 		<div class="field">
 			<div class="heading">
 				<div class="instructions">
-					Redirects support regex.
-					To redirect from <code>blog/2016/my-post</code> to <code>news/my-post</code> you would add the following redirect:
-					URI: <code>blog/([0-9]{4})/(.*)</code> To: <code>news/$2</code>.
-					<a href="https://github.com/ethercreative/seo#the-redirects" target="_blank">See here for more info</a>.
+					{{ "redirect_instructions"|t('seo', params = { 
+						a: "<code>blog/2016/my-post</code>", 
+						b: "<code>news/my-post</code>", 
+						redirect: "URI: <code>blog/([0-9]{4})/(.*)</code> To: <code>news/$2</code>." 
+					})|raw }}
+					<a href="https://github.com/ethercreative/seo#the-redirects" target="_blank">{{ "See here for more info"|t('seo') }}</a>.
 				</div>
 			</div>
 		</div>
 
 		<form class="redirects--form" id="redirectsNew">
-			<h4>Add new redirect</h4>
+			<h4>{{ "Add new redirect"|t('seo') }}</h4>
 			<div class="fields">
 				{{ forms.text({
 					name: "uri",
@@ -80,7 +82,7 @@
 			</div>
 			<div>
 				<div class="btngroup">
-					<input type="submit" class="btn submit" value="Add Redirect">
+					<input type="submit" class="btn submit" value="{{ 'Add Redirect'|t('seo') }}">
 					<div class="spinner hidden"></div>
 				</div>
 			</div>
@@ -90,7 +92,7 @@
 		<br>
 
 		<form class="redirects--form" id="redirectsBulk">
-			<h4>Bulk add redirects</h4>
+			<h4>{{ "Bulk add redirects"|t('seo') }}</h4>
 
 			<div class="fields down">
 				{{ forms.textarea({
@@ -103,11 +105,11 @@
 				<label class="type-select">
 					{{ forms.text({
 						name: "separator",
-						placeholder: "Separator",
+						placeholder: "{{ 'Separator'|t('seo') }}",
 						required: true
 					}) }}
 					<span class="instructions">
-						The character used to separate each column. In a CSV, for example, this would be a comma (,).
+						{{ "The character used to separate each column. In a CSV, for example, this would be a comma (,)."|t('seo') }}
 					</span>
 				</label>
 
@@ -119,7 +121,7 @@
 					}) }}
 
 					<span class="instructions">
-						The default redirect type (if one isn't defined)
+						{{ "The default redirect type (if one isn't defined)"|t('seo') }}
 					</span>
 				</label>
 
@@ -131,14 +133,14 @@
 					}) }}
 
 					<span class="instructions">
-						The site(s) these redirects should work on
+						{{ "The site(s) these redirects should work on"|t('seo') }}
 					</span>
 				</label>
 			</div>
 
 			<div>
 				<div class="btngroup">
-					<input type="submit" class="btn submit" value="Add Redirects">
+					<input type="submit" class="btn submit" value="{{ 'Add Redirects'|t('seo') }}">
 				</div>
 				<div class="spinner hidden"></div>
 			</div>
@@ -155,9 +157,9 @@
 					<thead>
 					<tr>
 						<th scope="col" data-attribute="uri">URI</th>
-						<th scope="col" data-attribute="to">To</th>
-						<th scope="col" data-attribute="type">Type</th>
-						<th scope="col" data-attribute="added">Added</th>
+						<th scope="col" data-attribute="to">{{ "To"|t('seo') }}</th>
+						<th scope="col" data-attribute="type">{{ "Type"|t('seo') }}</th>
+						<th scope="col" data-attribute="added">{{ "Added"|t('seo') }}</th>
 						<th colspan="2"></th>
 					</tr>
 					</thead>
@@ -174,7 +176,7 @@
 								<div class="element small">
 									<div class="label">
 										<span class="title">
-											<a href="#" title="Edit redirect"
+											<a href="#" title="{{ 'Edit redirect'|t('seo') }}"
 											   data-id="{{ redirect.id }}"
 											   data-order="{{ redirect.order }}"
 											   data-uri="{{ redirect.uri }}"
@@ -197,10 +199,10 @@
 								{{ redirect.dateCreated|datetime('short') }}
 							</td>
 							<td class="thin action">
-								<a class="move icon" title="Reorder"></a>
+								<a class="move icon" title="{{ 'Reorder'|t('seo') }}"></a>
 							</td>
 							<td class="thin action">
-								<a class="delete icon" title="Delete"></a>
+								<a class="delete icon" title="{{ 'Delete'|t('seo') }}"></a>
 							</td>
 						</tr>
 					{% endfor %}
