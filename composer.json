@@ -1,5 +1,5 @@
 {
-  "name": "ether/seo",
+  "name": "tr3motino/seo",
   "license": "MIT",
   "description": "SEO utilities including a unique field type, sitemap, & redirect manager",
   "type": "craft-plugin",
@@ -10,12 +10,12 @@
   },
   "autoload": {
     "psr-4": {
-      "ether\\seo\\": "src/"
+      "tr3motino\\seo\\": "src/"
     }
   },
   "support": {
-    "issues": "https://github.com/ethercreative/seo",
-    "docs": "https://github.com/ethercreative/seo/blob/v3/README.md"
+    "issues": "https://github.com/tr3motino/seo",
+    "docs": "https://github.com/tr3motino/seo/blob/v3/README.md"
   },
   "extra": {
     "handle": "seo",
@@ -23,7 +23,7 @@
     "developer": "Ether Creative",
     "developerUrl": "https://ethercreative.co.uk",
 
-    "class": "ether\\seo\\Seo"
+    "class": "tr3motino\\seo\\Seo"
   },
   "config": {
     "allow-plugins": {
