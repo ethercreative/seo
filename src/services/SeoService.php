@@ -6,6 +6,7 @@ use Craft;
 use craft\base\Component;
 use craft\base\Element;
 use craft\base\Field;
+use craft\helpers\App;
 use ether\seo\fields\SeoField;
 use ether\seo\models\data\SeoData;
 
@@ -22,7 +23,7 @@ class SeoService extends Component
 	{
 		$headers = Craft::$app->getResponse()->getHeaders();
 
-		$env = getenv('ENVIRONMENT') ?? getenv('CRAFT_ENVIRONMENT');
+		$env = App::env('ENVIRONMENT') ?? App::env('CRAFT_ENVIRONMENT');
 
 		// Always noindex except on production environment
 		if ($env !== 'production')
