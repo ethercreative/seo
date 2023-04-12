@@ -1,3 +1,10 @@
+## 4.1.0 - 2023-04-12
+### Fixed
+- Fix SEO field focus keywords on Craft 4 (Fixes #431, #407, via @dyerc)
+- Deleted sites are no longer included in the redirect select (via @thomascoppein)
+- Fix env check (Fixes #432, via @jacotijssen & @thomascoppein)
+- Fix custom fields not being evaluated in dynamic syntax (Fixes #415, via @juban)
+
 ## 4.0.3 - 2022-06-08
 ### Fixed
 - Fix sitemap render issue (Fixes #409, via @niektenhoopen)
