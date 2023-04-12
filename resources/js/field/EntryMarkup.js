@@ -115,13 +115,13 @@ class EntryMarkup {
 
 	_preview () {
 		return new Promise((async (resolve, reject) => {
-			const de = window.draftEditor;
+			const elementEditor = window.Craft.cp.$primaryForm.data('elementEditor');
 
-			if (de.settings.previewTargets.length === 0)
+			if (elementEditor.settings.previewTargets.length === 0)
 				reject();
 
 			$.ajax({
-				url: await de.getTokenizedPreviewUrl(de.settings.previewTargets[0].url),
+				url: await elementEditor.getTokenizedPreviewUrl(elementEditor.settings.previewTargets[0].url),
 				// data: $.extend({}, nextPostData, Craft.livePreview.basePostData),
 				method: 'GET',
 				// headers: { 'X-Craft-Token': this.token },
