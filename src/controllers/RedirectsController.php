@@ -36,7 +36,7 @@ class RedirectsController extends Controller
 		);
 
 		$sites = ['null' => 'All Sites'];
-		foreach (Craft::$app->sites->getAllSites()->where(['dateDeleted' => null]) as $site)
+		foreach (Craft::$app->sites->getAllSites() as $site)
 			$sites[$site->id] = $site->name;
 
 		return $this->renderTemplate('seo/redirects', [

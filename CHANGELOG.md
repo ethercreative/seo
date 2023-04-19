@@ -1,3 +1,7 @@
+## 4.1.1 - 2023-04-19
+### Fixed
+- Fix redirect page 500 error (Fixes #448)
+
 ## 4.1.0 - 2023-04-12
 ### Fixed
 - Fix SEO field focus keywords on Craft 4 (Fixes #431, #407, via @dyerc)
