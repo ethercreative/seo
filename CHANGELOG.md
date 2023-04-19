@@ -1,6 +1,8 @@
 ## 4.1.1 - 2023-04-19
 ### Fixed
 - Fix redirect page 500 error (Fixes #448)
+- Remove HTML from fail toast (Fixes #449)
+- Fix redirect deletion (Fixes #441)
 
 ## 4.1.0 - 2023-04-12
 ### Fixed

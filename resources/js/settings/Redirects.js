@@ -106,7 +106,7 @@ export default class Redirects {
 			));
 			
 			Craft.cp.displayNotice(
-				"<strong>SEO:</strong> Redirect added successfully!"
+				"SEO: Redirect added successfully!"
 			);
 			spinner.classList.add("hidden");
 			
@@ -115,7 +115,7 @@ export default class Redirects {
 			uri.focus();
 			this.initTables();
 		}, error => {
-			Craft.cp.displayError("<strong>SEO:</strong> " + error);
+			Craft.cp.displayError("SEO: " + error);
 			spinner.classList.add("hidden");
 		});
 	};
@@ -159,13 +159,13 @@ export default class Redirects {
 				));
 			});
 			
-			Craft.cp.displayNotice('<strong>SEO:</strong> Redirects added successfully!');
+			Craft.cp.displayNotice('SEO: Redirects added successfully!');
 			spinner.classList.add("hidden");
 			
 			redirects.value = '';
 			this.initTables();
 		}, error => {
-			Craft.cp.displayError('<strong>SEO:</strong> ' + error);
+			Craft.cp.displayError('SEO: ' + error);
 			spinner.classList.add("hidden");
 		});
 	};
@@ -209,7 +209,7 @@ export default class Redirects {
 			
 			this.tables[siteId].removeChild(row);
 		}, error => {
-			Craft.cp.displayError('<strong>SEO:</strong> ' + error);
+			Craft.cp.displayError('SEO: ' + error);
 			spinner.classList.add("hidden");
 		});
 	};
@@ -257,10 +257,10 @@ export default class Redirects {
 		this.post("DELETE", {
 			id: row.dataset.id
 		}, () => {
-			Craft.cp.displayNotice('<strong>SEO:</strong> Redirect deleted');
+			Craft.cp.displayNotice('SEO: Redirect deleted');
 			this.tables[siteId].removeChild(row);
 		}, error => {
-			Craft.cp.displayNotice('<strong>SEO:</strong> ' + error);
+			Craft.cp.displayNotice('SEO: ' + error);
 		});
 	};
 
@@ -279,9 +279,9 @@ export default class Redirects {
 			action: 'seo/redirects/sort',
 			order: post,
 		}, () => {
-			Craft.cp.displayNotice('<strong>SEO:</strong> Redirect order saved');
+			Craft.cp.displayNotice('SEO: Redirect order saved');
 		}, error => {
-			Craft.cp.displayNotice('<strong>SEO:</strong> ' + error);
+			Craft.cp.displayNotice('SEO: ' + error);
 		});
 	};
 	

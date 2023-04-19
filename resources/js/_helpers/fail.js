@@ -1,6 +1,6 @@
 /* global Craft */
 export default function fail (message) {
-	Craft.cp.displayError(`<strong>SEO:</strong> ${message}`);
+	Craft.cp.displayError(`SEO: ${message}`);
 	window.console && console.error.apply( // eslint-disable-line no-console
 		console,
 		[

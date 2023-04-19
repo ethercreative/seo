@@ -273,7 +273,11 @@ class RedirectsService extends Component
 	 */
 	public function delete ($id)
 	{
-		$redirect = RedirectRecord::findOne(compact('id'))->delete();
+		$redirect = false;
+
+		try {
+			$redirect = RedirectRecord::findOne(compact('id'))->delete();
+		} catch (\Exception $e) {}
 
 		if ($redirect === false)
 			return 'Unable find redirect with ID: ' . $id;
