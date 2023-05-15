@@ -1,3 +1,7 @@
+## 4.1.2 - 2023-05-15
+### Fixed
+- Fix robots always injecting no-index (Fixes #432)
+
 ## 4.1.1 - 2023-04-19
 ### Fixed
 - Fix redirect page 500 error (Fixes #448)
