@@ -1,3 +1,7 @@
+## 3.7.5 - 2023-06-05
+### Added
+- Support passing `?site=<siteHandle>` to sitemap URLs for headless sites
+
 ## 3.7.4 - 2021-06-14
 ### Fixed
 - Fix error when trying to fetch social image (Fixes #358, via @MDXDave)
