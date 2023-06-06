@@ -1,3 +1,7 @@
+## 3.7.6 - 2023-06-06
+### Changed
+- Don't filter out current site alt tag
+
 ## 3.7.5 - 2023-06-05
 ### Added
 - Support passing `?site=<siteHandle>` to sitemap URLs for headless sites

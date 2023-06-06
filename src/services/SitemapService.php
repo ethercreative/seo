@@ -299,11 +299,11 @@ class SitemapService extends Component
 		$elements->limit = $settings->sitemapLimit;
 		$elements->offset = $settings->sitemapLimit * $variables['page'];
 
-		$currentLocale = $craft->locale->id;
+//		$currentLocale = $craft->locale->id;
 		$availableLocales = $craft->i18n->getSiteLocaleIds();
 
-		if (($key = array_search($currentLocale, $availableLocales)) !== false)
-			unset($availableLocales[$key]);
+//		if (($key = array_search($currentLocale, $availableLocales)) !== false)
+//			unset($availableLocales[$key]);
 
 		$seoFieldHandle = null;
 		if ($first = $elements->one())
@@ -375,6 +375,7 @@ class SitemapService extends Component
 				},
 				[]
 			);
+
 
 			if (!$settings->removeAlternateUrls)
 			{
