@@ -14,6 +14,7 @@ use craft\helpers\Json;
 use craft\helpers\UrlHelper;
 use craft\helpers\Html;
 use craft\models\Section;
+use craft\shopify\elements\Product as ShopifyProduct;
 use ether\seo\models\data\SeoData;
 use ether\seo\Seo;
 use ether\seo\web\assets\SeoFieldAsset;
@@ -243,7 +244,7 @@ class SeoField extends Field implements PreviewableFieldInterface
 
 		if ($element instanceof Category)
 			$renderData['groupId'] = $element->groupId;
-		elseif ($element instanceof GlobalSet)
+		elseif ($element instanceof GlobalSet || $element instanceof ShopifyProduct)
 			$renderData['typeId'] = null;
 		elseif ($isCalendar)
 			$renderData['calendarId'] = $element->calendarId;
