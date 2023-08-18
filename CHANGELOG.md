@@ -1,3 +1,8 @@
+## 4.2.0 - 2023-08-18
+### Fixed
+- Fixed absolute URL including token query parameter (Fixes #457)
+- Fixed error on Shopify plugin products (#456 via @ttempleton)
+
 ## 4.1.2 - 2023-05-15
 ### Fixed
 - Fix robots always injecting no-index (Fixes #432)

@@ -383,6 +383,20 @@ class SeoData extends BaseObject
 		return UrlHelper::siteUrl($this->advanced['canonical']);
 	}
 
+	public function getAbsolute ()
+	{
+		$url = Craft::$app->getRequest()->getAbsoluteUrl();
+		$query = parse_url($url, PHP_URL_QUERY);
+		parse_str($query, $parts);
+
+		if (empty($parts)) return $url;
+
+		// Remove token param
+		unset($parts['token']);
+
+		return preg_replace('/\?([^#]*)/m', '?' . http_build_query($parts), $url);
+	}
+
 	// Helpers
 	// =========================================================================
 
