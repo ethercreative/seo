@@ -1,3 +1,11 @@
+## 4.2.1 - 2023-08-23
+### Fixed
+- Remove trailing `?` if token removed from URL (Fixes #457 part 2)
+- Restore whitespace in SEO tokens (Fixes #452)
+
+### Changed
+- Sanitize URL before outputting in meta (Fixes #454)
+
 ## 4.2.0 - 2023-08-18
 ### Fixed
 - Fixed absolute URL including token query parameter (Fixes #457)

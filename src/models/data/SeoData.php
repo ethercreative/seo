@@ -385,16 +385,16 @@ class SeoData extends BaseObject
 
 	public function getAbsolute ()
 	{
-		$url = Craft::$app->getRequest()->getAbsoluteUrl();
+		$url = filter_var(Craft::$app->getRequest()->getAbsoluteUrl(), FILTER_SANITIZE_URL);
 		$query = parse_url($url, PHP_URL_QUERY);
 		parse_str($query, $parts);
 
 		if (empty($parts)) return $url;
 
 		// Remove token param
-		unset($parts['token']);
+		unset($parts[Craft::$app->getConfig()->general->tokenParam]);
 
-		return preg_replace('/\?([^#]*)/m', '?' . http_build_query($parts), $url);
+		return rtrim(preg_replace('/\?([^#]*)/m', '?' . http_build_query($parts), $url), '?');
 	}
 
 	// Helpers
@@ -494,7 +494,7 @@ class SeoData extends BaseObject
 				$craft->sites->setCurrentSite($this->_element->site);
 				$craft->view->setTemplateMode(View::TEMPLATE_MODE_SITE);
 
-				$ret = Craft::$app->view->renderObjectTemplate(
+				$ret = $this->_renderObjectTemplate(
 					$template,
 					$variables
 				);
@@ -504,16 +504,27 @@ class SeoData extends BaseObject
 			}
 			else
 			{
-				$ret = Craft::$app->view->renderObjectTemplate(
+				$ret = $this->_renderObjectTemplate(
 					$template,
 					$variables
 				);
 			}
+
 		} catch (\Exception $e) {
 			$ret = 'ERROR: ' . $e->getMessage();
 		}
 
 		return $ret;
+	}
+
+	private function _renderObjectTemplate (string $template, mixed $object): string
+	{
+		$str = Craft::$app->view->renderObjectTemplate($template, $object);
+
+		// Craft trims whitespace which isn't what we want, so we'll restore it
+		preg_match_all('/^(?<s>\s+)|(?<e>\s+)$/m', $template, $matches, PREG_SET_ORDER);
+
+		return @$matches[0]['s'] . $str . @$matches[1]['e'];
 	}
 
 }
