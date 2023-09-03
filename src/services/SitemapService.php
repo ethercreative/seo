@@ -378,6 +378,7 @@ class SitemapService extends Component
 
 			if (!$settings->removeAlternateUrls)
 			{
+				$ignoredUrl = \Craft::$app->getConfig()->getConfigSettings('general')->seoIgnoredUrls;
 				foreach ($item->supportedSites as $siteId)
 				{
 					$id = is_numeric($siteId) ? $siteId : $siteId['siteId'];
@@ -385,6 +386,14 @@ class SitemapService extends Component
 
 					if (empty($site))
 						continue;
+
+					if ($ignoredUrl) {
+						foreach ($ignoredUrl as $ignored) {
+							if (str_contains($site->baseUrl, $ignored)) {
+								continue 2;
+							}
+						}
+					}
 
 					$lang = $site->language;
 
