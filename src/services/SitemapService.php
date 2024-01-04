@@ -281,7 +281,7 @@ class SitemapService extends Component
 				$type = Category::instance();
 				$idHandle = 'groupId';
 				break;
-		
+
 			case 'productTypes':
 				$type = \craft\commerce\elements\Product::instance();
 				$idHandle = 'typeId';
@@ -299,11 +299,11 @@ class SitemapService extends Component
 		$elements->limit = $settings->sitemapLimit;
 		$elements->offset = $settings->sitemapLimit * $variables['page'];
 
-		$currentLocale = $craft->locale->id;
+//		$currentLocale = $craft->locale->id;
 		$availableLocales = $craft->i18n->getSiteLocaleIds();
 
-		if (($key = array_search($currentLocale, $availableLocales)) !== false)
-			unset($availableLocales[$key]);
+//		if (($key = array_search($currentLocale, $availableLocales)) !== false)
+//			unset($availableLocales[$key]);
 
 		$seoFieldHandle = null;
 		if ($first = $elements->one())
@@ -375,6 +375,7 @@ class SitemapService extends Component
 				},
 				[]
 			);
+
 
 			if (!$settings->removeAlternateUrls)
 			{
@@ -627,7 +628,7 @@ class SitemapService extends Component
 			case 'productTypes':
 				$last = $this->_getUpdated(\craft\commerce\elements\Product::instance(), $id);
 				$pages = $this->_getPageCount(\craft\commerce\elements\Product::instance(), $id);
-				break;				
+				break;
 
 			default:
 				$last = DateTimeHelper::currentUTCDateTime()->format('c');
@@ -661,12 +662,13 @@ class SitemapService extends Component
 	private function _indexUrl ($group, $id, $page)
 	{
 		$sitemapName = Seo::$i->getSettings()->sitemapName;
+		$siteHandle = \Craft::$app->getRequest()->getQueryParam("site");
 
 		return UrlHelper::siteUrl(
 			$sitemapName . '_' . $group
 			. ($id > 0 ? '_' . $id : '')
 			. ($id > 0 ? '_' . $page : '')
-			. '.xml'
+			. '.xml' . (empty($siteHandle) ? '' : "?site=$siteHandle")
 		);
 	}
 
