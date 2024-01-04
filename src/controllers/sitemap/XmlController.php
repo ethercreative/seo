@@ -11,6 +11,15 @@ class XmlController extends Controller
 
 	protected $allowAnonymous = true;
 
+	public function beforeAction($action)
+	{
+		$siteHandle = \Craft::$app->getRequest()->getQueryParam("site");
+		if (!empty($siteHandle))
+			\Craft::$app->sites->setCurrentSite($siteHandle);
+
+		return parent::beforeAction($action);
+	}
+
 	/**
 	 * @throws \yii\base\Exception
 	 */
