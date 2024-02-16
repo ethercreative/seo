@@ -1,3 +1,8 @@
+## 3.7.7
+### Fixed
+- use pagination information on canonical (via @therealpecus)
+- sitemap element type grouping (via @jamesedmonston)
+
 ## 3.7.6 - 2023-06-06
 ### Changed
 - Don't filter out current site alt tag
