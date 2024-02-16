@@ -1,3 +1,8 @@
+## 4.2.2 - 2024-02-16
+### Fixed
+- use pagination information on canonical (via @therealpecus)
+- sitemap element type grouping (via @jamesedmonston)
+
 ## 4.2.1 - 2023-08-23
 ### Fixed
 - Remove trailing `?` if token removed from URL (Fixes #457 part 2)
