@@ -1,4 +1,4 @@
-## 3.7.7
+## 3.7.7 - 2024-02-16
 ### Fixed
 - use pagination information on canonical (via @therealpecus)
 - sitemap element type grouping (via @jamesedmonston)
