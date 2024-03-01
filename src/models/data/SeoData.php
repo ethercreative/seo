@@ -464,7 +464,7 @@ class SeoData extends BaseObject
 
 			$variables = array_merge(
 				$variables,
-				$this->_element->toArray($this->_element->extraFields())
+				$this->_element->toArray($this->_element->extraFields(), [], false)
 			);
 		}
 

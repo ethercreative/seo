@@ -118,12 +118,12 @@
 		{% endset %}
 		{{ forms.field({
 			label: 'Page Title',
-			instructions: 'Create a token for each part of your title. Clicking the lock will prevent the user from editing the contents of that token. Tokens use the same syntax as [Dynamic Entry Titles](https://docs.craftcms.com/v3/sections-and-entries.html#dynamic-entry-titles). They can be dragged to re-order.',
+			instructions: 'Create a token for each part of your title. Clicking the lock will prevent the user from editing the contents of that token. Tokens use the same syntax as [Dynamic Entry Titles](https://craftcms.com/docs/5.x/reference/element-types/entries.html#dynamic-entry-titles). They can be dragged to re-order.',
 		}, seoTitle) }}
 
 		{{ forms.textareaField({
 			label: 'Page Description',
-			instructions: 'This supports the same syntax as [Dynamic Entry Titles](https://docs.craftcms.com/v3/sections-and-entries.html#dynamic-entry-titles).',
+			instructions: 'This supports the same syntax as [Dynamic Entry Titles](https://craftcms.com/docs/5.x/reference/element-types/entries.html#dynamic-entry-titles).',
 			id: 'description',
 			name: 'description',
 			value: settings.description is empty and globalSettings.description is defined ? globalSettings.description : settings.description

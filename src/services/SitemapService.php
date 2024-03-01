@@ -150,7 +150,7 @@ class SitemapService extends Component
 	public function getValidSections ()
 	{
 		return array_filter(
-			Craft::$app->sections->getAllSections(),
+			Craft::$app->entries->getAllSections(),
 			[$this, '_filterOutNoUrls']
 		);
 	}
@@ -281,7 +281,7 @@ class SitemapService extends Component
 				$type = Category::instance();
 				$idHandle = 'groupId';
 				break;
-		
+
 			case 'productTypes':
 				$type = \craft\commerce\elements\Product::instance();
 				$idHandle = 'typeId';
@@ -618,7 +618,7 @@ class SitemapService extends Component
 			case 'productTypes':
 				$last = $this->_getUpdated(\craft\commerce\elements\Product::instance(), $id);
 				$pages = $this->_getPageCount(\craft\commerce\elements\Product::instance(), $id);
-				break;				
+				break;
 
 			default:
 				$last = DateTimeHelper::currentUTCDateTime()->format('c');

@@ -89,6 +89,11 @@ class SeoField extends Field implements PreviewableFieldInterface
 		return true;
 	}
 
+	public static function icon (): string
+	{
+		return 'award';
+	}
+
 	// Instance
 	// -------------------------------------------------------------------------
 

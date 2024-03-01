@@ -110,7 +110,7 @@ class SocialData extends BaseObject
 			$image = $image[0]['id'];
 
 		if (empty($image))
-			$image = $this->_fallback['image'];
+			$image = @$this->_fallback['image'];
 
 		if (!($image instanceof Asset))
 			$image = Craft::$app->getAssets()->getAssetById((int) $image);
