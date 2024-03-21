@@ -1,5 +1,5 @@
 {
-  "name": "ether/seo",
+  "name": "marcelweidum/seo",
   "license": "MIT",
   "description": "SEO utilities including a unique field type, sitemap, & redirect manager",
   "type": "craft-plugin",
