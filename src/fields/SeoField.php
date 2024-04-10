@@ -8,13 +8,12 @@ use craft\base\PreviewableFieldInterface;
 use craft\elements\Category;
 use craft\elements\Entry;
 use craft\elements\GlobalSet;
-use craft\errors\GqlException;
-use craft\gql\TypeLoader;
 use craft\helpers\Json;
 use craft\helpers\UrlHelper;
 use craft\helpers\Html;
 use craft\models\Section;
 use craft\shopify\elements\Product as ShopifyProduct;
+use craft\web\View;
 use ether\seo\models\data\SeoData;
 use ether\seo\Seo;
 use ether\seo\web\assets\SeoFieldAsset;
@@ -143,7 +142,7 @@ class SeoField extends Field implements PreviewableFieldInterface
 		// Variables
 		// ---------------------------------------------------------------------
 		$craft = \Craft::$app;
-		$namespaceId = $craft->view->namespaceInputId($this->id);
+		$formId = $craft->view->namespaceInputId($this->handle) . '-field';
 
 		$settings = $this->getSettings();
 		$settingsGlobal = Seo::$i->getSettings();
@@ -265,7 +264,8 @@ class SeoField extends Field implements PreviewableFieldInterface
 
 		$craft->view->registerAssetBundle(SeoFieldAsset::class);
 		$craft->view->registerJs(
-			"new SeoField('{$namespaceId}', {$seoOptions})"
+			"document.addEventListener('DOMContentLoaded', () => new SeoField('$formId', $seoOptions));",
+			View::POS_END,
 		);
 
 		return $craft->view->renderTemplate(
