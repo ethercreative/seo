@@ -556,7 +556,7 @@ class SitemapService extends Component
 	 */
 	private function _setCriteriaIdByType ($criteria, Element $type, $id)
 	{
-		switch ($type::class) {
+		switch (get_class($type)) {
 			case 'craft\\elements\\Entry':
 				$criteria->sectionId = $id;
 				break;
