@@ -17,18 +17,30 @@ TEMPLATE.innerHTML = `
 			overflow: hidden;
 		}
 		::slotted(seo-tab) {
+			position: relative;
 			padding: var(--s) var(--m);
 			cursor: pointer;
 			border-radius: var(--small-border-radius) var(--small-border-radius) 0 0;
 		}
-		::slotted(seo-tab[selected]),
-		::slotted(seo-tab[selected]:focus) {
+		::slotted(seo-tab[selected]) {
 			background: #fff;
 			box-shadow: 
 				inset 0 2px 0 var(--custom-text-color,var(--gray-500))
 			  , inset 0 1px 0 1px rgba(51,64,77,.1)
 			  , 0 2px 12px var(--custom-sel-tab-shadow-color,var(--gray-200))
 			  !important;
+		}
+		::slotted(seo-tab[selected]:focus-visible)::after {
+			content: '';
+			position: absolute;
+			z-index: 2;
+			top: 3px;
+			left: 3px;
+			right: 3px;
+			bottom: 3px;
+			display: block;
+			box-shadow: var(--focus-ring), 0 0 0 3px #fff;
+			pointer-events: none;
 		}
 		::slotted(seo-tab:hover:not([selected])) {
 			background: var(--gray-100);

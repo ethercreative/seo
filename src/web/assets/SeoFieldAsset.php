@@ -12,17 +12,19 @@ class SeoFieldAsset extends AssetBundle
 		$this->sourcePath = __DIR__;
 
 		$this->js = [
+			'js/seo/textarea.js',
 			'js/seo/field/index.js',
 			'js/seo/tabs/index.js',
+			'js/seo/social-card/index.js',
 		];
 
 		$this->jsOptions = [
 			'type' => 'module',
 		];
 
-		// old
 		$this->css = [
-			'css/seo.css',
+			'css/seo.css', // old
+			'css/seo-field.css',
 		];
 
 		parent::init();

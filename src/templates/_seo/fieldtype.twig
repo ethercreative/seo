@@ -68,12 +68,6 @@
 {% import _self as _ %}
 {% import '_includes/forms' as _forms %}
 
-<style>
-	seo-tabs:not(:defined), seo-tab:not(:defined), seo-panel:not(:defined) {
-		display: block;
-	}
-</style>
-
 <seo-tabs id="{{ id }}-tabs">
 	<seo-tab role="heading" slot="tab">{{ 'Optimisation'|t }}</seo-tab>
 	<seo-panel role="region" slot="panel">
@@ -206,37 +200,50 @@
 	<seo-tab role="heading" slot="tab">{{ 'Social'|t }}</seo-tab>
 	<seo-panel role="region" slot="panel">
 		{% set social %}
-			<div style="display:grid;grid-template-columns:1fr 1fr;grid-gap:24px">
-				{% set twitterIcon %}
-					<svg width="33px" height="26px" viewBox="0 0 33 26" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-						<g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-							<g transform="translate(-934.000000, -309.000000)" fill="#48A1EB" fill-rule="nonzero">
-								<path d="M966.154987,312.079665 C964.977462,312.601937 963.712681,312.955153 962.384137,313.113723 C963.739529,312.301159 964.780718,311.014564 965.270689,309.481726 C964.002133,310.233882 962.597241,310.780485 961.101737,311.074552 C959.904076,309.798445 958.197985,309.001403 956.309834,309.001403 C952.683709,309.001403 949.7443,311.940812 949.7443,315.566516 C949.7443,316.081238 949.802191,316.581697 949.914196,317.062439 C944.45823,316.788928 939.620601,314.175048 936.382511,310.202839 C935.81745,311.172714 935.493599,312.30032 935.493599,313.503435 C935.493599,315.781298 936.652667,317.790684 938.414131,318.96779 C937.338123,318.933811 936.32546,318.638486 935.440323,318.146837 C935.439904,318.173684 935.439904,318.201371 935.439904,318.229058 C935.439904,321.410097 937.703085,324.063829 940.706257,324.666645 C940.155459,324.816405 939.575296,324.896948 938.976675,324.896948 C938.553823,324.896948 938.142297,324.855837 937.741678,324.77907 C938.576895,327.387496 941.001583,329.285297 943.874711,329.338573 C941.62789,331.099198 938.797131,332.148777 935.720966,332.148777 C935.190723,332.148777 934.66845,332.118154 934.154987,332.056907 C937.060417,333.91947 940.511192,335.006384 944.218698,335.006384 C956.294732,335.006384 962.898019,325.002242 962.898019,316.327063 C962.898019,316.042225 962.891727,315.759065 962.879142,315.478003 C964.161961,314.552594 965.274884,313.396463 966.154987,312.079665 Z"></path>
-							</g>
-						</g>
-					</svg>
-				{% endset %}
-				{{ _.social(id, name, value, "Twitter", "twitter", socialPreviewUrl, twitterIcon) }}
-
-				{% set facebookIcon %}
-					<svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-						<g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-							<g transform="translate(-933.000000, -825.000000)" fill-rule="nonzero">
-								<g transform="translate(933.000000, 825.000000)">
-									<path d="M32,30 C32,31.104 31.104,32 30,32 L2,32 C0.896,32 0,31.104 0,30 L0,2 C0,0.896 0.896,0 2,0 L30,0 C31.104,0 32,0.896 32,2 L32,30 Z" fill="#3B5998"></path>
-									<path d="M22,32 L22,20 L26,20 L27,15 L22,15 L22,13 C22,11 23.002,10 25,10 L27,10 L27,5 C26,5 24.76,5 23,5 C19.325,5 17,7.881 17,12 L17,15 L13,15 L13,20 L17,20 L17,32 L22,32 Z" fill="#FFFFFF"></path>
-								</g>
-							</g>
-						</g>
-					</svg>
-				{% endset %}
-				{{ _.social(id, name, value, "Facebook", "facebook", socialPreviewUrl, facebookIcon) }}
+			<div class="seo-social-cards">
+				{% for key, value in value.social %}
+					<seo-social-card>
+						{% switch key %}
+							{% case 'twitter' %}
+								<svg viewBox="0 0 1200 1227" slot="logo">
+									<path fill="#000" d="M714.16 519.28 1160.9 0h-105.86l-387.9 450.89L357.34 0H0l468.5 681.82L0 1226.37h105.87l409.62-476.15 327.18 476.15H1200L714.14 519.28h.02Zm-145 168.55-47.46-67.9L144 79.7h162.6l304.8 436 47.47 67.89 396.2 566.72h-162.6L569.16 687.85v-.02Z"/>
+								</svg>
+							{% case 'facebook' %}
+								<svg viewBox="0 0 32 32" slot="logo">
+									<g fill="none">
+										<path fill="#3B5998" d="M32 30a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2C0 .9.9 0 2 0h28a2 2 0 0 1 2 2v28Z"/>
+										<path fill="#FFF" d="M22 32V20h4l1-5h-5v-2c0-2 1-3 3-3h2V5h-4c-3.68 0-6 2.88-6 7v3h-4v5h4v12h5Z"/>
+									</g>
+								</svg>
+						{% endswitch %}
+						<input
+							slot="image"
+							type="hidden"
+							name="{{ name }}[social][{{ key }}][image]"
+							value="{{ value.image ? value.image.id }}"
+						/>
+						<textarea
+							is="seo-textarea"
+							slot="title"
+							placeholder="This is the title of the page. You can edit it though"
+							name="{{ name }}[social][{{ key }}][title]"
+							rows="1"
+						>{{ value.title }}</textarea>
+						<textarea
+							is="seo-textarea"
+							slot="description"
+							placeholder="Integer posuere erat a ante venenatis dapibus posuere velit aliquet. Aenean lacinia bibendum nulla sed consectetur. Donec sed odio dui."
+							name="{{ name }}[social][{{ key }}][description]"
+							rows="2"
+						>{{ value.description }}</textarea>
+					</seo-social-card>
+				{% endfor %}
 			</div>
 		{% endset %}
 		{{ _forms.field({
 			id: id ~ '-social',
 			label: 'Social Cards',
-			instructions: 'Alter how you want this page to appear when shared',
+			instructions: 'Alter how you want this page to appear when shared on social media',
 		}, social) }}
 	</seo-panel>
 
@@ -244,10 +251,28 @@
 	<seo-panel role="region" slot="panel">
 		{# Ahh! Robots! #}
 		{% set robots %}
-			{% include 'seo/_seo/robots' with {
-				robots: isNew ? defaultRobots : value.advanced.robots,
-				name: name ~ "[advanced][robots]"
-			} %}
+			{% set robotsValue = isNew ? defaultRobots : value.advanced.robots %}
+			<div class="seo-robots">
+				{% for handle, detail in {
+					'noindex': 'Do not show this page in search results and do not show a "Cached" link in search results.',
+					'nofollow': 'Do not follow the links on this page.',
+					'noarchive': 'Do not show a "Cached" link in search results.',
+					'nosnippet': 'Do not show a text snippet or video preview in the search results for this page. A static thumbnail (if available) will still be visible.',
+					'notranslate': 'Do not offer translation of this page in search results.',
+					'noimageindex': 'Do not index images on this page.',
+				} %}
+					{% set label %}
+						<strong><code>{{ handle }}</code></strong>
+						<span> - {{ detail }}</span>
+					{% endset %}
+					{{ _forms.lightswitch({
+						name: name ~ "[advanced][robots][]",
+						value: handle,
+						on: handle in robotsValue,
+						onLabel: label,
+					}) }}
+				{% endfor %}
+			</div>
 		{% endset %}
 
 		{{ _forms.field({
