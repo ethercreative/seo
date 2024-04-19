@@ -17,7 +17,7 @@ seo-tab:not(:defined) {
 
 .seo-robots {
 	& .lightswitch-inner-container {
-		padding: 0;
-		border: none;
+		padding: 0 !important;
+		border: none !important;
 	}
 }
