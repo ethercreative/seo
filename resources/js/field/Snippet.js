@@ -38,7 +38,7 @@ export default class Snippet {
 					.trim()
 					.replace(/[\r\n\t]/g, ' ')
 					.replace(/\s{2,}/g, ' ')
-					.replace('%', '%25')
+					.replace(/%/g, '%25')
 			);
 		}
 
