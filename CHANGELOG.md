@@ -1,4 +1,8 @@
-## 5.0.0 - 2024-03-01
+## 5.0.0-rc2 - 2024-04-29
+### Fixed
+- Fix element validation issue when saving (Fixes #478)
+
+## 5.0.0-rc1 - 2024-03-01
 ### Changed
 - Add support for Craft 5
 
