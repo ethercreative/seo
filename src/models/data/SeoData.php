@@ -452,9 +452,12 @@ class SeoData extends BaseObject
 
 		if ($this->_element !== null)
 		{
-			foreach (array_keys($this->_element->fields()) as $name)
+			foreach ($this->_element->getFieldLayout()->getCustomFields() as $field) {
+				$name = $field->handle;
+
 				if ($name !== $this->_handle)
 					$variables[$name] = $this->_element->$name ?? null;
+			}
 
 			if (!array_key_exists('type', $variables) && $this->_element->hasMethod('getType'))
 				$variables['type'] = $this->_element->getType();
@@ -462,10 +465,11 @@ class SeoData extends BaseObject
 			if (!array_key_exists('section', $variables) && $this->_element->hasMethod('getSection'))
 				$variables['section'] = $this->_element->getSection();
 
-			$variables = array_merge(
-				$variables,
-				$this->_element->toArray($this->_element->extraFields(), [], false)
-			);
+			if (!array_key_exists('site', $variables) && $this->_element->hasMethod('getSite'))
+				$variables['site'] = $this->_element->getSite();
+
+			if (!array_key_exists('author', $variables) && $this->_element->hasMethod('getAuthor'))
+				$variables['author'] = $this->_element->getAuthor();
 		}
 
 		return $variables;
