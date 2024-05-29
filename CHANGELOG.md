@@ -1,3 +1,7 @@
+## 5.0.0-rc3 - 2024-05-29
+### Fixed
+- Fix title not being included in template render (Fixes #479)
+
 ## 5.0.0-rc2 - 2024-04-29
 ### Fixed
 - Fix element validation issue when saving (Fixes #478)
