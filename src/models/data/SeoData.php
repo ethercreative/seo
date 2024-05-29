@@ -459,6 +459,9 @@ class SeoData extends BaseObject
 					$variables[$name] = $this->_element->$name ?? null;
 			}
 
+			if (!array_key_exists('title', $variables) && $this->_element->hasProperty('title'))
+				$variables['title'] = $this->_element->title;
+
 			if (!array_key_exists('type', $variables) && $this->_element->hasMethod('getType'))
 				$variables['type'] = $this->_element->getType();
 
