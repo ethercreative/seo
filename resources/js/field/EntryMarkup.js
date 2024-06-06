@@ -13,24 +13,24 @@
 import { c, fail } from "../helpers";
 
 class EntryMarkup {
-	
+
 	// Variables
 	// =========================================================================
-	
+
 	frame = null;
 	postData = null;
 	token = null;
-	
+
 	// Entry Markup
 	// =========================================================================
-	
+
 	constructor () {
 		this.clean();
 	}
-	
+
 	// Actions
 	// =========================================================================
-	
+
 	/**
 	 * Gets and stores a parse-able preview of the entry markup
 	 *
@@ -41,13 +41,13 @@ class EntryMarkup {
 			const nextPostData = Garnish.getPostData(
 				document.getElementById("main-form")
 			);
-			
+
 			// Skip if no changes have been made to the content
 			if (this.postData && Craft.compare(nextPostData, this.postData)) {
 				resolve(this.frame.contentWindow.document.body);
 				return;
 			}
-			
+
 			this.postData = nextPostData;
 
 			try {
@@ -91,14 +91,14 @@ class EntryMarkup {
 			}
 		});
 	}
-	
+
 	/**
 	 * Creates an empty, hidden iframe to store the preview content, removing
 	 * the old one (if it exists)
 	 */
 	clean () {
 		this.frame && document.body.removeChild(this.frame);
-		
+
 		this.frame = c("iframe", {
 			frameborder: "0",
 			style: `
@@ -106,7 +106,7 @@ class EntryMarkup {
 				height: 0;
 			`
 		});
-		
+
 		document.body.appendChild(this.frame);
 	}
 
@@ -120,19 +120,17 @@ class EntryMarkup {
 			if (elementEditor.settings.previewTargets.length === 0)
 				reject();
 
+			const url = await elementEditor.getTokenizedPreviewUrl(elementEditor.settings.previewTargets[0].url, 'x-craft-live-preview');
+
 			$.ajax({
-				url: await elementEditor.getTokenizedPreviewUrl(elementEditor.settings.previewTargets[0].url),
-				// data: $.extend({}, nextPostData, Craft.livePreview.basePostData),
+				url,
 				method: 'GET',
-				// headers: { 'X-Craft-Token': this.token },
-				xhrFields: { withCredentials: true },
-				crossDomain: true,
 				success: resolve,
 				error: reject,
 			});
 		}));
 	}
-	
+
 }
 
 export default new EntryMarkup();
