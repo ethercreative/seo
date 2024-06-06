@@ -1,3 +1,7 @@
+## 5.0.0-rc4 - 2024-06-06
+### Fixed
+- Fix incorrect live preview URL used in keyword analysis
+
 ## 5.0.0-rc3 - 2024-05-29
 ### Fixed
 - Fix title not being included in template render (Fixes #479)
