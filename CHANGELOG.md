@@ -1,3 +1,7 @@
+## 4.2.3 - 2024-07-13
+### Fixed
+- Fix snippet issue when field has more that one % (via @ttempleton)
+
 ## 4.2.2 - 2024-02-16
 ### Fixed
 - use pagination information on canonical (via @therealpecus)
