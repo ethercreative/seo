@@ -38,7 +38,7 @@ export default class Snippet {
 					.trim()
 					.replace(/[\r\n\t]/g, ' ')
 					.replace(/\s{2,}/g, ' ')
-					.replace('%', '%25')
+					.replace(/%/g, '%25')
 			);
 		}
 
@@ -51,7 +51,7 @@ export default class Snippet {
 			slug:  this.slugField,
 			desc:  this.descField,
 		};
-		
+
 		this.title();
 		this.slugField && SEO.options.hasPreview && this.slug();
 		this.desc();
@@ -59,7 +59,7 @@ export default class Snippet {
 
 	// Initializers
 	// =========================================================================
-	
+
 	/**
 	 * Sync up the main title input with the SEO one
 	 * (if it's a new entry, or we don't have a title)
@@ -87,31 +87,31 @@ export default class Snippet {
 		this._observeMainForm();
 		this._observeAllInputs();
 	}
-	
+
 	/**
 	 * Sync up the SEO slug with crafts
 	 */
 	slug () {
 		const mainSlugField = document.getElementById('slug');
-		
+
 		// Skip if we don't have a slug field (i.e. the homepage)
 		if (!mainSlugField) return;
-		
+
 		const onSlugChange = () => {
 			this.slugField.textContent = mainSlugField.value;
 		};
-		
+
 		mainSlugField.addEventListener('input', onSlugChange);
-		
+
 		// Slug generation has a debounce that we need to account for to keep
 		// the slugs in sync
 		const title = document.getElementById('title');
 		title && title.addEventListener('input', debounce(onSlugChange, 500));
-		
+
 		// Sync straight away (see above in title() as to why)
 		onSlugChange();
 	}
-	
+
 	/**
 	 * Adjust the height of the description TextArea to ensure it never scrolls,
 	 * and handle descriptions that are longer than the recommended length.
@@ -123,27 +123,27 @@ export default class Snippet {
 				this.descField.style.height = this.descField.scrollHeight + 'px';
 			}, 1);
 		};
-		
+
 		// Prevent line breaks
 		this.descField.addEventListener('keydown', e => {
 			if (e.keyCode === 13) e.preventDefault();
 		});
-		
+
 		// Cleanse line breaks & check length
 		this.descField.addEventListener('input', () => {
 			this.descField.value =
 				this.descField.value.replace(/(\r\n|\r|\n)/gm, ' ');
-			
+
 			if (this.descField.value.length > 313)
 				this.descField.classList.add('invalid');
 			else
 				this.descField.classList.remove('invalid');
-			
+
 			adjustHeight();
 		});
-		
+
 		// Adjust height TextArea size changes
-		
+
 		// On tab change
 		if (document.getElementById('tabs')) {
 			const tabs = document.querySelectorAll('#tabs a.tab');
@@ -151,16 +151,16 @@ export default class Snippet {
 				tabs[i].addEventListener('click', adjustHeight);
 			}
 		}
-		
+
 		// On open / close live preview
 		if (Craft.livePreview) {
 			Craft.livePreview.on('enter', adjustHeight);
 			Craft.livePreview.on('exit', adjustHeight);
 		}
-		
+
 		// On window resize
 		window.addEventListener('resize', adjustHeight);
-		
+
 		// Set initial height (extra delay to fix FF bug)
 		setTimeout(() => {
 			adjustHeight();
@@ -389,5 +389,5 @@ export default class Snippet {
 			);
 		}
 	}
-	
+
 }

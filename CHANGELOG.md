@@ -1,3 +1,7 @@
+## 5.0.0-rc5 - 2024-07-13
+### Fixed
+- Fix snippet issue when field has more that one %
+
 ## 5.0.0-rc4 - 2024-06-06
 ### Fixed
 - Fix incorrect live preview URL used in keyword analysis
