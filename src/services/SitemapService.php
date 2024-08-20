@@ -364,6 +364,7 @@ class SitemapService extends Component
 				             ->from('{{%elements_sites}}')
 				             ->where('[[elementId]] = ' . $item->id)
 				             ->andWhere('enabled = true')
+				             ->andWhere('uri IS NOT NULL')
 				             ->all();
 
 			$enabledLookup = array_reduce(
