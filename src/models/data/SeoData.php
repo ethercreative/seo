@@ -377,8 +377,13 @@ class SeoData extends BaseObject
 	 */
 	public function getCanonical ()
 	{
-		if (empty($this->advanced['canonical']))
-			return UrlHelper::siteUrl(Craft::$app->request->getFullPath());
+		if (empty($this->advanced['canonical'])) {
+			$fullPathWithPagination = Craft::$app->request->getFullPath();
+			$pathInfo = Craft::$app->request->getPathInfo();
+			return ($subPath = strpos($fullPathWithPagination, $pathInfo . '/')) === false ?
+				UrlHelper::siteUrl($pathInfo) :
+				UrlHelper::siteUrl(substr($fullPathWithPagination, $subPath));
+		}
 
 		return UrlHelper::siteUrl($this->advanced['canonical']);
 	}
