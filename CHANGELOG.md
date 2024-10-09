@@ -1,4 +1,4 @@
-## 5.0.0
+## 5.0.0 - 2024-10-09
 ### Fixed
 - Fix canonical URL issues (via @therealpecus)
 
