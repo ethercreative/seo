@@ -1,3 +1,7 @@
+## 4.2.4 - 2024-10-09
+###
+- Fixed canonical URL issues (via @therealpecus)
+
 ## 4.2.3 - 2024-07-13
 ### Fixed
 - Fix snippet issue when field has more that one % (via @ttempleton)
