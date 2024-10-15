@@ -66,7 +66,7 @@ class SeoController extends Controller
 		$body = $craft->request->getBodyParams();
 		foreach ($body as $prop => $value)
 		{
-			if (!property_exists($element, $prop))
+            if (!$element->canSetProperty($prop))
 				continue;
 
 			if (in_array($prop, ['postDate', 'expiryDate'])) {
@@ -83,7 +83,10 @@ class SeoController extends Controller
 			$craft->request->getParam('fieldsLocation', 'fields')
 		);
 
-		return $this->asJson($element->$seoHandle->titleAsTokens);
+        $field = $element->getFieldLayout()?->getFieldByHandle($seoHandle);
+        $value = $field? $element->getFieldValue($seoHandle) : null;
+
+        return $this->asJson($value? $value->titleAsTokens : []);
 	}
 
 }
