@@ -78,6 +78,20 @@ Replace your `title` tag, and any other SEO related meta tags with `{% hook "seo
 
 This assumes that you will be creating a variable call `seo` in your templates that will return either the SEO field or a custom SEO object (see below). You can modify the output of this hook by setting your own SEO Meta Template in the SEO Settings. You can [view the default template here](https://github.com/ethercreative/seo/blob/v3/src/templates/_seo/meta.twig).
 
+### How meta output works (what the hook renders)
+
+- **Automatic field detection**: The default meta template will try to find your SEO field automatically using `getSeoField('seo')`. If your field handle is not `seo`, pass it: `getSeoField('mySeoHandle')`. If nothing is found, it falls back to `craft.seo.custom(siteName, '')`.
+- **Meta tags included**:
+  - `<title>` from your SEO field’s title tokens or fallback
+  - `<meta name="description">`
+  - Open Graph tags (title, description, image, site name, locale, alternates)
+  - Twitter Card tags (summary_large_image)
+  - `<meta name="robots">` when applicable (see Robots section below)
+  - `<link rel="canonical">`
+- **Canonical also as a header**: In addition to the `<link rel="canonical">`, the plugin adds an HTTP `Link: <...>; rel="canonical"` header on every frontend response.
+
+Tip: If you prefer to use an SEO object directly (e.g. for non-element templates), set a variable named `seo` in your template to `craft.seo.custom(...)` or include your element’s field value, and the hook will use it.
+
 ### Custom SEO Object
 
 In some cases, you will not have access to an SEO field, but will want to set the page title, description, & socials. You can do this by creating a custom SEO object using the function below:
@@ -109,6 +123,48 @@ craft.seo.custom(
 ```
 
 All parameters are optional.
+
+### Robots, noindex and robots.txt
+
+- **Environment protection**
+  - On any environment where `Craft::$app->env` is not `production`, every response gets an `X-Robots-Tag: none, noimageindex` header automatically to avoid accidental indexing of staging/dev. Keep production named exactly `production`.
+  - When Craft’s `devMode` is enabled, the rendered `<meta name="robots">` will also be `none, noimageindex`.
+
+- **Per‑entry robots directives (noindex, nofollow, etc.)**
+  - In the entry editor, open your SEO field → Advanced tab → toggle the directives you need. Available switches include `noindex`, `nofollow`, `noarchive`, `nosnippet`, `notranslate`, `noimageindex`.
+  - These map directly to the `<meta name="robots" content="...">` output. When present, the plugin also mirrors them via the `X-Robots-Tag` header.
+  - If the element has an `expiryDate`, the plugin adds `unavailable_after: <date>` to the meta and headers automatically.
+
+- **Global defaults**
+  - Set the default robots directives in SEO → Settings → Robots. New entries inherit these defaults; you can override per entry in the Advanced tab.
+
+- **robots.txt**
+  - The plugin serves `robots.txt` at `/robots.txt` and renders it from the template you configure in SEO → Settings → Robots.
+  - You can use any Craft Twig variables and a `seo` object that contains SEO settings. The default template includes your sitemap URL and blocks everything outside production, for example:
+
+    ```twig
+    {# Sitemap URL #}
+    Sitemap: {{ url(seo.sitemapName ~ '.xml') }}
+
+    {# Disallows #}
+    {% if craft.app.config.env != 'production' %}
+    User-agent: *
+    Disallow: /
+    {% else %}
+    User-agent: *
+    Disallow: /cpresources/
+    {% endif %}
+    ```
+
+### Canonical URLs
+
+- Set a canonical URL per entry in the SEO field → Advanced tab. Leave blank to fall back to the current page URL.
+- Output is provided both as `<link rel="canonical" href="...">` and as an HTTP `Link` header, which some crawlers prefer.
+
+### Using a custom meta template
+
+- In SEO → Settings, set a custom Meta Template to fully control the markup the `{% hook "seo" %}` renders. The `seo` variable is a `SeoData` object with properties like `title`, `description`, `social.twitter`, `social.facebook`, `robots`, `canonical`, and `expiry` that you can use in your Twig.
+- If you don’t provide a template, the built-in one at `seo/_seo/meta` is used.
 
 ## Upcoming Features
 
