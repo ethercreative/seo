@@ -6,7 +6,7 @@
 	{% endif -%}
 
 	{% set locale = craft.app.locale %}
-	{% set locales = craft.app.i18n.siteLocaleIds|without(locale) %}
+	{% set locales = craft.app.i18n.siteLocaleIds|without(locale.id) %}
 
 	<title>{{ seo.title }}</title>
 	<meta name="description" content="{{ seo.description }}" />
