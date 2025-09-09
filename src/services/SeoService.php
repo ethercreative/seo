@@ -51,14 +51,7 @@ class SeoService extends Component
 	}
 
 	public function injectCanonical ()
-	{
-		list($field) = $this->_getElementAndSeoFields();
-
-		Craft::$app->getResponse()->getHeaders()->add(
-			'Link',
-			'<' . $field->canonical . '>; rel="canonical"'
-		);
-	}
+	{}
 
 	// Helpers
 	// =========================================================================
